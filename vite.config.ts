@@ -20,7 +20,14 @@ export default defineConfig({
   css: {
     preprocessorOptions:{ 
       less: {
-        modifyVars: globalToken
+        modifyVars: {
+          ...globalToken,
+          textColor: '#fff',
+          
+          pageBg: '#050319',
+          headerBg: '#171438',
+          commonBg: '#14112c',
+        }
       },
     },
   },

@@ -1,0 +1,1 @@
+export { default as ApusLogo } from '../assets/logo-apus.png'

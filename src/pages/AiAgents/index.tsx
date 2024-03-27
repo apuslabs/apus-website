@@ -4,7 +4,7 @@ const Home: FC = (props) => {
 
   return (
     <div>
-      222
+      Ai
     </div>
   )
 }

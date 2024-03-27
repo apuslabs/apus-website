@@ -1,0 +1,50 @@
+.works {
+  padding: 16px;
+  &-header {
+    display: flex;
+    justify-content: flex-end;
+  }
+  &-body {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+  &-item {
+    padding: 16px;
+    flex: 0.5;
+    background: @commonBg;
+    border-radius: 6px;
+    &-header {
+      font-size: 26px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid @colorBorder;
+    }
+    &-content {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 24px 0 16px 0;
+      > li {
+        flex: 0 0 33%;
+        margin: 16px 0;
+        .item-title {
+          font-size: 16px;
+          color: rgba(128, 122, 174, 1);
+          margin-bottom: 8px;
+        }
+        .item-value {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+.newWork {
+  padding: 16px;
+  .card-content-title {
+    margin-bottom: 16px;
+  }
+  .title-second {
+    margin-top: 16px;
+  }
+}
