@@ -31,7 +31,7 @@ const Home: FC = (props) => {
 
       <Card title="4. Wait for Connection" bordered={false} style={{marginTop: '16px'}}>
         <div className='card-content-title'>In case your device won't connect, Contact out support or refer to our discord support channel.</div>
-        <Button type='primary' block>Refresh</Button>
+        <Button type='primary'  style={{border: 'unset'}} block>Refresh</Button>
       </Card>
     </div>
   )

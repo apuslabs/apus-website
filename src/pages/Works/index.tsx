@@ -14,7 +14,7 @@ const Home: FC = (props) => {
   return (
     <div className='works'>
       <div className='works-header'>
-        <Button type='primary' onClick={handleToWorkNew}>Run New GPU</Button>
+        <Button type='primary' style={{border: 'unset'}} onClick={handleToWorkNew}>Run New GPU</Button>
       </div>
       <div className='works-body'>
         <div className='works-item'>

@@ -10,7 +10,7 @@ const themeConfig = {
     Button: {
       colorPrimary: 'linear-gradient(to bottom, rgba(49, 172, 250, 1), rgba(7, 50, 204, 1))',
       defaultBg: 'rgba(21, 51, 201, 1)',
-      defaultBorderColor: ''
+      defaultBorderColor: '',
     },
     Card: {
       headerBg: '#14112c',
@@ -19,6 +19,10 @@ const themeConfig = {
     },
     Input: {
       colorBgContainer: '#252347'
+    },
+    Table: {
+      headerColor: 'rgba(225, 44, 255, 1)',
+      headerBg: 'rgba(33, 29, 71, 1)',
     }
   }
 }
