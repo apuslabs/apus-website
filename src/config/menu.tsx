@@ -31,21 +31,21 @@ const menuList = [
   {
     label: 'Dashboard',
     key: 'dashboard',
-    path: '/dashboard',
+    path: '/app/dashboard',
     icon: <Icon name='Dashboard' />,
     isleaf: 0
   },
   {
     label: 'Works',
     key: 'works',
-    path: '/works',
+    path: '/app/works',
     icon: <Icon name='Node' />,
     isleaf: 0,
     rouchildren: [
       {
         label: 'Run new GPU',
         key: 'worksNew',
-        path: '/works/new',
+        path: '/app/works/new',
         isleaf: 1
       }
     ]

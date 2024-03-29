@@ -1,14 +1,10 @@
-import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom'
+import { useNavigate, Outlet, useLocation } from 'react-router-dom'
 import "./App.less";
-import { Menu } from 'antd'
+import { ConfigProvider, theme, Menu } from 'antd'
 import { useEffect, useState } from 'react'
 import Header from './components/Header'
 import MenuList from './config/menu'
-import Dashboard from './pages/Dashboard'
-import Works from './pages/Works'
-import AiAgents from './pages/AiAgents'
-import WorkNew from './pages/Works/workNew'
-import menuList from './config/menu';
+import themeToken from './utils/appTheme.ts'
 
 function App() {
   const [current, setCurrent] = useState('dashboard')
@@ -17,41 +13,38 @@ function App() {
 
   useEffect(() => {
     const { pathname } = location
-    const current = menuList.find(item => pathname.includes(item.key))
-    setCurrent(current!.key)
+    const current = MenuList.find(item => pathname.includes(item.key))
+    if (current) {
+      setCurrent(current!.key)
+    }
   }, [])
 
   const handleMenuChange = ({ key }: { key: string }) => {
     setCurrent(key)
-    navigate(`/${key}`)
+    const path = MenuList.find(item => item.key === key)?.path
+    navigate(path || '')
   }
 
   return (
-    <div className='container-box'>
-      <Header />
-      <div className='container'>
-        <Menu
-          theme="dark"
-          style={{ width: 375 }}
-          defaultOpenKeys={['sub1']}
-          selectedKeys={[current]}
-          mode="inline"
-          items={MenuList}
-          onClick={handleMenuChange}
-        />
-        <div className='container-bg'>
-          <Routes>
-            <Route path="/" element={<Navigate to="/dashboard" replace />} />
-            <Route path="/dashboard" key="dashboard" element={<Dashboard />} />
-            <Route path="/works">
-              <Route index element={<Works />}></Route>
-              <Route path='/works/new' element={<WorkNew />} />
-            </Route>
-            <Route path="/aiAgents" element={<AiAgents />} />
-          </Routes>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken }}>
+      <div className='container-box'>
+        <Header />
+        <div className='container'>
+          <Menu
+            theme="dark"
+            style={{ width: 375 }}
+            defaultOpenKeys={['sub1']}
+            selectedKeys={[current]}
+            mode="inline"
+            items={MenuList}
+            onClick={handleMenuChange}
+          />
+          <div className='container-bg'>
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
+    </ConfigProvider>
   );
 }
 

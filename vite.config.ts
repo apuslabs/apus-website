@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { theme } from 'antd';
-import themeToken from './src/utils/theme'
+import themeToken from './src/utils/appTheme'
 
 const { getDesignToken } = theme;
 const globalToken = getDesignToken({
@@ -23,10 +23,10 @@ export default defineConfig({
         modifyVars: {
           ...globalToken,
           textColor: '#fff',
-          
           pageBg: '#050319',
           headerBg: '#171438',
           commonBg: '#14112c',
+          homeBg: 'rgba(29, 29, 29, 1)'
         }
       },
     },
