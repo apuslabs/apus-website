@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { ApusLogo } from "../../assets/image";
 import { useNavigate, useLocation } from 'react-router-dom';
 import './index.less'
@@ -12,7 +12,10 @@ interface menuType {
 
 const HomeHeader: FC = (props) => {
   const [currentMenu, setCurrentMenu] = useState<string>('')
-  const [menuShow, setMenuShow] = useState(false)
+  const [menuShow, setMenuShow] = useState<boolean>(false)
+  const [isMobile, setIsMobile] = useState<boolean>(true)
+
+  const menuRef = useRef(null)
 
   const location = useLocation()
 
@@ -26,9 +29,25 @@ const HomeHeader: FC = (props) => {
   // 根据尺寸判断是否显示菜单
   useEffect(() => {
     if (window.innerWidth >= 767) {
+      setIsMobile(false)
       setMenuShow(true)
     }
   }, [])
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: Event) => {
+  //     if (menuRef.current && !menuRef.current.contains(event.target)) {
+  //       setMenuShow(false)
+  //     }
+  //   }
+  //   // 添加全局点击事件监听器
+  //   document.addEventListener('mousedown', handleClickOutside);
+
+  //   // 清理函数：在组件卸载时移除事件监听器
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClickOutside);
+  //   };
+  // }, [menuRef])
 
   const menu: menuType[] = [
     { 
@@ -60,18 +79,16 @@ const HomeHeader: FC = (props) => {
   }
 
   const handleMenuShow = () => {
-    const isShow = !menuShow
-    console.log(isShow)
-    setMenuShow(isShow)
+    setMenuShow(!menuShow)
   }
 
   return (
-    <div className='homeheader'>
+    <div className='homeheader'  ref={menuRef}>
       <div className="homeheader-logo" onClick={() => navigate('/')}>
         <img src={ApusLogo} alt="Apus Logo" />
         <h2 className='homeheader-text'>Apus Network</h2>
       </div>
-      <ul className='homeheader-menu' style={menuShow ? { display: 'block' } : { display: 'none' }}>
+      <ul className='homeheader-menu' style={menuShow ? { opacity: 1, display: isMobile ? 'block' : 'flex' } : { opacity: 0, display: 'none' }}>
         {
           menu.map(item => (
             <li className={currentMenu === item.name ? 'active' : ''} onClick={() => handleMenuNavigate(item)} key={item.name}>{item.name}</li>

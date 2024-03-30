@@ -38,7 +38,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
       )}
 
       <div className="footer-build">
-        <div className="footer-build-title">Let’s build future together</div>
+        <div className="footer-build-title">Let’s build future<br/>together</div>
         <Button type="primary" className="start-btn">
           Start Now <RightOutlined />
         </Button>

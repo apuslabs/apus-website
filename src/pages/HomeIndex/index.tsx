@@ -23,7 +23,7 @@ const HomeIndex: FC = (props) => {
           </div>
         </div>
         <div className='homeindex-top-image'>
-
+          image
         </div>
       </div>
 
@@ -83,6 +83,26 @@ const HomeIndex: FC = (props) => {
       <div className='whyus'>
         <div className='home-title'>Why Us</div>
         <div className='home-describe'>To achieve a diversified portfolio, look for asset classes that have low or negative correlations so that if moves down, the other tends to it. ETFs and mutual funds are easy ways to select asset.</div>
+        <ul className='whyus-list'>
+          <li>
+            <div className='whyus-list-img'>
+              <img src="/src/assets/pptv.png" />
+            </div>
+            <div className='whyus-list-text'>450MM Users<br/>Worldwide</div>
+          </li>
+          <li>
+            <div className='whyus-list-img'>
+              <img src="/src/assets/ppio.png" />
+            </div>
+            <div className='whyus-list-text'>5000 Nodes<br/>Worldwide</div>
+          </li>
+          <li>
+            <div className='whyus-list-img'>
+              <img src="/src/assets/logo-apus.png" />
+            </div>
+            <div className='whyus-list-text'>Unlimited Compute<br/>Worldwide</div>
+          </li>
+        </ul>
       </div>
 
       <HomeFooter />

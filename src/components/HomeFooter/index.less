@@ -25,12 +25,10 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    height: 500px;
     padding: 80px 150px;
     &-title {
       font-size: 96px;
       font-weight: 700;
-      width: 800px;
       text-align: center;
     }
     .start-btn {
@@ -51,11 +49,13 @@
     &-text {
       font-size: 20px;
       color: rgba(136, 136, 136, 1);
+      text-align: center;
     }
     &-access {
       font-size: 24px;
       color: rgba(136, 136, 136, 1);
       margin-top: 50px;
+      text-align: center;
     }
   }
 
@@ -66,5 +66,42 @@
     font-size: 18px;
     color: rgba(136, 136, 136, 1);
     text-align: center;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .home-footer {
+    .footer-company {
+      padding: 100px 20px;
+      &-title {
+        font-size: 18px;
+      }
+      &-list {
+        flex-direction: column;
+      }
+    }
+    .footer-build  {
+      padding: 100px 20px;
+      &-title {
+        font-size: 42px;
+      }
+      .start-btn {
+        height: 54px;
+        width: 220px;
+        font-size: 22px;
+      }
+    }
+    .footer-bottom {
+      padding: 50px 20px;
+      &-text {
+        font-size: 18px;
+      }
+      &-access {
+        font-size: 20px;
+      }
+    }
+    .footer-copyright {
+      font-size: 14px;
+    }
   }
 }
