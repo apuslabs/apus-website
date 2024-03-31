@@ -4,6 +4,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './index.less'
 import { Button } from 'antd';
 import { Icon } from '../../components/SvgIcon'
+import { useWallet } from '@solana/wallet-adapter-react';
+import {
+  WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
+
 
 interface menuType {
   name: string
@@ -11,6 +16,7 @@ interface menuType {
 }
 
 const HomeHeader: FC = (props) => {
+  const { connected } = useWallet();
   const [currentMenu, setCurrentMenu] = useState<string>('')
   const [menuShow, setMenuShow] = useState<boolean>(false)
   const [isMobile, setIsMobile] = useState<boolean>(true)
@@ -60,7 +66,7 @@ const HomeHeader: FC = (props) => {
     },
     {
       name: 'Playground',
-      path: ''
+      path: 'https://playground.apus.network/'
     },
     { 
       name: 'Task',
@@ -95,7 +101,10 @@ const HomeHeader: FC = (props) => {
           ))
         }
       </ul>
-      <Button className='contact-btn' type='primary'>Contact Us</Button>
+      {connected ? <Button className='contact-btn' type='primary' onClick={() => {
+        navigate('/app/account')
+      }}>Console</Button> : <WalletMultiButton />}
+      
       <span className='mobile-menu' onClick={handleMenuShow}>
         <Icon name='Menu' size={35} />
       </span>

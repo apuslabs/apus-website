@@ -3,8 +3,15 @@ import { Button } from 'antd'
 import { RightOutlined } from '@ant-design/icons'
 import HomeFooter from '../../components/HomeFooter'
 import './index.less'
+import { useStatistics } from '../../contexts/task'
 
 const HomeIndex: FC = (props) => {
+  const {
+    gpuCount,
+    taskCount,
+    agentCount,
+    payoutCount
+  } = useStatistics()
 
   return (
     <div className='home-index'>
@@ -32,19 +39,19 @@ const HomeIndex: FC = (props) => {
         <ul className='server-box'>
           <li style={{ background: 'linear-gradient(to bottom, rgba(197, 115, 107, 1), rgba(174, 42, 39, 1))' }}>
             <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-value'>{gpuCount}</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, rgba(179, 101, 207, 1), rgba(115, 37, 206, 1))' }}>
             <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-value'>{agentCount}</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, rgba(92, 98, 207, 1), rgba(33, 36, 207, 1))' }}>
             <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-value'>{taskCount}</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, #888ce1, #5e46d1)' }}>
             <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-value'>{payoutCount}</div>
           </li>
         </ul>
       </div>

@@ -29,9 +29,9 @@ export const deepFindMenu = (menuList: menuItemType[], pathname: string): menuIt
 
 const menuList = [
   {
-    label: 'Dashboard',
-    key: 'dashboard',
-    path: '/app/dashboard',
+    label: 'Account',
+    key: 'account',
+    path: '/app/account',
     icon: <Icon name='Dashboard' />,
     isleaf: 0
   },
