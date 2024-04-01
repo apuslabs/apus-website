@@ -2,6 +2,7 @@ import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
 import { RightOutlined } from "@ant-design/icons";
+import { Dephy, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
 
 interface HomeFooterProps {
   showCompany?: boolean;
@@ -19,19 +20,19 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
           </div>
           <ul className="footer-company-list">
             <li>
-              <img src="/src/assets/novita.png" />
+              <img src={Novita} />
             </li>
             <li>
-              <img src="/src/assets/dephy.png" />
+              <img src={Dephy} />
             </li>
             <li>
-              <img src="/src/assets/lagrange.png" />
+              <img src={Lagrange} />
             </li>
             <li>
-              <img src="/src/assets/punet.png" />
+              <img src={Punet} />
             </li>
             <li>
-              <img src="/src/assets/omnilnfer.png" />
+              <img src={Omnilnfer} />
             </li>
           </ul>
         </div>

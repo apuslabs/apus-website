@@ -1,78 +1,85 @@
 import { FC, useState } from 'react'
 import HomeFooter from '../../components/HomeFooter'
-import { Input, Table } from 'antd';
+import { Input, Table, Tooltip } from 'antd';
 import type { TableProps } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'
 import './index.less'
+import { useTaskList } from '../../contexts/task';
 
 interface DataType {
-  key: string;
-  user: string;
-  agent: string;
-  gpuNode: string;
-  time: string;
-  price: number | string;
-  link: string
+  id: string;
+  payer: string;
+  agentId: string;
+  gpuNodeId: string;
+  timestamp: string;
+  agentFee: number;
+  gpuNodeFee: number;
+  key: string
+}
+
+function shortAddress(address: string) {
+  return <Tooltip title={address}>{`${address.slice(0, 4)}...${address.slice(-4)}`}</Tooltip>
 }
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'USER',
-    dataIndex: 'user',
+    title: 'Task ID',
+    dataIndex: 'id',
+    render: (r: string) => {
+      return <Tooltip title={r}>{`${r.slice(0, 6)}...`}</Tooltip>
+    }
   },
   {
-    title: 'Agent',
-    dataIndex: 'agent',
+    title: 'Payer Address',
+    dataIndex: 'payer',
+    render: (r: string) => {
+      return shortAddress(r)
+    }
   },
   {
-    title: 'GPU NODE',
-    dataIndex: 'gpuNode',
+    title: 'Agent ID',
+    dataIndex: 'agentId',
   },
   {
-    title: 'TIME',
-    dataIndex: 'time',
+    title: 'GPU Node ID',
+    dataIndex: 'gpuNodeId',
   },
   {
-    title: 'PRICE',
-    dataIndex: 'price',
+    title: 'Time',
+    dataIndex: 'timestamp',
   },
   {
-    title: 'SOLANA TX LINK',
-    dataIndex: 'link',
+    title: 'Agent Fee',
+    dataIndex: 'agentFee',
+  },
+  {
+    title: 'GPU Node Fee',
+    dataIndex: 'gpuNodeFee',
+  },
+  {
+    title: 'Solana Tx Link',
+    dataIndex: 'key',
+    render: (r: string) => {
+      return <a href={`https://explorer.solana.com/address/${r}?cluster=devnet`} target='_blank'>Explorer</a>
+    }
   },
 ]
 
 const Task: FC = (props) => {
-
-  const [listData, setListData] = useState<DataType[]>([
-    {
-      key: '1',
-      user: 'Maryam Amiri',
-      agent: '1,566,869,85',
-      gpuNode: 'Ay86Ng7XrHGSLt1xZoLdn4fabdHs1C8dyrfSw9i1AFFp',
-      time: '2024-03-20 12:00:00',
-      price: 2,
-      link: 'https://explorer.solana.'
-    },
-    {
-      key: '2',
-      user: 'Maryam Amiri',
-      agent: '1,566,869,85',
-      gpuNode: 'Ay86Ng7XrHGSLt1xZoLdn4fabdHs1C8dyrfSw9i1AFFp',
-      time: '2024-03-20 12:00:00',
-      price: 2,
-      link: 'https://explorer.solana.'
-    },
-  ])
+  const [search, setSearch] = useState<string>('')
+  const [formData, setFormData] = useState<string | undefined>()
+  const [taskList] = useTaskList(formData)
 
   return (
     <div className='task'>
       <div className='task-head'>
         <div className='task-head-title'>AI Tasks</div>
-        <Input suffix={<SearchOutlined />} size="large" placeholder='Search AI Task Transaction' className='task-input' />
+        <Input suffix={<SearchOutlined onClick={() => setFormData(search)} />} size="large" placeholder='Search AI Task Transaction' className='task-input' onChange={e => {
+          setSearch(e.target.value)
+        }} />
       </div>
       <div className='task-list'>
-        <Table className='task-table' columns={columns} dataSource={listData} pagination={false} />
+        <Table className='task-table' columns={columns} dataSource={taskList} pagination={false} />
       </div>
       <HomeFooter showCompany={false} />
     </div>

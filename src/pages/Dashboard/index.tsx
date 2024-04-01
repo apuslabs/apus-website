@@ -1,8 +1,8 @@
 import { FC, useState } from 'react'
-import { Button, Card, Table } from 'antd'
-import { Icon } from '../../components/SvgIcon'
+import { Button, Card } from 'antd'
 import type { TableProps } from 'antd';
 import './index.less'
+import { useWallet } from '@solana/wallet-adapter-react';
 
 interface DataType {
   key: string;
@@ -11,49 +11,49 @@ interface DataType {
   bouns: number;
 }
 
-const columns: TableProps<DataType>['columns'] = [
-  {
-    title: 'NAME',
-    dataIndex: 'name',
-    render: (text, record) => (
-      <div className='name-row'>
-        <div className='avtor'></div>
-        <div>
-          <div className='name'>{record.name}</div>
-          <div className='describe'>maryamamiri01</div>
-        </div>
-      </div>
-    ),
-    width: '34%'
-  },
-  {
-    title: 'POINTS',
-    dataIndex: 'points',
-    className: 'gray-text'
-  },
-  {
-    title: 'BOUNS',
-    dataIndex: 'bouns',
-    className: 'blue-text'
-  }
-]
+// const columns: TableProps<DataType>['columns'] = [
+//   {
+//     title: 'NAME',
+//     dataIndex: 'name',
+//     render: (text, record) => (
+//       <div className='name-row'>
+//         <div className='avtor'></div>
+//         <div>
+//           <div className='name'>{record.name}</div>
+//           <div className='describe'>maryamamiri01</div>
+//         </div>
+//       </div>
+//     ),
+//     width: '34%'
+//   },
+//   {
+//     title: 'POINTS',
+//     dataIndex: 'points',
+//     className: 'gray-text'
+//   },
+//   {
+//     title: 'BOUNS',
+//     dataIndex: 'bouns',
+//     className: 'blue-text'
+//   }
+// ]
 
 const Dashboard: FC = (props) => {
-  const [link, setLink] = useState<string>('https://dashboard.apusnetwork.com/register?referral_code-rmytijitmogcx')
-  const [listData, setListData] = useState<DataType[]>([
-    {
-      key: '1',
-      name: 'Maryam Amiri',
-      points: '1,566,869,85',
-      bouns: 1.25
-    },
-    {
-      key: '2',
-      name: 'Maryam Amiri2',
-      points: '1,566,869,85',
-      bouns: 1.25
-    },
-  ])
+  const {publicKey} = useWallet()
+  // const [listData, setListData] = useState<DataType[]>([
+  //   {
+  //     key: '1',
+  //     name: 'Maryam Amiri',
+  //     points: '1,566,869,85',
+  //     bouns: 1.25
+  //   },
+  //   {
+  //     key: '2',
+  //     name: 'Maryam Amiri2',
+  //     points: '1,566,869,85',
+  //     bouns: 1.25
+  //   },
+  // ])
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -65,7 +65,7 @@ const Dashboard: FC = (props) => {
   }
 
   const handleCopy = () => {
-    copyToClipboard(link)
+    copyToClipboard(`https://playground.apus.network?referral_code=${publicKey?.toBase58()}`)
   }
 
   return (
@@ -73,11 +73,11 @@ const Dashboard: FC = (props) => {
       <Card title="" bordered={false}>
         <div className='card-content-title'>Invitation link</div>
         <div className='card-content-block'>
-          <span>{ link }</span>
+          <span>{`https://playground.apus.network?referral_code=${publicKey?.toBase58()}`}</span>
           <Button onClick={handleCopy}>Copy</Button>
         </div>
       </Card>
-      <div className='dashboard-show'>
+      {/* <div className='dashboard-show'>
         <div className='dashboard-show-card' style={{ background: 'linear-gradient(to right, rgba(179, 103, 207, 1), rgba(115, 37, 206, 1))' }}>
           <Icon name="Total" size={78} />
           <div className='item'>
@@ -110,9 +110,9 @@ const Dashboard: FC = (props) => {
             <Icon name="Link" size={35}></Icon>
           </span>
         </div>
-      </div>
+      </div> */}
 
-      <Table className='dashboard-table' columns={columns} dataSource={listData} pagination={false} />
+      {/* <Table className='dashboard-table' columns={columns} dataSource={listData} pagination={false} /> */}
     </div>
   )
 }

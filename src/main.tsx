@@ -44,8 +44,8 @@ function Main() {
                   <Route path="ecosystem" element={<Ecosystem />} />
                   <Route path="task" element={<Task />} />
                 </Route>
-                <Route path="/app" element={<App />}>
-                  <Route path="dashboard" key="dashboard" element={<Dashboard />} />
+                <Route path="/app" element={<App />} >
+                  <Route path="account" key="account" element={<Dashboard />} />
                   <Route path="works">
                     <Route index element={<Works />}></Route>
                     <Route path='new' element={<WorkNew />} />

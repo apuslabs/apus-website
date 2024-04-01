@@ -2,9 +2,13 @@ import { FC } from 'react'
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import './index.less'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { useGpuNodeList } from '../../contexts/task'
 
-const Home: FC = (props) => {
+const Home: FC = () => {
   const navigate = useNavigate()
+
+  const [gpuNodeList] = useGpuNodeList()
 
   const handleToWorkNew = () => {
     navigate('/app/works/new')
@@ -16,16 +20,17 @@ const Home: FC = (props) => {
         <Button type='primary' style={{border: 'unset'}} onClick={handleToWorkNew}>Run New GPU</Button>
       </div>
       <div className='works-body'>
-        <div className='works-item'>
-          <div className='works-item-header'>Jaxs-MBP</div>
+        {gpuNodeList.map((gpuNode: any) => {
+          return <div className='works-item' key={gpuNode.id}>
+          <div className='works-item-header'>{gpuNode.id}</div>
           <ul className='works-item-content'>
             <li>
               <div className='item-title'>Status</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-value'></div>
             </li>
-            <li>
+            {/* <li>
               <div className='item-title'>Type</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-value'>{Offline}</div>
             </li>
             <li>
               <div className='item-title'>Platform</div>
@@ -34,41 +39,38 @@ const Home: FC = (props) => {
             <li>
               <div className='item-title'>IP Address</div>
               <div className='item-value'>Offline</div>
-            </li>
+            </li> */}
             <li>
               <div className='item-title'>CPU</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-value'>{gpuNode.cpuCores}</div>
             </li>
             <li>
-              <div className='item-title'>Memory GB</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-title'>Memory MB</div>
+              <div className='item-value'>{gpuNode.memory}</div>
+            </li>
+            <li>
+              <div className='item-title'>Storage GB</div>
+              <div className='item-value'>{gpuNode.storage}</div>
             </li>
             <li>
               <div className='item-title'>GPU Model</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-value'>{gpuNode.gpuCardModel}</div>
             </li>
             <li>
-              <div className='item-title'>GPU Memory</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-title'>Price</div>
+              <div className='item-value'>{gpuNode.price}</div>
             </li>
             <li>
-              <div className='item-title'>Memory GB</div>
-              <div className='item-value'>Offline</div>
-            </li>
-            <li>
-              <div className='item-title'>24 Hours Requests</div>
-              <div className='item-value'>Offline</div>
-            </li>
-            <li>
-              <div className='item-title'>24 Hour Payout</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-title'>24 Hour Tasks</div>
+              <div className='item-value'></div>
             </li>
             <li>
               <div className='item-title'>All time Payout</div>
-              <div className='item-value'>Offline</div>
+              <div className='item-value'></div>
             </li>
           </ul>
         </div>
+        })}
       </div>
     </div>
   )

@@ -4,13 +4,19 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import './index.less'
 import { Button } from 'antd';
 import { Icon } from '../../components/SvgIcon'
+import { useWallet } from '@solana/wallet-adapter-react';
+import {
+  WalletMultiButton
+} from '@solana/wallet-adapter-react-ui';
+
 
 interface menuType {
   name: string
   path: string
 }
 
-const HomeHeader: FC = (props) => {
+const HomeHeader: FC = () => {
+  const { connected } = useWallet();
   const [currentMenu, setCurrentMenu] = useState<string>('')
   const [menuShow, setMenuShow] = useState<boolean>(false)
   const [isMobile, setIsMobile] = useState<boolean>(true)
@@ -52,7 +58,7 @@ const HomeHeader: FC = (props) => {
   const menu: menuType[] = [
     { 
       name: 'Doc',
-      path: '/home/doc'
+      path: 'https://apus-network.gitbook.io/apus-console-docs/'
     },
     { 
       name: 'Ecosystem',
@@ -60,7 +66,7 @@ const HomeHeader: FC = (props) => {
     },
     {
       name: 'Playground',
-      path: ''
+      path: 'https://solplayground.apus.network/'
     },
     { 
       name: 'Task',
@@ -71,8 +77,8 @@ const HomeHeader: FC = (props) => {
   const navigate = useNavigate()
 
   const handleMenuNavigate = (data: menuType) => {
-    if (data.name === 'Doc') {
-      window.open('https://www.baidu.com')
+    if (data.name === 'Playground' || data.name === 'Doc') {
+      window.open(data.path, '_blank')
     } else {
       navigate(data.path)
     }
@@ -95,7 +101,10 @@ const HomeHeader: FC = (props) => {
           ))
         }
       </ul>
-      <Button className='contact-btn' type='primary'>Contact Us</Button>
+      {connected ? <Button className='contact-btn' type='primary' onClick={() => {
+        navigate('/app/account')
+      }}>Console</Button> : <WalletMultiButton />}
+      
       <span className='mobile-menu' onClick={handleMenuShow}>
         <Icon name='Menu' size={35} />
       </span>

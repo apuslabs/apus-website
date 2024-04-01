@@ -17,7 +17,7 @@ const useFindMenu = (menuList: menuItemType[]) => {
   return [currentMenu]
 }
 
-const Breadcrumb: FC = (props) => {
+const Breadcrumb: FC = () => {
   const navigator = useNavigate()
   const [currentMenu] = useFindMenu(menuList)
 
