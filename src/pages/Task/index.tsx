@@ -68,6 +68,12 @@ const columns: TableProps<DataType>['columns'] = [
     dataIndex: 'gpuNodeFee',
   },
   {
+    title: 'Dapp Fee',
+    render: () => {
+      return 0
+    }
+  },
+  {
     title: 'Status',
     dataIndex: 'status',
     render: (r: string) => {
