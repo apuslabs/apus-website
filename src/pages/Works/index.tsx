@@ -11,7 +11,7 @@ const Home: FC = (props) => {
   const [gpuNodeList] = useGpuNodeList()
 
   const handleToWorkNew = () => {
-    navigate('/works/new')
+    navigate('/app/works/new')
   }
 
   return (
