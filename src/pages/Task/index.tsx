@@ -14,6 +14,7 @@ interface DataType {
   timestamp: string;
   agentFee: number;
   gpuNodeFee: number;
+  status: 'pending' | 'completed';
   key: string
 }
 
@@ -21,12 +22,16 @@ function shortAddress(address: string) {
   return <Tooltip title={address}>{`${address.slice(0, 4)}...${address.slice(-4)}`}</Tooltip>
 }
 
+function shortId(id: string) {
+  return <Tooltip title={id}>{`${id.slice(0, 6)}...`}</Tooltip>
+}
+
 const columns: TableProps<DataType>['columns'] = [
   {
     title: 'Task ID',
     dataIndex: 'id',
     render: (r: string) => {
-      return <Tooltip title={r}>{`${r.slice(0, 6)}...`}</Tooltip>
+      return shortId(r)
     }
   },
   {
@@ -39,10 +44,16 @@ const columns: TableProps<DataType>['columns'] = [
   {
     title: 'Agent ID',
     dataIndex: 'agentId',
+    render: (r: string) => {
+      return shortId(r)
+    }
   },
   {
     title: 'GPU Node ID',
     dataIndex: 'gpuNodeId',
+    render: (r: string) => {
+      return shortId(r)
+    }
   },
   {
     title: 'Time',
@@ -55,6 +66,15 @@ const columns: TableProps<DataType>['columns'] = [
   {
     title: 'GPU Node Fee',
     dataIndex: 'gpuNodeFee',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+    render: (r: string) => {
+      return <span style={{
+        color: r === 'pending' ? 'red' : 'green'
+      }}>{r}</span>
+    }
   },
   {
     title: 'Solana Tx Link',
