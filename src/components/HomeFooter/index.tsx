@@ -2,7 +2,7 @@ import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
 import { RightOutlined } from "@ant-design/icons";
-import { Dephy, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
+import { Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
 
 interface HomeFooterProps {
   showCompany?: boolean;
@@ -50,7 +50,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
           Join the community and get involved! We'd love to meet you.
         </div>
         <div className="footer-bottom-img">
-          <img src="/src/assets/footer-icon.png" />
+          <img src={FooterIcon} />
         </div>
         <div className="footer-bottom-access">
           Revolutionizing AI with fair, scalable, decentralized access.

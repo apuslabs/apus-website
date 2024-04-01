@@ -5,7 +5,7 @@ import HomeFooter from '../../components/HomeFooter'
 import { Icon } from '../../components/SvgIcon'
 import './index.less'
 import { useStatistics } from '../../contexts/task'
-import { ApusLogo, Deploy, PPIO, PPTV, Scalable } from '../../assets/image'
+import { AdvantageDemocratize, AdvantageNetwork, ApusLogo, Deploy, PPIO, PPTV, Scalable } from '../../assets/image'
 import { useNavigate } from 'react-router-dom'
 
 const HomeIndex: FC = () => {
@@ -95,14 +95,14 @@ const HomeIndex: FC = () => {
           </li>
           <li>
             <div className='advantage-list-head'>
-              <img src='/src/assets/advantage-democratize.png' />
+              <img src={AdvantageDemocratize} />
             </div>
             <div className='advantage-list-title'>Democratized Compute Access</div>
             <div className='advantage-list-describe'>Facilitates equitable access to high-performance compute resources, fostering innovation and rewarding participation across the network.</div>
           </li>
           <li>
             <div className='advantage-list-head'>
-              <img src='/src/assets/advantage-network.png' />
+              <img src={AdvantageNetwork} />
             </div>
             <div className='advantage-list-title'>Privacy-Centric Network</div>
             <div className='advantage-list-describe'>Embraces a decentralized ethos with transparent, trustless operations and e2e encryption, safeguarding user data and ensuring fairness.</div>
