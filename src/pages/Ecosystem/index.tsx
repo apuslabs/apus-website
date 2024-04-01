@@ -4,6 +4,7 @@ import { PlusOutlined, RightOutlined } from '@ant-design/icons'
 import { Button, Tooltip } from 'antd'
 import './index.less'
 import { useAgentList } from '../../contexts/task'
+import { ApusLogo } from '../../assets/image'
 
 const Ecosystem: FC = () => {
 
@@ -34,7 +35,7 @@ const Ecosystem: FC = () => {
             agentList.map((agent: any) => {
               return <li className='li-aiagent'>
               <div className='li-head'>
-                <img src={agent.poster ?? '/src/assets/logo-apus.png'} />
+                <img src={agent.poster ?? ApusLogo} />
               </div>
               <div className='li-aiagent-title'>{agent.title} <span style={{
                 opacity: '80%'

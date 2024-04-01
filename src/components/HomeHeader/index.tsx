@@ -58,7 +58,7 @@ const HomeHeader: FC = () => {
   const menu: menuType[] = [
     { 
       name: 'Doc',
-      path: '/home/doc'
+      path: 'https://apus-network.gitbook.io/apus-console-docs/'
     },
     { 
       name: 'Ecosystem',
@@ -66,7 +66,7 @@ const HomeHeader: FC = () => {
     },
     {
       name: 'Playground',
-      path: 'https://playground.apus.network/'
+      path: 'https://solplayground.apus.network/'
     },
     { 
       name: 'Task',
@@ -77,8 +77,8 @@ const HomeHeader: FC = () => {
   const navigate = useNavigate()
 
   const handleMenuNavigate = (data: menuType) => {
-    if (data.name === 'Doc') {
-      window.open('https://www.baidu.com')
+    if (data.name === 'Playground' || data.name === 'Doc') {
+      window.open(data.path, '_blank')
     } else {
       navigate(data.path)
     }

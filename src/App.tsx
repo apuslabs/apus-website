@@ -1,15 +1,26 @@
 import { useNavigate, Outlet, useLocation } from 'react-router-dom'
 import "./App.less";
 import { ConfigProvider, theme, Menu } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import Header from './components/Header'
 import MenuList from './config/menu'
 import themeToken from './utils/appTheme.ts'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
+import { useWallet } from '@solana/wallet-adapter-react';
 
 function App() {
   const [current, setCurrent] = useState('dashboard')
   const navigate = useNavigate()
   const location = useLocation()
+  const {setVisible} = useWalletModal()
+  const {publicKey} = useWallet()
+
+  useLayoutEffect(() => {
+    if (!publicKey) {
+      setVisible(true)
+    }
+  }, [publicKey])
+  
 
   useEffect(() => {
     const { pathname } = location
