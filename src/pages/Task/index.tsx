@@ -7,13 +7,14 @@ import './index.less'
 import { useTaskList } from '../../contexts/task';
 
 interface DataType {
-  key: string;
-  user: string;
-  agent: string;
-  gpuNode: string;
-  time: string;
-  price: number | string;
-  link: string
+  id: string;
+  payer: string;
+  agentId: string;
+  gpuNodeId: string;
+  timestamp: string;
+  agentFee: number;
+  gpuNodeFee: number;
+  key: string
 }
 
 function shortAddress(address: string) {
