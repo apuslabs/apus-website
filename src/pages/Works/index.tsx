@@ -26,7 +26,9 @@ const Home: FC = () => {
           <ul className='works-item-content'>
             <li>
               <div className='item-title'>Status</div>
-              <div className='item-value'></div>
+              <div className='item-value' style={{
+                color: gpuNode.status === 'Online' ? 'green' : 'red'
+              }}>{gpuNode.status}</div>
             </li>
             {/* <li>
               <div className='item-title'>Type</div>
