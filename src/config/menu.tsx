@@ -50,11 +50,12 @@ const menuList = [
       }
     ]
   },
-  // {
-  //   label: 'Ai Agents',
-  //   key: 'aiAgents',
-  //   icon: <Icon name='Brain' />,
-  // },
+  {
+    label: 'Ai Agents',
+    key: 'aiAgents',
+    path: '/app/aiAgents',
+    icon: <Icon name='Brain' />,
+  },
 ]
 
 export default menuList

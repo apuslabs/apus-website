@@ -23,6 +23,9 @@ const themeConfig = {
     Table: {
       headerColor: 'rgba(225, 44, 255, 1)',
       headerBg: 'rgba(33, 29, 71, 1)',
+    },
+    Radio: {
+      wrapperMarginInlineEnd: '40px'
     }
   }
 }
