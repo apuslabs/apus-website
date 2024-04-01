@@ -4,8 +4,8 @@ import qs from 'qs'
 import useSWR from 'swr'
 
 export const solApiFetcher = axios.create({
-    // baseURL: 'https://solapi.apus.network',
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://solapi.apus.network',
+    // baseURL: 'http://localhost:3000',
 })
 
 export function useStatistics() {
