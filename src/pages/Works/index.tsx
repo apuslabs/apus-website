@@ -7,8 +7,7 @@ const Home: FC = (props) => {
   const navigate = useNavigate()
 
   const handleToWorkNew = () => {
-    console.log('2323')
-    navigate('/works/new')
+    navigate('/app/works/new')
   }
 
   return (

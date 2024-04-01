@@ -48,7 +48,9 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
         <div className="footer-bottom-text">
           Join the community and get involved! We'd love to meet you.
         </div>
-        <div></div>
+        <div className="footer-bottom-img">
+          <img src="/src/assets/footer-icon.png" />
+        </div>
         <div className="footer-bottom-access">
           Revolutionizing AI with fair, scalable, decentralized access.
         </div>

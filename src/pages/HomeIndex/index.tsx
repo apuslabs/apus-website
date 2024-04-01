@@ -2,6 +2,7 @@ import { FC } from 'react'
 import { Button } from 'antd'
 import { RightOutlined } from '@ant-design/icons'
 import HomeFooter from '../../components/HomeFooter'
+import { Icon } from '../../components/SvgIcon'
 import './index.less'
 
 const HomeIndex: FC = (props) => {
@@ -23,7 +24,7 @@ const HomeIndex: FC = (props) => {
           </div>
         </div>
         <div className='homeindex-top-image'>
-          image
+          
         </div>
       </div>
 
@@ -31,20 +32,32 @@ const HomeIndex: FC = (props) => {
         <div className='hoemindex-server'></div>
         <ul className='server-box'>
           <li style={{ background: 'linear-gradient(to bottom, rgba(197, 115, 107, 1), rgba(174, 42, 39, 1))' }}>
-            <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-img'>
+              <Icon name='GPU' size={112} />
+            </div>
+            <div className='server-box-name'>GPUs</div>
+            <div className='server-box-value'>323431</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, rgba(179, 101, 207, 1), rgba(115, 37, 206, 1))' }}>
-            <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-img'>
+              <Icon name='AiAgent' size={80} />
+            </div>
+            <div className='server-box-name'>AI Agents</div>
+            <div className='server-box-value'>31</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, rgba(92, 98, 207, 1), rgba(33, 36, 207, 1))' }}>
-            <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-img'>
+              <Icon name='AiTask' size={80} />
+            </div>
+            <div className='server-box-name'>AI Tasks</div>
+            <div className='server-box-value'>111323431</div>
           </li>
           <li style={{ background: 'linear-gradient(to bottom, #888ce1, #5e46d1)' }}>
-            <div className='server-box-name'></div>
-            <div className='server-box-value'></div>
+            <div className='server-box-img'>
+              <Icon name='Payout' size={80} />
+            </div>
+            <div className='server-box-name'>Network Payout</div>
+            <div className='server-box-value'>323431</div>
           </li>
         </ul>
       </div>
@@ -55,25 +68,29 @@ const HomeIndex: FC = (props) => {
         <ul className='advantage-list'>
           <li>
             <div className='advantage-list-head'>
-              <img src='/src/assets/deploy.png' />
+              <img src='/src/assets/advantage-deploy.png' />
             </div>
             <div className='advantage-list-title'>Non-Intrusive Deployment</div>
             <div className='advantage-list-describe'>Engineered for simple setup without disrupting existing machine performance, enabling worry-free contributions to AI computations.</div>
           </li>
           <li>
             <div className='advantage-list-head'>
-              <img src='/src/assets/scalable.png' />
+              <img src='/src/assets/advantage-scalable.png' />
             </div>
             <div className='advantage-list-title'>Scalable Infrastructure</div>
             <div className='advantage-list-describe'>Designed for scalability to meet dynamic compute demands, ensuring seamless AI processing capabilities as your needs evolve.</div>
           </li>
           <li>
-            <div className='advantage-list-head'></div>
+            <div className='advantage-list-head'>
+              <img src='/src/assets/advantage-democratize.png' />
+            </div>
             <div className='advantage-list-title'>Democratized Compute Access</div>
             <div className='advantage-list-describe'>Facilitates equitable access to high-performance compute resources, fostering innovation and rewarding participation across the network.</div>
           </li>
           <li>
-            <div className='advantage-list-head'></div>
+            <div className='advantage-list-head'>
+              <img src='/src/assets/advantage-network.png' />
+            </div>
             <div className='advantage-list-title'>Privacy-Centric Network</div>
             <div className='advantage-list-describe'>Embraces a decentralized ethos with transparent, trustless operations and e2e encryption, safeguarding user data and ensuring fairness.</div>
           </li>
