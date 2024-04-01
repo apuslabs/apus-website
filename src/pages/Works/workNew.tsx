@@ -20,7 +20,9 @@ const Home: FC = () => {
         }} value={price} onChange={e => {
           setPrice(e ?? 0)
         }} />
-        <div className='card-content-title'>Domain(recommanded)/IP</div>
+        <div className='card-content-title' style={{
+          marginTop: 16,
+        }}>Domain(recommanded)/IP</div>
         <Input size='large' value={domain} onChange={e => {
           setDomain(e.target.value)
         }} />

@@ -3,6 +3,7 @@ import "./index.less";
 import { Button } from "antd";
 import { RightOutlined } from "@ant-design/icons";
 import { Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
+import { useNavigate } from "react-router-dom";
 
 interface HomeFooterProps {
   showCompany?: boolean;
@@ -10,6 +11,7 @@ interface HomeFooterProps {
 
 const HomeFooter: FC<HomeFooterProps> = (props) => {
   const { showCompany } = props;
+  const navigate = useNavigate()
 
   return (
     <div className="home-footer">
@@ -40,7 +42,9 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
 
       <div className="footer-build">
         <div className="footer-build-title">Let’s build future<br/>together</div>
-        <Button type="primary" className="start-btn">
+        <Button type="primary" className="start-btn" onClick={() => {
+          navigate('/app/account')
+        }}>
           Start Now <RightOutlined />
         </Button>
       </div>

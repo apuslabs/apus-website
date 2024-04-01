@@ -37,7 +37,7 @@ function App() {
   }
 
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken }}>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken } as any}>
       <div className='container-box'>
         <Header />
         <div className='container'>

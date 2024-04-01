@@ -3,9 +3,12 @@ import { ApusLogo } from "../../assets/image";
 import Breadcrumb from '../Breadcrumb'
 import './index.less'
 import { useNavigate } from 'react-router-dom';
+import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 
 const Header: FC = () => {
   const navigate = useNavigate()
+  const { connected, publicKey } = useWallet()
 
   return (
     <div className='header'>
@@ -17,6 +20,9 @@ const Header: FC = () => {
       </div>
       <div className='header-right'>
         <Breadcrumb />
+      </div>
+      <div>
+      {connected ? <span>{publicKey?.toBase58()}</span> : <WalletMultiButton />}
       </div>
     </div>
   )

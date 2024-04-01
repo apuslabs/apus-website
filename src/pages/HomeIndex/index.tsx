@@ -30,7 +30,7 @@ const HomeIndex: FC = () => {
             <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24 }} onClick={() => {
               navigate('/app/works/new')
             }}>
-              Rent Your GPU
+              Provide Your GPU
               <RightOutlined />
             </Button>
             <Button  className='homeindex-top-left-btn'>Read Docs</Button>
