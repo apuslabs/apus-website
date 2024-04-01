@@ -13,13 +13,13 @@ function App() {
   const navigate = useNavigate()
   const location = useLocation()
   const {setVisible} = useWalletModal()
-  const {publicKey} = useWallet()
+  const {connected} = useWallet()
 
   useLayoutEffect(() => {
-    if (!publicKey) {
+    if (!connected) {
       setVisible(true)
     }
-  }, [publicKey])
+  }, [connected])
   
 
   useEffect(() => {
