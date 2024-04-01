@@ -1,6 +1,6 @@
 import { FC } from 'react'
 
-const Home: FC = (props) => {
+const Home: FC = () => {
 
   return (
     <div>

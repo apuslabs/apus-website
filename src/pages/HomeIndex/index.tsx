@@ -5,7 +5,7 @@ import HomeFooter from '../../components/HomeFooter'
 import './index.less'
 import { useStatistics } from '../../contexts/task'
 
-const HomeIndex: FC = (props) => {
+const HomeIndex: FC = () => {
   const {
     gpuCount,
     taskCount,

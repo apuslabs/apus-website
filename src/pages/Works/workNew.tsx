@@ -3,9 +3,7 @@ import { Button, Card, Input, InputNumber, Typography } from 'antd'
 import './index.less'
 import { useWallet } from '@solana/wallet-adapter-react';
 
-const { TextArea } = Input;
-
-const Home: FC = (props) => {
+const Home: FC = () => {
 
   const { publicKey } = useWallet()
   const [price, setPrice] = useState<number>(10)

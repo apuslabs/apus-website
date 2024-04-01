@@ -1,11 +1,11 @@
 import { FC } from 'react'
-import { Button, Tooltip } from 'antd'
+import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import './index.less'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useGpuNodeList } from '../../contexts/task'
 
-const Home: FC = (props) => {
+const Home: FC = () => {
   const navigate = useNavigate()
 
   const [gpuNodeList] = useGpuNodeList()

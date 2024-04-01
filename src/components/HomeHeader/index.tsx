@@ -15,7 +15,7 @@ interface menuType {
   path: string
 }
 
-const HomeHeader: FC = (props) => {
+const HomeHeader: FC = () => {
   const { connected } = useWallet();
   const [currentMenu, setCurrentMenu] = useState<string>('')
   const [menuShow, setMenuShow] = useState<boolean>(false)

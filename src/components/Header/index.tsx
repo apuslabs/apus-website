@@ -4,7 +4,7 @@ import Breadcrumb from '../Breadcrumb'
 import './index.less'
 import { useNavigate } from 'react-router-dom';
 
-const Header: FC = (props) => {
+const Header: FC = () => {
   const navigate = useNavigate()
 
   return (

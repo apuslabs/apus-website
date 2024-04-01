@@ -4,9 +4,8 @@ import { PlusOutlined, RightOutlined } from '@ant-design/icons'
 import { Button, Tooltip } from 'antd'
 import './index.less'
 import { useAgentList } from '../../contexts/task'
-import { Icon } from '../../components/SvgIcon'
 
-const Ecosystem: FC = (props) => {
+const Ecosystem: FC = () => {
 
   const [agentList] = useAgentList()
 
