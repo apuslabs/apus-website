@@ -1,9 +1,11 @@
 import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { RightOutlined, TwitterOutlined } from "@ant-design/icons";
 import { Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
 import { useNavigate } from "react-router-dom";
+// import TelegramIcon from "../../assets/telegram-fill.svg";
+// import TwitterIcon from "../../assets/twitter.svg";
 
 interface HomeFooterProps {
   showCompany?: boolean;
@@ -18,7 +20,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
       {showCompany && (
         <div className="footer-company">
           <div className="footer-company-title">
-            Trusted by 1600+ of the world most popular companies
+            Trusted by following companies
           </div>
           <ul className="footer-company-list">
             <li>
@@ -29,12 +31,6 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
             </li>
             <li>
               <img src={Lagrange} />
-            </li>
-            <li>
-              <img src={Punet} />
-            </li>
-            <li>
-              <img src={Omnilnfer} />
             </li>
           </ul>
         </div>
@@ -54,7 +50,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
           Join the community and get involved! We'd love to meet you.
         </div>
         <div className="footer-bottom-img">
-          <img src={FooterIcon} />
+          <FooterIcon />
         </div>
         <div className="footer-bottom-access">
           Revolutionizing AI with fair, scalable, decentralized access.

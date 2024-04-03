@@ -4,4 +4,5 @@
 
 :root {
   @apply bg-neutral text-accent;
+  font-family: 'Inter', sans-serif;
 }
