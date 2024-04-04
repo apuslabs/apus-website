@@ -112,8 +112,8 @@ const HomeIndex: FC = () => {
       </div>
 
       <div className='whyus'>
+        <div className='whyus-bg'></div>
         <div className='home-title'>Why Us</div>
-        <div className='home-describe'>To achieve a diversified portfolio, look for asset classes that have low or negative correlations so that if moves down, the other tends to it. ETFs and mutual funds are easy ways to select asset.</div>
         <ul className='whyus-list'>
           <li>
             <div className='whyus-list-img'>
