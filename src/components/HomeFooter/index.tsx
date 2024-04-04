@@ -50,7 +50,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
           Join the community and get involved! We'd love to meet you.
         </div>
         <div className="footer-bottom-img">
-          <FooterIcon />
+          <img src={FooterIcon} />
         </div>
         <div className="footer-bottom-access">
           Revolutionizing AI with fair, scalable, decentralized access.
