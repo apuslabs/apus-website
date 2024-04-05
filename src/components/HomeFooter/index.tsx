@@ -2,7 +2,7 @@ import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
 import { RightOutlined, TwitterOutlined } from "@ant-design/icons";
-import { Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet } from "../../assets/image";
+import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
 import { useNavigate } from "react-router-dom";
 // import TelegramIcon from "../../assets/telegram-fill.svg";
 // import TwitterIcon from "../../assets/twitter.svg";
@@ -32,6 +32,15 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
             <li>
               <img src={Lagrange} />
             </li>
+            <li>
+              <img src={SolanaLogo} />
+            </li>
+            <li>
+              <img src={ArweaveLogo} />
+            </li>
+            {/* <li>
+              <img src={AbyssWorldLogo} />
+            </li> */}
           </ul>
         </div>
       )}
@@ -49,8 +58,11 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
         <div className="footer-bottom-text">
           Join the community and get involved! We'd love to meet you.
         </div>
-        <div className="footer-bottom-img">
-          <img src={FooterIcon} />
+        <div className="footer-bottom-link">
+          <ul className="footer-bottom-link-list">
+            <li><a href="https://twitter.com/apus_network"><img src={TwitterIcon} /></a></li>
+            <li><a href="https://t.me/+AWdHtLSl2m4yM2I1"><img src={TelegramIcon} /></a></li>
+          </ul>
         </div>
         <div className="footer-bottom-access">
           Revolutionizing AI with fair, scalable, decentralized access.

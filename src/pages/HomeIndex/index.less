@@ -154,23 +154,32 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 80px 150px;
-    height: 590px;
     &-list {
-      display: flex;
-      margin-top: 50px;
+      position: relative;
+      margin-top: 100px;
       width: 75vw;
-      height: 430px;
+      height: 25vw;
       background: url(../../assets/whyus-line.png) no-repeat center;
-      background-size: contain;
-      justify-content: space-around;
+      background-size: cover;
       > li {
+        position: absolute;
+        top: 1vw;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         margin-bottom: 80px;
-        padding: 0 10%;
+      }
+      > li:nth-of-type(1) {
+        left: 10%;
+      }
+      > li:nth-of-type(2) {
+        left: 42.5%;
+      }
+      > li:nth-of-type(3) {
+        left: 75.5%;
       }
       &-img {
         width: 11.5vw;
@@ -185,10 +194,12 @@
         }
       }
       &-text {
-        font-size: 20px;
+        font-size: 18px;
         color: rgba(136, 136, 136, 1);
         margin-top: 16px;
         text-align: center;
+        width: 11.5vw;
+        text-wrap: wrap;
       }
     }
   }
@@ -250,16 +261,19 @@
     }
 
     .whyus {
-      padding: 100px 20px;
+      padding: 64px 16px;
       background-image: unset;
       &-list {
         width: 100%;
         overflow-x: auto;
-        margin-top: 24px;
+        margin-top: 0;
         background: unset;
-        height: unset;
+        display: flex;
+        gap: 20px;
+        height: 200px;
         padding: 0;
         > li {
+          position: initial;
           margin: 0 25px;
         }
         &-img {
@@ -270,7 +284,8 @@
           }
         }
         &-text {
-          font-size: 16px;
+          font-size: 14px;
+          width: auto;
         }
       }
     }

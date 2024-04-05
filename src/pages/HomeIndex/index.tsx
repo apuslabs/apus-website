@@ -27,13 +27,13 @@ const HomeIndex: FC = () => {
           <div className='homeindex-top-left-title'>DePIN + AI Agents</div>
           <div className='homeindex-top-left-describe'>Empower a decentralized AI agents ecosystem and boost AI democratization!</div>
           <div>
-            <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24 }} onClick={() => {
+            <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24, marginBottom: 24 }} onClick={() => {
               navigate('/app/works/new')
             }}>
               Provide Your GPU
               <RightOutlined />
             </Button>
-            <Button  className='homeindex-top-left-btn' onClick={() => {
+            <Button  className='homeindex-top-left-btn' style={{ marginBottom: 24 }} onClick={() => {
               navigate('/app/aiAgents')
             }}>Publish Your Agents</Button>
           </div>
@@ -119,19 +119,19 @@ const HomeIndex: FC = () => {
             <div className='whyus-list-img'>
               <img src={PPTV}/>
             </div>
-            <div className='whyus-list-text'>450MM Users<br/>Worldwide</div>
+            <div className='whyus-list-text'>450MM Users</div>
           </li>
           <li>
             <div className='whyus-list-img'>
               <img src={PPIO} />
             </div>
-            <div className='whyus-list-text'>5000 Nodes<br/>Worldwide</div>
+            <div className='whyus-list-text'>5000 Nodes</div>
           </li>
           <li>
             <div className='whyus-list-img'>
               <img src={ApusLogo} />
             </div>
-            <div className='whyus-list-text'>Unlimited Compute<br/>Worldwide</div>
+            <div className='whyus-list-text'>Unlimited Compute</div>
           </li>
         </ul>
       </div>

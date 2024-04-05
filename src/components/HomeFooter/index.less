@@ -65,9 +65,14 @@
       color: rgba(136, 136, 136, 1);
       text-align: center;
     }
-    &-img {
+    &-link {
       margin-top: 50px;
-      > img {
+      ul {
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+      }
+      img {
         height: 48px;
       }
     }
@@ -92,12 +97,13 @@
 @media only screen and (max-width: 767px) {
   .home-footer {
     .footer-company {
-      padding: 100px 20px;
+      padding: 64px 16px;
       &-title {
         font-size: 18px;
       }
       &-list {
         flex-direction: column;
+        gap: 20px;
       }
     }
     .footer-build  {
