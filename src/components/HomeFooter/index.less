@@ -8,9 +8,9 @@
       font-weight: 600;
     }
     &-list {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      display: grid;
+      grid: auto-flow / repeat(4, 1fr);
+      gap: 50px;
       margin-top: 28px;
       > li {
         > img {
@@ -102,7 +102,9 @@
         font-size: 18px;
       }
       &-list {
+        display: flex;
         flex-direction: column;
+        align-items: center;
         gap: 20px;
       }
     }

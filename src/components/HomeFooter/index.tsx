@@ -2,7 +2,7 @@ import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
 import { RightOutlined, TwitterOutlined } from "@ant-design/icons";
-import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
+import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, PPIOLogo, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
 import { useNavigate } from "react-router-dom";
 // import TelegramIcon from "../../assets/telegram-fill.svg";
 // import TwitterIcon from "../../assets/twitter.svg";
@@ -28,6 +28,9 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
             </li>
             <li>
               <img src={Dephy} />
+            </li>
+            <li>
+              <img src={PPIOLogo} />
             </li>
             <li>
               <img src={Lagrange} />
