@@ -13,13 +13,13 @@ function App() {
   const navigate = useNavigate()
   const location = useLocation()
   const {setVisible} = useWalletModal()
-  const {publicKey} = useWallet()
+  const {connected} = useWallet()
 
   useLayoutEffect(() => {
-    if (!publicKey) {
+    if (!connected) {
       setVisible(true)
     }
-  }, [publicKey])
+  }, [connected])
   
 
   useEffect(() => {
@@ -37,7 +37,7 @@ function App() {
   }
 
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken }}>
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken } as any}>
       <div className='container-box'>
         <Header />
         <div className='container'>

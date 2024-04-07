@@ -23,17 +23,19 @@ const HomeIndex: FC = () => {
 
       <div className='homeindex-top'>
         <div className='homeindex-top-left'>
-          <div className='homeindex-top-left-text'>Scalable, Interoperable, and Secure</div>
-          <div className='homeindex-top-left-title'>Edge Computing For AI</div>
-          <div className='homeindex-top-left-describe'>AI unleashed: Decentralized Power, Fair Cost, On-Demand for Masses</div>
+          {/* <div className='homeindex-top-left-text'>Scalable, Interoperable, and Secure</div> */}
+          <div className='homeindex-top-left-title'>DePIN + AI Agents</div>
+          <div className='homeindex-top-left-describe'>Empower a decentralized AI agents ecosystem and boost AI democratization!</div>
           <div>
-            <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24 }} onClick={() => {
+            <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24, marginBottom: 24 }} onClick={() => {
               navigate('/app/works/new')
             }}>
-              Rent Your GPU
+              Provide Your GPU
               <RightOutlined />
             </Button>
-            <Button  className='homeindex-top-left-btn'>Read Docs</Button>
+            <Button  className='homeindex-top-left-btn' style={{ marginBottom: 24 }} onClick={() => {
+              navigate('/app/aiAgents')
+            }}>Publish Your Agents</Button>
           </div>
         </div>
         <div className='homeindex-top-image'>
@@ -76,61 +78,60 @@ const HomeIndex: FC = () => {
       </div>
 
       <div className='advantage'>
-        <div className='home-title'>Advantages</div>
-        <div className='home-describe'>To achieve a diversified portfolio, look for asset classes that have low or negative correlations so that if moves down, the other tends to it. ETFs and mutual funds are easy ways to select asset.</div>
+        <div className='home-title'>Benifits</div>
         <ul className='advantage-list'>
           <li>
             <div className='advantage-list-head'>
               <img src={Deploy} />
             </div>
-            <div className='advantage-list-title'>Non-Intrusive Deployment</div>
-            <div className='advantage-list-describe'>Engineered for simple setup without disrupting existing machine performance, enabling worry-free contributions to AI computations.</div>
+            <div className='advantage-list-title'>Affordability</div>
+            <div className='advantage-list-describe'>Cost-effective AI, making cutting-edge technology accessible.</div>
           </li>
           <li>
             <div className='advantage-list-head'>
               <img src={Scalable} />
             </div>
-            <div className='advantage-list-title'>Scalable Infrastructure</div>
-            <div className='advantage-list-describe'>Designed for scalability to meet dynamic compute demands, ensuring seamless AI processing capabilities as your needs evolve.</div>
+            <div className='advantage-list-title'>Transparent Transactions</div>
+            <div className='advantage-list-describe'>Clear, honest engagements ensuring transaction integrity.</div>
           </li>
           <li>
             <div className='advantage-list-head'>
               <img src={AdvantageDemocratize} />
             </div>
-            <div className='advantage-list-title'>Democratized Compute Access</div>
-            <div className='advantage-list-describe'>Facilitates equitable access to high-performance compute resources, fostering innovation and rewarding participation across the network.</div>
+            <div className='advantage-list-title'>Ownership Protection</div>
+            <div className='advantage-list-describe'>Safeguarding intellectual contributions with robust protections.</div>
           </li>
           <li>
             <div className='advantage-list-head'>
               <img src={AdvantageNetwork} />
             </div>
-            <div className='advantage-list-title'>Privacy-Centric Network</div>
-            <div className='advantage-list-describe'>Embraces a decentralized ethos with transparent, trustless operations and e2e encryption, safeguarding user data and ensuring fairness.</div>
+            <div className='advantage-list-title'>Global Compute Marketplace</div>
+            <div className='advantage-list-describe'>Connecting global Compute resources for fair access.</div>
           </li>
         </ul>
       </div>
 
       <div className='whyus'>
+        <div className='whyus-bg'></div>
         <div className='home-title'>Why Us</div>
-        <div className='home-describe'>To achieve a diversified portfolio, look for asset classes that have low or negative correlations so that if moves down, the other tends to it. ETFs and mutual funds are easy ways to select asset.</div>
         <ul className='whyus-list'>
           <li>
             <div className='whyus-list-img'>
               <img src={PPTV}/>
             </div>
-            <div className='whyus-list-text'>450MM Users<br/>Worldwide</div>
+            <div className='whyus-list-text'>450MM Users</div>
           </li>
           <li>
             <div className='whyus-list-img'>
               <img src={PPIO} />
             </div>
-            <div className='whyus-list-text'>5000 Nodes<br/>Worldwide</div>
+            <div className='whyus-list-text'>5000 Nodes</div>
           </li>
           <li>
             <div className='whyus-list-img'>
               <img src={ApusLogo} />
             </div>
-            <div className='whyus-list-text'>Unlimited Compute<br/>Worldwide</div>
+            <div className='whyus-list-text'>Unlimited Compute</div>
           </li>
         </ul>
       </div>

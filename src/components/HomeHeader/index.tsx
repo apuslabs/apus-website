@@ -106,7 +106,7 @@ const HomeHeader: FC = () => {
       }}>Console</Button> : <WalletMultiButton />}
       
       <span className='mobile-menu' onClick={handleMenuShow}>
-        <Icon name='Menu' size={35} />
+        <Icon name='Menu' size={32} />
       </span>
     </div>
   )

@@ -41,7 +41,7 @@ export function useTaskList(taskId?: string) {
 export function useGpuNodeList() {
     const {publicKey} = useWallet()
     const {data: gpuNodeList} = useSWR<any>(`/gpu-nodes?${qs.stringify({ owner: publicKey?.toBase58() })}`, solApiFetcher.get, {
-        refreshInterval: 5000,
+        refreshInterval: 10000,
     })
     return [gpuNodeList?.data ?? []]
 }

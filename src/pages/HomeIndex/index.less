@@ -1,19 +1,17 @@
 .home-index {
   .homeindex-top {
-    height: 880px;
+    height: 660px;
     background: url(../../assets/home-top-bg.jpg), url(../../assets/home-middle-bg.png);
     background-repeat: no-repeat;
     background-position: 0 0, 0 100%;
     background-size: contain;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     background-color: #090909;
-    padding-top: 70px;
-    padding-left: 150px;
+    padding: 160px 80px;
     &-left {
       flex: 1;
-
-      margin-bottom: 100px;
+      padding-top: 80px;
       &-text {
         width: 325px;
         height: 38px;
@@ -28,12 +26,12 @@
       }
       &-title {
         // width: 640px;
-        font-size: 80px;
+        font-size: 62px;
         font-weight: 700;
         margin-bottom: 28px;
       }
       &-describe {
-        font-size: 30px;
+        font-size: 24px;
         color: rgba(183, 181, 208, 1);
         margin-bottom: 50px;
       }
@@ -67,6 +65,7 @@
       background-size: contain;
     }
     .server-box {
+      z-index: 99;
       display: flex;
       flex-wrap: wrap;
       width: 860px;
@@ -90,6 +89,8 @@
           justify-content: center;
         }
         .server-box-name {
+          margin-top: 12px;
+          margin-bottom: 18px;
           font-size: 26px;
         }
         .server-box-value {
@@ -154,28 +155,36 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     padding: 80px 150px;
     &-list {
-      display: flex;
-      margin-top: 50px;
-      width: 1428px;
-      height: 500px;
+      position: relative;
+      margin-top: 100px;
+      width: 75vw;
+      height: 25vw;
       background: url(../../assets/whyus-line.png) no-repeat center;
-      justify-content: space-around;
+      background-size: cover;
       > li {
+        position: absolute;
+        top: 1vw;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;  
+        justify-content: center;
         margin-bottom: 80px;
-        margin-left: 16px;
       }
-      > li:nth-child(3) {
-        margin-right: 8px;
+      > li:nth-of-type(1) {
+        left: 10%;
+      }
+      > li:nth-of-type(2) {
+        left: 42.5%;
+      }
+      > li:nth-of-type(3) {
+        left: 75.5%;
       }
       &-img {
-        width: 180px;
-        height: 180px;
+        width: 11.5vw;
+        height: 11.5vw;
         border-radius: 50%;
         background: rgba(18, 18, 18, 1);
         display: flex;
@@ -186,10 +195,12 @@
         }
       }
       &-text {
-        font-size: 20px;
+        font-size: 18px;
         color: rgba(136, 136, 136, 1);
         margin-top: 16px;
         text-align: center;
+        width: 11.5vw;
+        text-wrap: wrap;
       }
     }
   }
@@ -251,16 +262,19 @@
     }
 
     .whyus {
-      padding: 100px 20px;
+      padding: 64px 16px;
       background-image: unset;
       &-list {
         width: 100%;
         overflow-x: auto;
-        margin-top: 24px;
+        margin-top: 0;
         background: unset;
-        height: unset;
+        display: flex;
+        gap: 20px;
+        height: 200px;
         padding: 0;
         > li {
+          position: initial;
           margin: 0 25px;
         }
         &-img {
@@ -271,7 +285,8 @@
           }
         }
         &-text {
-          font-size: 16px;
+          font-size: 14px;
+          width: auto;
         }
       }
     }

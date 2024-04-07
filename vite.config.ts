@@ -6,7 +6,7 @@ import themeToken from './src/utils/appTheme'
 
 const { getDesignToken } = theme;
 const globalToken = getDesignToken({
-  ...themeToken
+  ...themeToken as any
 });
 
 // https://vitejs.dev/config/
