@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 const Home: FC = () => {
 
   const { publicKey } = useWallet()
-  const [price, setPrice] = useState<number>(10)
-  const [domain, setDomain] = useState<string>('')
+  const [price, setPrice] = useState<number>(0.001)
+  // const [domain, setDomain] = useState<string>('')
   const navigate = useNavigate()
 
   return (
@@ -20,12 +20,12 @@ const Home: FC = () => {
         }} value={price} onChange={e => {
           setPrice(e ?? 0)
         }} />
-        <div className='card-content-title' style={{
+        {/* <div className='card-content-title' style={{
           marginTop: 16,
         }}>Domain(recommanded)/IP</div>
         <Input size='large' value={domain} onChange={e => {
           setDomain(e.target.value)
-        }} />
+        }} /> */}
       </Card>
 
       <Card title="1. Prerequisites" bordered={false} style={{marginTop: '16px'}}>
@@ -48,14 +48,14 @@ const Home: FC = () => {
         </Card>
         <div className='card-content-title title-second'>Run the command to connect device</div>
         <Card size='small'>
-          <Typography.Text copyable>{`nohup ./solana-hackthon-cli --ownerpubkey ${publicKey?.toBase58() ?? ''} --price 4{price} ${domain ? `--endpoint ${domain}` : ''} > log.txt &`}</Typography.Text>
+          <Typography.Text copyable>{`nohup ./solana-hackthon-cli --ownerpubkey ${publicKey?.toBase58() ?? ''} --price ${price * Math.pow(10, 9)} > log.txt &`}</Typography.Text>
         </Card>
         <div className='card-content-title title-second'>You can also run it in background</div>
 
       </Card>
 
       <Card title="3. Wait for Connection" bordered={false} style={{marginTop: '16px'}}>
-        <div className='card-content-title'>Wait until your cli init finished and show <code>Listening and serving HTTP on 0.0.0.0:80</code>!</div>
+        <div className='card-content-title'>Wait until your cli init finished and check <code>log.txt</code> if has log <code>Listening and serving HTTP on 0.0.0.0:80</code>!</div>
         <div className='card-content-title'>In case your device won't connect, Contact out support or refer to our discord support channel.</div>
         <Button type='primary'  style={{border: 'unset'}} block onClick={() => {
           navigate('../')

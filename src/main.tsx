@@ -46,7 +46,7 @@ function Main() {
                 </Route>
                 <Route path="/app" element={<App />} >
                   <Route path="account" key="account" element={<Dashboard />} />
-                  <Route path="works">
+                  <Route path="workers">
                     <Route index element={<Works />}></Route>
                     <Route path='new' element={<WorkNew />} />
                   </Route>

@@ -55,24 +55,30 @@ const columns: TableProps<DataType>['columns'] = [
       return shortId(r)
     }
   },
-  {
-    title: 'Time',
-    dataIndex: 'timestamp',
-  },
+  // {
+  //   title: 'Time',
+  //   dataIndex: 'timestamp',
+  // },
   {
     title: 'Agent Fee',
     dataIndex: 'agentFee',
+    render: (r: number) => {
+      return r / Math.pow(10, 9)
+    }
   },
   {
     title: 'GPU Node Fee',
     dataIndex: 'gpuNodeFee',
-  },
-  {
-    title: 'Dapp Fee',
-    render: () => {
-      return 0
+    render: (r: number) => {
+      return r / Math.pow(10, 9)
     }
   },
+  // {
+  //   title: 'Dapp Fee',
+  //   render: () => {
+  //     return 0
+  //   }
+  // },
   {
     title: 'Status',
     dataIndex: 'status',

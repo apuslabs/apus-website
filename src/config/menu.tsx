@@ -28,24 +28,24 @@ export const deepFindMenu = (menuList: menuItemType[], pathname: string): menuIt
 }
 
 const menuList = [
+  // {
+  //   label: 'Account',
+  //   key: 'account',
+  //   path: '/app/account',
+  //   icon: <Icon name='Dashboard' />,
+  //   isleaf: 0
+  // },
   {
-    label: 'Account',
-    key: 'account',
-    path: '/app/account',
-    icon: <Icon name='Dashboard' />,
-    isleaf: 0
-  },
-  {
-    label: 'Works',
+    label: 'Workers',
     key: 'works',
-    path: '/app/works',
+    path: '/app/workers',
     icon: <Icon name='Node' />,
     isleaf: 0,
     rouchildren: [
       {
         label: 'Run new GPU',
         key: 'worksNew',
-        path: '/app/works/new',
+        path: '/app/workers/new',
         isleaf: 1
       }
     ]

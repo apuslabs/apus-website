@@ -72,12 +72,16 @@ const HomeHeader: FC = () => {
       name: 'Task',
       path: '/home/task'
     },
+    {
+      name: '🎡 Galxe Events',
+      path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GChizthcPL'
+    }
   ]
 
   const navigate = useNavigate()
 
   const handleMenuNavigate = (data: menuType) => {
-    if (data.name === 'Playground' || data.name === 'Doc') {
+    if (data.path.startsWith('http')) {
       window.open(data.path, '_blank')
     } else {
       navigate(data.path)
@@ -102,7 +106,7 @@ const HomeHeader: FC = () => {
         }
       </ul>
       {connected ? <Button className='contact-btn' type='primary' onClick={() => {
-        navigate('/app/account')
+        navigate('/app/workers')
       }}>Console</Button> : <WalletMultiButton />}
       
       <span className='mobile-menu' onClick={handleMenuShow}>

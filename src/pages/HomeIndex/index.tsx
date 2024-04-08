@@ -28,7 +28,7 @@ const HomeIndex: FC = () => {
           <div className='homeindex-top-left-describe'>Empower a decentralized AI agents ecosystem and boost AI democratization!</div>
           <div>
             <Button type='primary' className='homeindex-top-left-btn' style={{ marginRight: 24, marginBottom: 24 }} onClick={() => {
-              navigate('/app/works/new')
+              navigate('/app/workers/new')
             }}>
               Provide Your GPU
               <RightOutlined />

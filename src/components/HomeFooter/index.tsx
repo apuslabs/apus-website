@@ -51,7 +51,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
       <div className="footer-build">
         <div className="footer-build-title">Let’s build future<br/>together</div>
         <Button type="primary" className="start-btn" onClick={() => {
-          navigate('/app/account')
+          navigate('/app/workers')
         }}>
           Start Now <RightOutlined />
         </Button>
