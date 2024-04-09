@@ -2,8 +2,10 @@ import { FC } from 'react'
 import { Button } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import './index.less'
-import { useWallet } from '@solana/wallet-adapter-react'
 import { useGpuNodeList } from '../../contexts/task'
+import { tokenFormatter } from '../../utils/formatter'
+
+
 
 const Home: FC = () => {
   const navigate = useNavigate()
@@ -60,16 +62,16 @@ const Home: FC = () => {
             </li>
             <li>
               <div className='item-title'>Price</div>
-              <div className='item-value'>{gpuNode.price}</div>
+              <div className='item-value'>{tokenFormatter.format(gpuNode.price / 10 ** 9)}</div>
             </li>
-            <li>
+            {/* <li>
               <div className='item-title'>24 Hour Tasks</div>
               <div className='item-value'></div>
             </li>
             <li>
               <div className='item-title'>All time Payout</div>
               <div className='item-value'></div>
-            </li>
+            </li> */}
           </ul>
         </div>
         })}

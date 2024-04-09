@@ -5,6 +5,7 @@ import type { TableProps } from 'antd';
 import { SearchOutlined } from '@ant-design/icons'
 import './index.less'
 import { useTaskList } from '../../contexts/task';
+import { tokenFormatter } from '../../utils/formatter';
 
 interface DataType {
   id: string;
@@ -63,14 +64,14 @@ const columns: TableProps<DataType>['columns'] = [
     title: 'Agent Fee',
     dataIndex: 'agentFee',
     render: (r: number) => {
-      return r / Math.pow(10, 9)
+      return tokenFormatter.format(r / 10 ** 9)
     }
   },
   {
     title: 'GPU Node Fee',
     dataIndex: 'gpuNodeFee',
     render: (r: number) => {
-      return r / Math.pow(10, 9)
+      return tokenFormatter.format(r / 10 ** 9)
     }
   },
   // {
