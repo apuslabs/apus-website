@@ -74,7 +74,7 @@ const HomeHeader: FC = () => {
     },
     {
       name: '🎡 Galxe Events',
-      path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GChizthcPL'
+      path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCVVvtha6S'
     }
   ]
 
