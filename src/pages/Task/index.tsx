@@ -107,12 +107,12 @@ const Task: FC = (props) => {
     <div className='task'>
       <div className='task-head'>
         <div className='task-head-title'>AI Tasks</div>
-        <Input suffix={<SearchOutlined onClick={() => setFormData(search)} />} size="large" placeholder='Search AI Task Transaction' className='task-input' onChange={e => {
+        {/* <Input suffix={<SearchOutlined onClick={() => setFormData(search)} />} size="large" placeholder='Search AI Task Transaction' className='task-input' onChange={e => {
           setSearch(e.target.value)
-        }} />
+        }} /> */}
       </div>
       <div className='task-list'>
-        <Table className='task-table' columns={columns} dataSource={taskList} pagination={false} />
+        <Table className='task-table' columns={columns} dataSource={taskList} />
       </div>
       <HomeFooter showCompany={false} />
     </div>
