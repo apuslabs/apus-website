@@ -48,7 +48,7 @@ const Home: FC = () => {
         </Card>
         <div className='card-content-title title-second'>Run the command to connect device</div>
         <Card size='small'>
-          <Typography.Text copyable>{`nohup ./solana-hackthon-cli --ownerpubkey ${publicKey?.toBase58() ?? ''} --price ${price * Math.pow(10, 9)} > log.txt &`}</Typography.Text>
+          <Typography.Text copyable>{`sudo nohup ./solana-hackthon-cli --ownerpubkey ${publicKey?.toBase58() ?? ''} --price ${price * Math.pow(10, 9)} > log.txt &`}</Typography.Text>
         </Card>
         <div className='card-content-title title-second'>You can also run it in background</div>
 
