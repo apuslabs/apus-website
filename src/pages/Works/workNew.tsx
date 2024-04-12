@@ -50,12 +50,15 @@ const Home: FC = () => {
         <Card size='small'>
           <Typography.Text copyable>{`sudo nohup ./solana-hackthon-cli --ownerpubkey ${publicKey?.toBase58() ?? ''} --price ${price * Math.pow(10, 9)} > log.txt &`}</Typography.Text>
         </Card>
-        <div className='card-content-title title-second'>You can also run it in background</div>
-
+        <div className='card-content-title title-second'>Check log.txt</div>
+        <Card size='small'>
+          <Typography.Text copyable>tail -f log.txt</Typography.Text>
+        </Card>
+        <div className='card-content-title title-second'>If you had any problems, refer to discord for help!</div>
       </Card>
 
       <Card title="3. Wait for Connection" bordered={false} style={{marginTop: '16px'}}>
-        <div className='card-content-title'>Wait until your cli init finished and check <code>log.txt</code> if has log <code>Listening and serving HTTP on 0.0.0.0:80</code>!</div>
+        <div className='card-content-title'>Wait until your cli init finished and when <code>log.txt</code> shows <code>Listening and serving HTTP on 0.0.0.0:80</code>! It's down.</div>
         <div className='card-content-title'>In case your device won't connect, Contact out support or refer to our discord support channel.</div>
         <Button type='primary'  style={{border: 'unset'}} block onClick={() => {
           navigate('../')
