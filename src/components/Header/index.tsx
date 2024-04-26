@@ -1,14 +1,26 @@
-import { FC } from 'react'
+import { FC, useEffect, useLayoutEffect } from 'react'
 import { ApusLogo } from "../../assets/image";
 import Breadcrumb from '../Breadcrumb'
 import './index.less'
 import { useNavigate } from 'react-router-dom';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useConnect } from '../../contexts/wallet';
 
 const Header: FC = () => {
   const navigate = useNavigate()
   const { connected, publicKey } = useWallet()
+
+  const { check } = useConnect()
+
+  useLayoutEffect(() => {
+    const t = setTimeout(() => {
+      check()
+    }, 1000);
+    return () => {
+      clearTimeout(t)
+    }
+  }, [check])
 
   return (
     <div className='header'>

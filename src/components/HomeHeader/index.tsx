@@ -106,7 +106,7 @@ const HomeHeader: FC = () => {
         }
       </ul>
       {connected ? <Button className='contact-btn' type='primary' onClick={() => {
-        navigate('/app/workers')
+        navigate('/app/account')
       }}>Console</Button> : <WalletMultiButton />}
       
       <span className='mobile-menu' onClick={handleMenuShow}>

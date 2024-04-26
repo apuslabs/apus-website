@@ -28,13 +28,13 @@ export const deepFindMenu = (menuList: menuItemType[], pathname: string): menuIt
 }
 
 const menuList = [
-  // {
-  //   label: 'Account',
-  //   key: 'account',
-  //   path: '/app/account',
-  //   icon: <Icon name='Dashboard' />,
-  //   isleaf: 0
-  // },
+  {
+    label: 'Account',
+    key: 'account',
+    path: '/app/account',
+    icon: <Icon name='Dashboard' />,
+    isleaf: 0
+  },
   {
     label: 'Workers',
     key: 'works',

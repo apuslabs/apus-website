@@ -1,12 +1,15 @@
-import { FC } from 'react'
+import { FC, useEffect, useLayoutEffect } from 'react'
 import { Button } from 'antd'
 import { RightOutlined } from '@ant-design/icons'
 import HomeFooter from '../../components/HomeFooter'
 import { Icon } from '../../components/SvgIcon'
 import './index.less'
-import { useStatistics } from '../../contexts/task'
+import { solApiFetcher, useStatistics } from '../../contexts/task'
 import { AdvantageDemocratize, AdvantageNetwork, ApusLogo, Deploy, PPIO, PPTV, Scalable } from '../../assets/image'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
+import QueryString from 'qs'
+import { useWallet } from '@solana/wallet-adapter-react'
+import { useWalletModal } from '@solana/wallet-adapter-react-ui'
 
 const HomeIndex: FC = () => {
   const {
@@ -17,6 +20,30 @@ const HomeIndex: FC = () => {
   } = useStatistics()
 
   const navigate = useNavigate()
+
+  const location = useLocation()
+
+  const { connected, publicKey } = useWallet()
+  const { setVisible } = useWalletModal()
+
+  useLayoutEffect(() => {
+    const t = setTimeout(() => {
+      const query = QueryString.parse(location.search, { ignoreQueryPrefix: true })
+      if ('referral_code' in query) {
+        if (!connected) {
+          setVisible(true)
+        } else {
+          solApiFetcher.post('/invite-by', {
+            solanaAddress: publicKey?.toBase58(),
+            invitedBy: query.referral_code
+          })
+        }
+      }
+    }, 1000)
+    return () => {
+      clearTimeout(t)
+    }
+  }, [location.search, connected, publicKey])
 
   return (
     <div className='home-index'>

@@ -12,15 +12,6 @@ function App() {
   const [current, setCurrent] = useState('dashboard')
   const navigate = useNavigate()
   const location = useLocation()
-  const {setVisible} = useWalletModal()
-  const {connected} = useWallet()
-
-  useLayoutEffect(() => {
-    if (!connected) {
-      setVisible(true)
-    }
-  }, [connected])
-  
 
   useEffect(() => {
     const { pathname } = location

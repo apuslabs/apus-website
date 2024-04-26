@@ -1,11 +1,29 @@
 import { useWallet } from '@solana/wallet-adapter-react'
+import { message } from 'antd'
 import axios from 'axios'
 import qs from 'qs'
 import useSWR from 'swr'
 
+console.log(import.meta.env)
+
 export const solApiFetcher = axios.create({
-    baseURL: 'https://solapi.apus.network',
-    // baseURL: 'http://localhost:80',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
+})
+
+solApiFetcher.interceptors.response.use(res => res, err => {
+    if (!!err.response.data) {
+        if (!!err.response.data.msg) {
+            if (!!err.response.data.msg.message) {
+                message.error(err.response.data.msg.message)
+            } else {
+                message.error(err.response.data.msg)
+            }
+        } else {
+            message.error(err.response.data)
+        }
+    } else {
+        message.error(err.response.statusText)
+    }
 })
 
 export function useStatistics() {
