@@ -79,13 +79,15 @@ const Dashboard: FC = (props) => {
             copyToClipboard(referral_link)
           }}>Copy</Button>
         </div>
+        <div className='mt-2 text-slate-400'>You will earn <span className=" text-white font-bold">+15%</span> on top of any Points your invites earn.</div>
       </Card>
       <div className='dashboard-show'>
         <div className='dashboard-show-card' style={{ background: 'linear-gradient(to right, rgba(179, 103, 207, 1), rgba(115, 37, 206, 1))' }}>
           <Icon name="Total" size={78} />
           <div className='item'>
             <div className='item-value'>{totalPoints}</div>
-            <div className='item-name'>Total Point</div>
+            <div className='item-name font-bold'>Total Point</div>
+            <div className="mt-1 text-neutral-200 opacity-50">Updated every 1 hour</div>
           </div>
           <span className='link-btn'>
             <Icon name="Link" size={35}></Icon>
@@ -97,6 +99,7 @@ const Dashboard: FC = (props) => {
           <div className='item'>
             <div className='item-value'>{points}</div>
             <div className='item-name'>Galxe Points</div>
+            <div className="mt-1 text-neutral-200 opacity-50">Updated every 1 hour</div>
           </div>
           <span className='link-btn'>
             <Icon name="Link" size={35}></Icon>
@@ -108,6 +111,7 @@ const Dashboard: FC = (props) => {
           <div className='item'>
             <div className='item-value'>{totalPoints - points}</div>
             <div className='item-name'>Invite Points</div>
+            <div className="mt-1 text-neutral-200 opacity-50">Updated every 1 hour</div>
           </div>
           <span className='link-btn'>
             <Icon name="Link" size={35}></Icon>

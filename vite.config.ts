@@ -11,12 +11,11 @@ const globalToken = getDesignToken({
 
 // https://vitejs.dev/config/
 export default defineConfig({
-    plugins: [react(),nodePolyfills({
-        globals: {
-            Buffer: true, // can also be 'build', 'dev', or false
-        },
-    }
-  )],
+  plugins: [react(),nodePolyfills({
+    globals: {
+        Buffer: true, // can also be 'build', 'dev', or false
+    },
+  })],
   css: {
     preprocessorOptions:{ 
       less: {

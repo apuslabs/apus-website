@@ -31,7 +31,7 @@ function App() {
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken } as any}>
       <div className='container-box'>
         <Header />
-        <div className='container'>
+        <div className='app-container'>
           <Menu
             theme="dark"
             style={{ width: 375 }}
