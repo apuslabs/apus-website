@@ -44,7 +44,7 @@ const columns: TableProps<DataType>['columns'] = [
     title: 'Bouns',
     className: 'blue-text',
     render: (_, { points }) => {
-      return <span>{points * 0.15}</span>
+      return <span>{Math.ceil(points * 0.15)}</span>
     }
   }
 ]
