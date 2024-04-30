@@ -2,8 +2,9 @@ import { FC } from "react";
 import "./index.less";
 import { Button } from "antd";
 import { RightOutlined, TwitterOutlined } from "@ant-design/icons";
-import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, Lagrange, Novita, Omnilnfer, PPIOLogo, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
-import { useNavigate } from "react-router-dom";
+import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, ImgHomepage, Lagrange, Novita, Omnilnfer, PPIOLogo, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
+import { Link, useNavigate } from "react-router-dom";
+import { FooterMenuList, FooterSocialMediaList } from "../../config/menu";
 // import TelegramIcon from "../../assets/telegram-fill.svg";
 // import TwitterIcon from "../../assets/twitter.svg";
 
@@ -16,64 +17,28 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
   const navigate = useNavigate()
 
   return (
-    <div className="home-footer">
-      {showCompany && (
-        <div className="footer-company">
-          <div className="footer-company-title">
-            Trusted by following companies
-          </div>
-          <ul className="footer-company-list">
-            <li>
-              <img src={Novita} />
-            </li>
-            <li>
-              <img src={Dephy} />
-            </li>
-            <li>
-              <img src={PPIOLogo} />
-            </li>
-            <li>
-              <img src={Lagrange} />
-            </li>
-            <li>
-              <img src={SolanaLogo} />
-            </li>
-            <li>
-              <img src={ArweaveLogo} />
-            </li>
-            {/* <li>
-              <img src={AbyssWorldLogo} />
-            </li> */}
-          </ul>
-        </div>
-      )}
-
-      <div className="footer-build">
-        <div className="footer-build-title">Let’s build future<br/>together</div>
-        {/* <Button type="primary" className="start-btn" onClick={() => {
-          navigate('/app/workers')
-        }}>
-          Start Now <RightOutlined />
-        </Button> */}
+    <div className="flex px-12 py-16" style={{
+      backgroundColor: "#0B0B0B"
+    }}>
+      <div className="flex-1 flex flex-col justify-between">
+        <img src={ImgHomepage.LogoHorizonalWhite} className="h-8 w-80" />
+        <div className="text-base" style={{ color: "rgba(255,255,255,0.5)" }}>Copyright © Apus.Network 2024. All rights reserved</div>
       </div>
-
-      <div className="footer-bottom">
-        <div className="footer-bottom-text">
-          Join the community and get involved! We'd love to meet you.
-        </div>
-        <div className="footer-bottom-link">
-          <ul className="footer-bottom-link-list">
-            <li><a href="https://twitter.com/apus_network"><img src={TwitterIcon} /></a></li>
-            <li><a href="https://t.me/+AWdHtLSl2m4yM2I1"><img src={TelegramIcon} /></a></li>
-          </ul>
-        </div>
-        <div className="footer-bottom-access">
-          Revolutionizing AI with fair, scalable, decentralized access.
+      <div>
+        <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>Navigation</div>
+        <div className="flex flex-col gap-4">
+        {FooterMenuList.map(({ name, path }) => (
+          <Link to={path} className="text-base" key={name}>{name}</Link>
+        ))}
         </div>
       </div>
-
-      <div className="footer-copyright">
-        <div>Copyright © Apus.Network 2024. All rights reserved</div>
+      <div className="ml-32">
+        <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>Social Media</div>
+        <div className="flex flex-col gap-4">
+        {FooterSocialMediaList.map(({ name, path }) => (
+          <Link to={path} className="text-base" key={name}>{name}</Link>
+        ))}
+        </div>
       </div>
     </div>
   );

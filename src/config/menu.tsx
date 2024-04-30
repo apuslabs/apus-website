@@ -59,3 +59,74 @@ const menuList = [
 ]
 
 export default menuList
+
+
+interface menuType {
+  name: string
+  path: string
+}
+
+export const HeaderMenuList: menuType[] = [
+  { 
+    name: 'Doc',
+    path: 'https://apus-network.gitbook.io/apus-console-docs/'
+  },
+  { 
+    name: 'Ecosystem',
+    path: '/home/ecosystem'
+  },
+  {
+    name: 'Playground',
+    path: 'https://solplayground.apus.network/'
+  },
+  { 
+    name: 'Task',
+    path: '/home/task'
+  },
+  {
+    name: 'Galxe Events',
+    path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCwrpthpgb'
+  }
+]
+
+export const FooterMenuList: menuType[] = [
+  { 
+    name: 'Ecosystem',
+    path: '/home/ecosystem'
+  },
+  {
+    name: 'Playground',
+    path: 'https://solplayground.apus.network/'
+  },
+  { 
+    name: 'Task',
+    path: '/home/task'
+  },
+  {
+    name: 'Galxe Events',
+    path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCwrpthpgb'
+  },
+  // {
+  //   name: 'Brand Kits',
+  //   path: ""
+  // }
+]
+
+export const FooterSocialMediaList: menuType[] = [
+  {
+    name: 'Twitter',
+    path: 'https://twitter.com/ApusNetwork'
+  },
+  {
+    name: 'Telegram',
+    path: 'https://t.me/apusnetwork'
+  },
+  {
+    name: 'Discord',
+    path: 'https://discord.gg/NVqpWB2m8k'
+  },
+  {
+    name: "Docs",
+    path: "https://apus-network.gitbook.io/apus-console-docs/"
+  }
+]
