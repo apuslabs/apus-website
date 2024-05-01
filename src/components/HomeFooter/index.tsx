@@ -17,13 +17,11 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
   const navigate = useNavigate()
 
   return (
-    <div className="flex px-12 py-16" style={{
+    <div className="flex px-5 py-36 md:px-12 md:py-16 md:justify-end gap-32 relative" style={{
       backgroundColor: "#0B0B0B"
     }}>
-      <div className="flex-1 flex flex-col justify-between">
-        <img src={ImgHomepage.LogoHorizonalWhite} className="h-8 w-80" />
-        <div className="text-base" style={{ color: "rgba(255,255,255,0.5)" }}>Copyright © Apus.Network 2024. All rights reserved</div>
-      </div>
+      <img src={ImgHomepage.LogoHorizonalWhite} className="absolute left-5 top-12 md:left-12 md:top-16 h-8 w-80" />
+      <div className="absolute left-5 bottom-12 md:bottom-16 md:left-12 text-base" style={{ color: "rgba(255,255,255,0.5)" }}>Copyright © Apus.Network 2024. All rights reserved</div>
       <div>
         <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>Navigation</div>
         <div className="flex flex-col gap-4">
@@ -32,7 +30,7 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
         ))}
         </div>
       </div>
-      <div className="ml-32">
+      <div>
         <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>Social Media</div>
         <div className="flex flex-col gap-4">
         {FooterSocialMediaList.map(({ name, path }) => (
