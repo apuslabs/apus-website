@@ -1,20 +1,8 @@
-import { FC, useEffect, useLayoutEffect } from "react";
-import { Button } from "antd";
-import { RightOutlined } from "@ant-design/icons";
+import { FC, useLayoutEffect } from "react";
 import HomeFooter from "../../components/HomeFooter";
-import { Icon } from "../../components/SvgIcon";
 import "./index.less";
 import { solApiFetcher, useStatistics } from "../../contexts/task";
-import {
-  AdvantageDemocratize,
-  AdvantageNetwork,
-  ApusLogo,
-  Deploy,
-  PPIO,
-  PPTV,
-  Scalable,
-} from "../../assets/image";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import QueryString from "qs";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
@@ -125,7 +113,7 @@ const HomeIndex: FC = () => {
       <div className="section">
         <div className="section-header">Highlights</div>
         <div className="section-description">The status of Apus Network</div>
-        <div className="w-full grid grid-cols-1 grid-rows-4 md:grid-cols-2 md:grid-rows-2 gap-5 md:gap-12">
+        <div className="w-full grid grid-cols-1 grid-rows-4 md:grid-cols-2 md:grid-rows-2 gap-5 md:gap-12 highlights">
           {[
             {
               img: ImgHomepage.IconHighlightsGPU,
@@ -151,14 +139,10 @@ const HomeIndex: FC = () => {
             <div
               key={title}
               className="relative bg-black rounded-2xl h-44 md:h-72 px-5 py-5 md:px-10 md:py-6 flex flex-col justify-end items-end highlights-item"
-              style={{
-                background:
-                  "linear-gradient(-45deg, #160C87 0%, rgba(102,1,170,0) 100%)",
-              }}
             >
               <img
                 src={img}
-                className="absolute w-24 h-24 md:w-36 mde:h-36 left-6 top-3 md:left-10 md:top-6 transition-transform highlights-item-icon"
+                className="absolute w-24 h-24 md:w-36 md:h-36 left-6 top-3 md:left-10 md:top-6 transition-transform highlights-item-icon"
               />
               <div className="text-sm md:text-xl opacity-50 leading-none">{title}</div>
               <div
@@ -198,19 +182,19 @@ const HomeIndex: FC = () => {
               icon: ImgHomepage.IconBenifitsAffordability,
             },
             {
-              title: "Transparent Transactions",
+              title: "Transparent\nTransactions",
               describe:
                 "Clear, honest engagements ensuring transaction integrity.",
               icon: ImgHomepage.IconBenifitsBenifitsTransparent,
             },
             {
-              title: "Ownership Protection",
+              title: "Ownership\nProtection",
               describe:
                 "Safeguarding intellectual contributions with robust protections.",
               icon: ImgHomepage.IconBenifitsBenifitsOwnership,
             },
             {
-              title: "Global Compute Marketplace",
+              title: "Global Compute\nMarketplace",
               describe: "Connecting global Compute resources for fair access.",
               icon: ImgHomepage.IconBenifitsBenifitsGlobal,
             },
@@ -227,7 +211,7 @@ const HomeIndex: FC = () => {
                 src={icon}
                 className="absolute w-8 h-8 md:w-12 md:h-12 right-6 top-6 md:right-10 md:top-10 benifits-item-icon"
               />
-              <div className=" text-3xl md:text-5xl pr-32 text-wrap">{title}</div>
+              <div className=" text-3xl md:text-5xl pr-22 text-wrap whitespace-pre-wrap">{title}</div>
               <div className="text-sm opacity-50">{describe}</div>
             </div>
           ))}
@@ -291,11 +275,11 @@ const HomeIndex: FC = () => {
           ].map(({ group, list }) => (
             <div className="flex flex-col items-center" key={group}>
               <div className="mb-6 md:mb-10 text-xl">{group}</div>
-              <div className="flex gap-3 md:gap-6 items-center flex-wrap">
+              <div className="flex gap-3 md:gap-6 items-center justify-center flex-wrap">
                 {list.map(({img, height}, i) => (
                   <div
                     key={i}
-                    className="w-44 h-24 md:w-52 md:h-24 flex items-center justify-center rounded-lg"
+                    className="w-40 h-20 md:w-52 md:h-24 flex items-center justify-center rounded-lg"
                     style={{
                       backgroundColor: "#1e1e1e",
                     }}

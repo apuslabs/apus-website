@@ -1,12 +1,9 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useState } from 'react'
 import { ImgHomepage } from '../../assets/image'
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './index.less'
-import { Button } from 'antd';
-import { Icon } from '../../components/SvgIcon'
 import { useWallet } from '@solana/wallet-adapter-react';
 import {
-  WalletMultiButton,
   useWalletModal
 } from '@solana/wallet-adapter-react-ui';
 import { useBreakpoint } from '../../utils/react-use';
@@ -46,7 +43,7 @@ const HomeHeader: FC = () => {
           if(!connected) {
             setVisible(true)
           } else {
-            navigate('/console')
+            navigate('/app/account')
           } 
         }}>
           {!connected ? "Connect Wallet" : "Console"}

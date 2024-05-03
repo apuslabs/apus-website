@@ -89,3 +89,12 @@ body {
   filter: blur(2px);
   z-index: -10;
 }
+
+.highlights-item {
+  transition: all;
+  background: linear-gradient(-45deg, #160C87 -80%, rgba(102,1,170,0) 80%);
+}
+
+.highlights-item:hover {
+  background: linear-gradient(-60deg, #160C87 -50%, rgba(102,1,170,0) 100%);
+}

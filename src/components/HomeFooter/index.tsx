@@ -1,8 +1,6 @@
 import { FC } from "react";
 import "./index.less";
-import { Button } from "antd";
-import { RightOutlined, TwitterOutlined } from "@ant-design/icons";
-import { AbyssWorldLogo, ArweaveLogo, Dephy, FooterIcon, ImgHomepage, Lagrange, Novita, Omnilnfer, PPIOLogo, Punet, SolanaLogo, TelegramIcon, TwitterIcon } from "../../assets/image";
+import { ImgHomepage } from "../../assets/image";
 import { Link, useNavigate } from "react-router-dom";
 import { FooterMenuList, FooterSocialMediaList } from "../../config/menu";
 // import TelegramIcon from "../../assets/telegram-fill.svg";
@@ -17,10 +15,10 @@ const HomeFooter: FC<HomeFooterProps> = (props) => {
   const navigate = useNavigate()
 
   return (
-    <div className="flex px-5 py-36 md:px-12 md:py-16 md:justify-end gap-32 relative" style={{
+    <div className="flex px-5 py-28 md:px-12 md:py-16 md:justify-end gap-32 relative" style={{
       backgroundColor: "#0B0B0B"
     }}>
-      <img src={ImgHomepage.LogoHorizonalWhite} className="absolute left-5 top-12 md:left-12 md:top-16 h-8 w-80" />
+      <img src={ImgHomepage.LogoHorizonalWhite} className="absolute left-5 top-12 md:left-12 md:top-16 h-5 md:h-8 w-50 md:w-80" />
       <div className="absolute left-5 bottom-12 md:bottom-16 md:left-12 text-base" style={{ color: "rgba(255,255,255,0.5)" }}>Copyright © Apus.Network 2024. All rights reserved</div>
       <div>
         <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>Navigation</div>

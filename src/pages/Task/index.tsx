@@ -1,8 +1,7 @@
 import { FC, useState } from 'react'
 import HomeFooter from '../../components/HomeFooter'
-import { Input, Table, Tooltip } from 'antd';
+import { Table, Tooltip } from 'antd';
 import type { TableProps } from 'antd';
-import { SearchOutlined } from '@ant-design/icons'
 import './index.less'
 import { useTaskList } from '../../contexts/task';
 import { tokenFormatter } from '../../utils/formatter';
