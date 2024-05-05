@@ -74,7 +74,7 @@ const HomeIndex: FC = () => {
           className="absolute top-0 h-full -z-10 blur-lg object-cover"
           src={ImgHomepage.BgHero}
         />
-        <img
+        {/* <img
           className="absolute top-0 -z-10"
           style={{
             top: "13rem",
@@ -84,7 +84,7 @@ const HomeIndex: FC = () => {
             width: "23rem",
           }}
           src={ImgHomepage.IconHeroLogo}
-        />
+        /> */}
         <div
           className="text-white mb-12 text-medium text-4xl md:text-8xl"
         >
@@ -300,7 +300,7 @@ const HomeIndex: FC = () => {
       {/* Slogan */}
       <div className="section">
         <div className="w-full relative flex items-center justify-center h-48 md:h-150">
-          <img src={ImgHomepage.BgSlogan} className=" absolute top-0 bottom-0 left-0 right-0 w-full -z-10" />
+          <img src={ImgHomepage.BgSlogan} className=" absolute top-0 bottom-0 left-0 right-0 w-full h-full -z-10" />
           <div className=" text-2xl md:text-6xl text-white text-center leading-tight">Let's Build Future <br/> Together</div>
         </div>
       </div>
