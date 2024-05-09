@@ -71,7 +71,7 @@ const HomeIndex: FC = () => {
         }}
       >
         <img
-          className="absolute top-0 h-full -z-10 blur-lg object-cover"
+          className="absolute top-0 h-full -z-10 object-cover"
           src={ImgHomepage.BgHero}
         />
         {/* <img
