@@ -85,7 +85,7 @@ export const HeaderMenuList: menuType[] = [
   },
   {
     name: 'Galxe Events',
-    path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCwrpthpgb'
+    path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCUaQtzyws'
   }
 ]
 
