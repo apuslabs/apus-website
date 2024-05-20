@@ -115,7 +115,7 @@ export const FooterMenuList: menuType[] = [
 export const FooterSocialMediaList: menuType[] = [
   {
     name: 'Twitter',
-    path: 'https://twitter.com/ApusNetwork'
+    path: 'https://twitter.com/intent/follow?screen_name=apus_network'
   },
   {
     name: 'Telegram',
