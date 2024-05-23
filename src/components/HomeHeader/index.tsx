@@ -14,7 +14,7 @@ const HomeHeader: FC = () => {
   const { setVisible } = useWalletModal()
   const breakpoint = useBreakpoint()
   const isTablet = breakpoint === "mobile"
-  const [menuShow, setMenuShow] = useState<boolean>(!isTablet)
+  const [menuShow, setMenuShow] = useState<boolean>(false)
   const navigate = useNavigate()
 
   return (

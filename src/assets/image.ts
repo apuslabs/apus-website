@@ -6,23 +6,17 @@ import LogoHorizonalWhite from './homepage/logo_horizonal_white.png'
 import BgHero from './homepage/bg-hero-desktop.png'
 import BgSlogan from './homepage/bg-slogan.png'
 import IconHeroLogo from './homepage/icon-hero-logo.png'
-import IconHighlightsGPU from './homepage/highlights-gpu.png'
-import IconHighlightsAgent from './homepage/highlights-agent.png'
-import IconHighlightsTask from './homepage/highlights-task.png'
-import IconHighlightsPayout from './homepage/highlights-payout.png'
-import ImgMechanism from './homepage/img_mechanism.png'
-import IconBenifitsAffordability from './homepage/icon-benifits-affordability.png'
-import IconBenifitsBenifitsGlobal from './homepage/icon-benifits-global.png'
-import IconBenifitsBenifitsTransparent from './homepage/icon-benifits-transparent.png'
-import IconBenifitsBenifitsOwnership from './homepage/icon-benifits-ownership.png'
-import LogoWhyusApus from './homepage/whyus_logo_apus.png'
-import LogoWhyusPPIO from './homepage/whyus_logo_ppio.png'
-import LogoWhyusPPTV from './homepage/whyus_logo_pptv.png'
+import IconFeaturesGPUIntegrity from './homepage/features-gpu-integrity.png'
+import IconFeaturesAIModel from './homepage/features-ai-model.png'
+import IconFeaturesVerifiableResult from './homepage/features-result.png'
+import BgHighlights from './homepage/earth.png'
+import BgHighlightsMobile from './homepage/earth-m.png'
 import IconArrowRight from './homepage/icon-arrow-right.png'
 import LogoAbyssWorld from './homepage/logo-abyssworld.png'
 import LogoSolana from './homepage/logo-solana.png'
 import LogoArweave from './homepage/logo-arweave.png'
 import LogoPPIO from './homepage/logo-ppio.png'
+import LogoAO from './homepage/logo-ao.png'
 import LogoDephy from './homepage/logo-dephy.png'
 import LogoLagrange from './homepage/logo-lagrange.png'
 import LogoNovita from './homepage/logo-novita.png'
@@ -33,6 +27,7 @@ import LogoTaiko from './homepage/logo-taiko.png'
 import LogoScroll from './homepage/logo-scroll.png'
 import LogoEigenlayer from './homepage/logo-eigenlayer.png'
 import IconMenu from './homepage/icon-menu.png'
+import BgSolution from './homepage/solution.png'
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -40,18 +35,13 @@ export const ImgHomepage = {
   BgHero,
   BgSlogan,
   IconHeroLogo,
-  IconHighlightsGPU,
-  IconHighlightsAgent,
-  IconHighlightsTask,
-  IconHighlightsPayout,
-  ImgMechanism,
-  IconBenifitsAffordability,
-  IconBenifitsBenifitsGlobal,
-  IconBenifitsBenifitsTransparent,
-  IconBenifitsBenifitsOwnership,
-  LogoWhyusApus,
-  LogoWhyusPPIO,
-  LogoWhyusPPTV,
+  BgHighlights,
+  BgHighlightsMobile,
+  BgSolution,
+  IconFeaturesGPUIntegrity,
+  IconFeaturesAIModel,
+  IconFeaturesVerifiableResult,
+  LogoAO,
   IconArrowRight,
   LogoAbyssWorld,
   LogoSolana,

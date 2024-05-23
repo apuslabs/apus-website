@@ -4,14 +4,16 @@ import { ConfigProvider, theme } from 'antd'
 import themeToken from '../../utils/homeTheme'
 import HomeHeader from '../../components/HomeHeader'
 import './index.less'
+import HomeFooter from '../../components/HomeFooter'
 
 const Home: FC = () => {
 
   return (
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken }}>
-      <div className='home-box'>
+      <div>
         <HomeHeader />
         <Outlet />
+        <HomeFooter />
       </div>
     </ConfigProvider>
     

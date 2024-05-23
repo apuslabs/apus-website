@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #111111;
+  background-color: #0d0d0d;
   color: white;
 }
 
@@ -65,15 +65,23 @@ body {
 }
 
 .section {
-  @apply my-48 md:my-64 px-5 md:px-12 flex flex-col items-center justify-center;
+  @apply pt-20 h-screen overflow-hidden;
+}
+
+.section .fp-overflow {
+  @apply px-5 py-16 md:px-[48px] md:max-w-[1536px] md:mx-auto;
+}
+
+.section.pt-small .fp-overflow {
+  @apply pt-8 pb-24;
 }
 
 .section-header {
-  @apply font-medium text-4xl md:text-8xl mb-6 md:mb-12;
+  @apply font-medium text-4xl md:text-[4rem] mb-4 md:mb-12;
 }
 
 .section-description {
-  @apply  mb-12 md:mb-24 text-base md:text-xl;
+  @apply  text-base md:text-xl;
   color: rgba(255,255,255,0.5);
 }
 
@@ -97,4 +105,16 @@ body {
 
 .highlights-item:hover {
   background: linear-gradient(-80deg, #160C87 -50%, rgba(102,1,170,0.02) 80%);
+}
+
+.fp-overflow:focus-visible {
+  outline: none;
+}
+
+.fp-watermark {
+  display: none!important;
+}
+
+.section .fp-auto-height {
+  height: auto;
 }
