@@ -73,7 +73,7 @@ export const AIAssistantBlobAnimation = () => {
     });
   }, []);
   return (
-    <div className="absolute left-0 right-0 bottom-0 w-full h-full">
+    <div className="-z-10 absolute left-0 right-0 bottom-0 w-full h-full">
       <div id="blob" className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-[60%] blur-[1px]">
         <canvas></canvas>
       </div>

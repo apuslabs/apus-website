@@ -4,8 +4,6 @@ import axios from 'axios'
 import qs from 'qs'
 import useSWR from 'swr'
 
-console.log(import.meta.env)
-
 export const solApiFetcher = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
 })

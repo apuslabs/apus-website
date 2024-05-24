@@ -1,5 +1,4 @@
 import { FC, useEffect, useLayoutEffect } from "react";
-import HomeFooter from "../../components/HomeFooter";
 import "./index.less";
 import { solApiFetcher, useStatistics } from "../../contexts/task";
 import { useLocation, Link } from "react-router-dom";
@@ -11,6 +10,7 @@ import { useBreakpoint } from "../../utils/react-use";
 // @ts-ignore
 import fullpage from "fullpage.js";
 import { AIAssistantBlobAnimation } from "./AIAssistantBlobAnimation";
+import { DocLink } from "../../config/menu";
 
 const CompanyInfo: FC<{
   img: string;
@@ -32,6 +32,14 @@ const CompanyInfo: FC<{
     </div>
   );
 };
+
+if (history.scrollRestoration) {
+  history.scrollRestoration = 'manual';
+} else {
+  window.onbeforeunload = function () {
+      window.scrollTo(0, 0);
+  }
+}
 
 const HomeIndex: FC = () => {
   const { gpuCount, taskCount, agentCount, payoutCount } = useStatistics();
@@ -65,12 +73,13 @@ const HomeIndex: FC = () => {
   }, [location.search, connected, publicKey]);
 
   useEffect(() => {
-    console.log('fullpage init')
-    new fullpage("#fullpage", {
+    const fullpageInstance = new fullpage("#fullpage", {
       licenseKey: "gplv3-license",
       hybrid: true,
       fitToSection: false,
       normalScrollElements: isMobile ? '#solution-img' : '',
+      lockAnchors: true,
+      anchors: [],
     });
   }, [isMobile]);
 
@@ -161,17 +170,19 @@ const HomeIndex: FC = () => {
 
       {/* Solution */}
       <div className="section relative">
-        <div className="absolute w-full h-full left-0 top-0" style={{
+        <div className="-z-10 absolute w-full h-full left-0 top-0" style={{
           // inner shadow x:0 y:0 blur:64 color:rgba(255,255,255,0.1)
           boxShadow: 'inset 0 0 64px rgba(255,255,255,0.1)',
         }}></div>
-        <div className="absolute w-[124vw] h-[180vh] -bottom-[30vh] -left-[12vw] border-[32px] border-solid border-white blur-[100px] rounded-[50%]"></div>
-        <div className="absolute w-[124vw] h-[180vh] -bottom-[14vh] -left-[12vw] border-[32px] border-solid border-[#6601AA] blur-[100px] rounded-[50%]"></div>
-        <div className="absolute w-[124vw] h-[180vh] bottom-0 -left-[12vw] border-[32px] border-solid border-[#2715F1] blur-[100px] rounded-[50%]"></div>
+        <div className="-z-10 absolute w-[124vw] h-[180vh] -bottom-[30vh] -left-[12vw] border-[32px] border-solid border-white blur-[100px] rounded-[50%]"></div>
+        <div className="-z-10 absolute w-[124vw] h-[180vh] -bottom-[14vh] -left-[12vw] border-[32px] border-solid border-[#6601AA] blur-[100px] rounded-[50%]"></div>
+        <div className="-z-10 absolute w-[124vw] h-[180vh] bottom-0 -left-[12vw] border-[32px] border-solid border-[#2715F1] blur-[100px] rounded-[50%]"></div>
         <div className="section-header md:mt-24">Solution</div>
         <div className="section-description">DePIN for AI inference</div>
-        {!isMobile && <button className="btn-main btn-colorful mt-16 z-20">Doc</button>}
-        <div id="solution-img" className="w-screen md:w-full md:h-full overflow-x-auto -mx-5 md:mx-0 mt-16 md:mt-0 relative md:absolute md:top-0 md:left-0 md:bottom-0 z-20">
+        {!isMobile && <button className="btn-main btn-colorful mt-16 z-10" onClick={() => {
+          window.open(DocLink, '_blank')
+        }}>Doc</button>}
+        <div id="solution-img" className="w-screen md:w-full md:h-full overflow-x-auto -mx-5 md:mx-0 mt-16 md:mt-0 relative md:absolute md:top-0 md:left-0 md:bottom-0">
           <img
             className="md:absolute md:left-1/2 md:top-2/3 md:-translate-x-1/2 md:-translate-y-1/2 md:w-[67.5rem] h-150 md:h-[34.75rem] overflow-x-scroll max-w-none px-5 md:px-0"
             src={ImgHomepage.BgSolution}
@@ -181,11 +192,11 @@ const HomeIndex: FC = () => {
 
       {/* HighLights */}
       <div className="section relative fp-noscroll">
-        <div className="absolute w-full h-full top-0 left-0" style={{
+        <div className="-z-10 absolute w-full h-full top-0 left-0" style={{
           background: 'linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 20%, rgba(102,1,170,0%) 20%, rgba(26,15,118,80%) 90%, #160C87 140%)',
         }}></div>
-        <img className="absolute right-0 bottom-0 w-full md:w-[82.5rem] h-72 md:h-[32rem]" src={!isMobile ? ImgHomepage.BgHighlights : ImgHomepage.BgHighlightsMobile}/>
-        <div className="section-header mt-0 md:mt-24 z-10 text-center md:text-left">High Lights</div>
+        <img className="-z-10 absolute right-0 bottom-0 w-full md:w-[82.5rem] h-72 md:h-[32rem]" src={!isMobile ? ImgHomepage.BgHighlights : ImgHomepage.BgHighlightsMobile}/>
+        <div className="section-header mt-0 md:mt-24 text-center md:text-left">High Lights</div>
         <div className="section-description text-center md:text-left">The status of Apus Network</div>
         <div className="w-full mt-32 px-5 md:px-0 grid grid-rows-2 grid-cols-2 gap-16 md:flex md:gap-56 md:mt-16">
           {[
@@ -209,15 +220,15 @@ const HomeIndex: FC = () => {
             <div
               key={title}
             >
-              <div className="text-sm md:text-xl opacity-50 leading-none">
+              <div className="text-sm md:text-xl opacity-50 leading-none text-nowrap">
                 {title}
               </div>
               <div
-                className="text-5xl md:text-6xl mt-5 md:mt-6 text-transparent leading-none"
+                className="text-5xl md:text-6xl mt-5 md:mt-6 text-transparent leading-none text-nowrap bg-clip-text"
                 style={{
                   background:
                     "linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.3) 100%)",
-                  backgroundClip: "text",
+                    backgroundClip: "text",
                 }}
               >
                 {value}

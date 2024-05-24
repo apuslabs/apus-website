@@ -66,10 +66,12 @@ interface menuType {
   path: string
 }
 
+export const DocLink = 'https://apus-network.gitbook.io/apus-console-docs/'
+
 export const HeaderMenuList: menuType[] = [
   { 
     name: 'Doc',
-    path: 'https://apus-network.gitbook.io/apus-console-docs/'
+    path: DocLink
   },
   { 
     name: 'Ecosystem',
