@@ -12,27 +12,6 @@ import fullpage from "fullpage.js";
 import { AIAssistantBlobAnimation } from "./AIAssistantBlobAnimation";
 import { DocLink } from "../../config/menu";
 
-const CompanyInfo: FC<{
-  img: string;
-  desc: string;
-}> = ({ img, desc }) => {
-  return (
-    <div className="flex flex-col items-center">
-      <div
-        className="flex justify-center items-center border border-solid rounded-full h-80 w-80"
-        style={{
-          borderColor: "rgba(255, 255, 255, 0.2)",
-          background:
-            "linear-gradient(-60deg, #160C87 0%, rgba(102,1,170,0) 100%)",
-        }}
-      >
-        <img src={img} className="h-10" />
-      </div>
-      <div className="mt-12 text-xl">{desc}</div>
-    </div>
-  );
-};
-
 if (history.scrollRestoration) {
   history.scrollRestoration = 'manual';
 } else {
@@ -193,7 +172,7 @@ const HomeIndex: FC = () => {
       {/* HighLights */}
       <div className="section relative fp-noscroll">
         <div className="-z-10 absolute w-full h-full top-0 left-0" style={{
-          background: 'linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 20%, rgba(102,1,170,0%) 20%, rgba(26,15,118,80%) 90%, #160C87 140%)',
+          backgroundImage: 'linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 20%, rgba(102,1,170,0%) 20%, rgba(26,15,118,80%) 90%, #160C87 140%)',
         }}></div>
         <img className="-z-10 absolute right-0 bottom-0 w-full md:w-[82.5rem] h-72 md:h-[32rem]" src={!isMobile ? ImgHomepage.BgHighlights : ImgHomepage.BgHighlightsMobile}/>
         <div className="section-header mt-0 md:mt-24 text-center md:text-left">High Lights</div>
@@ -226,9 +205,8 @@ const HomeIndex: FC = () => {
               <div
                 className="text-5xl md:text-6xl mt-5 md:mt-6 text-transparent leading-none text-nowrap bg-clip-text"
                 style={{
-                  background:
+                  backgroundImage:
                     "linear-gradient(to bottom, #ffffff 0%, rgba(255,255,255,0.3) 100%)",
-                    backgroundClip: "text",
                 }}
               >
                 {value}
