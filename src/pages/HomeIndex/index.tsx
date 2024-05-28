@@ -115,13 +115,13 @@ const HomeIndex: FC = () => {
               icon: ImgHomepage.IconFeaturesGPUIntegrity,
             },
             {
-              title: `AI Model${!isMobile ? '\n' : ''} Trustworthiness`,
+              title: `AI Model ${!isMobile ? '\n' : ''}Trustworthiness`,
               describe:
                 "Guaranteeing the trustworthiness and integrity of AI models within the network.",
               icon: ImgHomepage.IconFeaturesAIModel,
             },
             {
-              title: `Verifiable inference${!isMobile ? '\n' : ''} Results`,
+              title: `Verifiable inference ${!isMobile ? '\n' : ''}Results`,
               describe:
                 "Verifying the integrity and accuracy of AI model inference results on the network.",
               icon: ImgHomepage.IconFeaturesVerifiableResult,
@@ -175,7 +175,7 @@ const HomeIndex: FC = () => {
           backgroundImage: 'linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 20%, rgba(102,1,170,0%) 20%, rgba(26,15,118,80%) 90%, #160C87 140%)',
         }}></div>
         <img className="-z-10 absolute right-0 bottom-0 w-full md:w-[82.5rem] h-72 md:h-[32rem]" src={!isMobile ? ImgHomepage.BgHighlights : ImgHomepage.BgHighlightsMobile}/>
-        <div className="section-header mt-0 md:mt-24 text-center md:text-left">High Lights</div>
+        <div className="section-header text-center md:text-left">High Lights</div>
         <div className="section-description text-center md:text-left">The status of Apus Network</div>
         <div className="w-full mt-32 px-5 md:px-0 grid grid-rows-2 grid-cols-2 gap-16 md:flex md:gap-56 md:mt-16">
           {[
