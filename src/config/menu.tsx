@@ -121,11 +121,15 @@ export const FooterSocialMediaList: menuType[] = [
   },
   {
     name: 'Telegram',
-    path: 'https://t.me/apusnetwork'
+    path: 'https://t.me/apus_network'
   },
   {
     name: 'Discord',
     path: 'https://discord.gg/NVqpWB2m8k'
+  },
+  {
+    name: "Medium",
+    path: "https://medium.com/@apusnetwork"
   },
   {
     name: "Docs",
