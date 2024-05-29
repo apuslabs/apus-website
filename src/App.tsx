@@ -2,7 +2,7 @@ import { useNavigate, Outlet, useLocation } from 'react-router-dom'
 import "./App.less";
 import { ConfigProvider, theme, Menu } from 'antd'
 import { useEffect, useLayoutEffect, useState } from 'react'
-import Header from './components/Header'
+import Header from './components/HomeHeader'
 import MenuList from './config/menu'
 import themeToken from './utils/appTheme.ts'
 import { useWalletModal } from '@solana/wallet-adapter-react-ui'
@@ -30,7 +30,7 @@ function App() {
   return (
     <ConfigProvider theme={{ algorithm: theme.darkAlgorithm, ...themeToken } as any}>
       <div className='container-box'>
-        <Header />
+        <Header showUserInfo />
         <div className='app-container'>
           <Menu
             theme="dark"
