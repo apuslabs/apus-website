@@ -218,17 +218,16 @@ const HomeIndex: FC = () => {
 
       {/* Trusted By */}
       <div className="section relative flex flex-col md:justify-center items-center">
-        <div className="section-header text-center">Trusted By</div>
-        <div className="section-description text-center">
+        <div className="section-header text-center">Powered By</div>
+        {/* <div className="section-description text-center">
           The following companies are in partnership with us
-        </div>
+        </div> */}
         <div className="mt-16 grid grid-cols-2 grid-flow-row gap-3 md:flex md:gap-6 md:items-center md:justify-center md:flex-wrap">
           {[
-            { img: ImgHomepage.LogoSolana, height: "1.125rem" },
-            { img: ImgHomepage.LogoArweave, height: "1.875rem" },
-            { img: ImgHomepage.LogoDephy, height: "2.25rem" },
-            { img: ImgHomepage.LogoPPIO, height: "2rem" },
             { img: ImgHomepage.LogoAO, height: "1.625rem" },
+            { img: ImgHomepage.LogoArweave, height: "1.875rem" },
+            { img: ImgHomepage.LogoSolana, height: "1.125rem" },
+            { img: ImgHomepage.LogoDephy, height: "2.25rem" },
           ].map(({ img, height }, i) => (
             <div
               key={i}

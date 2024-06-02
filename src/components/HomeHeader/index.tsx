@@ -49,7 +49,9 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         <ul className="bg-neutral-950 md:bg-inherit flex-col justify-center items-center gap-12 h-full md:flex md:flex-row">
           {HeaderMenuList.map((item) => (
             <li className="menu-colorful" key={item.name}>
-              <Link to={item.path}>{item.name}</Link>
+              <Link to={item.path} onClick={() => {
+                setMenuShow(false)
+              }}>{item.name}</Link>
             </li>
           ))}
         </ul>
@@ -59,6 +61,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         connected && showUserInfo ? (
           // <Dropdown menu={{ items: [
           //   {
+
           //     key: 'disconnect',
           //     label: <WalletDisconnectButton />
           //   }

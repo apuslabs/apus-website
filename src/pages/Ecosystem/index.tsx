@@ -33,7 +33,7 @@ const Ecosystem: FC = () => {
           </li>
           {
             agentList.map((agent: any) => {
-              return <li className='li-aiagent'>
+              return <li className='li-aiagent' key={agent.title}>
               <div className='li-head'>
                 <img src={agent.poster ?? ApusLogo} />
               </div>
