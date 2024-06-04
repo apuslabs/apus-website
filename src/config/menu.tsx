@@ -70,6 +70,10 @@ export const DocLink = 'https://apus-network.gitbook.io/apus-console-docs/'
 
 export const HeaderMenuList: menuType[] = [
   { 
+    name: 'AI on AO',
+    path: "https://app.gitbook.com/o/ATCVl1Cu40FCM0ZmGz3R/s/5lYl98LtTa5B7LMauBET/ao/inference-on-ao"
+  },
+  { 
     name: 'Doc',
     path: DocLink
   },
