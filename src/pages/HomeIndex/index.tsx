@@ -90,17 +90,17 @@ const HomeIndex: FC = () => {
       }}>
         <AIAssistantBlobAnimation />
         <div className="text-white text-center mb-24 text-medium text-2xl md:text-[4rem] leading-tight">
-          Decentralized & Trustless <br /> GPU Network for <br />{" "}
-          <span className="text-[#01BFCF]">AI Inference</span>
+          Trustless <br /> GPU Network for <br />{" "}
+          <span className="text-[#01BFCF]">AI on AO</span>
         </div>
-        <div className="flex justify-center gap-6">
+        {/* <div className="flex justify-center gap-6">
           <Link to="/app/workers/new">
             <div className="btn-main btn-colorful">Provide Your GPU</div>
           </Link>
           <Link to="/app/aiAgents">
             <div className="btn-main">Publish Your Agents</div>
           </Link>
-        </div>
+        </div> */}
       </div>
       {/* Benifits */}
       <div className="section pt-small flex flex-col items-center justify-center">

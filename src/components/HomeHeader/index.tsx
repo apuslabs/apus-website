@@ -6,7 +6,6 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletDisconnectButton, useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useBreakpoint } from "../../utils/react-use";
 import { HeaderMenuList } from "../../config/menu";
-import { Dropdown } from "antd";
 
 const ShortAddress: FC<{ address: string }> = ({ address }) => {
   const isLongerThen8Chars = address.length > 8;
@@ -58,30 +57,31 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
       </div> : null}
 
       {!isTablet ? (
-        connected && showUserInfo ? (
-          // <Dropdown menu={{ items: [
-          //   {
+        <div></div>
+        // connected && showUserInfo ? (
+        //   // <Dropdown menu={{ items: [
+        //   //   {
 
-          //     key: 'disconnect',
-          //     label: <WalletDisconnectButton />
-          //   }
-          // ]}}>
-            <ShortAddress address={publicKey?.toBase58() ?? ""}></ShortAddress>
-          // </Dropdown>
-        ) : (
-          <div
-            className="btn-main btn-colorful"
-            onClick={() => {
-              if (!connected) {
-                setVisible(true);
-              } else {
-                navigate("/app/account");
-              }
-            }}
-          >
-            {!connected ? "Connect Wallet" : "Console"}
-          </div>
-        )
+        //   //     key: 'disconnect',
+        //   //     label: <WalletDisconnectButton />
+        //   //   }
+        //   // ]}}>
+        //     <ShortAddress address={publicKey?.toBase58() ?? ""}></ShortAddress>
+        //   // </Dropdown>
+        // ) : (
+        //   <div
+        //     className="btn-main btn-colorful"
+        //     onClick={() => {
+        //       if (!connected) {
+        //         setVisible(true);
+        //       } else {
+        //         navigate("/app/account");
+        //       }
+        //     }}
+        //   >
+        //     {!connected ? "Connect Wallet" : "Console"}
+        //   </div>
+        // )
       ) : (
         <img
           src={ImgHomepage.IconMenu}
