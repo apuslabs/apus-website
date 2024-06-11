@@ -104,24 +104,24 @@ const HomeIndex: FC = () => {
       </div>
       {/* Benifits */}
       <div className="section pt-small flex flex-col items-center justify-center">
-        <div className="section-header text-center">Features</div>
+        <div className="section-header text-center mb-6 md:mb-[10rem]">Features</div>
         {/* <div className="section-description mb-6 md:mb-[10rem] text-center">Leading platform of AI Agents</div> */}
         <div id="benifits" className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-5 md:gap-10 w-full">
           {[
             {
-              title: `Competitive Incentive\nfor AI Models`,
+              title: `Competitive Incentive<br/>for AI Models`,
               describe:
                 "Apus Network's economic model competitively incentivizes the development and execution of the best AI models.",
               icon: ImgHomepage.IconFeaturesGPUIntegrity,
             },
             {
-              title: `Deterministic Execution\nfor GPUs`,
+              title: `Deterministic Execution<br/>for GPUs`,
               describe:
                 "Apus Network provides an open-source AO extension of deterministic GPU. This ensures trustless execution for AI.",
               icon: ImgHomepage.IconFeaturesAIModel,
             },
             {
-              title: `Cost-Effective AI Training\nand Inference`,
+              title: `Cost-Effective AI Training<br/>and Inference`,
               describe:
                 "Apus Network utilizes GPU mining nodes to perform optimal, trustless model training and inference on Arweave.",
               icon: ImgHomepage.IconFeaturesVerifiableResult,
@@ -129,7 +129,7 @@ const HomeIndex: FC = () => {
           ].map(({ title, describe, icon }) => (
             <div
               key={title}
-              className="relative md:h-[22.25rem] p-5 md:p-10 border border-solid flex flex-col rounded-2xl benifits-item"
+              className="relative md:h-[22.25rem] p-4 md:p-8 border border-solid flex flex-col rounded-2xl benifits-item"
               style={{
                 borderColor: "rgba(255, 255, 255, 0.1)",
               }}
@@ -138,8 +138,7 @@ const HomeIndex: FC = () => {
                 src={icon}
                 className="w-16 h-16 mb-6 md:mb-10"
               />
-              <div className="flex-1 text-2xl pb-6 md:text-3xl md:text-[2rem] text-wrap whitespace-pre-wrap">
-                {title}
+              <div className="flex-1 text-2xl pb-6 md:text-2xl xl:text-3xl md:text-[2rem] text-nowrap" dangerouslySetInnerHTML={{ __html: title}}>
               </div>
               <div className="text-xs md:text-base opacity-50">{describe}</div>
             </div>
