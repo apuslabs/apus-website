@@ -138,7 +138,7 @@ const HomeIndex: FC = () => {
                 src={icon}
                 className="w-16 h-16 mb-6 md:mb-10"
               />
-              <div className="flex-1 text-2xl pb-6 md:text-2xl xl:text-3xl md:text-[2rem] text-nowrap" dangerouslySetInnerHTML={{ __html: title}}>
+              <div className="flex-1 text-2xl pb-6 md:text-2xl xl:text-3xl text-nowrap" dangerouslySetInnerHTML={{ __html: title}}>
               </div>
               <div className="text-xs md:text-base opacity-50">{describe}</div>
             </div>
