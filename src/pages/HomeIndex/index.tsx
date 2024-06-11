@@ -90,8 +90,8 @@ const HomeIndex: FC = () => {
       }}>
         <AIAssistantBlobAnimation />
         <div className="text-white text-center mb-24 text-medium text-2xl md:text-[4rem] leading-tight">
-          Trustless <br /> GPU Network for <br />{" "}
-          <span className="text-[#01BFCF]">AI on AO</span>
+          Trustless <br /> GPU Network for AI<br />{" "}
+          <span className="text-[#01BFCF]">on AO</span>
         </div>
         {/* <div className="flex justify-center gap-6">
           <Link to="/app/workers/new">
@@ -105,25 +105,25 @@ const HomeIndex: FC = () => {
       {/* Benifits */}
       <div className="section pt-small flex flex-col items-center justify-center">
         <div className="section-header text-center">Features</div>
-        <div className="section-description mb-6 md:mb-[10rem] text-center">Leading platform of AI Agents</div>
+        {/* <div className="section-description mb-6 md:mb-[10rem] text-center">Leading platform of AI Agents</div> */}
         <div id="benifits" className="grid grid-cols-1 grid-rows-3 md:grid-cols-3 md:grid-rows-1 gap-5 md:gap-10 w-full">
           {[
             {
-              title: "GPU Integrity",
+              title: `Competitive Incentive\nfor AI Models`,
               describe:
-                "Ensuring the integrity and proper functioning of GPUs in the network.",
+                "Apus Network's economic model competitively incentivizes the development and execution of the best AI models.",
               icon: ImgHomepage.IconFeaturesGPUIntegrity,
             },
             {
-              title: `AI Model ${!isMobile ? '\n' : ''}Trustworthiness`,
+              title: `Deterministic Execution\nfor GPUs`,
               describe:
-                "Guaranteeing the trustworthiness and integrity of AI models within the network.",
+                "Apus Network provides an open-source AO extension of deterministic GPU. This ensures trustless execution for AI.",
               icon: ImgHomepage.IconFeaturesAIModel,
             },
             {
-              title: `Verifiable inference ${!isMobile ? '\n' : ''}Results`,
+              title: `Cost-Effective AI Training\nand Inference`,
               describe:
-                "Verifying the integrity and accuracy of AI model inference results on the network.",
+                "Apus Network utilizes GPU mining nodes to perform optimal, trustless model training and inference on Arweave.",
               icon: ImgHomepage.IconFeaturesVerifiableResult,
             },
           ].map(({ title, describe, icon }) => (
@@ -138,7 +138,7 @@ const HomeIndex: FC = () => {
                 src={icon}
                 className="w-16 h-16 mb-6 md:mb-10"
               />
-              <div className="flex-1 text-2xl md:text-3xl md:text-[2rem] text-wrap whitespace-pre-wrap">
+              <div className="flex-1 text-2xl pb-6 md:text-3xl md:text-[2rem] text-wrap whitespace-pre-wrap">
                 {title}
               </div>
               <div className="text-xs md:text-base opacity-50">{describe}</div>
@@ -148,7 +148,7 @@ const HomeIndex: FC = () => {
       </div>
 
       {/* Solution */}
-      <div className="section relative">
+      {/* <div className="section relative">
         <div className="-z-10 absolute w-full h-full left-0 top-0" style={{
           // inner shadow x:0 y:0 blur:64 color:rgba(255,255,255,0.1)
           boxShadow: 'inset 0 0 64px rgba(255,255,255,0.1)',
@@ -167,7 +167,7 @@ const HomeIndex: FC = () => {
             src={ImgHomepage.BgSolution}
           />
         </div>
-      </div>
+      </div> */}
 
       {/* HighLights */}
       <div className="section relative fp-noscroll">
