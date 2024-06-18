@@ -263,7 +263,7 @@ const HomeIndex: FC = () => {
       <div className="section md:pt-none" style={{
         paddingBottom: isMobile ? 0 : "unset"
       }}>
-        <div className="relative md:w-screen flex flex-col items-center" style={{
+        <div className="relative flex flex-col items-center" style={{
           height: isMobile ? "auto" : "calc(100vh - 5rem)"
         }}>
           <div className="section-header text-center">Powered By</div>
