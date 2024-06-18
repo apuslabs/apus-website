@@ -96,22 +96,27 @@ export const HeaderMenuList: menuType[] = [
 ]
 
 export const FooterMenuList: menuType[] = [
-  { 
-    name: 'Ecosystem',
-    path: '/home/ecosystem'
-  },
+  // { 
+  //   name: 'Ecosystem',
+  //   path: '/home/ecosystem'
+  // },
+  // {
+  //   name: 'Playground',
+  //   path: 'https://solplayground.apus.network/'
+  // },
+  // { 
+  //   name: 'Task',
+  //   path: '/home/task'
+  // },
   {
-    name: 'Playground',
-    path: 'https://solplayground.apus.network/'
-  },
-  { 
-    name: 'Task',
-    path: '/home/task'
+    name: "Docs",
+    path: "https://apus-network.gitbook.io/apus-console-docs/"
   },
   {
     name: 'Galxe Events',
     path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCwrpthpgb'
   },
+  
   // {
   //   name: 'Brand Kits',
   //   path: ""
@@ -134,9 +139,5 @@ export const FooterSocialMediaList: menuType[] = [
   {
     name: "Medium",
     path: "https://medium.com/@apusnetwork"
-  },
-  {
-    name: "Docs",
-    path: "https://apus-network.gitbook.io/apus-console-docs/"
   }
 ]

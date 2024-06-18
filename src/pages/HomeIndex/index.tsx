@@ -1,15 +1,12 @@
-import { FC, useEffect, useLayoutEffect } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import "./index.less";
 // import { solApiFetcher, useStatistics } from "../../contexts/task";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // import QueryString from "qs";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { ImgHomepage } from "../../assets/image";
 import { useBreakpoint } from "../../utils/react-use";
 // @ts-ignore
 import fullpage from "fullpage.js";
-import { calc } from "antd/es/theme/internal";
 import { FooterSocialMediaList } from "../../config/menu";
 // import { AIAssistantBlobAnimation } from "./AIAssistantBlobAnimation";
 // import { DocLink } from "../../config/menu";
@@ -23,35 +20,8 @@ if (history.scrollRestoration) {
 }
 
 const HomeIndex: FC = () => {
-  // const { gpuCount, taskCount, agentCount, payoutCount } = useStatistics();
-
-  const location = useLocation();
-
-  const { connected, publicKey } = useWallet();
-  const { setVisible } = useWalletModal();
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
-
-  // useLayoutEffect(() => {
-  //   const t = setTimeout(() => {
-  //     const query = QueryString.parse(location.search, {
-  //       ignoreQueryPrefix: true,
-  //     });
-  //     if ("referral_code" in query) {
-  //       if (!connected) {
-  //         setVisible(true);
-  //       } else {
-  //         solApiFetcher.post("/invite-by", {
-  //           solanaAddress: publicKey?.toBase58(),
-  //           invitedBy: query.referral_code,
-  //         });
-  //       }
-  //     }
-  //   }, 1000);
-  //   return () => {
-  //     clearTimeout(t);
-  //   };
-  // }, [location.search, connected, publicKey]);
 
   useEffect(() => {
     if (isMobile) {
@@ -91,11 +61,13 @@ const HomeIndex: FC = () => {
     };
   }, []);
 
+  const [announcementShow, setAnnouncementShow] = useState<boolean>(true);
+
   return (
     <div id="fullpage">
       {/* Hero */}
       <div
-        className="section relative flex flex-col justify-center items-center"
+        className="section min-h-screen md:min-h-none relative flex flex-col justify-center items-center"
         style={{
           paddingBottom: "20vh",
           backgroundImage: `url(${ImgHomepage.BgHero})`,
@@ -103,25 +75,25 @@ const HomeIndex: FC = () => {
           backgroundPosition: "center",
         }}
       >
-        {/* <AIAssistantBlobAnimation /> */}
-        <div className="text-white text-center w-2/3 mx-auto -mt-56 md:mt-0 mb-24 text-medium text-4xl md:text-[4rem] leading-tight">
+        <div className="text-white text-center w-2/3 mx-auto -mt-56 mb-24 text-medium text-4xl md:text-[4rem] leading-tight">
           Trustless GPU Network for AI on AO
         </div>
-        {/* <div className="flex justify-center gap-6">
-          <Link to="/app/workers/new">
-            <div className="btn-main btn-colorful">Provide Your GPU</div>
-          </Link>
-          <Link to="/app/aiAgents">
-            <div className="btn-main">Publish Your Agents</div>
-          </Link>
-        </div> */}
+
+        {announcementShow ? <div className="boreder-benifits absolute bottom-3 md:bottom-auto md:top-20 left-1/2 -translate-x-1/2 p-6 flex items-center z-50" style={{
+          width: isMobile ? 'calc(100% - 1.5rem)' : '60rem'
+        }}>
+          <img src={ImgHomepage.IconAnnouncement} className="w-5 h-5 mr-4" />
+          <div className="text-xs md:text-sm text-white flex-1 mr-6">Apus has removed Ecosystem, Playground, Task and Connect Wallet. In the meantime your points have been retained, and a new incentive mechanism will be added in the future. Stay tuned!</div>
+          <div className="btn-main btn-small btn-colorful" onClick={() => { setAnnouncementShow(false) }}>Got It</div>
+        </div> : null}
+
       </div>
       {/* Benifits */}
       <div className="section flex flex-col items-center justify-center">
         <div className="section-header text-center mb-6 md:mb-[3rem]">
           Key Features
         </div>
-        <div className="section-description mb-6 md:mb-[6rem] md:w-1/2 text-center">
+        <div className="section-description mb-6 md:mb-[6rem] w-[18.75rem] md:w-1/2 md:mx-auto text-center">
           Apus Network is building towards a decentralized, trustless GPU
           network dedicated to providing reliable, efficient, and low-cost
           computational power for AI training and inference.
@@ -176,9 +148,9 @@ const HomeIndex: FC = () => {
       </div>
 
       {/* Solution */}
-      <div className="section relative flex flex-col items-center">
-        <div className="section-header md:mt-24">How it works</div>
-        <div className="section-description w-4/5 text-center md:w-1/2">
+      <div className="section relative flex flex-col items-center pt-none">
+        <div className="section-header mt-12 md:mt-20">How it works</div>
+        <div className="section-description w-[18.75rem] text-center md:text-left md:w-1/2">
           Apus Network provides a robust and dynamic Edge Compute service
           tailored specifically for AI applications. By leveraging a distributed
           network of edge devices, we offer a seamless solution for AI tasks
@@ -186,12 +158,12 @@ const HomeIndex: FC = () => {
         </div>
         <div
           id="solution-img"
-          className="-z-10 w-screen md:w-full md:h-full overflow-x-auto -mx-5 md:mx-0 mt-16 md:mt-0 relative md:absolute md:top-0 md:left-0 md:bottom-0"
+          className="w-screen md:w-full md:h-full overflow-x-auto overflow-y-hidden md:mx-0 mt-16 md:mt-0 relative md:absolute md:top-0 md:left-0 md:bottom-0"
         >
-          {!isMobile && <img
-            className="absolute bottom-0 md:right-32 md:w-[67.5rem] md:h-[34.75rem]"
+          <img
+            className="absolute bottom-0 left-14 md:left-auto translate-y-1/3 md:translate-y-0 max-w-none md:right-32 md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
             src={ImgHomepage.ResolutionDizuo}
-          />}
+          />
           <img
             className="md:absolute md:right-32 md:top-2/3 md:-translate-y-2/3 md:w-[67.5rem] h-150 md:h-[34.75rem] overflow-x-scroll max-w-none px-5 md:px-0"
             src={ImgHomepage.BgSolution}
@@ -200,7 +172,6 @@ const HomeIndex: FC = () => {
         <div
           className="-z-10 absolute w-full h-full left-0 top-0"
           style={{
-            // inner shadow x:0 y:0 blur:64 color:rgba(255,255,255,0.1)
             boxShadow: "inset 0 0 64px rgba(255,255,255,0.1)",
           }}
         ></div>
@@ -227,27 +198,32 @@ const HomeIndex: FC = () => {
         >
           <div className="md:col-span-1 md:row-span-1 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden boreder-benifits">
             <img src={ImgHomepage.BiconGood} className="w-10 h-10 mb-4 md:mb-6" />
-            <div className="flex-1 text-2xl mb-4 md:mb-10 md:text-2xl xl:text-3xl text-nowrap">
+            <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap">
               Public Goods
             </div>
-            <div className="text-xs md:text-base w-2/3 opacity-50">
+            <div className="flex-1 text-xs md:text-base md:w-2/3 opacity-50">
               Apus Network's economic model incentivizes the development and
               execution of superior AI models. This competitive environment
               fosters innovation and ensures continuous advancements in AI
               technology.
             </div>
             <img
-              src={ImgHomepage.BenifitsGood}
-              className={`md:absolute right-0 top-0 h-full -z-10`}
+              src={isMobile ? ImgHomepage.BenifitsGood : ImgHomepage.BenifitsGoodPc}
+              className={`max-w-none md:absolute md:right-0 md:top-0 md:h-full -z-10`}
+              style={{
+                width: isMobile ? "calc(100% + 5rem)" : "auto",
+                marginLeft: isMobile ? "calc(-2.5rem + 1px)" : "",
+                marginBottom: isMobile ? 1 : 0,
+              }}
             />
           </div>
           <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden boreder-benifits">
             
             <img src={ImgHomepage.BiconEnergy} className="w-10 h-10 mb-4 md:mb-6" />
-            <div className="flex-1 text-2xl mb-4 md:mb-10 md:text-2xl xl:text-3xl text-nowrap">
+            <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap">
               Energy Efficiency
             </div>
-            <div className="text-xs md:text-base w-2/3 opacity-50 mb-4 md:mb-0">
+            <div className="text-xs md:text-base md:w-2/3 opacity-50 mb-4 md:mb-0">
               We optimize energy consumption by utilizing idle compute power
               across the network, contributing to a greener computing
               environment.
@@ -257,35 +233,40 @@ const HomeIndex: FC = () => {
               className={`md:absolute right-0 top-0 h-full -z-10`}
             />
           </div>
-          <div className="md:row-span-2 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col justify-end rounded-2xl overflow-hidden boreder-benifits">
+          <div className="md:row-span-2 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden boreder-benifits">
             <img
               src={ImgHomepage.BiconAccessibility}
               className="w-10 h-10 mb-4 md:mb-6"
             />
-            <div className="text-2xl mb-4 md:mb-10 md:text-2xl xl:text-3xl text-nowrap">
+            <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap">
               Accessibility
             </div>
-            <div className="text-xs md:text-base w-2/3 opacity-50 mb-4 md:mb-0">
+            <div className="flex-1 md:flex-grow-0 text-xs md:text-base md:w-2/3 opacity-50 mb-4 md:mb-0">
               We provide simple interfaces and comprehensive usage guides,
               enabling non-professional users to fully leverage AI capabilities.
             </div>
             <img
-              src={ImgHomepage.BenifitsAccessibility}
-              className={`md:absolute right-0 top-0 h-4/5 -z-10`}
+              src={isMobile ? ImgHomepage.BenifitsAccessibilityMobile : ImgHomepage.BenifitsAccessibility}
+              className={`md:absolute -mx-10 max-w-none md:mx-0 md:right-px md:top-px md:h-4/5 -z-10 rounded-2xl`}
+              style={{
+                width: isMobile ? "calc(100% + 5rem - 2px)" : "auto",
+                marginTop: isMobile ? 1 : 0,
+                marginLeft: isMobile ? "calc(-2.5rem + 1px)" : "",
+                marginBottom: isMobile ? 1 : 0,
+              }}
             />
           </div>
         </div>
       </div>
 
       {/* Trusted By */}
-      <div className="section pt-none">
-        <div className="relative md:w-screen flex flex-col md:justify-center items-center" style={{
-          height: "calc(100vh - 5rem)"
+      <div className="section md:pt-none" style={{
+        paddingBottom: isMobile ? 0 : "unset"
+      }}>
+        <div className="relative md:w-screen flex flex-col items-center" style={{
+          height: isMobile ? "auto" : "calc(100vh - 5rem)"
         }}>
           <div className="section-header text-center">Powered By</div>
-          {/* <div className="section-description text-center">
-          The following companies are in partnership with us
-        </div> */}
           <div className="mt-16 grid grid-cols-3 grid-flow-row gap-3 md:flex md:gap-6 md:items-center md:justify-center md:flex-wrap">
             {[
               { img: ImgHomepage.LogoArweave, height: "1.275rem" },
@@ -304,8 +285,8 @@ const HomeIndex: FC = () => {
               </div>
             ))}
           </div>
-          <div className="section-header text-center mt-64">Let's Build Together</div>
-          <Link to={FooterSocialMediaList[0].path}><div className=" btn-colorful btn-main">Get Our Updates</div></Link>
+          <div className="section-header text-center mt-32 md:mt-64">Let's Build Together</div>
+          <Link to={FooterSocialMediaList[0].path}><div className=" btn-colorful btn-main mt-12 md:mt-0 mb-32 md:mb-0">Get Our Updates</div></Link>
           <img
             src={ImgHomepage.BgBottom}
             className="absolute bottom-0 left-1/2 -translate-x-1/2 -z-10"

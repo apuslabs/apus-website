@@ -31,7 +31,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
     <div
       className="h-20 w-full fixed t-0 l-0 r-0 px-5 md:px-12 flex items-center justify-between z-10"
       style={{
-        // backgroundColor: "rgba(17, 17, 17, 0.95)",
+        backgroundColor: menuShow ? "rgba(10, 10, 10, 0.95)" : "transparent",
       }}
     >
       <div className="h-full flex items-center" onClick={() => navigate("/")}>

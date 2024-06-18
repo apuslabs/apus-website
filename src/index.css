@@ -64,16 +64,20 @@ body {
   }
 }
 
+.btn-main.btn-small {
+  @apply text-xs w-24 h-8 rounded-md;
+}
+
 .section {
-  @apply px-5 py-12 md:p-0 md:pt-20 min-h-screen m-auto md:h-screen overflow-hidden;
+  @apply px-5 py-12 md:p-0 md:pt-20 m-auto md:h-screen overflow-hidden;
 }
 
 .section .fp-overflow {
-  @apply px-5 py-16 md:px-[48px] md:max-w-[1536px] md:mx-auto;
+  @apply px-5 py-16 pt-36 md:px-[48px] md:max-w-[1536px] md:mx-auto;
 }
 
 .section.pt-none .fp-overflow {
-  @apply pt-0;
+  @apply pt-20;
 }
 
 .section.pt-none {
@@ -81,7 +85,7 @@ body {
 }
 
 .section-header {
-  @apply font-medium text-4xl md:text-[4rem] mb-4 md:mb-12;
+  @apply text-4xl md:text-[4rem] mb-4 md:mb-12;
 }
 .section-header.leading-tight {
   line-height: 1.05;

@@ -23,12 +23,15 @@ import FeaturesExecution from './homepage2/features-execution.png'
 import FeaturesIncentive from './homepage2/features-incentive.png'
 import ResolutionDizuo from './homepage2/resolution-dizuo.png'
 import BenifitsAccessibility from './homepage2/benifits-accessibility.png'
+import BenifitsAccessibilityMobile from './homepage2/benifits-accessibility-mobile.png'
 import BenifitsEnergy from './homepage2/benifits-energy.png'
 import BenifitsGood from './homepage2/benifits-good.png'
+import BenifitsGoodPc from './homepage2/benifits-good-pc.png'
 import BiconAccessibility from './homepage2/bicon-accessibility.png'
 import BiconEnergy from './homepage2/bicon-energy.png'
 import BiconGood from './homepage2/bicon-good.png'
 import BgBottom from './homepage2/bg_bottom.png'
+import IconAnnouncement from './homepage2/icon-announcement.png'
 
 
 export const ImgHomepage = {
@@ -61,4 +64,7 @@ export const ImgHomepage = {
   BenifitsAccessibility,
   BenifitsGood,
   BgBottom,
+  BenifitsAccessibilityMobile,
+  BenifitsGoodPc,
+  IconAnnouncement,
 }
