@@ -17,6 +17,19 @@ import LogoDephy from './homepage/logo-dephy.png'
 import LogoNovita from './homepage/logo-novita.png'
 import IconMenu from './homepage/icon-menu.png'
 import BgSolution from './homepage/solution.png'
+import BgHero from './homepage2/bg_kv.png'
+import FeaturesCost from './homepage2/features-cost.png'
+import FeaturesExecution from './homepage2/features-execution.png'
+import FeaturesIncentive from './homepage2/features-incentive.png'
+import ResolutionDizuo from './homepage2/resolution-dizuo.png'
+import BenifitsAccessibility from './homepage2/benifits-accessibility.png'
+import BenifitsEnergy from './homepage2/benifits-energy.png'
+import BenifitsGood from './homepage2/benifits-good.png'
+import BiconAccessibility from './homepage2/bicon-accessibility.png'
+import BiconEnergy from './homepage2/bicon-energy.png'
+import BiconGood from './homepage2/bicon-good.png'
+import BgBottom from './homepage2/bg_bottom.png'
+
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -35,5 +48,17 @@ export const ImgHomepage = {
   LogoPPIO,
   LogoDephy,
   LogoNovita,
-  IconMenu
+  IconMenu,
+  BgHero,
+  FeaturesCost,
+  FeaturesExecution,
+  FeaturesIncentive,
+  ResolutionDizuo,
+  BiconAccessibility,
+  BiconEnergy,
+  BiconGood,
+  BenifitsEnergy,
+  BenifitsAccessibility,
+  BenifitsGood,
+  BgBottom,
 }

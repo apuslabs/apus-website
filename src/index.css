@@ -7,7 +7,7 @@
 }
 
 body {
-  background-color: #0d0d0d;
+  background-color: #111111;
   color: white;
 }
 
@@ -65,23 +65,30 @@ body {
 }
 
 .section {
-  @apply pt-20 h-screen overflow-hidden;
+  @apply px-5 py-12 md:p-0 md:pt-20 min-h-screen m-auto md:h-screen overflow-hidden;
 }
 
 .section .fp-overflow {
   @apply px-5 py-16 md:px-[48px] md:max-w-[1536px] md:mx-auto;
 }
 
-.section.pt-small .fp-overflow {
-  @apply pt-8 pb-24;
+.section.pt-none .fp-overflow {
+  @apply pt-0;
+}
+
+.section.pt-none {
+  @apply p-0;
 }
 
 .section-header {
   @apply font-medium text-4xl md:text-[4rem] mb-4 md:mb-12;
 }
+.section-header.leading-tight {
+  line-height: 1.05;
+}
 
 .section-description {
-  @apply  text-base md:text-xl;
+  @apply  text-xs md:text-xl;
   color: rgba(255,255,255,0.5);
 }
 

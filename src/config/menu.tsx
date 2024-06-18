@@ -77,18 +77,18 @@ export const HeaderMenuList: menuType[] = [
     name: 'Doc',
     path: DocLink
   },
-  { 
-    name: 'Ecosystem',
-    path: '/home/ecosystem'
-  },
-  {
-    name: 'Playground',
-    path: 'https://solplayground.apus.network/'
-  },
-  { 
-    name: 'Task',
-    path: '/home/task'
-  },
+  // { 
+  //   name: 'Ecosystem',
+  //   path: '/home/ecosystem'
+  // },
+  // {
+  //   name: 'Playground',
+  //   path: 'https://solplayground.apus.network/'
+  // },
+  // { 
+  //   name: 'Task',
+  //   path: '/home/task'
+  // },
   {
     name: 'Galxe Events',
     path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCUaQtzyws'

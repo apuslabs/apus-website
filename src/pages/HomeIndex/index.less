@@ -17,3 +17,34 @@
   opacity: 1;
   transform: translateY(0);
 }
+
+.boreder-benifits {
+  position: relative;
+  background-color: #0C1018;
+  border-radius: 16px;
+  z-index: -20;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #2622FF -50%, rgba(255,255,255,0.05) 50%, #7D1ED2 150%);
+    z-index: -20;
+    border-radius: 16px;
+  }
+  &::after {
+    content: '';
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    right: 1px;
+    bottom: 1px;
+    width: calc(100% - 2px);
+    height: calc(100% - 2px);
+    background-color: #0C1018;
+    z-index: -20;
+    border-radius: 16px; /* Optional: to match the border radius */
+  }
+}
