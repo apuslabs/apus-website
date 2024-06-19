@@ -168,13 +168,13 @@ const HomeIndex: FC = () => {
 
       {/* How it works */}
       <div
-        className="section-container md:h-[56vw] p-none relative"
+        className="section-container md:h-[67.5rem] p-none relative"
         style={{
           backgroundImage: `url(${ImgHomepage.BgArch})`,
           backgroundSize: "100% 100%",
         }}
       >
-        <div className="section md:px-5 flex flex-col items-center md:items-start">
+        <div className="section md:px-5 md:py-[10rem] flex flex-col items-center md:items-start">
           <div className="section-header mt-12 md:mt-20 z-10">How it works</div>
           <div className="section-description w-[18.75rem] text-center md:text-left md:w-1/2 z-10">
             Apus Network provides a robust and dynamic Edge Compute service
@@ -192,7 +192,7 @@ const HomeIndex: FC = () => {
             src={ImgHomepage.ResolutionDizuo}
           />
           <img
-            className="md:absolute md:right-32 md:top-2/3 md:-translate-y-2/3 md:w-[67.5rem] h-150 md:h-[34.75rem] overflow-x-scroll max-w-none px-5 md:px-0"
+            className="md:absolute md:right-32 md:top-2/3 md:-translate-y-2/3 md:w-[68rem] h-150 md:h-[38rem] overflow-x-scroll max-w-none px-5 md:px-0"
             src={ImgHomepage.BgSolution}
           />
         </div>
@@ -333,7 +333,7 @@ const HomeIndex: FC = () => {
         </div>
         <img
           src={ImgHomepage.BgBottom}
-          className="absolute bottom-0 left-1/2 -translate-x-1/2 -z-10"
+          className="absolute bottom-0 md:w-2/3 left-1/2 -translate-x-1/2 -z-10"
         />
       </div>
     </div>
