@@ -29,21 +29,19 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
 
   return (
     <div
-      className="h-20 w-full fixed t-0 l-0 r-0 px-5 md:px-12 flex items-center justify-between z-10"
+      className="h-20 w-full fixed t-0 l-0 r-0 px-5 md:px-12 flex items-center justify-between backdrop-blur-3xl z-10"
       style={{
-        backgroundColor: menuShow ? "rgba(10, 10, 10, 0.95)" : "transparent",
+        backgroundColor: menuShow ? "#111111" : "rgba(0,0,0,0.5)",
       }}
     >
       <div className="h-full flex items-center" onClick={() => navigate("/")}>
         <img src={ImgHomepage.LogoHorizonal} alt="Apus Logo" className="h-6" />
       </div>
       {!showUserInfo ? <div
-        className={`absolute top-20 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative ${
-          isTablet ? "bg-blur" : ""
-        }`}
+        className={`fixed top-20 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative bg-[rgba(0,0,0,0.8)]`}
         style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
       >
-        <ul className="bg-neutral-950 md:bg-inherit flex-col justify-center items-center gap-12 h-full md:flex md:flex-row">
+        <ul className="flex-col justify-center items-center gap-12 md:h-full md:flex md:flex-row bg-[#111111] md:bg-transparent z-20">
           {HeaderMenuList.map((item) => (
             <li className="menu-colorful" key={item.name}>
               <Link to={item.path} onClick={() => {

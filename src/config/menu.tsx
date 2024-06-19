@@ -117,10 +117,10 @@ export const FooterMenuList: menuType[] = [
     path: 'https://app.galxe.com/quest/8FWGXFwnzm3xkWkRiKzopd/GCwrpthpgb'
   },
   
-  // {
-  //   name: 'Brand Kits',
-  //   path: ""
-  // }
+  {
+    name: 'Brand Kits',
+    path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4"
+  }
 ]
 
 export const FooterSocialMediaList: menuType[] = [

@@ -8,6 +8,7 @@ import LogoDephy from './homepage/logo-dephy.png'
 import IconMenu from './homepage/icon-menu.png'
 import BgSolution from './homepage/solution.png'
 import BgHero from './homepage2/bg_kv.png'
+import BgArch from './homepage2/bg-arch.png'
 import FeaturesCost from './homepage2/features-cost.png'
 import FeaturesExecution from './homepage2/features-execution.png'
 import FeaturesIncentive from './homepage2/features-incentive.png'
@@ -32,6 +33,7 @@ export const ImgHomepage = {
   LogoDephy,
   IconMenu,
   BgHero,
+  BgArch,
   BgSolution,
   FeaturesCost,
   FeaturesExecution,

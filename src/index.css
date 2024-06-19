@@ -68,19 +68,15 @@ body {
   @apply text-xs w-24 h-8 rounded-md;
 }
 
+.section-container {
+  @apply px-5 py-12 md:py-0 overflow-hidden;
+}
+
 .section {
-  @apply px-5 py-12 md:p-0 md:pt-20 m-auto md:h-screen overflow-hidden;
+  @apply m-auto md:max-w-[90rem];
 }
 
-.section .fp-overflow {
-  @apply px-5 py-16 pt-36 md:px-[48px] md:max-w-[1536px] md:mx-auto;
-}
-
-.section.pt-none .fp-overflow {
-  @apply pt-20;
-}
-
-.section.pt-none {
+.section-container.p-none {
   @apply p-0;
 }
 
