@@ -29,7 +29,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
 
   return (
     <div
-      className="h-20 w-full fixed t-0 l-0 r-0 px-5 md:px-12 flex items-center justify-between backdrop-blur-3xl z-10"
+      className="h-20 w-full fixed t-0 l-0 r-0 px-5 md:px-12 flex items-center justify-between backdrop-blur-3xl z-20"
       style={{
         backgroundColor: menuShow ? "#111111" : "rgba(0,0,0,0.5)",
       }}
