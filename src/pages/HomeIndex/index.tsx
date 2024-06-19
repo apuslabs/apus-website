@@ -177,10 +177,7 @@ const HomeIndex: FC = () => {
         <div className="section md:px-5 md:py-[10rem] flex flex-col items-center md:items-start">
           <div className="section-header mt-12 md:mt-20 z-10">How it works</div>
           <div className="section-description w-[18.75rem] text-center md:text-left md:w-1/2 z-10">
-            Apus Network provides a robust and dynamic Edge Compute service
-            tailored specifically for AI applications. By leveraging a
-            distributed network of edge devices, we offer a seamless solution
-            for AI tasks that require substantial computational resources.
+            The solution involves a decentralized, trustless GPU network that provides reliable and cost-effective computational power for AI training and inference. Aggregators create pools and use incentives to encourage the contribution of high-quality fine-tuned models. The network includes an inference process and training process, distributing tasks across deterministic GPUs operated by miners.
           </div>
         </div>
         <div
