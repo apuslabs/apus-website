@@ -349,4 +349,6 @@ const HomeIndex: FC = () => {
 export default HomeIndex;
 
 
-const TwitterVideo = () => <div className="w-[35rem] max-w-full" dangerouslySetInnerHTML={{ __html: `<blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">The AO token mint is now live. <a href="https://t.co/GAXT1OLdCu">pic.twitter.com/GAXT1OLdCu</a></p>&mdash; ao (@aoTheComputer) <a href="https://twitter.com/aoTheComputer/status/1801284939612123244?ref_src=twsrc%5Etfw">June 13, 2024</a></blockquote>`}}></div>
+const TwitterVideo = () => <div className="w-[35rem] max-w-full">
+  <blockquote className="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">The AO token mint is now live. <a href="https://t.co/GAXT1OLdCu">pic.twitter.com/GAXT1OLdCu</a></p>&mdash; ao (@aoTheComputer) <a href="https://twitter.com/aoTheComputer/status/1801284939612123244?ref_src=twsrc%5Etfw">June 13, 2024</a></blockquote>
+</div>
