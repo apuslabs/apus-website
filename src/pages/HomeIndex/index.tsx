@@ -142,23 +142,22 @@ const HomeIndex: FC = () => {
             ].map(({ title, describe, img, imgClassName }) => (
               <div
                 key={title}
-                className="relative p-10 border border-solid flex flex-col rounded-2xl benifits-item overflow-hidden"
-                style={{
-                  borderColor: "rgba(255, 255, 255, 0.1)",
-                }}
+                className="benifits-item boreder-benifits"
               >
-                <div
-                  className="flex-1 text-2xl mb-8 md:mb-10 md:text-2xl xl:text-3xl text-nowrap"
-                  dangerouslySetInnerHTML={{ __html: title }}
-                ></div>
-                <div className="text-xs mb-8 md:mb-9 md:text-base opacity-50">
-                  {describe}
+                <div className="relative p-10 rounded-2xl h-full flex flex-col overflow-hidden">
+                  <div
+                    className="flex-1 text-2xl mb-8 md:mb-10 md:text-2xl xl:text-3xl text-nowrap"
+                    dangerouslySetInnerHTML={{ __html: title }}
+                  ></div>
+                  <div className="text-xs mb-8 md:mb-9 md:text-base opacity-50">
+                    {describe}
+                  </div>
+                  <img src={img} className={`opacity-0 ${imgClassName ?? ""}`} />
+                  <img
+                    src={img}
+                    className={`absolute bottom-0 ${imgClassName ?? ""}`}
+                  />
                 </div>
-                <img src={img} className={`opacity-0 ${imgClassName ?? ""}`} />
-                <img
-                  src={img}
-                  className={`absolute bottom-0 ${imgClassName ?? ""}`}
-                />
               </div>
             ))}
           </div>
@@ -189,7 +188,7 @@ const HomeIndex: FC = () => {
           />
         </div>
           <img
-            className="absolute bottom-0 left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-0 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
+            className="absolute bottom-0 md left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-20 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
             src={ImgHomepage.ResolutionDizuo}
           />
       </div>
@@ -212,7 +211,8 @@ const HomeIndex: FC = () => {
             id="benifits"
             className="md:grid md:grid-cols-2 md:grid-rows-2 flex flex-col gap-5 md:gap-10 w-full"
           >
-            <div className="md:col-span-1 md:row-span-1 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden boreder-benifits">
+            <div className="md:col-span-1 md:row-span-1 boreder-benifits">
+            <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconGood}
                 className="w-10 h-10 mb-4 md:mb-6"
@@ -235,12 +235,14 @@ const HomeIndex: FC = () => {
                 className={`max-w-none md:absolute md:right-0 md:top-0 md:h-full -z-10`}
                 style={{
                   width: isMobile ? "calc(100% + 5rem)" : "auto",
-                  marginLeft: isMobile ? "calc(-2.5rem + 1px)" : "",
+                  marginLeft: isMobile ? "calc(-2.5rem)" : "",
                   marginBottom: isMobile ? 1 : 0,
                 }}
               />
             </div>
-            <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden boreder-benifits">
+            </div>
+            <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 boreder-benifits">
+            <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconEnergy}
                 className="w-10 h-10 mb-4 md:mb-6"
@@ -258,7 +260,9 @@ const HomeIndex: FC = () => {
                 className={`md:absolute right-0 top-0 h-full -z-10`}
               />
             </div>
-            <div className="md:row-span-2 relative p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden boreder-benifits">
+            </div>
+            <div className="md:row-span-2 boreder-benifits">
+            <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconAccessibility}
                 className="w-10 h-10 mb-4 md:mb-6"
@@ -279,12 +283,13 @@ const HomeIndex: FC = () => {
                 }
                 className={`md:absolute -mx-10 max-w-none md:mx-0 md:right-px md:top-px md:h-4/5 -z-10 rounded-2xl`}
                 style={{
-                  width: isMobile ? "calc(100% + 5rem - 2px)" : "auto",
+                  width: isMobile ? "calc(100% + 5rem)" : "auto",
                   marginTop: isMobile ? 1 : 0,
-                  marginLeft: isMobile ? "calc(-2.5rem + 1px)" : "",
+                  marginLeft: isMobile ? "calc(-2.5rem)" : "",
                   marginBottom: isMobile ? 1 : 0,
                 }}
               />
+            </div>
             </div>
           </div>
         </div>
@@ -298,7 +303,7 @@ const HomeIndex: FC = () => {
         }}
       >
         <div className="section flex flex-col items-center">
-          <div className="section-header mt-12 md:mt-[10rem] mb-16 text-center">Powered By</div>
+          <div className="section-header mt-12 md:mt-16 mb-16 text-center">Powered By</div>
           <div className="flex flex-wrap gap-6 items-center justify-center md:flex-wrap">
             {[
               { img: ImgHomepage.LogoArweave, height: "1.875rem" },

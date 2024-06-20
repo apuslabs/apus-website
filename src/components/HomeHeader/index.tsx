@@ -40,14 +40,16 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
       {!showUserInfo ? <div
         className={`fixed top-20 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative bg-[rgba(0,0,0,0.8)]`}
         style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
+        onClick={() => {
+          setMenuShow(false)
+        }}
       >
         <ul className="flex-col justify-center items-center gap-12 md:h-full md:flex md:flex-row bg-[#111111] md:bg-transparent z-20">
           {HeaderMenuList.map((item) => (
-            <li className="menu-colorful" key={item.name}>
-              <Link to={item.path} onClick={() => {
-                setMenuShow(false)
-              }}>{item.name}</Link>
+            <Link to={item.path}><li className="menu-colorful" key={item.name}>
+              {item.name}
             </li>
+            </Link>
           ))}
         </ul>
       </div> : null}
