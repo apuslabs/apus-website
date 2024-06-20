@@ -212,7 +212,7 @@ const HomeIndex: FC = () => {
             id="benifits"
             className="md:grid md:grid-cols-2 md:grid-rows-2 flex flex-col gap-5 md:gap-10 w-full"
           >
-            <div className="md:col-span-1 md:row-span-1 boreder-benifits">
+            <div className="md:col-span-1 md:row-span-1 boreder-benifits darker">
             <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconGood}
@@ -242,7 +242,7 @@ const HomeIndex: FC = () => {
               />
             </div>
             </div>
-            <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 boreder-benifits">
+            <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 boreder-benifits darker">
             <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconEnergy}
@@ -262,7 +262,7 @@ const HomeIndex: FC = () => {
               />
             </div>
             </div>
-            <div className="md:row-span-2 boreder-benifits">
+            <div className="md:row-span-2 boreder-benifits darker">
             <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden">
               <img
                 src={ImgHomepage.BiconAccessibility}
