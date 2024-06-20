@@ -93,15 +93,14 @@ const HomeIndex: FC = () => {
       <div
         className="section-container min-h-screen md:h-[56vw] relative"
         style={{
-          paddingBottom: "20vh",
           backgroundImage: `url(${ImgHomepage.BgHero})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
         <div className="section">
-          <div className="text-white text-center w-2/3 mx-auto mt-20 md:mt-40 text-medium text-4xl md:text-[4rem] leading-tight">
-            Trustless GPU Network for AI on AO
+          <div className="text-white text-center mx-auto mt-20 md:mt-40 text-medium text-4xl md:text-[4rem] leading-tight">
+            Trustless GPU Network<br/>for AI on AO
           </div>
         </div>
       </div>
@@ -168,31 +167,31 @@ const HomeIndex: FC = () => {
 
       {/* How it works */}
       <div
-        className="section-container md:h-[67.5rem] p-none relative"
+        className="section-container p-none relative"
         style={{
           backgroundImage: `url(${ImgHomepage.BgArch})`,
           backgroundSize: "100% 100%",
         }}
       >
-        <div className="section md:px-5 md:py-[10rem] flex flex-col items-center md:items-start">
-          <div className="section-header mt-12 md:mt-20 z-10">How it works</div>
-          <div className="section-description w-[18.75rem] text-center md:text-left md:w-1/2 z-10">
+        <div className="section md:px-5 md:pt-[10rem] flex flex-col items-center">
+          <div className="section-header mt-12 md:mt-0 z-10">How it works</div>
+          <div className="section-description w-[18.75rem] text-center md:w-[40rem] z-10">
             The solution involves a decentralized, trustless GPU network that provides reliable and cost-effective computational power for AI training and inference. Aggregators create pools and use incentives to encourage the contribution of high-quality fine-tuned models. The network includes an inference process and training process, distributing tasks across deterministic GPUs operated by miners.
           </div>
         </div>
         <div
           id="solution-img"
-          className="w-screen md:w-full md:h-full overflow-x-auto overflow-y-hidden md:mx-0 mt-16 md:mt-0 relative md:absolute md:top-0 md:left-0 md:bottom-0"
+          className="w-screen md:w-full overflow-x-auto overflow-y-hidden mt-16 relative md:flex md:justify-center"
         >
           <img
-            className="absolute bottom-0 left-14 md:left-auto translate-y-1/3 md:translate-y-0 max-w-none md:right-32 md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
-            src={ImgHomepage.ResolutionDizuo}
-          />
-          <img
-            className="md:absolute md:right-32 md:top-2/3 md:-translate-y-2/3 md:w-[68rem] h-150 md:h-[38rem] overflow-x-scroll max-w-none px-5 md:px-0"
+            className="md:w-[68rem] h-150 md:h-[38rem] md:mb-24 overflow-x-scroll max-w-none px-5 md:px-0"
             src={ImgHomepage.BgSolution}
           />
         </div>
+          <img
+            className="absolute bottom-0 left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-0 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
+            src={ImgHomepage.ResolutionDizuo}
+          />
       </div>
 
       {/* Democratizing AI Compute Power */}
@@ -300,7 +299,7 @@ const HomeIndex: FC = () => {
       >
         <div className="section flex flex-col items-center">
           <div className="section-header mt-12 md:mt-[10rem] mb-16 text-center">Powered By</div>
-          <div className="mt-16 flex flex-wrap gap-6 items-center justify-center md:flex-wrap">
+          <div className="flex flex-wrap gap-6 items-center justify-center md:flex-wrap">
             {[
               { img: ImgHomepage.LogoArweave, height: "1.875rem" },
               { img: ImgHomepage.LogoDephy, height: "2.25rem" },
@@ -319,18 +318,22 @@ const HomeIndex: FC = () => {
               </div>
             ))}
           </div>
-          <div className="section-header text-center mt-32 md:mt-64">
+          <div className="section-header text-center mt-24 md:mt-40">
+            Know Apus Better
+          </div>
+          <TwitterVideo />
+          <div className="section-header text-center mt-24 md:mt-40">
             Let's Build Together
           </div>
           <Link to={FooterSocialMediaList[0].path}>
-            <div className=" btn-colorful btn-main mt-12 md:mt-16 mb-56 md:mb-[16rem]">
+            <div className=" btn-colorful btn-main mb-24 md:mb-[16rem]">
               Get Our Updates
             </div>
           </Link>
         </div>
         <img
           src={ImgHomepage.BgBottom}
-          className="absolute bottom-0 md:w-2/3 left-1/2 -translate-x-1/2 -z-10"
+          className="absolute bottom-0 md:w-[72rem] left-1/2 -translate-x-1/2 -z-10"
         />
       </div>
     </div>
@@ -338,3 +341,6 @@ const HomeIndex: FC = () => {
 };
 
 export default HomeIndex;
+
+
+const TwitterVideo = () => <div className="w-[35rem] max-w-full" dangerouslySetInnerHTML={{ __html: `<blockquote class="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">The AO token mint is now live. <a href="https://t.co/GAXT1OLdCu">pic.twitter.com/GAXT1OLdCu</a></p>&mdash; ao (@aoTheComputer) <a href="https://twitter.com/aoTheComputer/status/1801284939612123244?ref_src=twsrc%5Etfw">June 13, 2024</a></blockquote>`}}></div>
