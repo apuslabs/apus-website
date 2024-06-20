@@ -350,5 +350,6 @@ export default HomeIndex;
 
 
 const TwitterVideo = () => <div className="w-[35rem] max-w-full">
-  <blockquote className="twitter-tweet" data-media-max-width="560"><p lang="en" dir="ltr">The AO token mint is now live. <a href="https://t.co/GAXT1OLdCu">pic.twitter.com/GAXT1OLdCu</a></p>&mdash; ao (@aoTheComputer) <a href="https://twitter.com/aoTheComputer/status/1801284939612123244?ref_src=twsrc%5Etfw">June 13, 2024</a></blockquote>
+  <blockquote className="twitter-tweet" data-media-max-width="560">
+    <p lang="en" dir="ltr">🎉 🚀The AO ecosystem <a href="https://twitter.com/aoTheComputer?ref_src=twsrc%5Etfw">@aoTheComputer</a> has just launched the groundbreaking &quot;AI on AO&quot; initiative! We at <a href="https://twitter.com/apus_network?ref_src=twsrc%5Etfw">@apus_network</a> are honored to be featured in the launch video. 🐘<br/><br/>By leveraging Arweave&#39;s permanent on-chain storage, Apus Network is building towards a decentralized,… <a href="https://t.co/d9MP7cwM8Z">pic.twitter.com/d9MP7cwM8Z</a></p>&mdash; Apus Network (@apus_network) <a href="https://twitter.com/apus_network/status/1803821969449816543?ref_src=twsrc%5Etfw">June 20, 2024</a></blockquote>
 </div>
