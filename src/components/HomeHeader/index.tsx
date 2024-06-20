@@ -36,7 +36,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         <img src={ImgHomepage.LogoHorizonal} alt="Apus Logo" className="h-6" />
       </div>
       {!showUserInfo ? <div
-        className={`fixed top-20 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative bg-[rgba(0,0,0,0.8)]`}
+        className={`fixed top-20 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative bg-[rgba(0,0,0,0.8)] md:bg-transparent`}
         style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
         onClick={() => {
           setMenuShow(false)
