@@ -100,7 +100,7 @@ const HomeIndex: FC = () => {
         }}
       >
         <div className="section">
-          <div className="text-white text-center mx-auto mt-20 md:mt-28 xl:mt-32 2xl:mt-40 text-medium text-4xl md:text-[4rem] leading-tight">
+          <div className="text-white text-center mx-auto mt-20 md:mt-28 xl:mt-32 2xl:mt-40 text-medium text-4xl md:text-[4rem] leading-[1.1]">
             Trustless GPU Network<br/>for AI on AO
           </div>
         </div>
