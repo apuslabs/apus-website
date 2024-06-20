@@ -61,7 +61,7 @@ const HomeIndex: FC = () => {
     };
   }, []);
 
-  const [announcementShow, setAnnouncementShow] = useState<boolean>(true);
+  const [announcementShow, setAnnouncementShow] = useState<boolean>(localStorage.getItem('announcementShow') !== 'false');
 
   return (
     <div id="fullpage">
@@ -82,6 +82,7 @@ const HomeIndex: FC = () => {
           <div
             className="btn-main btn-small btn-colorful"
             onClick={() => {
+              localStorage.setItem('announcementShow', 'false')
               setAnnouncementShow(false);
             }}
           >
