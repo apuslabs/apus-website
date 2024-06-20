@@ -147,10 +147,10 @@ const HomeIndex: FC = () => {
               >
                 <div className="relative p-10 rounded-2xl h-full flex flex-col overflow-hidden">
                   <div
-                    className="flex-1 text-2xl mb-8 md:mb-10 md:text-2xl xl:text-3xl text-nowrap"
+                    className="text-2xl mb-8 md:mb-10 md:text-2xl xl:text-3xl text-nowrap"
                     dangerouslySetInnerHTML={{ __html: title }}
                   ></div>
-                  <div className="text-xs mb-8 md:mb-9 md:text-base opacity-50">
+                  <div className="flex-1 text-xs mb-8 md:mb-9 md:text-base opacity-50">
                     {describe}
                   </div>
                   <img src={img} className={`opacity-0 ${imgClassName ?? ""}`} />
