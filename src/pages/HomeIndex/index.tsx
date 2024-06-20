@@ -100,7 +100,7 @@ const HomeIndex: FC = () => {
         }}
       >
         <div className="section">
-          <div className="text-white text-center mx-auto mt-20 md:mt-40 text-medium text-4xl md:text-[4rem] leading-tight">
+          <div className="text-white text-center mx-auto mt-20 md:mt-28 xl:mt-32 2xl:mt-40 text-medium text-4xl md:text-[4rem] leading-tight">
             Trustless GPU Network<br/>for AI on AO
           </div>
         </div>
@@ -176,22 +176,22 @@ const HomeIndex: FC = () => {
         <div className="section md:px-5 md:pt-[10rem] flex flex-col items-center">
           <div className="section-header mt-12 md:mt-0 z-10">How it works</div>
           <div className="section-description w-[18.75rem] text-center md:w-[40rem] z-10">
-            The solution involves a decentralized, trustless GPU network that provides reliable and cost-effective computational power for AI training and inference. Aggregators create pools and use incentives to encourage the contribution of high-quality fine-tuned models. The network includes an inference process and training process, distributing tasks across deterministic GPUs operated by miners.
+          Use a competitive pool mechanism to find the best models. Achieve deterministic GPUs by modifying CUDA and other software. Implement AI inference and training on the AO platform, allowing miners to join permissionlessly, resulting in cost-effective AI.
           </div>
         </div>
         <div
           id="solution-img"
-          className="w-screen md:w-full overflow-x-auto overflow-y-hidden mt-16 relative md:flex md:justify-center"
+          className="w-screen md:w-full overflow-x-auto overflow-y-hidden mt-16 relative md:flex md:justify-center z-10"
         >
           <img
-            className="md:w-[68rem] h-150 md:h-[38rem] md:mb-24 overflow-x-scroll max-w-none px-5 md:px-0"
+            className="md:w-[68rem] h-150 md:h-[38rem] md:mb-24 overflow-x-scroll max-w-none px-5 md:px-0 z-10"
             src={ImgHomepage.BgSolution}
           />
-        </div>
           <img
-            className="absolute bottom-0 md left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-20 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100 -z-10"
+            className="absolute bottom-0 left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-20 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100"
             src={ImgHomepage.ResolutionDizuo}
           />
+        </div>
       </div>
 
       {/* Democratizing AI Compute Power */}
