@@ -2,8 +2,6 @@ import { FC, useState } from "react";
 import { ImgHomepage } from "../../assets/image";
 import { useNavigate, Link } from "react-router-dom";
 import "./index.less";
-import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletDisconnectButton, useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useBreakpoint } from "../../utils/react-use";
 import { HeaderMenuList } from "../../config/menu";
 
