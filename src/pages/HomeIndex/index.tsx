@@ -92,7 +92,7 @@ const HomeIndex: FC = () => {
       ) : null}
       {/* Hero */}
       <div
-        className="section-container h-screen relative"
+        className="section-container h-screen min-h-[56vw] relative"
         style={{
           backgroundImage: `url(${ImgHomepage.BgHero})`,
           backgroundSize: "cover",
@@ -196,7 +196,7 @@ const HomeIndex: FC = () => {
             src={ImgHomepage.BgSolution}
           />
           <img
-            className="absolute bottom-0 left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-20 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100"
+            className="absolute bottom-0 left-14 md:left-1/2 md:-translate-x-1/2 translate-y-1/3 md:translate-y-0 max-w-none md:w-[67.5rem] h-[24rem] md:h-[34.75rem] opacity-60 md:opacity-100"
             src={ImgHomepage.ResolutionDizuo}
           />
         </div>
