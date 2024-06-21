@@ -25,6 +25,7 @@ body {
 }
 
 .btn-colorful {
+  /* z-index: 10; */
   &::before {
     content: "";
     @apply absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2/3 h-3/4 blur-lg;

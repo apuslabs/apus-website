@@ -92,16 +92,24 @@ const HomeIndex: FC = () => {
       ) : null}
       {/* Hero */}
       <div
-        className="section-container min-h-screen md:h-[56vw] relative"
+        className="section-container h-screen relative"
         style={{
           backgroundImage: `url(${ImgHomepage.BgHero})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="section">
+        <div className="section h-full flex flex-col">
           <div className="text-white text-center mx-auto mt-20 md:mt-28 xl:mt-32 2xl:mt-40 text-medium text-4xl md:text-[4rem] leading-[1.1]">
             Trustless GPU Network<br/>for AI on AO
+          </div>
+          <div className="flex-1 flex justify-center items-end gap-6 pb-24 z-10">
+            <div className=" btn-colorful btn-main" onClick={() => {
+              window.open("https://playground.apus.network", "_blank");
+            }}>Go to Playground</div>
+            <div className="btn-main" onClick={() => {
+              window.open("https://apus-network.gitbook.io/apus-console-docs/", "_blank");
+            }}>Know Apus More</div>
           </div>
         </div>
       </div>
