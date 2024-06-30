@@ -357,4 +357,4 @@ const HomeIndex: FC = () => {
 export default HomeIndex;
 
 
-const TwitterVideo = () => <iframe width="560" height="315" src="https://www.youtube.com/embed/-rPbCeCbJVc?si=778KTA2eKneoQLDF" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+const TwitterVideo = () => <iframe className="w-[35rem] h-[20rem] max-w-full" src="https://www.youtube.com/embed/-rPbCeCbJVc?si=778KTA2eKneoQLDF" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
