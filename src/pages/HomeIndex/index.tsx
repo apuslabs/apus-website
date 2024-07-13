@@ -105,8 +105,8 @@ const HomeIndex: FC = () => {
           </div>
           <div className="flex-1 flex justify-center items-end gap-6 pb-24 z-10">
             <div className=" btn-colorful btn-main" onClick={() => {
-              window.open("https://playground.apus.network", "_blank");
-            }}>Go to Playground</div>
+              window.open("https://apus-network.gitbook.io/apus-console-docs/ao/benchmark-poc", "_blank");
+            }}>Benchmark POC</div>
             <div className="btn-main" onClick={() => {
               window.open("https://apus-network.gitbook.io/apus-console-docs/", "_blank");
             }}>Know Apus More</div>
