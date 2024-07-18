@@ -1,21 +1,8 @@
 import { FC, useState } from "react";
 import { ImgHomepage } from "../../assets/image";
 import { useNavigate, Link } from "react-router-dom";
-import "./index.less";
 import { useBreakpoint } from "../../utils/react-use";
 import { HeaderMenuList } from "../../config/menu";
-
-const ShortAddress: FC<{ address: string }> = ({ address }) => {
-  const isLongerThen8Chars = address.length > 8;
-  const firstPart = address.slice(0, 4);
-  const lastPart = address.slice(-4);
-  const shortAddress = `${firstPart}...${lastPart}`;
-  return (
-      <div title={address} data-tip={address}>
-          {isLongerThen8Chars ? shortAddress : address}
-      </div>
-  );
-};
 
 const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
   showUserInfo = false,
@@ -44,7 +31,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
       >
         <ul className="flex-col justify-center items-center gap-12 md:h-full md:flex md:flex-row bg-[#111111] md:bg-transparent z-20">
           {HeaderMenuList.map((item) => (
-            <Link to={item.path}><li className="menu-colorful" key={item.name}>
+            <Link key={item.name} to={item.path}><li className="menu-colorful" key={item.name}>
               {item.name}
             </li>
             </Link>
@@ -54,30 +41,6 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
 
       {!isTablet ? (
         <div className="w-[15rem]"></div>
-        // connected && showUserInfo ? (
-        //   // <Dropdown menu={{ items: [
-        //   //   {
-
-        //   //     key: 'disconnect',
-        //   //     label: <WalletDisconnectButton />
-        //   //   }
-        //   // ]}}>
-        //     <ShortAddress address={publicKey?.toBase58() ?? ""}></ShortAddress>
-        //   // </Dropdown>
-        // ) : (
-        //   <div
-        //     className="btn-main btn-colorful"
-        //     onClick={() => {
-        //       if (!connected) {
-        //         setVisible(true);
-        //       } else {
-        //         navigate("/app/account");
-        //       }
-        //     }}
-        //   >
-        //     {!connected ? "Connect Wallet" : "Console"}
-        //   </div>
-        // )
       ) : (
         <img
           src={ImgHomepage.IconMenu}

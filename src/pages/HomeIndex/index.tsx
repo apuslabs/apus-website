@@ -1,42 +1,16 @@
 import { FC, useEffect, useLayoutEffect, useState } from "react";
-import "./index.less";
-// import { solApiFetcher, useStatistics } from "../../contexts/task";
+import "./index.css";
 import { Link } from "react-router-dom";
-// import QueryString from "qs";
 import { ImgHomepage } from "../../assets/image";
 import { useBreakpoint } from "../../utils/react-use";
-// @ts-ignore
-// import fullpage from "fullpage.js";
 import { FooterSocialMediaList } from "../../config/menu";
-// import { AIAssistantBlobAnimation } from "./AIAssistantBlobAnimation";
-// import { DocLink } from "../../config/menu";
-
-if (history.scrollRestoration) {
-  history.scrollRestoration = "manual";
-} else {
-  window.onbeforeunload = function () {
-    window.scrollTo(0, 0);
-  };
-}
+import { ConfigProvider, theme } from "antd";
+import HomeHeader from "../../components/HomeHeader";
+import HomeFooter from "../../components/HomeFooter";
 
 const HomeIndex: FC = () => {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
-
-  // useEffect(() => {
-  //   if (isMobile) {
-  //     document.body.style.overflow = "auto";
-  //   } else {
-  //     const fullpageInstance = new fullpage("#fullpage", {
-  //       licenseKey: "gplv3-license",
-  //       hybrid: true,
-  //       fitToSection: false,
-  //       normalScrollElements: isMobile ? "#solution-img" : "",
-  //       lockAnchors: true,
-  //       anchors: [],
-  //     });
-  //   }
-  // }, [isMobile]);
 
   useLayoutEffect(() => {
     var observer = new IntersectionObserver(
@@ -354,7 +328,18 @@ const HomeIndex: FC = () => {
   );
 };
 
-export default HomeIndex;
+const Homepage: FC = () => {
+
+  return (
+    <div>
+      <HomeHeader />
+      <HomeIndex />
+      <HomeFooter />
+    </div>
+  )
+}
+
+export default Homepage;
 
 
 const TwitterVideo = () => <iframe className="w-[35rem] h-[20rem] max-w-full" src="https://www.youtube.com/embed/-rPbCeCbJVc?si=778KTA2eKneoQLDF" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>

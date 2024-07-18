@@ -1,19 +1,13 @@
 import { FC } from "react";
-import "./index.less";
 import { ImgHomepage } from "../../assets/image";
 import { Link, useNavigate } from "react-router-dom";
 import { FooterMenuList, FooterSocialMediaList } from "../../config/menu";
-// import TelegramIcon from "../../assets/telegram-fill.svg";
-// import TwitterIcon from "../../assets/twitter.svg";
 
 interface HomeFooterProps {
   showCompany?: boolean;
 }
 
 const HomeFooter: FC<HomeFooterProps> = (props) => {
-  const { showCompany } = props;
-  const navigate = useNavigate()
-
   return (
     <div className="flex px-5 py-28 md:px-12 md:py-16 md:justify-end gap-32 relative" style={{
       backgroundColor: "#0B0B0B"
