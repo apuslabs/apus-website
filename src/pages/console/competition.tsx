@@ -22,7 +22,8 @@ const TwitterVideo = () => (
 const QuickButton: FC<{
   address?: string;
   text: string;
-}> = ({ address, text }) => {
+  onJoinCompetition: () => void;
+}> = ({ address, text, onJoinCompetition }) => {
   const { activeAddress, connectWallet } = useArweaveContext();
   return (
     <div
@@ -30,6 +31,8 @@ const QuickButton: FC<{
       onClick={() => {
         if (!activeAddress) {
           connectWallet();
+        } else {
+          onJoinCompetition()
         }
       }}
     >
@@ -236,14 +239,14 @@ const JoinCompetitionModal: FC<{
 const Competition = () => {
   const [showMore, setShowMore] = useState(false);
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
-    useState(true);
+    useState(false);
   return (
     <div id="competition" className="max-w-[1080px] mx-auto">
       <div className="flex justify-between items-center my-6">
         <h2 className="text-xl font-semibold text-neutral-900">
           Competition Pool
         </h2>
-        <QuickButton text="Connect Wallet" />
+        <QuickButton text="Connect Wallet" onJoinCompetition={() => {setJoinCompetitionModalVisible(true)}} />
       </div>
       <div className="relative p-6 bg-light rounded-2xl">
         <div className="w-3/5">

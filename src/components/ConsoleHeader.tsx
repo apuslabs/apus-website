@@ -6,7 +6,7 @@ import { ShortAddress } from "../utils/ao";
 import { useArweaveContext } from "../contexts/arconnect";
 
 const UserInfo: FC = function () {
-  const { activeAddress, connectWallet, hasWallet } = useArweaveContext();
+  const { activeAddress, connectWallet } = useArweaveContext();
   return activeAddress ? (
     <div className="btn-default">{ShortAddress(activeAddress)}</div>
   ) : (
