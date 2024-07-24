@@ -77,3 +77,14 @@ export const FooterSocialMediaList: menuType[] = [
     path: "https://medium.com/@apusnetwork"
   }
 ]
+
+export const ConsoleHeaderList: menuType[] = [
+  {
+    name: 'Competition Pool',
+    path: '/console/competition'
+  },
+  {
+    name: 'Playground',
+    path: '/console/playground'
+  }
+]

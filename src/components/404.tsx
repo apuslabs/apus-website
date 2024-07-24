@@ -3,7 +3,7 @@ import HomeHeader from "./HomeHeader";
 import HomeFooter from "./HomeFooter";
 import { Link } from "react-router-dom";
 
-export default () => <div className="min-h-screen flex flex-col">
+export default () => <div className="min-h-screen flex flex-col bg-neutral-900 text-white relative z-10">
   <HomeHeader></HomeHeader>
   <Result
   className="flex-1 p-4 pt-24"

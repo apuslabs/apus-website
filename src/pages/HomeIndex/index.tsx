@@ -1,10 +1,9 @@
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useLayoutEffect, useState } from "react";
 import "./index.css";
 import { Link } from "react-router-dom";
 import { ImgHomepage } from "../../assets/image";
 import { useBreakpoint } from "../../utils/react-use";
 import { FooterSocialMediaList } from "../../config/menu";
-import { ConfigProvider, theme } from "antd";
 import HomeHeader from "../../components/HomeHeader";
 import HomeFooter from "../../components/HomeFooter";
 
@@ -38,7 +37,7 @@ const HomeIndex: FC = () => {
   const [announcementShow, setAnnouncementShow] = useState<boolean>(localStorage.getItem('announcementShow') !== 'false');
 
   return (
-    <div id="fullpage">
+    <div>
       {announcementShow ? (
         <div
           className="boreder-benifits bottom-3 md:bottom-auto md:top-24 left-1/2 -translate-x-1/2 p-6 flex items-center z-50"
@@ -331,7 +330,7 @@ const HomeIndex: FC = () => {
 const Homepage: FC = () => {
 
   return (
-    <div>
+    <div id="homepage">
       <HomeHeader />
       <HomeIndex />
       <HomeFooter />

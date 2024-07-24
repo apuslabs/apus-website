@@ -1,3 +1,10 @@
+#homepage {
+  position: relative;
+  background-color: #111111;
+  color: white;
+  z-index: -99;
+}
+
 .benifits-item {
   opacity: 0;
   transform: translateY(20px);

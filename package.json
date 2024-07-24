@@ -12,7 +12,10 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.5",
+    "@permaweb/aoconnect": "^0.0.56",
     "antd": "^5.15.3",
+    "antd-style": "^3.6.2",
+    "arconnect": "^1.0.3",
     "axios": "^1.6.8",
     "qs": "^6.12.0",
     "react": "^18.2.0",
