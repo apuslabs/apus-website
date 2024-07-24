@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  font-family: 'Inter', sans-serif;
-  --gradient2: linear-gradient(-45deg, #9B8AFF 0%, #2806FA 100%);
-  --gradient3: linear-gradient(135deg, #2806FA 0%, #A253FC 59%, #FFDBDB 100%);
+  font-family: "Inter", sans-serif;
+  --gradient2: linear-gradient(-45deg, #9b8aff 0%, #2806fa 100%);
+  --gradient3: linear-gradient(135deg, #2806fa 0%, #a253fc 59%, #ffdbdb 100%);
   --black50: rgba(0, 0, 0, 0.5);
   --black20: rgba(0, 0, 0, 0.2);
 }
@@ -31,10 +31,10 @@
   cursor: pointer;
   border-radius: 10px;
   /* inner shadow blur 16px  */
-  box-shadow: inset 0 0 16px rgba(255, 255, 255 , 0.25);
+  box-shadow: inset 0 0 16px rgba(255, 255, 255, 0.25);
   @apply flex items-center justify-center h-10 px-6 text-sm font-semibold;
   &:hover {
-    background: #6640FC;
+    background: #6640fc;
   }
   &.disabled {
     opacity: 50%;
@@ -72,7 +72,7 @@
   &::before {
     content: "";
     @apply absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2/3 h-3/4 blur-lg;
-    background-color: #4D01C8;
+    background-color: #4d01c8;
     border-radius: 50%;
     transition: width 0.3s, height 0.3s;
     z-index: -1;
@@ -80,7 +80,7 @@
   &::after {
     content: "";
     @apply absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2/5 h-2/6 blur-lg;
-    background-color: #17C7FF;
+    background-color: #17c7ff;
     opacity: 0.8;
     border-radius: 50%;
     transition: width 0.3s, height 0.3s;
@@ -132,8 +132,8 @@
 }
 
 .section-description {
-  @apply  text-xs md:text-xl;
-  color: rgba(255,255,255,0.5);
+  @apply text-xs md:text-xl;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .bg-blur::after {
@@ -144,18 +144,26 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(0,0,0,0.95);
+  background: rgba(0, 0, 0, 0.95);
   filter: blur(2px);
   z-index: -10;
 }
 
 .highlights-item {
   transition: all;
-  background: linear-gradient(-45deg, #160C87 -100%, rgba(102,1,170,0.02) 60%);
+  background: linear-gradient(
+    -45deg,
+    #160c87 -100%,
+    rgba(102, 1, 170, 0.02) 60%
+  );
 }
 
 .highlights-item:hover {
-  background: linear-gradient(-80deg, #160C87 -50%, rgba(102,1,170,0.02) 80%);
+  background: linear-gradient(
+    -80deg,
+    #160c87 -50%,
+    rgba(102, 1, 170, 0.02) 80%
+  );
 }
 
 .fp-overflow:focus-visible {
@@ -163,7 +171,7 @@
 }
 
 .fp-watermark {
-  display: none!important;
+  display: none !important;
 }
 
 .section .fp-auto-height {
