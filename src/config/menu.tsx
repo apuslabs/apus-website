@@ -80,7 +80,7 @@ export const FooterSocialMediaList: menuType[] = [
 
 export const ConsoleHeaderList: menuType[] = [
   {
-    name: 'Competition Pool',
+    name: 'Competition Pools',
     path: '/console/competition'
   },
   {
