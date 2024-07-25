@@ -6,6 +6,7 @@ import { ShortAddress } from "../../utils/ao";
 import "./competition.css";
 import { useArweaveContext } from "../../contexts/arconnect";
 import { useForm } from "antd/es/form/Form";
+import { ColumnType } from "antd/es/table";
 
 const TwitterVideo = () => (
   <iframe
@@ -67,7 +68,11 @@ const CompeittionDetails = [
     value: (
       <div className="flex items-center gap-1">
         <span className="text-gradient2 font-medium">400M Point</span>
-        <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4" />
+        <Tooltip title="50% of the reward pool is allocated to the top three participants in the leaderboards." overlayInnerStyle={{
+          width: '20rem'
+        }}>
+          <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4" />
+        </Tooltip>
       </div>
     ),
   },
@@ -107,7 +112,7 @@ const Statisitcs = [
     value: "2,000",
   },
   {
-    label: "Rewards Rewards Distributed",
+    label: "Rewards Distributed",
     value: "14,758,800 Points",
   },
   {
@@ -120,7 +125,7 @@ const Statisitcs = [
   },
 ];
 
-const TableColumns = [
+const TableColumns: ColumnType<any>[] = [
   {
     title: "RANK",
     dataIndex: "rank",
@@ -151,6 +156,7 @@ const TableColumns = [
   {
     title: "USING AI MODELS",
     key: "operations",
+    align: 'right',
     render: (_: string, item: any) => (
       <div className="btn-default btn-small">Chat With AI Model</div>
     ),
@@ -178,7 +184,7 @@ const JoinCompetitionModal: FC<{
   return (
     <Modal
       title={
-        <div className="font-semibold text-black text-2xl">
+        <div className="font-bold text-black text-2xl">
           Submit Fine-tuned Model
         </div>
       }
@@ -202,7 +208,9 @@ const JoinCompetitionModal: FC<{
           label={
             <div className="text-xs text-black50 flex items-center gap-1">
               File Hash on Arweave
-              <Tooltip title="A hash code is a digital fingerprint of an input data set, where the code is used to verify or identify the original document at a later time. A hash value is usually produced by applying a hashing function to an input value.">
+              <Tooltip title="A hash code is a digital fingerprint of an input data set, where the code is used to verify or identify the original document at a later time. A hash value is usually produced by applying a hashing function to an input value." overlayClassName="w-80" overlayInnerStyle={{
+                width: '20rem'
+              }}>
                 <img
                   src={ImgCompetition.IconInfoCircle}
                   className="w-3 h-3 cursor-pointer"
@@ -241,8 +249,8 @@ const Competition = () => {
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
     useState(false);
   return (
-    <div id="competition" className="max-w-[1080px] mx-auto">
-      <div className="flex justify-between items-center my-6">
+    <div id="competition" className="max-w-[1080px] mx-auto pb-64">
+      <div className="flex justify-between items-center mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">
           Competition Pool
         </h2>
@@ -291,7 +299,7 @@ const Competition = () => {
         </div>
       </div>
 
-      <div className="flex justify-between items-center my-6">
+      <div className="flex justify-between items-center mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">Dashboard</h2>
       </div>
       <div className="flex gap-4">
@@ -309,13 +317,13 @@ const Competition = () => {
         })}
       </div>
 
-      <div className="flex flex-col my-6">
+      <div className="flex flex-col mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">Leaderboard</h2>
         <p className="mt-2 text-black50 text-xs">
           Leaderboard updated every 24 hours
         </p>
       </div>
-      <div className="rounded-2xl pb-6">
+      <div className="rounded-2xl">
         <Table dataSource={FakeData()} rowKey="model" columns={TableColumns} />
       </div>
       <JoinCompetitionModal

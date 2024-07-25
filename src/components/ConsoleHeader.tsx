@@ -20,7 +20,7 @@ export default function () {
   const location = useLocation();
 
   return (
-    <header className="bg-white h-20 w-full fixed top-0 left-0 right-0 px-10 flex items-center gap-10">
+    <header className="bg-light h-20 w-full fixed top-0 left-0 right-0 px-10 flex items-center gap-10 z-20">
       <Link to="/" className="h-full flex-0 flex items-center">
         <img src={ImgCompetition.LogoHorizonalSimple} className="h-8" />
       </Link>
