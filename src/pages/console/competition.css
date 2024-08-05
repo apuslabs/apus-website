@@ -67,3 +67,7 @@
 .ant-input-outlined:hover {
   background: #ffffff !important;
 }
+
+.ant-upload-wrapper .ant-upload-drag .ant-upload {
+  @apply p-0 overflow-hidden;
+}

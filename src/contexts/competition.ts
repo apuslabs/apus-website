@@ -1,79 +1,10 @@
-import { useEffect, useState } from "react";
-import { benchmarkDryrun, benchmarkMsg, toString } from "../utils/ao";
+import { useEffect } from "react";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime' // ES 2015
 import { useArweaveContext } from "./arconnect";
+import { useDryrunWrapper, useMessageWrapper } from "../utils/ao";
+import { BENCHMARK_PROCESS, EMBEDDING_PROCESS } from "../config/process";
 dayjs.extend(relativeTime);
-
-
-interface MessageResult<M> {
-  Output: any;
-  Messages: [M];
-  Spawns: any[];
-  Error?: any;
-}
-
-export function useMessage<Message = any>(Action: string, tags: Record<string, string>  = {}, data?: string | number | Record<string, any>) {
-  const [result, setResult] = useState<MessageResult<Message>>()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>()
-
-  const msg = async () => {
-    setLoading(true)
-    try {
-      const result = await benchmarkMsg({ ...tags, Action }, data)
-      if (result == null) {
-        throw new Error("No result")
-      }
-      if (result.Error) {
-        setError(toString(result.Error))
-      }
-      setResult(result as any)
-    } catch (e) {
-      setError(toString(e))
-    } finally {
-      setLoading(false)
-    }
-  }
-  
-  return {
-    result,
-    loading,
-    error,
-    msg,
-  }
-}
-
-export function useDryrun<Message = any>(Action: string, tags: Record<string, string> = {}, data?: string | number | Record<string, any>) {
-  const [result, setResult] = useState<MessageResult<Message>>()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>()
-
-  const msg = async () => {
-    setLoading(true)
-    try {
-      const result = await benchmarkDryrun({ ...tags, Action }, data)
-      if (result == null) {
-        throw new Error("No result")
-      }
-      if (result.Error) {
-        setError(toString(result.Error))
-      }
-      setResult(result as any)
-    } catch (e) {
-      setError(toString(e))
-    } finally {
-      setLoading(false)
-    }
-  }
-  
-  return {
-    result,
-    loading,
-    error,
-    msg,
-  }
-}
 
 export interface PoolInfo {
   title: string
@@ -122,22 +53,22 @@ export interface Leaderboard {
   granted_reward: number
 }
 
-export function useCompetitionPool(
-  setJoinCompetitionModalVisible: (visible: boolean) => void,
-  setShowMore: (visible: boolean) => void,
-) {
+const useBenchmarkMessage = useMessageWrapper(BENCHMARK_PROCESS)
+const useBenchmarkDryrun = useDryrunWrapper(BENCHMARK_PROCESS)
+
+export function useCompetitionPool() {
   const { activeAddress } = useArweaveContext()
 
-  const { result: poolInfoResult, loading: poolInfoLoading, error: poolInfoError, msg: getPool } = useDryrun("Get-Pool", {}, { pool_id: 1})
+  const { result: poolInfoResult, loading: poolInfoLoading, error: poolInfoError, msg: getPool } = useBenchmarkDryrun("Get-Pool")
   // TODO: useDryrun
-  const { result: dashboardResult, loading: dashboardLoading, error: dashboardError, msg: getDashboard } = useMessage("Get-Dashboard")
+  const { result: dashboardResult, loading: dashboardLoading, error: dashboardError, msg: getDashboard } = useBenchmarkMessage("Get-Dashboard")
   // TODO: useDryrun
-  const { result: leaderboardResult, loading: leaderboardLoading, error: leaderboardError, msg: getLeaderboard } = useMessage("Get-Leaderboard")
-  const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useMessage("Join-Pool")
+  const { result: leaderboardResult, loading: leaderboardLoading, error: leaderboardError, msg: getLeaderboard } = useBenchmarkMessage("Get-Leaderboard")
+  const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
 
   useEffect(() => {
     if (activeAddress) {
-      getPool()
+      getPool({}, { pool_id: 1})
       getDashboard()
       getLeaderboard()
     }
@@ -165,16 +96,10 @@ export function useCompetitionPool(
 
   const stage = !isPoolStarted ? "Upcoming" : poolOpening ? "Active" : "Completed"
 
-  const quickBtnOnClick = () => {
+  const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
     if (!poolOpening) return
     setJoinCompetitionModalVisible(true)
   }
-
-  useEffect(() => {
-    if (!isPoolStarted) {
-      setShowMore(true)
-    }
-  }, [isPoolStarted])
 
   return {
     poolInfo,
@@ -200,5 +125,25 @@ export function useCompetitionPool(
     quickBtnOnClick,
     timeTips,
     stage,
+  }
+}
+
+const useEmbeddingMessage = useMessageWrapper(EMBEDDING_PROCESS)
+
+interface DatasetItem {
+  content: string
+  meta?: Record<string, any>
+}
+
+export function useEmbedding() {
+  const { result: createDatasetResult, loading: createDatasetLoading, error: createDatasetError, msg } = useEmbeddingMessage("Create-Dataset")
+
+  const createDataset = (hash: string, list: DatasetItem[]) => msg({}, {hash, list})
+
+  return {
+    createDatasetResult,
+    createDatasetLoading,
+    createDatasetError,
+    createDataset
   }
 }

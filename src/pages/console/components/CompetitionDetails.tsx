@@ -4,8 +4,7 @@ import { PoolInfo } from "../../../contexts/competition";
 import { formatNumberWithSuffix, timeFormat } from "../../../utils/utils";
 import { Link } from "react-router-dom";
 
-export 
-const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
+export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
   {
     icon: ImgCompetition.IconCoinsStacked,
     label: "Reward Pool",

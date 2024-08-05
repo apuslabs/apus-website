@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ImgCompetition } from "../../assets/image";
 import { ConfigProvider, Empty, Form, GetProp, Input, Modal, Table, Tooltip } from "antd";
 import "./competition.css";
@@ -33,21 +33,22 @@ const Competition = () => {
     poolInfo,
     poolInfoLoading,
     dashboard,
-    // dashboardLoading,
-    leaderboard,
     leaderboardLoading,
-    joinPoolResult,
-    joinPoolLoading,
-    joinPoolError,
     joinPool,
+    getLeaderboard,
     isPoolStarted,
     isPoolEnded,
-    poolOpening,
     quickBtnText,
     quickBtnOnClick,
     timeTips,
     stage,
-  } = useCompetitionPool(setJoinCompetitionModalVisible, setShowMore);
+  } = useCompetitionPool();
+
+  useEffect(() => {
+    if (!isPoolStarted) {
+      setShowMore(true)
+    }
+  }, [isPoolStarted])
 
   if (poolInfoLoading) {
     return <div></div>;
@@ -62,7 +63,7 @@ const Competition = () => {
         <QuickButton
           text={quickBtnText}
           disabled={!isPoolStarted || isPoolEnded}
-          onJoinCompetition={quickBtnOnClick}
+          onJoinCompetition={() => quickBtnOnClick(setJoinCompetitionModalVisible)}
         />
       </div>
       <div className="relative p-6 bg-light rounded-2xl">
@@ -151,8 +152,10 @@ const Competition = () => {
           setJoinCompetitionModalVisible(false);
         }}
         onOk={() => {
-          setJoinCompetitionModalVisible(true);
+          setJoinCompetitionModalVisible(false);
         }}
+        joinPool={joinPool}
+        getLeaderboard={getLeaderboard}
       />
     </div>
   );

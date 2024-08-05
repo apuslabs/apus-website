@@ -9,7 +9,7 @@ export const QuickButton: FC<{
   const { activeAddress, connectWallet } = useArweaveContext();
   return (
     <div
-      className={`btn-gradient3 ${disabled ? "opacity-50" : ""}`}
+      className={`btn-gradient3 ${disabled ? "disabled" : " cursor-pointer"}`}
       onClick={() => {
         if (!activeAddress) {
           connectWallet();

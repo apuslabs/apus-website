@@ -1,6 +1,8 @@
 import { message, createDataItemSigner, dryrun, result } from "@permaweb/aoconnect";
 import { BENCHMARK_PROCESS } from "../config/process";
 import { blueLabelStyle, greenLabelStyle, messageStyle, redLabelStyle, yellowLabelStyle } from "../config/console";
+import { useState } from "react";
+import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 
 export const ShortAddress = (address: string) =>
   `${address.substring(0, 4)}...${address.substring(
@@ -28,7 +30,7 @@ export function toString(value: any): string {
   }
 }
 
-function messageResultWrapper(process: string, debug?: boolean) {
+export function messageResultWrapper(process: string, debug?: boolean) {
   return async function (
     tags: Record<string, string>,
     data?: string | Record<string, any> | number
@@ -44,7 +46,7 @@ function messageResultWrapper(process: string, debug?: boolean) {
         // the arweave TXID of the message
         message: messageId,
         // the arweave TXID of the process
-        process: BENCHMARK_PROCESS,
+        process,
       });
       debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, messageReturn);
       return messageReturn;
@@ -55,9 +57,7 @@ function messageResultWrapper(process: string, debug?: boolean) {
   };
 }
 
-export const benchmarkMsg = messageResultWrapper(BENCHMARK_PROCESS, true);
-
-function dryrunResultWrapper(process: string, debug?: boolean) {
+export function dryrunResultWrapper(process: string, debug?: boolean) {
   return async function (
     tags: Record<string, string>,
     data?: string | Record<string, any> | number
@@ -78,4 +78,66 @@ function dryrunResultWrapper(process: string, debug?: boolean) {
   };
 }
 
-export const benchmarkDryrun = dryrunResultWrapper(BENCHMARK_PROCESS, true);
+
+export const useMessageWrapper = (process: string) => (Action: string) => {
+  const [result, setResult] = useState<MessageResult>()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
+
+  const msg = async (tags: Record<string, string>  = {}, data?: string | number | Record<string, any>) => {
+    setLoading(true)
+    try {
+      const result = await messageResultWrapper(process, true)({ ...tags, Action }, data)
+      if (result == null) {
+        throw new Error("No result")
+      }
+      if (result.Error) {
+        setError(toString(result.Error))
+      }
+      setResult(result as any)
+    } catch (e) {
+      setError(toString(e))
+      throw e
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  return {
+    result,
+    loading,
+    error,
+    msg,
+  }
+}
+
+export const useDryrunWrapper = (process: string) => (Action: string) => {
+  const [result, setResult] = useState<MessageResult>()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string>()
+
+  const msg = async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {
+    setLoading(true)
+    try {
+      const result = await dryrunResultWrapper(process)({ ...tags, Action }, data)
+      if (result == null) {
+        throw new Error("No result")
+      }
+      if (result.Error) {
+        setError(toString(result.Error))
+      }
+      setResult(result as any)
+    } catch (e) {
+      setError(toString(e))
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+  return {
+    result,
+    loading,
+    error,
+    msg,
+  }
+}
