@@ -33,6 +33,7 @@ import IconData from "./competition/icon-data.png";
 import IconFile from "./competition/icon-file.png";
 import IconHourGlass from "./competition/icon-hourglass.png";
 import IconInfoCircle from "./competition/icon-info-circle.png";
+import TableNull from "./competition/table_null.png";
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -70,4 +71,5 @@ export const ImgCompetition = {
   IconFile,
   IconHourGlass,
   IconInfoCircle,
+  TableNull,
 };
