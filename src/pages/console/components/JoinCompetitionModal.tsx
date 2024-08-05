@@ -49,7 +49,7 @@ export const JoinCompetitionModal: FC<{
       title={
         <div className="font-bold text-black text-2xl">Submit Dataset</div>
       }
-      open={true || visible}
+      open={visible}
       onCancel={onCancel}
       onOk={onOk}
       footer={null}

@@ -1,0 +1,14 @@
+#playground .ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector {
+  @apply bg-light h-14 px-4 font-medium;
+}
+#playground .ant-select-single.ant-select-lg {
+  @apply h-14;
+}
+
+.ant-select-dropdown {
+ @apply bg-light;
+}
+
+#playground textarea.ant-input {
+  @apply leading-normal min-h-14 text-base font-medium text-black80 p-4;
+}

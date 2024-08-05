@@ -5,6 +5,7 @@ import ConsoleWrapper from "./pages/console/wrapper";
 import Competition from "./pages/console/competition";
 import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
+import Playground from "./pages/console/playground";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
         path: "competition",
         element: <Competition />,
       },
+      {
+        path: "playground",
+        element: <Playground />
+      }
     ],
   },
   {

@@ -73,3 +73,17 @@ export const ImgCompetition = {
   IconInfoCircle,
   TableNull,
 };
+
+import ApusAvatar from "./playground/apus-avatar.png";
+import UserAvatar from "./playground/user-avatar.png";
+import SignalGreen from "./playground/signal-green.png";
+import SignalYellow from "./playground/signal-yellow.png";
+import SignalRed from "./playground/signal-red.png";
+
+export const ImgPlayground = {
+  ApusAvatar,
+  UserAvatar,
+  SignalGreen,
+  SignalYellow,
+  SignalRed,
+};
