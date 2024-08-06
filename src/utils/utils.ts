@@ -22,7 +22,7 @@ export const formatNumber = new Intl.NumberFormat('en-US').format
 
 export function timeFormat(value: number): string {
   const date = new Date(value);
-  return dayjs(value).format('YYYY-MM-DD HH:mm');
+  return dayjs.unix(value).format('YYYY-MM-DD HH:mm');
 }
 
 export async function sha1(str: string) {

@@ -135,7 +135,7 @@ export const Playground = () => {
       </div>
     </div>
   );
-};
+}; 
 
 export default function () {
   return (

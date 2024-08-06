@@ -10,23 +10,30 @@ export interface PoolInfo {
   title: string
   prize_pool: number
   // TODO: end_time, start_time
-  competition_time: {
-    endTime: number
-    startTime: number
+  meta_data: {
+    competition_time: {
+      start: number
+      end: number
+    }
+    fine_tuning_tutorial_link: string
+    description: string
+    video: string
   }
-  fine_tuning_tutorial_link: string
-  description: string
-  video: string
 }
 
 const DefaultPoolInfo = {
   title: "",
   prize_pool: 0,
-  // TODO: update
-  competition_time: '{"endTime":0,"startTime":0}',
-  fine_tuning_tutorial_link: "",
-  description: "",
-  video: "",
+  meta_data: JSON.stringify({
+    // TODO: update
+    competition_time: {
+      start: 0,
+      end: 0,
+    },
+    fine_tuning_tutorial_link: "",
+    description: "",
+    video: "",
+  })
 }
 
 export interface Dashboard {
@@ -67,6 +74,7 @@ export function useCompetitionPool() {
   const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
 
   useEffect(() => {
+    console.log(activeAddress)
     if (activeAddress) {
       getPool({}, { pool_id: 1})
       getDashboard()
@@ -74,21 +82,23 @@ export function useCompetitionPool() {
     }
   }, [activeAddress])
 
-  const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data ?? JSON.stringify(DefaultPoolInfo)
-  const dashboardMsg = dashboardResult?.Messages?.[0]?.Data ?? JSON.stringify(DefaultDashboard)
-  const leaderboardMsg = leaderboardResult?.Messages?.[0]?.Data ?? "[]"
+  const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo)
+  const dashboardMsg = dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard)
+  const leaderboardMsg = leaderboardResult?.Messages?.[0]?.Data || "[]"
 
   const poolInfo: PoolInfo = JSON.parse(poolInfoMsg)
   const dashboard: Dashboard = JSON.parse(dashboardMsg)
   const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg)
 
   // TODO: remove this
-  poolInfo.competition_time = JSON.parse(poolInfo.competition_time as any)
-
-  const isPoolStarted = Date.now() > poolInfo.competition_time.startTime
-  const poolStartCountdown = dayjs(poolInfo.competition_time.startTime).fromNow(true)
-  const isPoolEnded = Date.now() > poolInfo.competition_time.endTime
-  const poolEndCountdown = dayjs(poolInfo.competition_time.endTime).fromNow(true)
+  poolInfo.meta_data = JSON.parse(poolInfo.meta_data as any || DefaultPoolInfo.meta_data)
+  
+  const startTime= dayjs.unix(poolInfo.meta_data.competition_time.start)
+  const endTime = dayjs.unix(poolInfo.meta_data.competition_time.end)
+  const isPoolStarted = startTime.isBefore(Date.now())
+  const poolStartCountdown = dayjs.unix(poolInfo.meta_data.competition_time.start).fromNow(true)
+  const isPoolEnded = endTime.isBefore(Date.now())
+  const poolEndCountdown = dayjs.unix(poolInfo.meta_data.competition_time.end).fromNow(true)
   const poolOpening = isPoolStarted && !isPoolEnded
 
   const quickBtnText = poolOpening ? "Join Competition" : isPoolEnded ? "Competition Completed" : `Starts in ${poolStartCountdown}`

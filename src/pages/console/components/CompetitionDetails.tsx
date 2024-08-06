@@ -28,9 +28,9 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     icon: ImgCompetition.IconCalendar,
     label: "Duration",
     value:
-      timeFormat(poolInfo.competition_time.startTime) +
+      timeFormat(poolInfo.meta_data.competition_time.start) +
       " - " +
-      timeFormat(poolInfo.competition_time.endTime),
+      timeFormat(poolInfo.meta_data.competition_time.end),
   },
   {
     icon: ImgCompetition.IconHourGlass,
@@ -51,7 +51,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     label: "Dataset",
     value: (
       <Link to="/" className="text-blue font-medium">
-        {poolInfo.fine_tuning_tutorial_link || "https://github.com"}
+        {poolInfo.meta_data.fine_tuning_tutorial_link || "https://github.com"}
       </Link>
     ),
   },

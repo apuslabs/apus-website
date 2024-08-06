@@ -33,6 +33,7 @@ const Competition = () => {
     poolInfo,
     poolInfoLoading,
     dashboard,
+    leaderboard,
     leaderboardLoading,
     joinPool,
     getLeaderboard,
@@ -97,7 +98,7 @@ const Competition = () => {
                 <span className="text-black">Requirements:</span>
               </div>
               <p className="text-black50 px-5 leading-relaxed">
-                {poolInfo.description ||
+                {poolInfo.meta_data.description ||
                   `Large language models (LLMs) are rapidly entering our lives, but
                 ensuring their responses resonate with users is critical for
                 successful interaction. This competition presents a unique
@@ -138,7 +139,7 @@ const Competition = () => {
       <div className="rounded-2xl">
         <ConfigProvider renderEmpty={renderEmpty}>
         <Table
-          dataSource={[]}
+          dataSource={leaderboard}
           rowKey="dataset_id"
           loading={leaderboardLoading}
           columns={TableColumns}
