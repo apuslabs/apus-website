@@ -1,103 +1,97 @@
-import { ConfigProvider, Form, Input, Select } from "antd";
+import { ConfigProvider, Form, Input, message, Select, Spin } from "antd";
 import { ImgPlayground } from "../../assets/image";
 import "./playground.css";
 import TextArea from "antd/es/input/TextArea";
+import { usePlayground } from "../../contexts/playground";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-const fakeDataset = [
-  {
-    dataset_hash: "1",
-    dataset_name: "#1 Anna's dataset",
-  },
-  {
-    dataset_hash: "2",
-    dataset_name: "#2 Anna's dataset",
-  },
-  {
-    dataset_hash: "3",
-    dataset_name: "#3 Anna's dataset",
-  },
-];
-
-const textLengthOptions = [
-  {
-    text: (
-      <div className="flex items-center">
-        <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalGreen} />
-        <span className="whitespace-pre">
-          <span className="inline-block w-28">Short Text</span>
-          <span className="inline-block w-32">Max.30 words.</span>
-          15 second load
-        </span>
-      </div>
-    ),
-    token: 30,
-  },
-  {
-    text: (
-      <div className="flex items-center">
-        <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalYellow} />
-        <span className="whitespace-pre">
-          <span className="inline-block w-28">Medium Text</span>
-          <span className="inline-block w-32">Max.60 words.</span>
-          30 second load
-        </span>
-      </div>
-    ),
-    token: 60,
-  },
-  {
-    text: (
-      <div className="flex items-center">
-        <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalRed} />
-        <span className="whitespace-pre">
-          <span className="inline-block w-28">Long Text</span>
-          <span className="inline-block w-32">Max.120 words.</span>
-          45 second load
-        </span>
-      </div>
-    ),
-    token: 120,
-  },
-];
-
-const fakeMessages = [
-  {
-    role: "assiasent",
-    message:
-      "Hi, welcome to the Playground! Please type your question into the text box below. You can select your chosen AI model and text response length from the drop-down options above. Enjoy!",
-  },
-  {
-    role: "user",
-    message:
-      "What are some of the better decentralised Ai products available on Blockchain, then each product describes 3 benefits?",
-  },
-];
+// const textLengthOptions = [
+//   {
+//     text: (
+//       <div className="flex items-center">
+//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalGreen} />
+//         <span className="whitespace-pre">
+//           <span className="inline-block w-28">Short Text</span>
+//           <span className="inline-block w-32">Max.30 words.</span>
+//           15 second load
+//         </span>
+//       </div>
+//     ),
+//     token: 30,
+//   },
+//   {
+//     text: (
+//       <div className="flex items-center">
+//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalYellow} />
+//         <span className="whitespace-pre">
+//           <span className="inline-block w-28">Medium Text</span>
+//           <span className="inline-block w-32">Max.60 words.</span>
+//           30 second load
+//         </span>
+//       </div>
+//     ),
+//     token: 60,
+//   },
+//   {
+//     text: (
+//       <div className="flex items-center">
+//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalRed} />
+//         <span className="whitespace-pre">
+//           <span className="inline-block w-28">Long Text</span>
+//           <span className="inline-block w-32">Max.120 words.</span>
+//           45 second load
+//         </span>
+//       </div>
+//     ),
+//     token: 120,
+//   },
+// ];
 
 export const Playground = () => {
+  const [selectedDataset, setSelectedDataset] = useState<string>()
+  const {
+    datasets,
+    chatQuestion,
+    fetchResult,
+    isWaitingForAnswer,
+    chatHistory,
+    getChatAnswering,
+    sendChatQuestioning,
+  } = usePlayground(selectedDataset);
+  const { search } = useLocation()
+  useEffect(() => {
+    if (datasets.length) {
+      const searchParams = new URLSearchParams(search)
+      const datasetID = searchParams.get('dataset_id')
+      const passed_dataset = datasets.find(({ id }) => String(id) == datasetID)?.participant_dataset_hash
+      setSelectedDataset(passed_dataset || datasets[0].participant_dataset_hash)
+    }
+  }, [datasets])
+  const [question, setQuestion] = useState<string>()
+
+  const isBtnDisabled = getChatAnswering || sendChatQuestioning
   return (
     <div
       id="playground"
       className="max-w-[1080px] mx-auto pb-32 pt-6"
-      style={{
-        height: "calc(100vh - 5rem)",
-      }}
     >
       <div className="text-sm text-black50 mb-4">Dataset & Text Length</div>
       <div className="flex items-center gap-4">
         <Select
-          defaultValue={fakeDataset[0].dataset_hash}
+          value={selectedDataset}
           size="large"
           className="w-1/2"
         >
-          {fakeDataset.map(({ dataset_hash, dataset_name }) => {
+          {datasets.map(({ participant_dataset_hash, upload_dataset_name }) => {
             return (
-              <Select.Option key={dataset_hash} value={dataset_hash}>
-                {dataset_name}
+              <Select.Option key={participant_dataset_hash} value={participant_dataset_hash}>
+                {upload_dataset_name}
               </Select.Option>
             );
           })}
         </Select>
-        <Select
+        {/* <Select
           defaultValue={textLengthOptions[0].token}
           size="large"
           className="w-1/2"
@@ -109,28 +103,47 @@ export const Playground = () => {
               </Select.Option>
             );
           })}
-        </Select>
+        </Select> */}
       </div>
       <div className="text-sm text-black50 mb-4 mt-8">Chat</div>
       <div className="rounded-2xl overflow-hidden bg-[#EBEFFF]">
         <div className="h-[534px] p-6">
-          {fakeMessages.map(({ role, message }, index) => {
+          {chatHistory.map(({ role, message }, index) => {
             const isUser = role === 'user'
             return (
               <div key={index} className={`flex gap-2 ${isUser ? 'flex-row-reverse justify-start' : ''}`}>
                 <div className="flex-0 w-12 h-12">
                   <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
                 </div>
-                <div className="flex-1 max-w-[60%] bg-white rounded-lg p-4 font-medium text-base leading-normal mb-4">{message}</div>
+                <div className={`flex-1 max-w-[60%] rounded-lg p-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
               </div>
             );
           })}
         </div>
-        <div className="relative bg-[#F5F7FF] p-6" style={{
+        <div className="relative bg-[#F5F7FF] p-4" style={{
           boxShadow: '0 -4px 16px rgba(0, 0, 0, 0.1)',
         }}>
-          <TextArea placeholder="Enter prompt here" />
-          <div className="btn-gradient3 absolute right-10 bottom-8 w-32">Send</div>
+          <TextArea value={question} onChange={e => {
+            setQuestion(e.target.value)
+          }} disabled={isWaitingForAnswer} placeholder="Enter prompt here" style={{
+            paddingRight: '20%',
+          }} />
+          <div className={`absolute right-8 bottom-6`}>
+            <Spin spinning={isBtnDisabled}>
+              <div className={`btn-gradient3 w-32`} onClick={() => {
+                if (isBtnDisabled) return
+                if (isWaitingForAnswer) {
+                  fetchResult()
+                } else {
+                  if (!question?.trim().length) {
+                    message.warning('Please enter a prompt')
+                  } else {
+                    chatQuestion(question.trim()).then(() => {setQuestion('')})
+                  }
+                }
+              }}>{isWaitingForAnswer ? 'Refresh' : 'Send'}</div>
+            </Spin>
+          </div>
         </div>
       </div>
     </div>

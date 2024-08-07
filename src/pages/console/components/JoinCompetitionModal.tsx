@@ -92,7 +92,6 @@ export const JoinCompetitionModal: FC<{
                 message.error(`${file.name} is not a json file`);
                 return Upload.LIST_IGNORE
               }
-              console.log(file)
               const fileContent = await file.text();
               try {
                 const jsonData = JSON.parse(fileContent);

@@ -14,6 +14,7 @@ export default {
         'black20': 'rgba(0, 0, 0, 0.2)',
         'black50': 'rgba(0, 0, 0, 0.5)',
         'black80': 'rgba(0, 0, 0, 0.8)',
+        'white50': 'rgba(255, 255, 255, 0.5)',
         'light': '#EDF2FF',
         'light-purple': '#D7DDF4',
         blue: '#061EFA',

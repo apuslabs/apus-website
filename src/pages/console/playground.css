@@ -12,3 +12,7 @@
 #playground textarea.ant-input {
   @apply leading-normal min-h-14 text-base font-medium text-black80 p-4;
 }
+
+#playground .ant-select .ant-select-arrow {
+  transform: scaleY(0.5);
+}
