@@ -61,14 +61,17 @@ export const Playground = () => {
     sendChatQuestioning,
   } = usePlayground(selectedDataset);
   const { search } = useLocation()
+
+  const [initDataset, setInitDataset] = useState(false)
   useEffect(() => {
-    if (datasets.length) {
+    if (datasets.length && !initDataset) {
       const searchParams = new URLSearchParams(search)
       const datasetID = searchParams.get('dataset_id')
       const passed_dataset = datasets.find(({ id }) => String(id) == datasetID)?.participant_dataset_hash
       setSelectedDataset(passed_dataset || datasets[0].participant_dataset_hash)
+      setInitDataset(true)
     }
-  }, [datasets])
+  }, [datasets, initDataset])
   const [question, setQuestion] = useState<string>()
 
   const isBtnDisabled = getChatAnswering || sendChatQuestioning
@@ -85,6 +88,9 @@ export const Playground = () => {
           value={selectedDataset}
           size="large"
           className="w-1/2"
+          onSelect={v => {
+            setSelectedDataset(v)
+          }}
         >
           {datasets.map(({ participant_dataset_hash, upload_dataset_name }) => {
             return (
