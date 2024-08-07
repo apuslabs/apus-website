@@ -11,6 +11,7 @@ import { CompetitionDetails } from "./components/CompetitionDetails";
 import { Statisitcs } from "./components/Statistics";
 import { renderEmpty, TableColumns } from "./const";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
+import { useArweaveContext } from "../../contexts/arconnect";
 
 const TwitterVideo = () => (
   <iframe
@@ -25,6 +26,7 @@ const TwitterVideo = () => (
 );
 
 const Competition = () => {
+  const { activeAddress } = useArweaveContext()
   const [showMore, setShowMore] = useState(false);
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
     useState(false);
@@ -51,10 +53,6 @@ const Competition = () => {
     }
   }, [isPoolStarted])
 
-  if (poolInfoLoading) {
-    return <div></div>;
-  }
-
   return (
     <div id="competition" className="max-w-[1080px] mx-auto pb-64">
       <div className="flex justify-between items-center mt-8 mb-4">
@@ -70,8 +68,7 @@ const Competition = () => {
       <div className="relative p-6 bg-light rounded-2xl">
         <div className="w-3/5">
           <h1 className="mb-6 font-bold text-3xl leading-tight">
-            {poolInfo.title ||
-              "Fine-tune AI model_Conversations On Coding, Debugging, Storytelling"}
+            {poolInfo.title || ""}
           </h1>
           <p className=" text-neutral-900 leading-none">{timeTips}</p>
         </div>
@@ -142,8 +139,7 @@ const Competition = () => {
           dataSource={leaderboard}
           rowKey="dataset_id"
           loading={leaderboardLoading}
-          columns={TableColumns}
-          
+          columns={TableColumns(activeAddress)}
         />
         </ConfigProvider>
       </div>

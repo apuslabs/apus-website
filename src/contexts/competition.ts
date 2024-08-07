@@ -44,10 +44,10 @@ export interface Dashboard {
 }
 
 const DefaultDashboard = {
-  participants: 0,
-  granted_reward: 0,
-  my_rank: 0,
-  my_reward: 0,
+  participants: -1,
+  granted_reward: -1,
+  my_rank: -1,
+  my_reward: -1,
 }
 
 export interface Leaderboard {
@@ -74,7 +74,6 @@ export function useCompetitionPool() {
   const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
 
   useEffect(() => {
-    console.log(activeAddress)
     if (activeAddress) {
       getPool({}, { pool_id: 1})
       getDashboard()
@@ -133,7 +132,7 @@ export function useCompetitionPool() {
     poolOpening,
     quickBtnText,
     quickBtnOnClick,
-    timeTips,
+    timeTips: poolInfoLoading ? "" : timeTips,
     stage,
   }
 }

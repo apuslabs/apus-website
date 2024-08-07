@@ -1,6 +1,9 @@
 import { Dashboard } from "../../../contexts/competition";
 import { formatNumber } from "../../../utils/utils";
 
+const DefaultDash = (val: number, suffix?: string): string =>
+  val === -1 ? "-" : (formatNumber(val) + (suffix != null ? ` ${suffix}` : ""));
+
 export const Statisitcs = ({
   participants,
   granted_reward,
@@ -9,18 +12,18 @@ export const Statisitcs = ({
 }: Dashboard) => [
   {
     label: "Total Participants",
-    value: formatNumber(participants),
+    value: DefaultDash(participants),
   },
   {
     label: "Rewards Distributed",
-    value: formatNumber(granted_reward) + " Points",
+    value: DefaultDash(granted_reward, "Points"),
   },
   {
     label: "Your Rank",
-    value: my_rank,
+    value: DefaultDash(my_rank),
   },
   {
     label: "Your Points",
-    value: formatNumber(my_reward) + " Points",
+    value: DefaultDash(my_reward, "Points"),
   },
 ];

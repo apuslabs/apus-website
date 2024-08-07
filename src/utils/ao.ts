@@ -119,7 +119,7 @@ export const useDryrunWrapper = (process: string) => (Action: string) => {
   const msg = async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {
     setLoading(true)
     try {
-      const result = await dryrunResultWrapper(process)({ ...tags, Action }, data)
+      const result = await dryrunResultWrapper(process, true)({ ...tags, Action }, data)
       if (result == null) {
         throw new Error("No result")
       }
