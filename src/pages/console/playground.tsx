@@ -5,6 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import { usePlayground } from "../../contexts/playground";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { useAutoScroll } from "../../utils/react-use";
 
 // const textLengthOptions = [
 //   {
@@ -71,12 +72,14 @@ export const Playground = () => {
   const [question, setQuestion] = useState<string>()
 
   const isBtnDisabled = getChatAnswering || sendChatQuestioning
+
+  const scrollRef = useAutoScroll()
   return (
     <div
       id="playground"
       className="max-w-[1080px] mx-auto pb-32 pt-6"
     >
-      <div className="text-sm text-black50 mb-4">Dataset & Text Length</div>
+      <div className="text-sm text-black50 mb-4">Dataset</div>
       <div className="flex items-center gap-4">
         <Select
           value={selectedDataset}
@@ -107,7 +110,7 @@ export const Playground = () => {
       </div>
       <div className="text-sm text-black50 mb-4 mt-8">Chat</div>
       <div className="rounded-2xl overflow-hidden bg-[#EBEFFF]">
-        <div className="h-[534px] p-6">
+        <div className="h-[534px] p-6 overflow-y-auto scroll-smooth" ref={scrollRef}>
           {chatHistory.map(({ role, message }, index) => {
             const isUser = role === 'user'
             return (
@@ -115,7 +118,7 @@ export const Playground = () => {
                 <div className="flex-0 w-12 h-12">
                   <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
                 </div>
-                <div className={`flex-1 max-w-[60%] rounded-lg p-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
+                <div className={`flex-1 max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
               </div>
             );
           })}
