@@ -103,7 +103,7 @@ export function useCompetitionPool() {
   const quickBtnText = poolOpening ? "Join Competition" : isPoolEnded ? "Competition Completed" : `Starts in ${poolStartCountdown}`
   const timeTips = !isPoolStarted ? `Starts in ${poolStartCountdown}` : poolOpening ? `Ends in ${poolEndCountdown}` : `Ends in ${poolEndCountdown} ago`
 
-  const stage = !isPoolStarted ? "Upcoming" : poolOpening ? "Active" : "Completed"
+  const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed"
 
   const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
     if (!poolOpening) return
