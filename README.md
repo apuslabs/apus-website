@@ -33,3 +33,4 @@ export default {
 spl-token mint CrhmSkC19d8QeeBK5kUtreXfg1wvWvvVZhBTRjbmY18m 10 BK1R6mi6f4SwKn5zK7h3MWLCzjGSBBawKsLHFgXGo7Vx
 
 spl-token approve BK1R6mi6f4SwKn5zK7h3MWLCzjGSBBawKsLHFgXGo7Vx 200 5cs2T6hG7M39Yc22BrvHh6ESEFc9U8RXodseXR1eWTu4 --owner ~/Downloads/Customer.json
+t
