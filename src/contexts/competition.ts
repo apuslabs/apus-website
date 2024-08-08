@@ -68,16 +68,16 @@ export function useCompetitionPool() {
 
   const { result: poolInfoResult, loading: poolInfoLoading, error: poolInfoError, msg: getPool } = useBenchmarkDryrun("Get-Pool")
   // TODO: useDryrun
-  const { result: dashboardResult, loading: dashboardLoading, error: dashboardError, msg: getDashboard } = useBenchmarkMessage("Get-Dashboard")
+  const { result: dashboardResult, loading: dashboardLoading, error: dashboardError, msg: getDashboard } = useBenchmarkDryrun("Get-Dashboard")
   // TODO: useDryrun
-  const { result: leaderboardResult, loading: leaderboardLoading, error: leaderboardError, msg: getLeaderboard } = useBenchmarkMessage("Get-Leaderboard")
+  const { result: leaderboardResult, loading: leaderboardLoading, error: leaderboardError, msg: getLeaderboard } = useBenchmarkDryrun("Get-Leaderboard")
   const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
 
   useEffect(() => {
     getPool({}, { pool_id: 1})
     if (activeAddress) {
-      getDashboard()
-      getLeaderboard()
+      getDashboard({ FromAddress: activeAddress })
+      getLeaderboard({ FromAddress: activeAddress })
     }
   }, [activeAddress])
 

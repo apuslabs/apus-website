@@ -7,7 +7,7 @@ import {
   useMessageWrapper,
 } from "../utils/ao";
 import { useArweaveContext } from "./arconnect";
-import { useLocalStorage } from "react-use";
+import { useDebounce, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
 
 const DEFAULT_OUTPUT_TOKENS = "20";
@@ -43,10 +43,9 @@ const calculateInferenceTime = (question: string) => {
 
 export function usePlayground(dataset_hash?: string) {
   const { activeAddress } = useArweaveContext();
-  const [userHistory, setUserHistory, removeUserHistory] =
-    useLocalStorage<UserHistory>("session-history", {});
+  const [userHistory, setUserHistory] = useLocalStorage<UserHistory>("session-history", {});
 
-  const { msg: getDatasets, result: datasetsResult } =
+  const { msg: getDatasets, result: datasetsResult, loading: datasetsLoading } =
     usePlaygroundDryrun("Get-Datasets");
   const { msg: chatQuestionMsg, loading: sendChatQuestioning } = usePlaygroundMessage("Chat-Question");
   const { msg: getChatAnswer, loading: getChatAnswering } =
@@ -69,6 +68,7 @@ export function usePlayground(dataset_hash?: string) {
       );
       const cqTags = getTagsFromMessage(cqResult, 1);
       const cqReference = cqTags?.Reference || "";
+      console.log(cqReference)
       if (cqReference) {
         chatHistory.push({
           role: "user",
@@ -78,6 +78,7 @@ export function usePlayground(dataset_hash?: string) {
           expectedTime: dayjs().add(calculateInferenceTime(question), "seconds").valueOf()
         });
         setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
+        fetchResult()
       }
     }
   };
@@ -133,10 +134,10 @@ export function usePlayground(dataset_hash?: string) {
     }
     // load chat history
     if (dataset_hash && userHistory && userHistory[dataset_hash] && userHistory[dataset_hash].length && !loadAtLoad) {
-      fetchResult()
-      setLoadAtLoad(true)
+      setLoadAtLoad(true);
+      fetchResult();
     }
-  }, [dataset_hash, userHistory, loadAtLoad])
+  }, [dataset_hash, JSON.stringify(userHistory), loadAtLoad])
 
   const datasetsMsg = datasetsResult?.Messages?.[0]?.Data || JSON.stringify([]);
 
@@ -144,11 +145,13 @@ export function usePlayground(dataset_hash?: string) {
 
   return {
     datasets,
+    datasetsLoading,
     chatQuestion,
     fetchResult,
     isWaitingForAnswer,
     chatHistory,
     getChatAnswering,
     sendChatQuestioning,
+    setLoadAtLoad,
   };
 }

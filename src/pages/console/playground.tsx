@@ -6,6 +6,7 @@ import { usePlayground } from "../../contexts/playground";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAutoScroll } from "../../utils/react-use";
+import { useLocalStorage } from "react-use";
 
 // const textLengthOptions = [
 //   {
@@ -50,28 +51,30 @@ import { useAutoScroll } from "../../utils/react-use";
 // ];
 
 export const Playground = () => {
-  const [selectedDataset, setSelectedDataset] = useState<string>()
+  const [selectedDataset, setSelectedDataset] = useLocalStorage<string>("selected-dataset")
   const {
     datasets,
+    datasetsLoading,
     chatQuestion,
     fetchResult,
     isWaitingForAnswer,
     chatHistory,
     getChatAnswering,
     sendChatQuestioning,
+    setLoadAtLoad,
   } = usePlayground(selectedDataset);
   const { search } = useLocation()
 
   const [initDataset, setInitDataset] = useState(false)
   useEffect(() => {
-    if (datasets.length && !initDataset) {
+    if (datasets.length && !initDataset && !selectedDataset) {
       const searchParams = new URLSearchParams(search)
       const datasetID = searchParams.get('dataset_id')
       const passed_dataset = datasets.find(({ id }) => String(id) == datasetID)?.participant_dataset_hash
       setSelectedDataset(passed_dataset || datasets[0].participant_dataset_hash)
       setInitDataset(true)
     }
-  }, [datasets, initDataset])
+  }, [datasets, initDataset, selectedDataset])
   const [question, setQuestion] = useState<string>()
 
   const isBtnDisabled = getChatAnswering || sendChatQuestioning
@@ -86,10 +89,12 @@ export const Playground = () => {
       <div className="flex items-center gap-4">
         <Select
           value={selectedDataset}
+          loading={datasetsLoading}
           size="large"
           className="w-1/2"
           onSelect={v => {
             setSelectedDataset(v)
+            setLoadAtLoad(false)
           }}
         >
           {datasets.map(({ participant_dataset_hash, upload_dataset_name }) => {
@@ -124,7 +129,7 @@ export const Playground = () => {
                 <div className="flex-0 w-12 h-12">
                   <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
                 </div>
-                <div className={`flex-1 max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
+                <div className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
               </div>
             );
           })}
