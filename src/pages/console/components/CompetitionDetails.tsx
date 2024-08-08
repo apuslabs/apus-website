@@ -11,10 +11,10 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     value: (
       <div className="flex items-center gap-1">
         <span className="text-gradient2 font-medium">
-          {(formatNumberWithSuffix(poolInfo.prize_pool) || "0") + " Points"}
+          {(formatNumberWithSuffix(poolInfo.prize_pool) || "0") + " APUS_Tn1"}
         </span>
         <Tooltip
-          title="50% of the reward pool is allocated to the top three participants in the leaderboards."
+          title="The 100,000 APUS_Tn1 prize pool is allocated as follows: 1st place gets 35%, 2nd place 20%, 3rd place 10%, 4th-10th places 5% each, and 300 APUS_Tn1 for all other qualified participants."
           overlayInnerStyle={{
             width: "20rem",
           }}

@@ -16,14 +16,14 @@ export const Statisitcs = ({
   },
   {
     label: "Rewards Distributed",
-    value: DefaultDash(granted_reward, "Points"),
+    value: DefaultDash(granted_reward, "APUS_Tn1"),
   },
   {
     label: "Your Rank",
     value: DefaultDash(my_rank),
   },
   {
-    label: "Your Points",
-    value: DefaultDash(my_reward, "Points"),
+    label: "Your APUS_Tn1",
+    value: DefaultDash(my_reward, "APUS_Tn1"),
   },
 ];

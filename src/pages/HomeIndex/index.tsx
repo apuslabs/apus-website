@@ -49,7 +49,7 @@ const HomeIndex: FC = () => {
           <img src={ImgHomepage.IconAnnouncement} className="w-5 h-5 mr-4" />
           <div className="text-xs md:text-sm text-white flex-1 mr-6">
             Apus has removed Ecosystem, Playground, Task and Connect Wallet. In
-            the meantime your points have been retained, and a new incentive
+            the meantime your APUS_Tn1 have been retained, and a new incentive
             mechanism will be added in the future. Stay tuned!
           </div>
           <div

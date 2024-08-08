@@ -68,7 +68,7 @@ const Competition = () => {
       <div className="relative p-6 bg-light rounded-2xl">
         <div className="w-3/5">
           <h1 className="mb-6 font-bold text-3xl leading-tight">
-            {poolInfo.title || ""}
+            {"Sam Digital Twin Dataset Competition Pool" || poolInfo.title || ""}
           </h1>
           <p className=" text-neutral-900 leading-none">{timeTips}</p>
         </div>
@@ -94,14 +94,24 @@ const Competition = () => {
                 <img src={ImgCompetition.IconAlignLeft} className="w-4 h-4" />
                 <span className="text-black">Requirements:</span>
               </div>
-              <p className="text-black50 px-5 leading-relaxed">
+              <p className="text-black50 px-5 leading-relaxed text-wrap break-words whitespace-pre-line">
                 {poolInfo.meta_data.description ||
-                  `Large language models (LLMs) are rapidly entering our lives, but
-                ensuring their responses resonate with users is critical for
-                successful interaction. This competition presents a unique
-                opportunity to tackle this challenge with real-world data and
-                help us bridge the gap between LLM capability and human
-                preference.`}
+                  `Objective:
+                  The Sam Digital Twin Dataset Competition Pool aims to help Sam, the Founder and Inventor of Arweave and AO, create a comprehensive digital twin by collecting extensive data.
+
+                  Rules:
+                  1. Submit datasets related to Sam.
+                  2. Evaluations are conducted automatically on AO.
+                  3. Open to individuals and teams.
+                  4. If scores are tied, earlier submissions rank higher.
+
+                  Prize Distribution:
+                  The 100,000 APUS_Tn1 prize pool is distributed as follows:
+                  1st place: 35% (35,000 APUS_Tn1)
+                  2nd place: 20% (20,000 APUS_Tn1)
+                  3rd place: 10% (10,000 APUS_Tn1)
+                  4th-10th places: 5% each (5,000 APUS_Tn1 each)
+                  All other qualified participants: 300 APUS_Tn1 each`}
               </p>
             </li>
           </ul>

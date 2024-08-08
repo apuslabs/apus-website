@@ -36,7 +36,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => ([
     title: "REWARD",
     dataIndex: "granted_reward",
     key: "granted_reward",
-    render: (text: string, item: Leaderboard) => <BlueText text={`${text} Points`} isBlue={item.author === activeAddress} />
+    render: (text: string, item: Leaderboard) => <BlueText text={`${text} APUS_Tn1`} isBlue={item.author === activeAddress} />
   },
   {
     title: "USING AI MODELS",
