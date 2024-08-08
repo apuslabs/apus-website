@@ -74,8 +74,8 @@ export function useCompetitionPool() {
   const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
 
   useEffect(() => {
+    getPool({}, { pool_id: 1})
     if (activeAddress) {
-      getPool({}, { pool_id: 1})
       getDashboard()
       getLeaderboard()
     }
