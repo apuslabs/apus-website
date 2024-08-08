@@ -61,7 +61,7 @@ export const Playground = () => {
     chatHistory,
     getChatAnswering,
     sendChatQuestioning,
-    setLoadAtLoad,
+    setNeedRefresh,
   } = usePlayground(selectedDataset);
   const { search } = useLocation()
 
@@ -94,7 +94,7 @@ export const Playground = () => {
           className="w-1/2"
           onSelect={v => {
             setSelectedDataset(v)
-            setLoadAtLoad(false)
+            setNeedRefresh(true)
           }}
         >
           {datasets.map(({ participant_dataset_hash, upload_dataset_name }) => {

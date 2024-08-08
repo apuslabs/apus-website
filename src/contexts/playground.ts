@@ -78,7 +78,7 @@ export function usePlayground(dataset_hash?: string) {
           expectedTime: dayjs().add(calculateInferenceTime(question), "seconds").valueOf()
         });
         setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
-        fetchResult()
+        setNeedRefresh(true)
       }
     }
   };
@@ -113,12 +113,13 @@ export function usePlayground(dataset_hash?: string) {
             timestamp: dayjs().valueOf(),
             expectedTime: lastChat.expectedTime
           });
+          setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
         }
       }
     }
   };
 
-  const [loadAtLoad, setLoadAtLoad] = useState(false);
+  const [needRefresh, setNeedRefresh] = useState(true);
   
   useEffect(() => {
     if (dataset_hash && userHistory && !userHistory[dataset_hash]) {
@@ -133,11 +134,11 @@ export function usePlayground(dataset_hash?: string) {
       return
     }
     // load chat history
-    if (dataset_hash && userHistory && userHistory[dataset_hash] && userHistory[dataset_hash].length && !loadAtLoad) {
-      setLoadAtLoad(true);
+    if (dataset_hash && userHistory && userHistory[dataset_hash] && userHistory[dataset_hash].length && needRefresh) {
+      setNeedRefresh(false);
       fetchResult();
     }
-  }, [dataset_hash, JSON.stringify(userHistory), loadAtLoad])
+  }, [dataset_hash, JSON.stringify(userHistory), needRefresh])
 
   const datasetsMsg = datasetsResult?.Messages?.[0]?.Data || JSON.stringify([]);
 
@@ -152,6 +153,6 @@ export function usePlayground(dataset_hash?: string) {
     chatHistory,
     getChatAnswering,
     sendChatQuestioning,
-    setLoadAtLoad,
+    setNeedRefresh,
   };
 }
