@@ -1,8 +1,15 @@
-#homepage {
+body, #root, #homepage {
   position: relative;
+}
+
+body, #root {
+  z-index: -99;
+}
+
+#homepage {
   background-color: #111111;
   color: white;
-  z-index: -99;
+  z-index: -98;
 }
 
 .benifits-item {
