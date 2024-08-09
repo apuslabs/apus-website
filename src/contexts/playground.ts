@@ -12,6 +12,7 @@ import dayjs from "dayjs";
 
 const DEFAULT_OUTPUT_TOKENS = "20";
 const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) => isOverTime ? "The Chat is taking longer than expected. Please wait a few more minutes." : `Chat Result Will Reach You in ${timeLeft}`;
+const USER_TIMEOUT_TIPS = "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
 const usePlaygroundMessage = useMessageWrapper(BENCHMARK_PROCESS);
 const usePlaygroundDryrun = useDryrunWrapper(BENCHMARK_PROCESS);
@@ -97,13 +98,24 @@ export function usePlayground(dataset_hash?: string) {
         if (chatTags?.status == "nil" || chatTags?.status == "100") {
           const isOverTime = dayjs().isAfter(dayjs(lastChat.expectedTime));
           const timeLeft = dayjs().to(dayjs(lastChat.expectedTime));
-          chatHistory.push({
-            role: "frontend",
-            message: USER_WAIT_TIPS(isOverTime, timeLeft),
-            reference: lastChat.reference,
-            timestamp: dayjs().valueOf(),
-            expectedTime: lastChat.expectedTime
-          });
+          // if over 1 hour, stop waiting, and show tips
+          if (dayjs().diff(dayjs(lastChat.expectedTime), "hour") > 1) {
+            chatHistory.push({
+              role: "assistant",
+              message: USER_TIMEOUT_TIPS,
+              reference: lastChat.reference,
+              timestamp: dayjs().valueOf(),
+              expectedTime: lastChat.expectedTime
+            })
+          } else {
+            chatHistory.push({
+              role: "frontend",
+              message: USER_WAIT_TIPS(isOverTime, timeLeft),
+              reference: lastChat.reference,
+              timestamp: dayjs().valueOf(),
+              expectedTime: lastChat.expectedTime
+            });
+          }
           setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
         } else if (chatTags?.status == "200") {
           chatHistory.push({

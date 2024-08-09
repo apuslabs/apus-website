@@ -50,7 +50,7 @@ import { useLocalStorage } from "react-use";
 //   },
 // ];
 
-function truncateString(str: string, delimiters: string[] = ["<|system|>", "<|user|>", "<|end|>", "<|endoftext|>", "<|assistant|>", "\n"]) {
+function truncateString(str: string, delimiters: string[] = ["<|", "\n"]) {
   let minIndex = str.length;
 
   delimiters.forEach(delimiter => {
