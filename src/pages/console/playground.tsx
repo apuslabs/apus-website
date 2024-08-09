@@ -50,6 +50,19 @@ import { useLocalStorage } from "react-use";
 //   },
 // ];
 
+function truncateString(str: string, delimiters: string[] = ["<|system|>", "<|user|>", "<|end|>", "<|endoftext|>", "<|assistant|>", "\n"]) {
+  let minIndex = str.length;
+
+  delimiters.forEach(delimiter => {
+      const index = str.indexOf(delimiter);
+      if (index !== -1 && index < minIndex) {
+          minIndex = index;
+      }
+  });
+
+  return str.substring(0, minIndex);
+}
+
 export const Playground = () => {
   const [selectedDataset, setSelectedDataset] = useLocalStorage<string>("selected-dataset")
   const {
@@ -129,7 +142,7 @@ export const Playground = () => {
                 <div className="flex-0 w-12 h-12">
                   <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
                 </div>
-                <div className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{message}</div>
+                <div className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? ' bg-white50' : 'bg-white'}`}>{role !== 'user' ? truncateString(message) : message}</div>
               </div>
             );
           })}
