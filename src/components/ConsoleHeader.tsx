@@ -4,11 +4,23 @@ import { Link, useLocation, useMatch } from "react-router-dom";
 import { ConsoleHeaderList } from "../config/menu";
 import { ShortAddress } from "../utils/ao";
 import { useArweaveContext } from "../contexts/arconnect";
+import { Dropdown } from "antd";
 
 const UserInfo: FC = function () {
-  const { activeAddress, connectWallet } = useArweaveContext();
+  const { activeAddress, connectWallet, disconnect } = useArweaveContext();
   return activeAddress ? (
-    <div className="btn-default">{ShortAddress(activeAddress)}</div>
+    <Dropdown placement="bottomRight" menu={{
+      items: [
+        { key: "logout", label: "Disconnect Wallet" },
+      ],
+      onClick: ({ key }) => {
+        if (key === "logout") {
+          disconnect();
+        }
+      },
+    }}>
+      <div className="btn-default">{ShortAddress(activeAddress)}</div>
+    </Dropdown>
   ) : (
     <div className="btn-gradient3" onClick={connectWallet}>
       Connect Wallet

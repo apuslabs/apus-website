@@ -123,7 +123,7 @@ export function useCompetitionPool() {
     poolInfoLoading,
     poolInfoError,
     getPool,
-    dashboard,
+    dashboard: activeAddress ? dashboard : DefaultDashboard,
     dashboardLoading,
     dashboardError,
     getDashboard,
