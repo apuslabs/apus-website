@@ -33,14 +33,14 @@ const Competition = () => {
 
   const {
     poolInfo,
-    poolInfoLoading,
     dashboard,
     leaderboard,
     leaderboardLoading,
     joinPool,
     getLeaderboard,
     isPoolStarted,
-    isPoolEnded,
+    poolOpening,
+    hasSubmitted,
     quickBtnText,
     quickBtnOnClick,
     timeTips,
@@ -61,7 +61,7 @@ const Competition = () => {
         </h2>
         <QuickButton
           text={quickBtnText}
-          disabled={!isPoolStarted || isPoolEnded}
+          disabled={!poolOpening || hasSubmitted}
           onJoinCompetition={() => quickBtnOnClick(setJoinCompetitionModalVisible)}
         />
       </div>
@@ -126,8 +126,7 @@ const Competition = () => {
         {Statisitcs(dashboard).map(({ label, value }) => {
           return (
             <div
-              className="flex-1 bg-light p-6 
-            border border-black5 border-solid rounded-2xl"
+              className="flex-1 bg-light p-6 border border-black5 border-solid rounded-2xl"
               key={label}
             >
               <label className="text-black50 text-xs mb-4">{label}</label>
@@ -140,7 +139,7 @@ const Competition = () => {
       <div className="flex flex-col mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">Leaderboard</h2>
         <p className="mt-2 text-black50 text-xs">
-          Leaderboard updated every 24 hours
+          Leaderboard updated every 1 hours
         </p>
       </div>
       <div className="rounded-2xl">

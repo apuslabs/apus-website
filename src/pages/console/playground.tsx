@@ -80,14 +80,19 @@ export const Playground = () => {
 
   const [initDataset, setInitDataset] = useState(false)
   useEffect(() => {
-    if (datasets.length && !initDataset && !selectedDataset) {
+    if (!initDataset) {
       const searchParams = new URLSearchParams(search)
-      const datasetID = searchParams.get('dataset_id')
-      const passed_dataset = datasets.find(({ id }) => String(id) == datasetID)?.participant_dataset_hash
-      setSelectedDataset(passed_dataset || datasets[0].participant_dataset_hash)
-      setInitDataset(true)
+      const passed_dataset = searchParams.get('dataset_id')
+      if (passed_dataset) {
+        setSelectedDataset(passed_dataset)
+        setInitDataset(true)
+      } else if (!selectedDataset && datasets.length) {
+        setSelectedDataset(passed_dataset || datasets[0].participant_dataset_hash)
+        setInitDataset(true)
+      }
     }
   }, [datasets, initDataset, selectedDataset])
+
   const [question, setQuestion] = useState<string>()
 
   const isBtnDisabled = getChatAnswering || sendChatQuestioning

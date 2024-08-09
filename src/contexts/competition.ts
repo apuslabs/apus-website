@@ -52,9 +52,8 @@ const DefaultDashboard = {
 
 export interface Leaderboard {
   rank: number
-  dataset_id: number
+  dataset_id: string
   dataset_name: string
-  dataset_upload_time: number
   score: number
   author: string
   granted_reward: number
@@ -62,6 +61,14 @@ export interface Leaderboard {
 
 const useBenchmarkMessage = useMessageWrapper(BENCHMARK_PROCESS)
 const useBenchmarkDryrun = useDryrunWrapper(BENCHMARK_PROCESS)
+
+function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
+  return leaderboard.sort((a, b) => {
+    if (a.author === activeAddress) return -1
+    if (b.author === activeAddress) return 1
+    return b.score - a.score
+  })
+}
 
 export function useCompetitionPool() {
   const { activeAddress } = useArweaveContext()
@@ -99,14 +106,15 @@ export function useCompetitionPool() {
   const isPoolEnded = endTime.isBefore(Date.now())
   const poolEndCountdown = dayjs.unix(poolInfo.meta_data.competition_time.end).fromNow(true)
   const poolOpening = isPoolStarted && !isPoolEnded
+  const hasSubmitted = leaderboard.some(item => item.author === activeAddress)
 
-  const quickBtnText = poolOpening ? "Join Competition" : isPoolEnded ? "Competition Completed" : `Starts in ${poolStartCountdown}`
+  const quickBtnText = poolOpening ? hasSubmitted ? "Submitted" : "Join Competition" : isPoolEnded ? "Competition Completed" : `Starts in ${poolStartCountdown}`
   const timeTips = !isPoolStarted ? `Starts in ${poolStartCountdown}` : poolOpening ? `Ends in ${poolEndCountdown}` : `Ends in ${poolEndCountdown} ago`
 
   const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed"
 
   const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
-    if (!poolOpening) return
+    if (!poolOpening || hasSubmitted) return
     setJoinCompetitionModalVisible(true)
   }
 
@@ -119,7 +127,7 @@ export function useCompetitionPool() {
     dashboardLoading,
     dashboardError,
     getDashboard,
-    leaderboard,
+    leaderboard: resortLeaderboard(leaderboard, activeAddress),
     leaderboardLoading,
     leaderboardError,
     getLeaderboard,
@@ -129,6 +137,7 @@ export function useCompetitionPool() {
     joinPool,
     isPoolStarted,
     isPoolEnded,
+    hasSubmitted,
     poolOpening,
     quickBtnText,
     quickBtnOnClick,
