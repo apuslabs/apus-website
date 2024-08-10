@@ -32,19 +32,17 @@ const Competition = () => {
     useState(false);
 
   const {
-    poolInfo,
     dashboard,
+    isPoolStarted,
+    isQuickBtnDisabled,
+    joinPool,
     leaderboard,
     leaderboardLoading,
-    joinPool,
-    getLeaderboard,
-    isPoolStarted,
-    poolOpening,
-    hasSubmitted,
-    quickBtnText,
+    poolInfo,
     quickBtnOnClick,
-    timeTips,
+    quickBtnText,
     stage,
+    timeTips,
   } = useCompetitionPool();
 
   useEffect(() => {
@@ -61,7 +59,7 @@ const Competition = () => {
         </h2>
         <QuickButton
           text={quickBtnText}
-          disabled={!poolOpening || hasSubmitted}
+          disabled={isQuickBtnDisabled}
           onJoinCompetition={() => quickBtnOnClick(setJoinCompetitionModalVisible)}
         />
       </div>

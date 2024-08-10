@@ -113,42 +113,32 @@ export function useCompetitionPool() {
 
   const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed"
 
+  const isQuickBtnDisabled = !poolOpening || hasSubmitted || leaderboardLoading
   const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
     if (!poolOpening || hasSubmitted) return
     setJoinCompetitionModalVisible(true)
   }
 
+  const joinPoolRefresh = async (tags?: Record<string, string>, data?: string | number | Record<string, any>) => {
+    await joinPool(tags, data)
+    if (activeAddress) {
+      getDashboard({ FromAddress: activeAddress })
+      getLeaderboard({ FromAddress: activeAddress })
+    }
+  }
+
   return {
-    poolInfo,
-    poolInfoLoading,
-    poolInfoError,
-    getPool,
     dashboard: activeAddress ? dashboard : DefaultDashboard,
-    dashboardLoading,
-    dashboardError,
-    getDashboard,
+    isPoolStarted,
+    isQuickBtnDisabled,
+    joinPool: joinPoolRefresh,
     leaderboard: resortLeaderboard(leaderboard, activeAddress),
     leaderboardLoading,
-    leaderboardError,
-    getLeaderboard,
-    joinPoolResult,
-    joinPoolLoading,
-    joinPoolError,
-    joinPool: async (tags?: Record<string, string>, data?: string | number | Record<string, any>) => {
-      await joinPool(tags, data)
-      if (activeAddress) {
-        getDashboard({ FromAddress: activeAddress })
-        getLeaderboard({ FromAddress: activeAddress })
-      }
-    },
-    isPoolStarted,
-    isPoolEnded,
-    hasSubmitted,
-    poolOpening,
-    quickBtnText,
+    poolInfo,
     quickBtnOnClick,
-    timeTips: poolInfoLoading ? "" : timeTips,
+    quickBtnText,
     stage,
+    timeTips: poolInfoLoading ? "" : timeTips,
   }
 }
 
