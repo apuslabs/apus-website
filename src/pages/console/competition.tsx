@@ -161,7 +161,6 @@ const Competition = () => {
           setJoinCompetitionModalVisible(false);
         }}
         joinPool={joinPool}
-        getLeaderboard={getLeaderboard}
       />
     </div>
   );

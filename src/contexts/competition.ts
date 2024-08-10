@@ -134,7 +134,13 @@ export function useCompetitionPool() {
     joinPoolResult,
     joinPoolLoading,
     joinPoolError,
-    joinPool,
+    joinPool: async (tags?: Record<string, string>, data?: string | number | Record<string, any>) => {
+      await joinPool(tags, data)
+      if (activeAddress) {
+        getDashboard({ FromAddress: activeAddress })
+        getLeaderboard({ FromAddress: activeAddress })
+      }
+    },
     isPoolStarted,
     isPoolEnded,
     hasSubmitted,

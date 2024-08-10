@@ -17,8 +17,7 @@ export const JoinCompetitionModal: FC<{
   onCancel: () => void;
   onOk: () => void;
   joinPool: ReturnType<typeof useCompetitionPool>["joinPool"];
-  getLeaderboard: ReturnType<typeof useCompetitionPool>["getLeaderboard"];
-}> = ({ visible, onCancel, onOk, joinPool, getLeaderboard }) => {
+}> = ({ visible, onCancel, onOk, joinPool }) => {
   const [form] = useForm();
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -34,7 +33,6 @@ export const JoinCompetitionModal: FC<{
       const fileContent = await formData.dataset[0].originFileObj.text()
       await createDataset(hash, JSON.parse(fileContent))
       await joinPool({}, { dataset_hash: hash, dataset_name: formData.name })
-      await getLeaderboard()
       onOk()
     } catch (e) {
       message.error(JSON.stringify(e))
