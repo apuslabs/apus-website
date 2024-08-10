@@ -113,9 +113,9 @@ export function useCompetitionPool() {
 
   const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed"
 
-  const isQuickBtnDisabled = !poolOpening || hasSubmitted || leaderboardLoading
+  const isQuickBtnDisabled = !poolOpening || hasSubmitted || leaderboardLoading || dashboardLoading || poolInfoLoading
   const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
-    if (!poolOpening || hasSubmitted) return
+    if (isQuickBtnDisabled) return
     setJoinCompetitionModalVisible(true)
   }
 
