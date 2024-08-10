@@ -50,7 +50,7 @@ import { useLocalStorage } from "react-use";
 //   },
 // ];
 
-function truncateString(str: string, delimiters: string[] = ["<|", "\n"]) {
+function truncateString(str: string, delimiters: string[] = ["<|"]) {
   let minIndex = str.length;
 
   delimiters.forEach(delimiter => {
@@ -60,7 +60,7 @@ function truncateString(str: string, delimiters: string[] = ["<|", "\n"]) {
       }
   });
 
-  return str.substring(0, minIndex);
+  return str.substring(0, minIndex).replace("\n", " ").trim();
 }
 
 export const Playground = () => {
