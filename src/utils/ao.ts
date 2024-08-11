@@ -67,7 +67,7 @@ export function dryrunResultWrapper(process: string, debug?: boolean) {
       const dryrunResult = await dryrun({
         process,
         tags: obj2tags(tags),
-        signer: createDataItemSigner(window.arweaveWallet),
+        // signer: createDataItemSigner(window.arweaveWallet),
         data: toString(data),
       });
       debug && console.log(`%c${tags.Action ?? ""}%c %cDryRun%c`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, dryrunResult);

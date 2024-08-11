@@ -82,9 +82,9 @@ export function useCompetitionPool() {
 
   useEffect(() => {
     getPool({}, { pool_id: 1})
+    getLeaderboard({ FromAddress: activeAddress ?? "" })
     if (activeAddress) {
       getDashboard({ FromAddress: activeAddress })
-      getLeaderboard({ FromAddress: activeAddress })
     }
   }, [activeAddress])
 
