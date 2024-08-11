@@ -99,9 +99,10 @@ const Competition = () => {
 
                   Rules:
                   1. Submit datasets related to Sam.
-                  2. Evaluations are conducted automatically on AO.
-                  3. Open to individuals and teams.
-                  4. If scores are tied, earlier submissions rank higher.
+                  2. Each account can only submit once.
+                  3. Evaluations are conducted automatically on AO.
+                  4. Open to individuals and teams.
+                  5. If scores are tied, earlier submissions rank higher.
 
                   Prize Distribution:
                   The 100,000 APUS_Tn1 prize pool is distributed as follows:
