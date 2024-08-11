@@ -14,7 +14,7 @@ const DEFAULT_OUTPUT_TOKENS = "20";
 const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
   isOverTime
     ? "The Chat is taking longer than expected. Please wait a few more minutes."
-    : `Chat Result Will Reach You ${timeLeft}`;
+    : `The response of the chat will reach you ${timeLeft}`;
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
