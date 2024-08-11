@@ -1,2 +1,2 @@
-export const BENCHMARK_PROCESS = "Escd6eIWg_5QJgA4NPZy09NLyhiNIhyNewS-vaBeHVI";
-export const EMBEDDING_PROCESS = "hMEUOgWi97d9rGT-lHNCbm937bTypMq7qxMWeaUnMLo";
+export const BENCHMARK_PROCESS = "xLlcWNqzvVJHOYpgFP9QV-FSF4mcmPtk8xjverzRK3U";
+export const EMBEDDING_PROCESS = "jjEkZTRO_tL4BrhMm34TLXM_wg3zoXINK6fIbp3OSUo";
