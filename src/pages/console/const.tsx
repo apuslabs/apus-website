@@ -42,7 +42,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     title: <div className="flex">
     SCORE
     <Tooltip
-      title="Out of 100. Higher scores rank higher."
+      title="Out of 200. Higher scores rank higher."
     >
       <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4 ml-1" />
     </Tooltip>
