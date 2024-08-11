@@ -48,10 +48,10 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         <div
           className="btn-main btn-colorful"
           onClick={() => {
-            activeAddress ? navigate("/console/competition/") : connectWallet();
+            navigate("/console/competition/")
           }}
         >
-          {!activeAddress ? "Connect Wallet" : "Console"}
+          {"Console"}
         </div>
       ) : (
         <img
