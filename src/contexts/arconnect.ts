@@ -25,6 +25,9 @@ function useArweave() {
   }, []);
 
   const connectWallet = async () => {
+    if (!window.arweaveWallet) {
+      window.open("https://www.arconnect.io/download", "_blank");
+    }
     await window.arweaveWallet.connect(initialPermissions);
     await init();
   };
