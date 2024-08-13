@@ -8,48 +8,6 @@ import { useLocation } from "react-router-dom";
 import { useAutoScroll } from "../../utils/react-use";
 import { useLocalStorage } from "react-use";
 
-// const textLengthOptions = [
-//   {
-//     text: (
-//       <div className="flex items-center">
-//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalGreen} />
-//         <span className="whitespace-pre">
-//           <span className="inline-block w-28">Short Text</span>
-//           <span className="inline-block w-32">Max.30 words.</span>
-//           15 second load
-//         </span>
-//       </div>
-//     ),
-//     token: 30,
-//   },
-//   {
-//     text: (
-//       <div className="flex items-center">
-//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalYellow} />
-//         <span className="whitespace-pre">
-//           <span className="inline-block w-28">Medium Text</span>
-//           <span className="inline-block w-32">Max.60 words.</span>
-//           30 second load
-//         </span>
-//       </div>
-//     ),
-//     token: 60,
-//   },
-//   {
-//     text: (
-//       <div className="flex items-center">
-//         <img className="w-3 h-3 mr-2" src={ImgPlayground.SignalRed} />
-//         <span className="whitespace-pre">
-//           <span className="inline-block w-28">Long Text</span>
-//           <span className="inline-block w-32">Max.120 words.</span>
-//           45 second load
-//         </span>
-//       </div>
-//     ),
-//     token: 120,
-//   },
-// ];
-
 function truncateString(str: string, delimiters: string[] = ["<|"]) {
   let minIndex = str.length;
 
@@ -106,7 +64,7 @@ export const Playground = () => {
       <div className="text-sm text-black50 mb-4">Dataset</div>
       <div className="flex items-center gap-4">
         <Select
-          value={selectedDataset}
+          value={datasetsLoading ? undefined : selectedDataset}
           loading={datasetsLoading}
           size="large"
           className="w-1/2"

@@ -14,7 +14,7 @@ const DEFAULT_OUTPUT_TOKENS = "20";
 const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
   isOverTime
     ? "The Chat is taking longer than expected. Please wait a few more minutes."
-    : `The response of the chat will reach you ${timeLeft}`;
+    : `Response time is about ${timeLeft} minutes.Thanks for waiting! We are working hard to improve.😊`;
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
@@ -57,7 +57,7 @@ export function usePlayground(dataset_hash?: string) {
     msg: getDatasets,
     result: datasetsResult,
     loading: datasetsLoading,
-  } = usePlaygroundDryrun("Get-Datasets");
+  } = usePlaygroundDryrun("Get-Datasets", true);
   const { msg: chatQuestionMsg, loading: sendChatQuestioning } =
     usePlaygroundMessage("Chat-Question");
   const { msg: getChatAnswer, loading: getChatAnswering } =
@@ -112,7 +112,7 @@ export function usePlayground(dataset_hash?: string) {
         const chatAnswer = getDataFromMessage(chatAnswerResult);
         if (chatTags?.status == "nil" || chatTags?.status == "100") {
           const isOverTime = dayjs().isAfter(dayjs(lastChat.expectedTime));
-          const timeLeft = dayjs().to(dayjs(lastChat.expectedTime));
+          const timeLeft = dayjs().to(dayjs(lastChat.expectedTime), true);
           // if over 1 hour, stop waiting, and show tips
           if (dayjs().diff(dayjs(lastChat.expectedTime), "hour") > 1) {
             chatHistory.push({

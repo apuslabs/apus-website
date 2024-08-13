@@ -126,9 +126,9 @@ export const useMessageWrapper = (process: string) => (Action: string) => {
   }
 }
 
-export const useDryrunWrapper = (process: string) => (Action: string) => {
+export const useDryrunWrapper = (process: string) => (Action: string, autoLoad = false) => {
   const [result, setResult] = useState<MessageResult>()
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(autoLoad)
   const [error, setError] = useState<string>()
 
   const msg = async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {

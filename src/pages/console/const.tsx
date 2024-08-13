@@ -39,7 +39,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     ),
   },
   {
-    title: <TitleWithTip title="SCORE" tip="Out of 100. Higher scores rank higher." />,
+    title: <TitleWithTip title="SCORE" tip="The total score is out of 100, with higher scores ranking higher." />,
     dataIndex: "score",
     key: "score",
     render: (text: string, item: Leaderboard) => (
