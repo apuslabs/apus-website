@@ -12,6 +12,7 @@ import { Statisitcs } from "./components/Statistics";
 import { renderEmpty, TableColumns } from "./const";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
 import { useArweaveContext } from "../../contexts/arconnect";
+import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";
 
 const TwitterVideo = () => (
   <iframe width="560" height="315" src="https://www.youtube.com/embed/_VJi-1ajaEA?si=0Rzb6gaswdsIU43L&amp;controls=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
@@ -22,6 +23,7 @@ const Competition = () => {
   const [showMore, setShowMore] = useState(false);
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
     useState(false);
+  const [submitSuccessfulModalVisible, setSubmitSuccessfulModalVisible] = useState(false);
 
   const {
     dashboard,
@@ -35,7 +37,9 @@ const Competition = () => {
     quickBtnText,
     stage,
     timeTips,
-  } = useCompetitionPool();
+  } = useCompetitionPool(() => {
+    setSubmitSuccessfulModalVisible(true)
+  });
 
   useEffect(() => {
     if (!isPoolStarted) {
@@ -159,6 +163,11 @@ const Competition = () => {
           setJoinCompetitionModalVisible(false);
         }}
         joinPool={joinPool}
+      />
+      <SubmitSuccessfulModal visible={submitSuccessfulModalVisible}
+        onCancel={() => {
+          setSubmitSuccessfulModalVisible(false);
+        }}
       />
     </div>
   );

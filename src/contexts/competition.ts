@@ -70,7 +70,7 @@ function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   })
 }
 
-export function useCompetitionPool() {
+export function useCompetitionPool(onJoinPool: () => void) {
   const { activeAddress } = useArweaveContext()
 
   const { result: poolInfoResult, loading: poolInfoLoading, error: poolInfoError, msg: getPool } = useBenchmarkDryrun("Get-Pool")
@@ -121,6 +121,7 @@ export function useCompetitionPool() {
 
   const joinPoolRefresh = async (tags?: Record<string, string>, data?: string | number | Record<string, any>) => {
     await joinPool(tags, data)
+    onJoinPool()
     if (activeAddress) {
       getDashboard({ FromAddress: activeAddress })
       getLeaderboard({ FromAddress: activeAddress })
