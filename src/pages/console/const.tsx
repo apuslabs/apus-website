@@ -4,6 +4,7 @@ import { ConfigProvider, Empty, GetProp, Tooltip } from "antd";
 import { ImgCompetition } from "../../assets/image";
 import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
 
 const BlueText = ({ text, isBlue }: { text: string| number; isBlue: boolean }) => (
   <span className={isBlue ? "text-blue" : ""}>{text}</span>
@@ -42,9 +43,12 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     title: <TitleWithTip title="SCORE" tip="The total score is out of 100, with higher scores ranking higher." />,
     dataIndex: "score",
     key: "score",
-    render: (text: string, item: Leaderboard) => (
-      <BlueText text={text ? Number(text) / 2 : "N/A"} isBlue={item.author === activeAddress} />
-    ),
+    render: (text: string, item: Leaderboard) => {
+      const score = Number(text) / 2
+      const isOver1Day = dayjs(item.upload_time).isBefore(dayjs().subtract(1, "day"))
+      const progressTip = item.completion_progress === 1 || isOver1Day ? "" : `(${Math.floor(item.completion_progress * 100)}%)`
+      return <BlueText text={text ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
+    },
   },
   {
     title: "TRAINER",

@@ -54,9 +54,11 @@ export interface Leaderboard {
   rank: number
   dataset_id: string
   dataset_name: string
+  upload_time: number
   score: number
   author: string
   granted_reward: number
+  completion_progress: number
 }
 
 const useBenchmarkMessage = useMessageWrapper(BENCHMARK_PROCESS)
