@@ -5,22 +5,22 @@ import { ImgCompetition } from "../../assets/image";
 import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
 
-const BlueText = ({ text, isBlue }: { text: string; isBlue: boolean }) => (
+const BlueText = ({ text, isBlue }: { text: string| number; isBlue: boolean }) => (
   <span className={isBlue ? "text-blue" : ""}>{text}</span>
+);
+
+const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
+  <div className="flex">
+    {title}
+    <Tooltip title={tip}>
+      <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4 ml-1" />
+    </Tooltip>
+  </div>
 );
 
 export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
   {
-    title: (
-      <div className="flex">
-        RANK
-        <Tooltip
-          title="If scores are tied, earlier submissions rank higher."
-        >
-          <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4 ml-1" />
-        </Tooltip>
-      </div>
-    ),
+    title: <TitleWithTip title="RANK" tip="If scores are tied, earlier submissions rank higher." />,
     dataIndex: "rank",
     key: "rank",
     render: (text: string, item: Leaderboard) => (
@@ -39,18 +39,11 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     ),
   },
   {
-    title: <div className="flex">
-    SCORE
-    <Tooltip
-      title="Out of 200. Higher scores rank higher."
-    >
-      <img src={ImgCompetition.IconInfoCircle} className="w-4 h-4 ml-1" />
-    </Tooltip>
-  </div>,
+    title: <TitleWithTip title="SCORE" tip="Out of 100. Higher scores rank higher." />,
     dataIndex: "score",
     key: "score",
     render: (text: string, item: Leaderboard) => (
-      <BlueText text={text || "N/A"} isBlue={item.author === activeAddress} />
+      <BlueText text={text ? Number(text) / 2 : "N/A"} isBlue={item.author === activeAddress} />
     ),
   },
   {
@@ -65,7 +58,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     ),
   },
   {
-    title: "REWARD",
+    title: <TitleWithTip title="REWARDS" tip="The competition rewards will fluctuate based on changes in ranking. Your ranking may shift as more participants join" />,
     dataIndex: "granted_reward",
     key: "granted_reward",
     render: (text: string, item: Leaderboard) => (

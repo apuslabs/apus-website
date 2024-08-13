@@ -14,15 +14,7 @@ import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
 import { useArweaveContext } from "../../contexts/arconnect";
 
 const TwitterVideo = () => (
-  <iframe
-    className="w-[22.25rem] h-[12.5rem] rounded-lg"
-    src="https://www.youtube.com/embed/-rPbCeCbJVc?si=778KTA2eKneoQLDF"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerPolicy="strict-origin-when-cross-origin"
-    allowFullScreen
-  ></iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/_VJi-1ajaEA?si=0Rzb6gaswdsIU43L&amp;controls=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
 );
 
 const Competition = () => {
@@ -66,7 +58,7 @@ const Competition = () => {
       <div className="relative p-6 bg-light rounded-2xl">
         <div className="w-3/5">
           <h1 className="mb-6 font-bold text-3xl leading-tight">
-            {"Sam Digital Twin Dataset Competition Pool" || poolInfo.title || ""}
+            {"Sam Williams - Digital Twin Dataset Competition" || poolInfo.title || ""}
           </h1>
           <p className=" text-neutral-900 leading-none">{timeTips}</p>
         </div>
@@ -95,22 +87,29 @@ const Competition = () => {
               <p className="text-black50 px-5 leading-relaxed text-wrap break-words whitespace-pre-line">
                 {poolInfo.meta_data.description ||
                   `Objective:
+
                   The Sam Digital Twin Dataset Competition Pool aims to help Sam, the Founder and Inventor of Arweave and AO, create a comprehensive digital twin by collecting extensive data.
 
                   Rules:
-                  1. Submit datasets related to Sam.
-                  2. Each account can only submit once.
-                  3. Evaluations are conducted automatically on AO.
-                  4. Open to individuals and teams.
-                  5. If scores are tied, earlier submissions rank higher.
 
+                  Submit datasets related to Sam.
+                  Each account can only submit once.
+                  Evaluations are conducted automatically on AO.
+                  Open to individuals and teams.
+                  If scores are tied, earlier submissions rank higher.
+                  Only the top 200 participants are eligible for rewards.
                   Prize Distribution:
-                  The 100,000 APUS_Tn1 prize pool is distributed as follows:
-                  1st place: 35% (35,000 APUS_Tn1)
-                  2nd place: 20% (20,000 APUS_Tn1)
-                  3rd place: 10% (10,000 APUS_Tn1)
-                  4th-10th places: 5% each (5,000 APUS_Tn1 each)
-                  All other qualified participants: 300 APUS_Tn1 each`}
+
+                  The 157,000 APUS_Tn1 prize pool is distributed as follows:
+
+                  1st place: 35,000 APUS_Tn1
+                  2nd place: 20,000 APUS_Tn1
+                  3rd place: 10,000 APUS_Tn1
+                  4th-10th places: 5,000 APUS_Tn1 each
+                  All other qualified participants: 300 APUS_Tn1 each
+                  Example: If two participants have the same score, the earlier submission ranks higher. For instance, if Participant A submits before Participant B, A will take 2nd place and receive 20,000 APUS_Tn1, while B will take 3rd place and receive 10,000 APUS_Tn1.
+
+                  Notice:Prizes will be automatically distributed to your wallet within 48 hours after the competition ends.`}
               </p>
             </li>
           </ul>
