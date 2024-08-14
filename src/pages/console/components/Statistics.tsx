@@ -12,18 +12,18 @@ export const Statisitcs = ({
 }: Dashboard) => [
   {
     label: "Total Participants",
-    value: DefaultDash(participants),
+    value: DefaultDash(participants || 0),
   },
   {
     label: "Rewards Distributed",
-    value: DefaultDash(granted_reward, "APUS_Tn1"),
+    value: DefaultDash(granted_reward || 0, "APUS_Tn1"),
   },
   {
     label: "Your Rank",
-    value: DefaultDash(my_rank),
+    value: DefaultDash(my_rank || 0),
   },
   {
     label: "Your APUS_Tn1",
-    value: DefaultDash(my_reward, "APUS_Tn1"),
+    value: DefaultDash(my_reward || 0, "APUS_Tn1"),
   },
 ];
