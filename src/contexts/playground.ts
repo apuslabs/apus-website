@@ -65,10 +65,10 @@ export function usePlayground(dataset_hash?: string) {
 
   // auto get datasets when active address changes
   useEffect(() => {
-    if (activeAddress) {
+    // if (activeAddress) {
       getDatasets();
-    }
-  }, [activeAddress]);
+    // }
+  }, []);
 
   const chatHistory = dataset_hash ? userHistory?.[dataset_hash] || [] : [];
 
