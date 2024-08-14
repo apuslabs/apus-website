@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createHashRouter, RouterProvider } from "react-router-dom";
 import HomeIndex from "./pages/HomeIndex";
 import NoMatch from "./components/404";
 import ConsoleWrapper from "./pages/console/wrapper";
@@ -7,7 +7,7 @@ import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
 import Playground from "./pages/console/playground";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <HomeIndex />,
