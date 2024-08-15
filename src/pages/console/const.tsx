@@ -26,7 +26,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     key: "rank",
     render: (text: string, item: Leaderboard) => (
       <BlueText
-        text={item.score ? text : "N/A"}
+        text={item.completion_progress ? text : "N/A"}
         isBlue={item.author === activeAddress}
       />
     ),
@@ -47,7 +47,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
       const score = Number(text) / 2
       const isOver1Day = dayjs(item.upload_time).isBefore(dayjs().subtract(1, "day"))
       const progressTip = item.completion_progress === 1 || isOver1Day ? "" : `(${Math.floor(item.completion_progress * 100)}%)`
-      return <BlueText text={text ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
+      return <BlueText text={item.completion_progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
     },
   },
   {
