@@ -4,6 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime' // ES 2015
 import { useArweaveContext } from "./arconnect";
 import { useDryrunWrapper, useMessageWrapper } from "../utils/ao";
 import { BENCHMARK_PROCESS, EMBEDDING_PROCESS } from "../config/process";
+import { message } from "antd";
 dayjs.extend(relativeTime);
 
 export interface PoolInfo {
@@ -121,7 +122,11 @@ export function useCompetitionPool(onJoinPool: () => void) {
     setJoinCompetitionModalVisible(true)
   }
 
-  const joinPoolRefresh = async (tags?: Record<string, string>, data?: string | number | Record<string, any>) => {
+  const joinPoolRefresh = async (tags: Record<string, string>, data: Record<string, any>) => {
+    if (leaderboard?.some(item => item.dataset_name === data.dataset_name)) {
+      message.error("Dataset name already exists")
+      return
+    }
     await joinPool(tags, data)
     onJoinPool()
     if (activeAddress) {
