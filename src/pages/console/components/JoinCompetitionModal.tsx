@@ -31,11 +31,32 @@ export const JoinCompetitionModal: FC<{
       const formData = await form.validateFields()
       const hash = await sha1(formData.name)
       const fileContent = await formData.dataset[0].originFileObj.text()
-      await createDataset(hash, JSON.parse(fileContent))
+      const jsonContent = JSON.parse(fileContent)
+      if (!Array.isArray(jsonContent)) {
+        throw new Error('Invalid JSON file: should be an array')
+      }
+      const contents = []
+      for (let i of jsonContent) {
+        if (typeof i.content !== 'string') {
+          throw new Error('Invalid JSON file: content should be string')
+        }
+        contents.push(i.content)
+      }
+      if (contents.length === 0) {
+        throw new Error('Invalid JSON file: empty content')
+      }
+      const createResult = await createDataset(hash, contents)
+      if (createResult.Messages?.[0]?.Tags?.find((tag: any) => tag.name === 'status')?.value === '429') {
+        throw new Error('Too many submits currently, sorry for the inconvenience, please try again later')
+      }
       await joinPool({}, { dataset_hash: hash, dataset_name: formData.name })
       onOk()
     } catch (e) {
-      message.error(JSON.stringify(e))
+      if (e instanceof Error) {
+        message.error(e.message)
+      } else {
+        message.error(JSON.stringify(e))
+      }
     } finally {
       setSubmitting(false)
     }
