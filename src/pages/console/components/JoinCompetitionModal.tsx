@@ -53,7 +53,11 @@ export const JoinCompetitionModal: FC<{
       onOk()
     } catch (e) {
       if (e instanceof Error) {
-        message.error(e.message)
+        if (e.message === "{}") {
+          message.error("Unknown error, please try another dataset file or contact admin.");
+        } else {
+          message.error(e.message);
+        }
       } else {
         message.error(JSON.stringify(e))
       }

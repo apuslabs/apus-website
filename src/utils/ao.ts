@@ -49,11 +49,22 @@ export function messageResultWrapper(process: string, debug?: boolean) {
         // the arweave TXID of the process
         process,
       });
+      if (messageReturn.Error !== undefined) {
+        if (
+          typeof messageReturn.Error === "string" ||
+          typeof messageReturn.Error === "number"
+        ) {
+          throw new Error(messageReturn.Error + "");
+        } else {
+          throw new Error(JSON.stringify(messageReturn.Error));
+        }
+      }
       debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, messageReturn);
       return messageReturn;
     } catch (e) {
       debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, redLabelStyle, messageStyle);
       console.error(e);
+      throw e
     }
   };
 }
