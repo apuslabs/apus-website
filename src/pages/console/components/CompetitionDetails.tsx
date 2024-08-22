@@ -38,21 +38,21 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     label: "Stage",
     value: stage,
   },
-  // {
-  //   icon: ImgCompetition.IconFile,
-  //   label: "Fine-tuning Tutorial",
-  //   value: (
-  //     <Link to="/" className=" text-blue font-medium">
-  //       {poolInfo.fine_tuning_tutorial_link || "https://github.com"}
-  //     </Link>
-  //   ),
-  // },
   {
     icon: ImgCompetition.IconData,
     label: "Dataset",
     value: (
       <Link to="https://github.com/apuslabs/Dataset-Sample" className="text-blue font-medium">
         {"https://github.com/apuslabs/Dataset-Sample"}
+      </Link>
+    ),
+  },
+  {
+    icon: ImgCompetition.IconFile,
+    label: "FAQ",
+    value: (
+      <Link to="/" className=" text-blue font-medium">
+        {"https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86"}
       </Link>
     ),
   },
