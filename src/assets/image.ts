@@ -6,8 +6,9 @@ import LogoArweave from "./homepage/logo-arweave.png";
 import LogoAO from "./homepage/logo-ao.png";
 import LogoDephy from "./homepage/logo-dephy.png";
 import IconMenu from "./homepage/icon-menu.png";
+import IconMenuWhite from "./homepage/icon-menu-white.png";
 import BgSolution from "./homepage/solution.png";
-import BgHero from "./homepage/bg_kv.webp";
+import BgHero from "./homepage/bg_kv.png";
 import BgArch from "./homepage/bg-arch.png";
 import FeaturesCost from "./homepage/features-cost.png";
 import FeaturesExecution from "./homepage/features-execution.png";
@@ -42,6 +43,7 @@ export const ImgHomepage = {
   LogoAO,
   LogoDephy,
   IconMenu,
+  IconMenuWhite,
   BgHero,
   BgArch,
   BgSolution,
