@@ -23,7 +23,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         background: menuShow
           ? "#4c4c4c"
           : !isTablet
-            ? "linear-gradient(to bottom, rgba(74,34,235,15%) 0%, rgba(74,34,235,0) 100%)"
+            ? "linear-gradient(to bottom, rgba(74,34,235,25%) 0%, rgba(74,34,235,0) 100%)"
             : "#ffffff",
       }}
     >
@@ -40,7 +40,9 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
       </div>
       {!showUserInfo ? (
         <div
-          className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl md:bg-transparent text-white`}
+          className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative
+            ${isTablet ? "bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl" : ""}
+            md:text-[#333333] text-white`}
           style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
           onClick={() => {
             setMenuShow(false);
