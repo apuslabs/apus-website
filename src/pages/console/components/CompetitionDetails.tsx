@@ -51,7 +51,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     icon: ImgCompetition.IconFile,
     label: "FAQ",
     value: (
-      <Link to="/" className=" text-blue font-medium">
+      <Link to="https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86" className=" text-blue font-medium">
         {"https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86"}
       </Link>
     ),
