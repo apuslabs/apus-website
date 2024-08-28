@@ -141,7 +141,7 @@
 }
 
 .section-description {
-    @apply text-xs md:text-2xl w-5/6 md:w-full;
+    @apply text-xs md:text-2xl w-5/6 md:w-full md:max-w-[960px];
     /* color: rgba(255, 255, 255, 0.5); */
 }
 
