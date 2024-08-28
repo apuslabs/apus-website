@@ -55,7 +55,7 @@
 }
 
 .menu-colorful:hover {
-    background: linear-gradient(135deg, #01f88d 0%, #0990ff 51%, #bd32ff 100%);
+    background: #4a22eb;
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;

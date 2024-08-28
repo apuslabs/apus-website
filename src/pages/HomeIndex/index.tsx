@@ -139,7 +139,7 @@ const HomeIndex: FC = () => {
                 describe:
                   "Apus Network provides an open-source AO extension of deterministic GPU. This ensures trustless execution for AI.",
                 img: ImgHomepage.FeaturesExecution,
-                imgClassName: "-ml-4 md:-ml-10",
+                imgClassName: "-ml-10",
               },
               {
                 title: `Cost-Effective AI<br/>Training and Inference`,
