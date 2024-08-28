@@ -352,10 +352,11 @@ const HomeIndex: FC = () => {
           <div className="section-header text-center mt-24 md:mt-40">
             Let's Build Together
           </div>
-          <Link to={FooterSocialMediaList[0].path}>
-            <div className="btn-colorful btn-main mb-24 md:mb-[16rem] mt-6">
-              Get Our Updates
-            </div>
+          <Link
+            to={FooterSocialMediaList[0].path}
+            className="mb-24 md:mb-[16rem] mt-6"
+          >
+            <div className="btn-colorful btn-main">Get Our Updates</div>
           </Link>
         </div>
         <img
