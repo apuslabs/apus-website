@@ -12,7 +12,7 @@ const HomeIndex: FC = () => {
   const isMobile = breakpoint === "mobile";
 
   useLayoutEffect(() => {
-    var observer = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       function (entries) {
         if (entries[0].isIntersecting === true) {
           // 依次显示卡片
@@ -39,7 +39,13 @@ const HomeIndex: FC = () => {
   );
 
   return (
-    <div>
+    <div
+      className="-z-10 relative"
+      style={{
+        background:
+          "linear-gradient(to bottom, rgba(243,243,243,0.5) 0%, rgba(177,177,177,0.5) 100%)",
+      }}
+    >
       {announcementShow ? (
         <div
           className="bg-[#333333] rounded-lg bottom-3 md:bottom-auto md:top-24 left-1/2 -translate-x-1/2 p-6 flex items-center z-50"
@@ -69,14 +75,14 @@ const HomeIndex: FC = () => {
       <div
         className="section-container h-screen min-h-[56vw] relative"
         style={{
-          backgroundImage: `url(${ImgHomepage.BgHero})`,
+          backgroundImage: `url(${isMobile ? ImgHomepage.BgHeroMobile : ImgHomepage.BgHero})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       >
-        <div className="section h-full flex flex-col justify-center">
+        <div className="section h-full flex flex-col justify-center items-center">
           <div className="absolute md:left-32 top-1/2 -translate-y-1/2 md:text-left text-[#333333] text-center font-bold text-5xl md:text-8xl leading-[1.1]">
-            Trustless GPU Network
+            Trustless {isMobile ? <br /> : ""}GPU Network
             <br />
             for AI on AO
           </div>
@@ -93,7 +99,7 @@ const HomeIndex: FC = () => {
               Benchmark POC
             </div>
             <div
-              className="btn-colorful btn-main active"
+              className="btn-colorful btn-main"
               onClick={() => {
                 window.open(
                   "https://apus-network.gitbook.io/apus-console-docs/",
@@ -171,7 +177,7 @@ const HomeIndex: FC = () => {
         className="section-container p-none relative"
         style={{
           background:
-            "radial-gradient(circle at 50% 70%, #7028CC 0%, #ffffff 50%, #ffffff 100%)",
+            "radial-gradient(circle at 50% 70%, #7028CC 0%, rgba(255,255,255, 0%) 50%, transparent 50%, transparent 100%)",
         }}
       >
         <div className="section md:px-5 md:pt-[10rem] flex flex-col items-center">
@@ -188,7 +194,7 @@ const HomeIndex: FC = () => {
           className="w-screen md:w-full overflow-x-auto overflow-y-hidden mt-16 relative md:flex md:justify-center z-10"
         >
           <img
-            className="md:w-[68rem] h-150 md:h-[38rem] md:mb-24 overflow-x-scroll max-w-none px-5 md:px-0 z-10"
+            className="relative md:w-[68rem] h-150 md:h-[38rem] md:mb-24 overflow-x-scroll max-w-none px-5 md:px-0 z-10"
             src={ImgHomepage.BgSolution}
           />
           <img
@@ -308,7 +314,7 @@ const HomeIndex: FC = () => {
         }}
       >
         <div className="section flex flex-col items-center">
-          <div className="section-header mt-12 md:mt-16 text-center">
+          <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">
             Powered By
           </div>
           <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center md:flex-wrap mt-6 md:mt-12">

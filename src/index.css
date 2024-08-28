@@ -134,14 +134,14 @@
 }
 
 .section-header {
-    @apply font-bold text-3xl md:text-8xl mb-4 md:mb-12;
+    @apply font-bold text-3xl md:text-6xl mb-4 md:mb-12;
 }
 .section-header.leading-tight {
     line-height: 1.05;
 }
 
 .section-description {
-    @apply font-medium text-xs md:text-3xl w-5/6 md:w-full;
+    @apply text-xs md:text-2xl w-5/6 md:w-full;
     /* color: rgba(255, 255, 255, 0.5); */
 }
 

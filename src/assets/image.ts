@@ -9,6 +9,7 @@ import IconMenu from "./homepage/icon-menu.png";
 import IconMenuWhite from "./homepage/icon-menu-white.png";
 import BgSolution from "./homepage/solution.png";
 import BgHero from "./homepage/bg_kv.png";
+import BgHeroMobile from "./homepage/bg_kv_mobile.png";
 import BgArch from "./homepage/bg-arch.png";
 import FeaturesCost from "./homepage/features-cost.png";
 import FeaturesExecution from "./homepage/features-execution.png";
@@ -45,6 +46,7 @@ export const ImgHomepage = {
   IconMenu,
   IconMenuWhite,
   BgHero,
+  BgHeroMobile,
   BgArch,
   BgSolution,
   FeaturesCost,

@@ -14,17 +14,12 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
 
   return (
     <div
-      className="h-16 md:h-[100px] w-full
+      className="h-16 md:h-20 w-full
       fixed t-0 l-0 r-0 px-5 md:px-12
       flex items-center justify-between
-      md:border-b border-solid border-black
       backdrop-blur-3xl z-20"
       style={{
-        background: menuShow
-          ? "#4c4c4c"
-          : !isTablet
-            ? "linear-gradient(to bottom, rgba(74,34,235,25%) 0%, rgba(74,34,235,0) 100%)"
-            : "#ffffff",
+        background: menuShow ? "#4c4c4c" : "#ffffff",
       }}
     >
       <div className="h-full flex items-center" onClick={() => navigate("/")}>
@@ -35,7 +30,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
               : ImgHomepage.LogoHorizonal
           }
           alt="Apus Logo"
-          className="h-6 md:h-12"
+          className="h-6 md:h-10"
         />
       </div>
       {!showUserInfo ? (
