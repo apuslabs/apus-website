@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ImgCompetition } from "../../assets/image";
-import { ConfigProvider, Empty, Form, GetProp, Input, Modal, Table, Tooltip } from "antd";
+import { ConfigProvider, Table, notification } from "antd";
 import "./competition.css";
 import {
   useCompetitionPool,
@@ -24,6 +24,15 @@ const Competition = () => {
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
     useState(false);
   const [submitSuccessfulModalVisible, setSubmitSuccessfulModalVisible] = useState(false);
+  const [api, contextHolder] = notification.useNotification();
+
+  useEffect(() => {
+    api.warning({
+      message: `UNDER MAINTENANCE`,
+      description: 'WILL BE BACK SOON',
+      placement: "top",
+    });
+  }, [])
 
   const {
     dashboard,
@@ -49,6 +58,7 @@ const Competition = () => {
 
   return (
     <div id="competition" className="max-w-[1080px] mx-auto pb-64">
+      {contextHolder}
       <div className="flex justify-between items-center mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">
           Competition Pool

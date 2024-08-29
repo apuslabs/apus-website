@@ -102,12 +102,14 @@ export function useCompetitionPool(onJoinPool: () => void) {
   // TODO: remove this
   poolInfo.meta_data = JSON.parse(poolInfo.meta_data as any || DefaultPoolInfo.meta_data)
   
-  const startTime= dayjs.unix(poolInfo.meta_data.competition_time.start)
-  const endTime = dayjs.unix(poolInfo.meta_data.competition_time.end)
+  // const startTime= dayjs.unix(poolInfo.meta_data.competition_time.start)
+  // const endTime = dayjs.unix(poolInfo.meta_data.competition_time.end)
+  const startTime= dayjs.unix(1723737600)
+  const endTime = dayjs.unix(1724904000)
   const isPoolStarted = startTime.isBefore(Date.now())
-  const poolStartCountdown = dayjs.unix(poolInfo.meta_data.competition_time.start).fromNow(true)
+  const poolStartCountdown = startTime.fromNow(true)
   const isPoolEnded = endTime.isBefore(Date.now())
-  const poolEndCountdown = dayjs.unix(poolInfo.meta_data.competition_time.end).fromNow(true)
+  const poolEndCountdown = endTime.fromNow(true)
   const poolOpening = isPoolStarted && !isPoolEnded
   const hasSubmitted = leaderboard.some(item => item.author === activeAddress)
 
