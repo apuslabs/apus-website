@@ -76,6 +76,10 @@ export const FooterSocialMediaList: menuType[] = [
     name: "Medium",
     path: "https://medium.com/@apusnetwork",
   },
+  {
+    name: "LinkedIn",
+    path: "https://sg.linkedin.com/company/apus-network",
+  },
 ];
 
 export const ConsoleHeaderList: menuType[] = [
