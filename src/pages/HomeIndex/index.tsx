@@ -56,9 +56,7 @@ const HomeIndex: FC = () => {
         >
           <img src={ImgHomepage.IconAnnouncement} className="w-5 h-5 mr-4" />
           <div className="text-[10px] md:text-sm text-white flex-1 mr-6">
-            Apus has removed Ecosystem, Playground, Task and Connect Wallet. In
-            the meantime your APUS_Tn1 have been retained, and a new incentive
-            mechanism will be added in the future. Stay tuned!
+          Apus Network has migrated to AO! Click on Console in the top right to explore our testnet Competition Pools and Playground for the chance to earn Apus_Tn1 token rewards.
           </div>
           <div
             className="btn-main btn-small btn-colorful"
