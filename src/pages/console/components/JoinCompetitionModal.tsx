@@ -49,7 +49,10 @@ export const JoinCompetitionModal: FC<{
       if (createResult.Messages?.[0]?.Tags?.find((tag: any) => tag.name === 'status')?.value === '429') {
         throw new Error('Too many submits currently, sorry for the inconvenience, please try again later')
       }
-      await joinPool({}, { dataset_hash: hash, dataset_name: formData.name })
+      const joinPoolResult: any = await joinPool({}, { dataset_hash: hash, dataset_name: formData.name })
+      if (joinPoolResult.Messages?.[0]?.Tags?.find((tag: any) => tag.name === 'status')?.value === '429') {
+        throw new Error('Too many submits currently, sorry for the inconvenience, please try again later')
+      }
       onOk()
     } catch (e) {
       if (e instanceof Error) {

@@ -49,17 +49,19 @@ export function messageResultWrapper(process: string, debug?: boolean) {
         // the arweave TXID of the process
         process,
       });
-      if (messageReturn.Error !== undefined) {
+      const msgErr = messageReturn.Error || (messageReturn as any).error
+      if (msgErr !== undefined) {
         if (
-          typeof messageReturn.Error === "string" ||
-          typeof messageReturn.Error === "number"
+          typeof msgErr === "string" ||
+          typeof msgErr === "number"
         ) {
-          throw new Error(messageReturn.Error + "");
+          throw new Error(msgErr + "");
         } else {
-          throw new Error(JSON.stringify(messageReturn.Error));
+          throw new Error(JSON.stringify(msgErr));
         }
       }
       debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, messageReturn);
+      console.log(messageReturn)
       return messageReturn;
     } catch (e) {
       debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, redLabelStyle, messageStyle);
@@ -110,11 +112,12 @@ export const useMessageWrapper = (process: string) => (Action: string) => {
     setLoading(true)
     try {
       const result = await messageResultWrapper(process, true)({ ...tags, Action }, data)
+      console.log(result)
       if (result == null) {
         throw new Error("No result")
       }
       if (result.Error) {
-        setError(toString(result.Error))
+        throw result.Error
       }
       setResult(result as any)
       return result
