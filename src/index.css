@@ -25,7 +25,7 @@
 }
 
 .btn-gradient3 {
-    background:;
+    background: var(--gradient3);
     border: none;
     color: white;
     cursor: pointer;

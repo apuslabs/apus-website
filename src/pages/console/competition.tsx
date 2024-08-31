@@ -26,13 +26,13 @@ const Competition = () => {
   const [submitSuccessfulModalVisible, setSubmitSuccessfulModalVisible] = useState(false);
   const [api, contextHolder] = notification.useNotification();
 
-  useEffect(() => {
-    api.warning({
-      message: `UNDER MAINTENANCE`,
-      description: 'WILL BE BACK SOON',
-      placement: "top",
-    });
-  }, [])
+  // useEffect(() => {
+  //   api.warning({
+  //     message: `UNDER MAINTENANCE`,
+  //     description: 'WILL BE BACK SOON',
+  //     placement: "top",
+  //   });
+  // }, [])
 
   const {
     dashboard,
