@@ -17,6 +17,8 @@ export interface PoolInfo {
       end: number;
     };
     description: string;
+    dataset: string;
+    video: string;
   };
 }
 
@@ -148,12 +150,14 @@ export function useCompetitionPool(
       ? "Active"
       : "Completed";
 
-  const isQuickBtnDisabled =
+  let isQuickBtnDisabled =
     !poolOpening ||
     hasSubmitted ||
     leaderboardLoading ||
     dashboardLoading ||
     poolInfoLoading;
+  // TODO: remove online
+  isQuickBtnDisabled = false;
   const quickBtnOnClick = (
     setJoinCompetitionModalVisible: (visible: boolean) => void,
   ) => {
@@ -172,8 +176,8 @@ export function useCompetitionPool(
     await joinPool(tags, data);
     onJoinPool();
     if (activeAddress) {
-      getDashboard({ FromAddress: activeAddress });
-      getLeaderboard({ FromAddress: activeAddress });
+      getDashboard({ FromAddress: activeAddress }, poolID);
+      getLeaderboard({ FromAddress: activeAddress }, poolID);
     }
   };
 

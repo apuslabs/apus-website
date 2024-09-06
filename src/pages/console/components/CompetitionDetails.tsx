@@ -33,11 +33,8 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     icon: ImgCompetition.IconData,
     label: "Dataset",
     value: (
-      <Link
-        to="https://github.com/apuslabs/Dataset-Sample"
-        className="text-blue font-medium"
-      >
-        {"https://github.com/apuslabs/Dataset-Sample"}
+      <Link to={poolInfo.metadata.dataset} className="text-blue font-medium">
+        {poolInfo.metadata.dataset}
       </Link>
     ),
   },

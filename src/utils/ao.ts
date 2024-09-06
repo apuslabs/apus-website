@@ -62,6 +62,48 @@ function formatResult(result: MessageResult) {
   }
 }
 
+function handleResult(
+  debug: boolean | undefined,
+  msgType: string,
+  result: MessageResult,
+  messageId = "",
+  tags: any,
+  data: any,
+) {
+  const msgErr = result.Error || (result as any).error;
+  if (msgErr !== undefined) {
+    if (typeof msgErr === "string" || typeof msgErr === "number") {
+      throw new Error(msgErr + "");
+    } else {
+      throw new Error(JSON.stringify(msgErr));
+    }
+  }
+  if (result?.Messages?.[0]) {
+    const msg = result?.Messages?.[0];
+    if (msg.Tags?.Status) {
+      if (msg.Tags?.Status !== "200") {
+        throw new Error(msg.Tags?.Status + " " + msg.Data);
+      }
+    }
+  }
+  debug &&
+    console.log(
+      `%c${tags.Action ?? ""}%c %c${msgType}%c ${messageId}`,
+      blueLabelStyle,
+      messageStyle,
+      greenLabelStyle,
+      messageStyle,
+      Object.assign(
+        {
+          reqTags: tags,
+          reqData: data,
+          output: result?.Output?.data,
+        },
+        formatResult(result),
+      ),
+    );
+}
+
 export function messageResultWrapper(process: string, debug?: boolean) {
   return async function (
     tags: Record<string, string>,
@@ -80,30 +122,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
         // the arweave TXID of the process
         process,
       });
-      const msgErr = messageReturn.Error || (messageReturn as any).error;
-      if (msgErr !== undefined) {
-        if (typeof msgErr === "string" || typeof msgErr === "number") {
-          throw new Error(msgErr + "");
-        } else {
-          throw new Error(JSON.stringify(msgErr));
-        }
-      }
-      debug &&
-        console.log(
-          `%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`,
-          blueLabelStyle,
-          messageStyle,
-          greenLabelStyle,
-          messageStyle,
-          Object.assign(
-            {
-              reqTags: obj2tags(tags),
-              reqData: toString(data),
-              output: messageReturn?.Output?.data,
-            },
-            formatResult(messageReturn),
-          ),
-        );
+      handleResult(debug, "Msg", messageReturn, messageId, tags, data);
       return messageReturn;
     } catch (e) {
       debug &&
@@ -132,22 +151,7 @@ export function dryrunResultWrapper(process: string, debug?: boolean) {
         // signer: createDataItemSigner(window.arweaveWallet),
         data: toString(data),
       });
-      debug &&
-        console.log(
-          `%c${tags.Action ?? ""}%c %cDryRun%c`,
-          blueLabelStyle,
-          messageStyle,
-          greenLabelStyle,
-          messageStyle,
-          Object.assign(
-            {
-              reqTags: obj2tags(tags),
-              reqData: toString(data),
-              output: dryrunResult?.Output?.data,
-            },
-            formatResult(dryrunResult),
-          ),
-        );
+      handleResult(debug, "DryRun", dryrunResult, undefined, tags, data);
       return dryrunResult;
     } catch (e) {
       debug &&

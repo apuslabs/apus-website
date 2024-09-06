@@ -96,7 +96,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     key: "reward",
     render: (text: string, item: Leaderboard) => (
       <BlueText
-        text={`${text} APUS_Tn1`}
+        text={`${text || 0} APUS_Tn1`}
         isBlue={item.author === activeAddress}
       />
     ),

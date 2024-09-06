@@ -13,18 +13,22 @@ import { useArweaveContext } from "../../contexts/arconnect";
 import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";
 import { useParams } from "react-router-dom";
 
-const TwitterVideo = () => (
-  <iframe
-    width="560"
-    height="315"
-    src="https://www.youtube.com/embed/_VJi-1ajaEA?si=0Rzb6gaswdsIU43L&amp;controls=0"
-    title="YouTube video player"
-    frameBorder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    referrerPolicy="strict-origin-when-cross-origin"
-    allowFullScreen
-  ></iframe>
-);
+const TwitterVideo = ({ videoLink }: { videoLink?: string }) => {
+  return videoLink ? (
+    <iframe
+      width="560"
+      height="315"
+      src={videoLink}
+      title="YouTube video player"
+      frameBorder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerPolicy="strict-origin-when-cross-origin"
+      allowFullScreen
+    ></iframe>
+  ) : (
+    <div></div>
+  );
+};
 
 const Competition = () => {
   const { activeAddress } = useArweaveContext();
@@ -105,7 +109,7 @@ const Competition = () => {
               </p>
             </li>
           </ul>
-          <TwitterVideo />
+          <TwitterVideo videoLink={poolInfo.metadata.video} />
         </div>
       </div>
 
