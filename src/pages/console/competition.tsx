@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { ImgCompetition } from "../../assets/image";
-import { ConfigProvider, Table, notification } from "antd";
+import { ConfigProvider, Table } from "antd";
 import "./competition.css";
-import {
-  useCompetitionPool,
-} from "../../contexts/competition";
+import { useCompetitionPool } from "../../contexts/competition";
 import { QuickButton } from "./components/QuickButton";
 import { ButtonShowMore } from "./components/ButtonShowMore";
 import { CompetitionDetails } from "./components/CompetitionDetails";
@@ -13,26 +11,29 @@ import { renderEmpty, TableColumns } from "./const";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
 import { useArweaveContext } from "../../contexts/arconnect";
 import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";
+import { useParams } from "react-router-dom";
 
 const TwitterVideo = () => (
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/_VJi-1ajaEA?si=0Rzb6gaswdsIU43L&amp;controls=0" title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerPolicy="strict-origin-when-cross-origin" allowFullScreen></iframe>
+  <iframe
+    width="560"
+    height="315"
+    src="https://www.youtube.com/embed/_VJi-1ajaEA?si=0Rzb6gaswdsIU43L&amp;controls=0"
+    title="YouTube video player"
+    frameBorder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    referrerPolicy="strict-origin-when-cross-origin"
+    allowFullScreen
+  ></iframe>
 );
 
 const Competition = () => {
-  const { activeAddress } = useArweaveContext()
+  const { activeAddress } = useArweaveContext();
+  const { poolid } = useParams();
   const [showMore, setShowMore] = useState(false);
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] =
     useState(false);
-  const [submitSuccessfulModalVisible, setSubmitSuccessfulModalVisible] = useState(false);
-  const [api, contextHolder] = notification.useNotification();
-
-  // useEffect(() => {
-  //   api.warning({
-  //     message: `UNDER MAINTENANCE`,
-  //     description: 'WILL BE BACK SOON',
-  //     placement: "top",
-  //   });
-  // }, [])
+  const [submitSuccessfulModalVisible, setSubmitSuccessfulModalVisible] =
+    useState(false);
 
   const {
     dashboard,
@@ -46,19 +47,18 @@ const Competition = () => {
     quickBtnText,
     stage,
     timeTips,
-  } = useCompetitionPool(() => {
-    setSubmitSuccessfulModalVisible(true)
+  } = useCompetitionPool(poolid, () => {
+    setSubmitSuccessfulModalVisible(true);
   });
 
   useEffect(() => {
     if (!isPoolStarted) {
-      setShowMore(true)
+      setShowMore(true);
     }
-  }, [isPoolStarted])
+  }, [isPoolStarted]);
 
   return (
     <div id="competition" className="max-w-[1080px] mx-auto pb-64">
-      {contextHolder}
       <div className="flex justify-between items-center mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">
           Competition Pool
@@ -66,13 +66,15 @@ const Competition = () => {
         <QuickButton
           text={quickBtnText}
           disabled={isQuickBtnDisabled}
-          onJoinCompetition={() => quickBtnOnClick(setJoinCompetitionModalVisible)}
+          onJoinCompetition={() =>
+            quickBtnOnClick(setJoinCompetitionModalVisible)
+          }
         />
       </div>
       <div className="relative p-6 bg-light rounded-2xl">
         <div className="w-3/5">
           <h1 className="mb-6 font-bold text-3xl leading-tight">
-            {"Sam Williams - Digital Twin Dataset Competition" || poolInfo.title || ""}
+            {poolInfo.title || ""}
           </h1>
           <p className=" text-neutral-900 leading-none">{timeTips}</p>
         </div>
@@ -91,7 +93,7 @@ const Competition = () => {
                     <span className="text-black50">{value}</span>
                   </li>
                 );
-              }
+              },
             )}
             <li className="text-sm">
               <div className="flex items-center gap-1 mb-3">
@@ -99,31 +101,7 @@ const Competition = () => {
                 <span className="text-black">Requirements:</span>
               </div>
               <p className="text-black50 px-5 leading-relaxed text-wrap break-words whitespace-pre-line">
-                {poolInfo.meta_data.description ||
-                  `Objective:
-
-                  The Sam Digital Twin Dataset Competition Pool aims to help Sam, the Founder and Inventor of Arweave and AO, create a comprehensive digital twin by collecting extensive data.
-
-                  Rules:
-
-                  Submit datasets related to Sam.
-                  Each account can only submit once.
-                  Evaluations are conducted automatically on AO.
-                  Open to individuals and teams.
-                  If scores are tied, earlier submissions rank higher.
-                  Only the top 200 participants are eligible for rewards.
-                  Prize Distribution:
-
-                  The 157,000 APUS_Tn1 prize pool is distributed as follows:
-
-                  1st place: 35,000 APUS_Tn1
-                  2nd place: 20,000 APUS_Tn1
-                  3rd place: 10,000 APUS_Tn1
-                  4th-10th places: 5,000 APUS_Tn1 each
-                  All other qualified participants: 300 APUS_Tn1 each
-                  Example: If two participants have the same score, the earlier submission ranks higher. For instance, if Participant A submits before Participant B, A will take 2nd place and receive 20,000 APUS_Tn1, while B will take 3rd place and receive 10,000 APUS_Tn1.
-
-                  Notice:Prizes will be automatically distributed to your wallet within 48 hours after the competition ends.`}
+                {poolInfo.metadata.description}
               </p>
             </li>
           </ul>
@@ -156,12 +134,12 @@ const Competition = () => {
       </div>
       <div className="rounded-2xl">
         <ConfigProvider renderEmpty={renderEmpty}>
-        <Table
-          dataSource={leaderboard}
-          rowKey="dataset_id"
-          loading={leaderboardLoading}
-          columns={TableColumns(activeAddress)}
-        />
+          <Table
+            dataSource={leaderboard}
+            rowKey="dataset_hash"
+            loading={leaderboardLoading}
+            columns={TableColumns(activeAddress)}
+          />
         </ConfigProvider>
       </div>
       <JoinCompetitionModal
@@ -174,7 +152,8 @@ const Competition = () => {
         }}
         joinPool={joinPool}
       />
-      <SubmitSuccessfulModal visible={submitSuccessfulModalVisible}
+      <SubmitSuccessfulModal
+        visible={submitSuccessfulModalVisible}
         onCancel={() => {
           setSubmitSuccessfulModalVisible(false);
         }}
@@ -183,7 +162,7 @@ const Competition = () => {
   );
 };
 
-export default () => {
+export default function CompetitionWrapper() {
   return (
     <ConfigProvider
       theme={{
@@ -209,4 +188,4 @@ export default () => {
       <Competition />
     </ConfigProvider>
   );
-};
+}

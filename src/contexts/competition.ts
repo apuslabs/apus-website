@@ -1,25 +1,23 @@
 import { useEffect } from "react";
 import dayjs from "dayjs";
-import relativeTime from 'dayjs/plugin/relativeTime' // ES 2015
+import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
 import { useArweaveContext } from "./arconnect";
-import { useDryrunWrapper, useMessageWrapper } from "../utils/ao";
-import { BENCHMARK_PROCESS, EMBEDDING_PROCESS } from "../config/process";
+import { dryrunWrapper, messageWrapper } from "../utils/ao";
+import { POOL_PROCESS, EMBEDDING_PROCESS } from "../config/process";
 import { message } from "antd";
 dayjs.extend(relativeTime);
 
 export interface PoolInfo {
-  title: string
-  prize_pool: number
+  title: string;
+  reward_pool: number;
   // TODO: end_time, start_time
-  meta_data: {
+  metadata: {
     competition_time: {
-      start: number
-      end: number
-    }
-    fine_tuning_tutorial_link: string
-    description: string
-    video: string
-  }
+      start: number;
+      end: number;
+    };
+    description: string;
+  };
 }
 
 const DefaultPoolInfo = {
@@ -34,106 +32,150 @@ const DefaultPoolInfo = {
     fine_tuning_tutorial_link: "",
     description: "",
     video: "",
-  })
-}
+  }),
+};
 
 export interface Dashboard {
-  participants: number
-  granted_reward: number
-  my_rank: number
-  my_reward: number
+  participants: number;
+  granted_reward: number;
+  rank: number;
+  rewarded_tokens: number;
 }
 
 const DefaultDashboard = {
   participants: -1,
   granted_reward: -1,
-  my_rank: -1,
-  my_reward: -1,
-}
+  rank: -1,
+  rewarded_tokens: -1,
+};
 
 export interface Leaderboard {
-  rank: number
-  dataset_id: string
-  dataset_name: string
-  upload_time: number
-  score: number
-  author: string
-  granted_reward: number
-  completion_progress: number
+  rank: number;
+  dataset_hash: string;
+  dataset_name: string;
+  created_at: number;
+  score: number;
+  author: string;
+  reward: number;
+  progress: number;
 }
 
-const useBenchmarkMessage = useMessageWrapper(BENCHMARK_PROCESS)
-const useBenchmarkDryrun = useDryrunWrapper(BENCHMARK_PROCESS)
+const useBenchmarkMessage = messageWrapper(POOL_PROCESS);
+const useBenchmarkDryrun = dryrunWrapper(POOL_PROCESS);
 
 function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   return leaderboard.sort((a, b) => {
-    if (a.author === activeAddress) return -1
-    if (b.author === activeAddress) return 1
-    return b.score - a.score
-  })
+    if (a.author === activeAddress) return -1;
+    if (b.author === activeAddress) return 1;
+    return b.score - a.score;
+  });
 }
 
-export function useCompetitionPool(onJoinPool: () => void) {
-  const { activeAddress } = useArweaveContext()
+export function useCompetitionPool(
+  poolID: string | undefined,
+  onJoinPool: () => void,
+) {
+  const { activeAddress } = useArweaveContext();
 
-  const { result: poolInfoResult, loading: poolInfoLoading, error: poolInfoError, msg: getPool } = useBenchmarkDryrun("Get-Pool")
-  // TODO: useDryrun
-  const { result: dashboardResult, loading: dashboardLoading, error: dashboardError, msg: getDashboard } = useBenchmarkDryrun("Get-Dashboard")
-  // TODO: useDryrun
-  const { result: leaderboardResult, loading: leaderboardLoading, error: leaderboardError, msg: getLeaderboard } = useBenchmarkDryrun("Get-Leaderboard")
-  const { result: joinPoolResult, loading: joinPoolLoading, error: joinPoolError, msg: joinPool } = useBenchmarkMessage("Join-Pool")
+  const {
+    result: poolInfoResult,
+    loading: poolInfoLoading,
+    msg: getPool,
+  } = useBenchmarkDryrun("Get-Competition");
+  const {
+    result: dashboardResult,
+    loading: dashboardLoading,
+    msg: getDashboard,
+  } = useBenchmarkDryrun("Get-Dashboard");
+  const {
+    result: leaderboardResult,
+    loading: leaderboardLoading,
+    msg: getLeaderboard,
+  } = useBenchmarkDryrun("Get-Leaderboard");
+  const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
 
   useEffect(() => {
-    getPool({}, { pool_id: 1})
-    getLeaderboard({ FromAddress: activeAddress ?? "" })
+    if (!activeAddress || !poolID) return;
+    getPool({}, poolID);
+    getLeaderboard({ FromAddress: activeAddress ?? "" }, poolID);
     if (activeAddress) {
-      getDashboard({ FromAddress: activeAddress })
+      getDashboard({ FromAddress: activeAddress }, poolID);
     }
-  }, [activeAddress])
+  }, [activeAddress, poolID]);
 
-  const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo)
-  const dashboardMsg = dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard)
-  const leaderboardMsg = leaderboardResult?.Messages?.[0]?.Data || "[]"
+  const poolInfoMsg =
+    poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);
+  const dashboardMsg =
+    dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard);
+  const leaderboardMsg = leaderboardResult?.Messages?.[0]?.Data || "[]";
 
-  const poolInfo: PoolInfo = JSON.parse(poolInfoMsg)
-  const dashboard: Dashboard = JSON.parse(dashboardMsg)
-  const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg)
+  const poolInfo: PoolInfo = JSON.parse(poolInfoMsg);
+  const dashboard: Dashboard = JSON.parse(dashboardMsg);
+  const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg);
 
   // TODO: remove this
-  poolInfo.meta_data = JSON.parse(poolInfo.meta_data as any || DefaultPoolInfo.meta_data)
-  
-  const startTime= dayjs.unix(poolInfo.meta_data.competition_time.start)
-  const endTime = dayjs.unix(poolInfo.meta_data.competition_time.end)
-  const isPoolStarted = startTime.isBefore(Date.now())
-  const poolStartCountdown = startTime.fromNow(true)
-  const isPoolEnded = endTime.isBefore(Date.now())
-  const poolEndCountdown = endTime.fromNow(true)
-  const poolOpening = isPoolStarted && !isPoolEnded
-  const hasSubmitted = leaderboard.some(item => item.author === activeAddress)
+  poolInfo.metadata = JSON.parse(
+    (poolInfo.metadata as any) || DefaultPoolInfo.meta_data,
+  );
 
-  const quickBtnText = poolOpening ? hasSubmitted ? "Submitted" : "Join Competition" : isPoolEnded ? "Competition Completed" : `Starts in ${poolStartCountdown}`
-  const timeTips = !isPoolStarted ? `Starts in ${poolStartCountdown}` : poolOpening ? `Ends in ${poolEndCountdown}` : `Ends in ${poolEndCountdown} ago`
+  const startTime = dayjs.unix(poolInfo.metadata.competition_time.start);
+  const endTime = dayjs.unix(poolInfo.metadata.competition_time.end);
+  const isPoolStarted = startTime.isBefore(Date.now());
+  const poolStartCountdown = startTime.fromNow(true);
+  const isPoolEnded = endTime.isBefore(Date.now());
+  const poolEndCountdown = endTime.fromNow(true);
+  const poolOpening = isPoolStarted && !isPoolEnded;
+  const hasSubmitted = leaderboard.some(
+    (item) => item.author === activeAddress,
+  );
 
-  const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed"
+  const quickBtnText = poolOpening
+    ? hasSubmitted
+      ? "Submitted"
+      : "Join Competition"
+    : isPoolEnded
+      ? "Competition Completed"
+      : `Starts in ${poolStartCountdown}`;
+  const timeTips = !isPoolStarted
+    ? `Starts in ${poolStartCountdown}`
+    : poolOpening
+      ? `Ends in ${poolEndCountdown}`
+      : `Ends in ${poolEndCountdown} ago`;
 
-  const isQuickBtnDisabled = !poolOpening || hasSubmitted || leaderboardLoading || dashboardLoading || poolInfoLoading
-  const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
-    if (isQuickBtnDisabled) return
-    setJoinCompetitionModalVisible(true)
-  }
+  const stage = !isPoolStarted
+    ? "Unplayed"
+    : poolOpening
+      ? "Active"
+      : "Completed";
 
-  const joinPoolRefresh = async (tags: Record<string, string>, data: Record<string, any>) => {
-    if (leaderboard?.some(item => item.dataset_name === data.dataset_name)) {
-      message.error("Dataset name already exists")
-      return
+  const isQuickBtnDisabled =
+    !poolOpening ||
+    hasSubmitted ||
+    leaderboardLoading ||
+    dashboardLoading ||
+    poolInfoLoading;
+  const quickBtnOnClick = (
+    setJoinCompetitionModalVisible: (visible: boolean) => void,
+  ) => {
+    if (isQuickBtnDisabled) return;
+    setJoinCompetitionModalVisible(true);
+  };
+
+  const joinPoolRefresh = async (
+    tags: Record<string, string>,
+    data: Record<string, any>,
+  ) => {
+    if (leaderboard?.some((item) => item.dataset_name === data.dataset_name)) {
+      message.error("Dataset name already exists");
+      return;
     }
-    await joinPool(tags, data)
-    onJoinPool()
+    await joinPool(tags, data);
+    onJoinPool();
     if (activeAddress) {
-      getDashboard({ FromAddress: activeAddress })
-      getLeaderboard({ FromAddress: activeAddress })
+      getDashboard({ FromAddress: activeAddress });
+      getLeaderboard({ FromAddress: activeAddress });
     }
-  }
+  };
 
   return {
     dashboard: activeAddress ? dashboard : DefaultDashboard,
@@ -147,25 +189,32 @@ export function useCompetitionPool(onJoinPool: () => void) {
     quickBtnText,
     stage,
     timeTips: poolInfoLoading ? "" : timeTips,
-  }
+  };
 }
 
-const useEmbeddingMessage = useMessageWrapper(EMBEDDING_PROCESS)
+const useEmbeddingMessage = messageWrapper(EMBEDDING_PROCESS);
 
 interface DatasetItem {
-  content: string
-  meta?: Record<string, any>
+  content: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  meta?: Record<string, any>;
 }
 
 export function useEmbedding() {
-  const { result: createDatasetResult, loading: createDatasetLoading, error: createDatasetError, msg } = useEmbeddingMessage("Create-Dataset")
+  const {
+    result: createDatasetResult,
+    loading: createDatasetLoading,
+    error: createDatasetError,
+    msg,
+  } = useEmbeddingMessage("Create-Dataset");
 
-  const createDataset = (hash: string, list: DatasetItem[]) => msg({}, {hash, list})
+  const createDataset = (hash: string, list: DatasetItem[]) =>
+    msg({}, { hash, list });
 
   return {
     createDatasetResult,
     createDatasetLoading,
     createDatasetError,
-    createDataset
-  }
+    createDataset,
+  };
 }

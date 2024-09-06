@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
-import { BENCHMARK_PROCESS } from "../config/process";
+import { POOL_PROCESS } from "../config/process";
 import {
   getDataFromMessage,
   getTagsFromMessage,
-  useDryrunWrapper,
-  useMessageWrapper,
+  dryrunWrapper,
+  messageWrapper,
 } from "../utils/ao";
-import { useArweaveContext } from "./arconnect";
-import { useDebounce, useInterval, useLocalStorage } from "react-use";
+import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
 
 const DEFAULT_OUTPUT_TOKENS = "20";
@@ -18,8 +17,8 @@ const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
-const usePlaygroundMessage = useMessageWrapper(BENCHMARK_PROCESS);
-const usePlaygroundDryrun = useDryrunWrapper(BENCHMARK_PROCESS);
+const usePlaygroundMessage = messageWrapper(POOL_PROCESS);
+const usePlaygroundDryrun = dryrunWrapper(POOL_PROCESS);
 
 interface DatasetItem {
   id: number;
@@ -47,10 +46,9 @@ const calculateInferenceTime = (question: string) => {
 };
 
 export function usePlayground(dataset_hash?: string) {
-  const { activeAddress } = useArweaveContext();
   const [userHistory, setUserHistory] = useLocalStorage<UserHistory>(
     "session-history",
-    {}
+    {},
   );
 
   const {
@@ -66,7 +64,7 @@ export function usePlayground(dataset_hash?: string) {
   // auto get datasets when active address changes
   useEffect(() => {
     // if (activeAddress) {
-      getDatasets();
+    getDatasets();
     // }
   }, []);
 
@@ -76,7 +74,7 @@ export function usePlayground(dataset_hash?: string) {
     if (dataset_hash && question) {
       const cqResult = await chatQuestionMsg(
         {},
-        { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS }
+        { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS },
       );
       const cqTags = getTagsFromMessage(cqResult, 1);
       const cqReference = cqTags?.Reference || "";
@@ -146,9 +144,12 @@ export function usePlayground(dataset_hash?: string) {
     }
   };
 
-  useInterval(() => {
-    fetchResult();
-  }, 5 * 60 * 1000);
+  useInterval(
+    () => {
+      fetchResult();
+    },
+    5 * 60 * 1000,
+  );
 
   const [needRefresh, setNeedRefresh] = useState(true);
 

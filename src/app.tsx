@@ -21,13 +21,13 @@ const router = createHashRouter([
     ),
     children: [
       {
-        path: "competition",
+        path: "competition/:poolid",
         element: <Competition />,
       },
       {
         path: "playground",
-        element: <Playground />
-      }
+        element: <Playground />,
+      },
     ],
   },
   {
@@ -38,9 +38,11 @@ const router = createHashRouter([
 
 export default function App() {
   const ar = useArweave();
-  return <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-    <ArweaveContext.Provider value={ar}>
-      <RouterProvider router={router} />
-    </ArweaveContext.Provider>
-  </ConfigProvider>;
+  return (
+    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+      <ArweaveContext.Provider value={ar}>
+        <RouterProvider router={router} />
+      </ArweaveContext.Provider>
+    </ConfigProvider>
+  );
 }

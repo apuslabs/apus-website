@@ -2,13 +2,13 @@ import { Dashboard } from "../../../contexts/competition";
 import { formatNumber } from "../../../utils/utils";
 
 const DefaultDash = (val: number, suffix?: string): string =>
-  val === -1 ? "-" : (formatNumber(val) + (suffix != null ? ` ${suffix}` : ""));
+  val === -1 ? "-" : formatNumber(val) + (suffix != null ? ` ${suffix}` : "");
 
 export const Statisitcs = ({
   participants,
   granted_reward,
-  my_rank,
-  my_reward,
+  rank,
+  rewarded_tokens,
 }: Dashboard) => [
   {
     label: "Total Participants",
@@ -20,10 +20,10 @@ export const Statisitcs = ({
   },
   {
     label: "Your Rank",
-    value: DefaultDash(my_rank || 0),
+    value: DefaultDash(rank || 0),
   },
   {
     label: "Your APUS_Tn1",
-    value: DefaultDash(my_reward || 0, "APUS_Tn1"),
+    value: DefaultDash(rewarded_tokens || 0, "APUS_Tn1"),
   },
 ];

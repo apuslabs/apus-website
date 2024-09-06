@@ -6,9 +6,13 @@ import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
-const BlueText = ({ text, isBlue }: { text: string| number; isBlue: boolean }) => (
-  <span className={isBlue ? "text-blue" : ""}>{text}</span>
-);
+const BlueText = ({
+  text,
+  isBlue,
+}: {
+  text: string | number;
+  isBlue: boolean;
+}) => <span className={isBlue ? "text-blue" : ""}>{text}</span>;
 
 const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
   <div className="flex">
@@ -21,12 +25,17 @@ const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
 
 export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
   {
-    title: <TitleWithTip title="RANK" tip="If scores are tied, earlier submissions rank higher." />,
+    title: (
+      <TitleWithTip
+        title="RANK"
+        tip="If scores are tied, earlier submissions rank higher."
+      />
+    ),
     dataIndex: "rank",
     key: "rank",
     render: (text: string, item: Leaderboard) => (
       <BlueText
-        text={item.completion_progress ? text : "N/A"}
+        text={item.progress ? text : "N/A"}
         isBlue={item.author === activeAddress}
       />
     ),
@@ -40,14 +49,29 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     ),
   },
   {
-    title: <TitleWithTip title="SCORE" tip="The total score is out of 100, with higher scores ranking higher." />,
+    title: (
+      <TitleWithTip
+        title="SCORE"
+        tip="The total score is out of 100, with higher scores ranking higher."
+      />
+    ),
     dataIndex: "score",
     key: "score",
     render: (text: string, item: Leaderboard) => {
-      const score = Number(text) / 2
-      const isOver1Day = dayjs(item.upload_time).isBefore(dayjs().subtract(1, "day"))
-      const progressTip = item.completion_progress === 1 || isOver1Day ? "" : `(${Math.floor(item.completion_progress * 100)}%)`
-      return <BlueText text={item.completion_progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
+      const score = Number(text) / 2;
+      const isOver1Day = dayjs(item.created_at).isBefore(
+        dayjs().subtract(1, "day"),
+      );
+      const progressTip =
+        item.progress === 1 || isOver1Day
+          ? ""
+          : `(${Math.floor(item.progress * 100)}%)`;
+      return (
+        <BlueText
+          text={item.progress ? `${score} ${progressTip}` : "N/A"}
+          isBlue={item.author === activeAddress}
+        />
+      );
     },
   },
   {
@@ -62,9 +86,14 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     ),
   },
   {
-    title: <TitleWithTip title="REWARDS" tip="The competition rewards will fluctuate based on changes in ranking. Your ranking may shift as more participants join" />,
-    dataIndex: "granted_reward",
-    key: "granted_reward",
+    title: (
+      <TitleWithTip
+        title="REWARDS"
+        tip="The competition rewards will fluctuate based on changes in ranking. Your ranking may shift as more participants join"
+      />
+    ),
+    dataIndex: "reward",
+    key: "reward",
     render: (text: string, item: Leaderboard) => (
       <BlueText
         text={`${text} APUS_Tn1`}
@@ -77,7 +106,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     key: "operations",
     align: "right",
     render: (_: string, item: any) => (
-      <Link to={`../playground?dataset_id=${item.dataset_id}`}>
+      <Link to={`../playground?dataset_id=${item.dataset_hash}`}>
         <div className="btn-default btn-small">Chat</div>
       </Link>
     ),
@@ -85,7 +114,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
 ];
 
 export const renderEmpty: GetProp<typeof ConfigProvider, "renderEmpty"> = (
-  componentName
+  componentName,
 ) => {
   if (componentName === "Table" /** 👈 5.20.0+ */) {
     return (

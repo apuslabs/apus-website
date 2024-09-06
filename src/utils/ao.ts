@@ -1,6 +1,17 @@
-import { message, createDataItemSigner, dryrun, result } from "@permaweb/aoconnect";
-import { BENCHMARK_PROCESS } from "../config/process";
-import { blueLabelStyle, greenLabelStyle, messageStyle, redLabelStyle, yellowLabelStyle } from "../config/console";
+import {
+  message,
+  createDataItemSigner,
+  dryrun,
+  result,
+} from "@permaweb/aoconnect";
+import { POOL_PROCESS } from "../config/process";
+import {
+  blueLabelStyle,
+  greenLabelStyle,
+  messageStyle,
+  redLabelStyle,
+  yellowLabelStyle,
+} from "../config/console";
 import { useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
@@ -8,7 +19,7 @@ import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
 export const ShortAddress = (address: string) =>
   `${address.substring(0, 4)}...${address.substring(
     address.length - 5,
-    address.length - 1
+    address.length - 1,
   )}`;
 function obj2tags(obj: Record<string, any>) {
   return Object.entries(obj).map(([key, value]) => ({
@@ -31,10 +42,30 @@ export function toString(value: any): string {
   }
 }
 
+function formatResult(result: MessageResult) {
+  if (result?.Messages?.length > 1) {
+    return {
+      resMsgs: result?.Messages,
+    };
+  } else {
+    const data = result?.Messages?.[0]?.Data;
+    let parsedData;
+    try {
+      parsedData = JSON.parse(data);
+    } catch {
+      parsedData = data;
+    }
+    return {
+      resTags: result?.Messages?.[0]?.Tags,
+      resData: parsedData,
+    };
+  }
+}
+
 export function messageResultWrapper(process: string, debug?: boolean) {
   return async function (
     tags: Record<string, string>,
-    data?: string | Record<string, any> | number
+    data?: string | Record<string, any> | number,
   ) {
     const messageId = await message({
       process,
@@ -49,24 +80,42 @@ export function messageResultWrapper(process: string, debug?: boolean) {
         // the arweave TXID of the process
         process,
       });
-      const msgErr = messageReturn.Error || (messageReturn as any).error
+      const msgErr = messageReturn.Error || (messageReturn as any).error;
       if (msgErr !== undefined) {
-        if (
-          typeof msgErr === "string" ||
-          typeof msgErr === "number"
-        ) {
+        if (typeof msgErr === "string" || typeof msgErr === "number") {
           throw new Error(msgErr + "");
         } else {
           throw new Error(JSON.stringify(msgErr));
         }
       }
-      debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, messageReturn);
-      console.log(messageReturn)
+      debug &&
+        console.log(
+          `%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`,
+          blueLabelStyle,
+          messageStyle,
+          greenLabelStyle,
+          messageStyle,
+          Object.assign(
+            {
+              reqTags: obj2tags(tags),
+              reqData: toString(data),
+              output: messageReturn?.Output?.data,
+            },
+            formatResult(messageReturn),
+          ),
+        );
       return messageReturn;
     } catch (e) {
-      debug && console.log(`%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`, blueLabelStyle, messageStyle, redLabelStyle, messageStyle);
+      debug &&
+        console.log(
+          `%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`,
+          blueLabelStyle,
+          messageStyle,
+          redLabelStyle,
+          messageStyle,
+        );
       console.error(e);
-      throw e
+      throw e;
     }
   };
 }
@@ -74,7 +123,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
 export function dryrunResultWrapper(process: string, debug?: boolean) {
   return async function (
     tags: Record<string, string>,
-    data?: string | Record<string, any> | number
+    data?: string | Record<string, any> | number,
   ) {
     try {
       const dryrunResult = await dryrun({
@@ -83,52 +132,89 @@ export function dryrunResultWrapper(process: string, debug?: boolean) {
         // signer: createDataItemSigner(window.arweaveWallet),
         data: toString(data),
       });
-      debug && console.log(`%c${tags.Action ?? ""}%c %cDryRun%c`, blueLabelStyle, messageStyle, greenLabelStyle, messageStyle, dryrunResult);
+      debug &&
+        console.log(
+          `%c${tags.Action ?? ""}%c %cDryRun%c`,
+          blueLabelStyle,
+          messageStyle,
+          greenLabelStyle,
+          messageStyle,
+          Object.assign(
+            {
+              reqTags: obj2tags(tags),
+              reqData: toString(data),
+              output: dryrunResult?.Output?.data,
+            },
+            formatResult(dryrunResult),
+          ),
+        );
       return dryrunResult;
     } catch (e) {
-      debug && console.log(`%c${tags.Action ?? ""}%c %cDryRun%c`, blueLabelStyle, messageStyle, redLabelStyle, messageStyle);
+      debug &&
+        console.log(
+          `%c${tags.Action ?? ""}%c %cDryRun%c`,
+          blueLabelStyle,
+          messageStyle,
+          redLabelStyle,
+          messageStyle,
+        );
       console.error(e);
     }
   };
 }
 
-export function getTagsFromMessage(message: MessageResult | DryRunResult | undefined, index: number = 0): Record<string, string> | undefined {
-  return message?.Messages?.[index]?.Tags?.reduce((acc: any, tag: any) => {
-    acc[tag.name] = tag.value;
-    return acc;
-  }, {} as Record<string, string>);
+export function getTagsFromMessage(
+  message: MessageResult | DryRunResult | undefined,
+  index: number = 0,
+): Record<string, string> | undefined {
+  return message?.Messages?.[index]?.Tags?.reduce(
+    (acc: any, tag: any) => {
+      acc[tag.name] = tag.value;
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
 }
 
-export function getDataFromMessage<T = any>(message: MessageResult | DryRunResult | undefined, index: number = 0): T | undefined {
+export function getDataFromMessage<T = any>(
+  message: MessageResult | DryRunResult | undefined,
+  index: number = 0,
+): T | undefined {
   return message?.Messages?.[index]?.Data;
 }
 
-export const useMessageWrapper = (process: string) => (Action: string) => {
-  const [result, setResult] = useState<MessageResult>()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string>()
+export const messageWrapper = (process: string) => (Action: string) => {
+  const [result, setResult] = useState<MessageResult>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
 
-  const msg = async (tags: Record<string, string>  = {}, data?: string | number | Record<string, any>) => {
-    setLoading(true)
+  const msg = async (
+    tags: Record<string, string> = {},
+    data?: string | number | Record<string, any>,
+  ) => {
+    setLoading(true);
     try {
-      const result = await messageResultWrapper(process, true)({ ...tags, Action }, data)
-      console.log(result)
+      const result = await messageResultWrapper(process, true)(
+        { ...tags, Action },
+        data,
+      );
+      console.log(result);
       if (result == null) {
-        throw new Error("No result")
+        throw new Error("No result");
       }
       if (result.Error) {
-        throw result.Error
+        throw result.Error;
       }
-      setResult(result as any)
-      return result
+      setResult(result as any);
+      return result;
     } catch (e) {
-      setError(toString(e))
-      throw e
+      setError(toString(e));
+      throw e;
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
-  
+  };
+
   return {
     result,
     output: result?.Output,
@@ -137,40 +223,48 @@ export const useMessageWrapper = (process: string) => (Action: string) => {
     loading,
     error,
     msg,
-  }
-}
+  };
+};
 
-export const useDryrunWrapper = (process: string) => (Action: string, autoLoad = false) => {
-  const [result, setResult] = useState<MessageResult>()
-  const [loading, setLoading] = useState(autoLoad)
-  const [error, setError] = useState<string>()
+export const dryrunWrapper =
+  (process: string) =>
+  (Action: string, autoLoad = false) => {
+    const [result, setResult] = useState<MessageResult>();
+    const [loading, setLoading] = useState(autoLoad);
+    const [error, setError] = useState<string>();
 
-  const msg = async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {
-    setLoading(true)
-    try {
-      const result = await dryrunResultWrapper(process, true)({ ...tags, Action }, data)
-      if (result == null) {
-        throw new Error("No result")
+    const msg = async (
+      tags: Record<string, string> = {},
+      data?: string | number | Record<string, any>,
+    ) => {
+      setLoading(true);
+      try {
+        const result = await dryrunResultWrapper(process, true)(
+          { ...tags, Action },
+          data,
+        );
+        if (result == null) {
+          throw new Error("No result");
+        }
+        if (result.Error) {
+          setError(toString(result.Error));
+        }
+        setResult(result as any);
+        return result;
+      } catch (e) {
+        setError(toString(e));
+      } finally {
+        setLoading(false);
       }
-      if (result.Error) {
-        setError(toString(result.Error))
-      }
-      setResult(result as any)
-      return result
-    } catch (e) {
-      setError(toString(e))
-    } finally {
-      setLoading(false)
-    }
-  }
-  
-  return {
-    result,
-    output: result?.Output,
-    firstMessageData: result?.Messages?.[0]?.Data,
-    firstMessgeTags: result?.Messages?.[0]?.Tags,
-    loading,
-    error,
-    msg,
-  }
-}
+    };
+
+    return {
+      result,
+      output: result?.Output,
+      firstMessageData: result?.Messages?.[0]?.Data,
+      firstMessgeTags: result?.Messages?.[0]?.Tags,
+      loading,
+      error,
+      msg,
+    };
+  };

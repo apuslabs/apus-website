@@ -1,4 +1,4 @@
-export const BENCHMARK_PROCESS = "pNSXgR1gIp6zzoXZv4mfSLQfuWVzvPsLZHg8-oi_DZo";
-export const EMBEDDING_PROCESS = "4pX6ABsJAJR8RWq_6tpGWfX29rFgIblvTqh6mWNKrro";
-// export const BENCHMARK_PROCESS = "xLlcWNqzvVJHOYpgFP9QV-FSF4mcmPtk8xjverzRK3U";
-// export const EMBEDDING_PROCESS = "jjEkZTRO_tL4BrhMm34TLXM_wg3zoXINK6fIbp3OSUo";
+export const POOL_PROCESS = "NcgWkb377fZRWQDT0t8Xnhb2JYDlJ1pOmXfYZZxb4LM";
+export const COMPETITION_PROCESS =
+  "OnYMDvUdLu0u8W0ld5dK9ejgutl397dlCp7A2L7rK7c";
+export const EMBEDDING_PROCESS = "agVpRpcfcR_wygOjNxv-xlbdCgWoaY1-5nPYw6wtJgE";
