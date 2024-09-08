@@ -142,7 +142,7 @@ const Competition = () => {
             dataSource={leaderboard}
             rowKey="dataset_hash"
             loading={leaderboardLoading}
-            columns={TableColumns(activeAddress)}
+            columns={TableColumns(poolid, activeAddress)}
           />
         </ConfigProvider>
       </div>

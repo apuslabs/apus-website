@@ -85,10 +85,10 @@ export const FooterSocialMediaList: menuType[] = [
 export const ConsoleHeaderList: menuType[] = [
   {
     name: "Competition Pools",
-    path: "/console/competition/",
+    path: "/console/competition/1002",
   },
   {
     name: "Playground",
-    path: "/console/playground/",
+    path: "/console/playground/1002",
   },
 ];

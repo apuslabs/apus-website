@@ -23,7 +23,10 @@ const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
   </div>
 );
 
-export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
+export const TableColumns = (
+  poolid?: string,
+  activeAddress?: string,
+): ColumnType<any>[] => [
   {
     title: (
       <TitleWithTip
@@ -106,7 +109,7 @@ export const TableColumns = (activeAddress?: string): ColumnType<any>[] => [
     key: "operations",
     align: "right",
     render: (_: string, item: any) => (
-      <Link to={`../playground?dataset_id=${item.dataset_hash}`}>
+      <Link to={`../playground/${poolid}?dataset_id=${item.dataset_hash}`}>
         <div className="btn-default btn-small">Chat</div>
       </Link>
     ),

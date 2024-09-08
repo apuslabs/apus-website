@@ -25,7 +25,7 @@ const router = createHashRouter([
         element: <Competition />,
       },
       {
-        path: "playground",
+        path: "playground/:poolid",
         element: <Playground />,
       },
     ],

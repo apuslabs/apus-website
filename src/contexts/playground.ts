@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { POOL_PROCESS } from "../config/process";
+import { CHAT_PROCESS, POOL_PROCESS } from "../config/process";
 import {
   getDataFromMessage,
   getTagsFromMessage,
@@ -17,15 +17,13 @@ const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
-const usePlaygroundMessage = messageWrapper(POOL_PROCESS);
-const usePlaygroundDryrun = dryrunWrapper(POOL_PROCESS);
+const usePlaygroundMessage = messageWrapper(CHAT_PROCESS);
+const usePlaygroundDryrun = dryrunWrapper(CHAT_PROCESS);
+const usePoolDryrun = dryrunWrapper(POOL_PROCESS);
 
 interface DatasetItem {
-  id: number;
-  author: string;
-  participant_dataset_hash: string;
-  rewarded_tokens: number;
-  upload_dataset_name: string;
+  dataset_hash: string;
+  dataset_name: string;
 }
 
 interface ChatItem {
@@ -45,7 +43,7 @@ const calculateInferenceTime = (question: string) => {
   return avgTime + baseTime;
 };
 
-export function usePlayground(dataset_hash?: string) {
+export function usePlayground(poolid?: string, dataset_hash?: string) {
   const [userHistory, setUserHistory] = useLocalStorage<UserHistory>(
     "session-history",
     {},
@@ -55,7 +53,7 @@ export function usePlayground(dataset_hash?: string) {
     msg: getDatasets,
     result: datasetsResult,
     loading: datasetsLoading,
-  } = usePlaygroundDryrun("Get-Datasets", true);
+  } = usePoolDryrun("Get-Datasets", true);
   const { msg: chatQuestionMsg, loading: sendChatQuestioning } =
     usePlaygroundMessage("Chat-Question");
   const { msg: getChatAnswer, loading: getChatAnswering } =
@@ -64,7 +62,7 @@ export function usePlayground(dataset_hash?: string) {
   // auto get datasets when active address changes
   useEffect(() => {
     // if (activeAddress) {
-    getDatasets();
+    getDatasets({}, poolid);
     // }
   }, []);
 
@@ -76,8 +74,7 @@ export function usePlayground(dataset_hash?: string) {
         {},
         { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS },
       );
-      const cqTags = getTagsFromMessage(cqResult, 1);
-      const cqReference = cqTags?.Reference || "";
+      const cqReference = cqResult?.Messages?.[1]?.Data || "";
       console.log(cqReference);
       if (cqReference) {
         chatHistory.push({
@@ -108,7 +105,7 @@ export function usePlayground(dataset_hash?: string) {
         const chatAnswerResult = await getChatAnswer({}, lastChat.reference);
         const chatTags = getTagsFromMessage(chatAnswerResult);
         const chatAnswer = getDataFromMessage(chatAnswerResult);
-        if (chatTags?.status == "nil" || chatTags?.status == "100") {
+        if (chatTags?.Status == "nil" || chatTags?.Status == "102") {
           const isOverTime = dayjs().isAfter(dayjs(lastChat.expectedTime));
           const timeLeft = dayjs().to(dayjs(lastChat.expectedTime), true);
           // if over 1 hour, stop waiting, and show tips
@@ -130,7 +127,7 @@ export function usePlayground(dataset_hash?: string) {
             });
           }
           setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
-        } else if (chatTags?.status == "200") {
+        } else if (chatTags?.Status == "200") {
           chatHistory.push({
             role: "assistant",
             message: chatAnswer,
