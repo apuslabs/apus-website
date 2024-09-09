@@ -44,6 +44,8 @@ const Competition = () => {
     isPoolStarted,
     isQuickBtnDisabled,
     joinPool,
+    checkPermission,
+    checkingPermission,
     leaderboard,
     leaderboardLoading,
     poolInfo,
@@ -70,6 +72,8 @@ const Competition = () => {
         <QuickButton
           text={quickBtnText}
           disabled={isQuickBtnDisabled}
+          loading={checkingPermission}
+          checkPermission={checkPermission}
           onJoinCompetition={() =>
             quickBtnOnClick(setJoinCompetitionModalVisible)
           }

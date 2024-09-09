@@ -95,6 +95,8 @@ export function useCompetitionPool(
     msg: getLeaderboard,
   } = useBenchmarkDryrun("Get-Leaderboard");
   const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
+  const { msg: checkPermission, loading: checkingPermission } =
+    useBenchmarkDryrun("Check-Permission");
 
   useEffect(() => {
     if (!poolID) return;
@@ -152,6 +154,7 @@ export function useCompetitionPool(
     !poolOpening ||
     hasSubmitted ||
     leaderboardLoading ||
+    checkingPermission ||
     dashboardLoading ||
     poolInfoLoading;
   const quickBtnOnClick = (
@@ -181,7 +184,9 @@ export function useCompetitionPool(
     dashboard: dashboard,
     isPoolStarted,
     isQuickBtnDisabled,
+    checkingPermission,
     joinPool: joinPoolRefresh,
+    checkPermission,
     leaderboard: resortLeaderboard(leaderboard, activeAddress),
     leaderboardLoading,
     poolInfo,
