@@ -65,7 +65,10 @@ export const JoinCompetitionModal: FC<{
         { dataset_hash: hash, dataset_name: formData.name },
       );
       onOk();
-    } catch (e) {
+    } catch (e: any) {
+      if ("errorFields" in e) {
+        return;
+      }
       if (e instanceof Error) {
         if (e.message === "{}") {
           message.error(
@@ -132,6 +135,11 @@ export const JoinCompetitionModal: FC<{
               const isJSON = file.type === "application/json";
               if (!isJSON) {
                 message.error(`${file.name} is not a json file`);
+                return Upload.LIST_IGNORE;
+              }
+              const isLt2M = file.size / 1024 / 1024 > 1;
+              if (isLt2M) {
+                message.error("File must smaller than 1MB!");
                 return Upload.LIST_IGNORE;
               }
               const fileContent = await file.text();
