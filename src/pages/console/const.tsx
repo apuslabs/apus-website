@@ -102,7 +102,7 @@ export const TableColumns = (
       key: "reward",
       render: (text: string, item: Leaderboard) => (
         <BlueText
-          text={`${text || 0} APUS_Tn1`}
+          text={item.progress ? `${text || 0} APUS_Tn1` : "N/A"}
           isBlue={item.author === activeAddress}
         />
       ),
