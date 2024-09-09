@@ -198,7 +198,7 @@ export const messageWrapper = (process: string) => (Action: string) => {
   ) => {
     setLoading(true);
     try {
-      const result = await messageResultWrapper(process, true)(
+      const result = await messageResultWrapper(process, import.meta.env.DEV)(
         { ...tags, Action },
         data,
       );
@@ -243,7 +243,7 @@ export const dryrunWrapper =
     ) => {
       setLoading(true);
       try {
-        const result = await dryrunResultWrapper(process, true)(
+        const result = await dryrunResultWrapper(process, import.meta.env.DEV)(
           { ...tags, Action },
           data,
         );

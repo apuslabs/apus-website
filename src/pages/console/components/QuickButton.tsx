@@ -2,7 +2,6 @@ import { FC } from "react";
 import { useArweaveContext } from "../../../contexts/arconnect";
 import { useCompetitionPool } from "../../../contexts/competition";
 import { Spin, message } from "antd";
-import { useParams } from "react-router-dom";
 
 export const QuickButton: FC<{
   disabled: boolean;
