@@ -1,77 +1,81 @@
 #competition .ant-table {
-  @apply p-6 bg-light rounded-[1rem];
+    @apply p-6 bg-light rounded-[1rem];
 }
 
 .ant-table-wrapper
-  .ant-table-container
-  table
-  > thead
-  > tr:first-child
-  > *:first-child,
+    .ant-table-container
+    table
+    > thead
+    > tr:first-child
+    > *:first-child,
 .ant-table-wrapper
-  .ant-table-container
-  table
-  > thead
-  > tr:first-child
-  > *:last-child {
-  border-start-start-radius: 0;
-  border-start-end-radius: 0;
+    .ant-table-container
+    table
+    > thead
+    > tr:first-child
+    > *:last-child {
+    border-start-start-radius: 0;
+    border-start-end-radius: 0;
 }
 
 .ant-table-wrapper
-  .ant-table-thead
-  > tr
-  > th:not(:last-child):not(.ant-table-selection-column):not(
-    .ant-table-row-expand-icon-cell
-  ):not([colspan])::before,
+    .ant-table-thead
+    > tr
+    > th:not(:last-child):not(.ant-table-selection-column):not(
+        .ant-table-row-expand-icon-cell
+    ):not([colspan])::before,
 .ant-table-wrapper
-  .ant-table-thead
-  > tr
-  > td:not(:last-child):not(.ant-table-selection-column):not(
-    .ant-table-row-expand-icon-cell
-  ):not([colspan])::before {
-  top: 0;
-  width: 2px;
-  height: 100%;
-  transform: translateY(0);
+    .ant-table-thead
+    > tr
+    > td:not(:last-child):not(.ant-table-selection-column):not(
+        .ant-table-row-expand-icon-cell
+    ):not([colspan])::before {
+    top: 0;
+    width: 2px;
+    height: 100%;
+    transform: translateY(0);
 }
 
 .ant-table-wrapper .ant-table-thead > tr > th,
 .ant-table-wrapper .ant-table-thead > tr > td {
-  color: #111111;
-  @apply text-xs font-normal;
+    color: #111111;
+    @apply text-xs font-normal;
 }
 
 .ant-pagination .ant-pagination-item.ant-pagination-item {
-  @apply rounded-full font-normal;
+    @apply rounded-full font-normal;
 }
 .ant-pagination .ant-pagination-item.ant-pagination-item-active a {
-  @apply text-light;
+    @apply text-light;
 }
 .ant-pagination .ant-pagination-item a {
-  @apply text-black50;
+    @apply text-black50;
 }
 
 .ant-modal-mask {
-  @apply backdrop-blur-lg;
+    @apply backdrop-blur-lg;
 }
 
 .ant-modal-content,
 .ant-modal-title {
-  box-shaow: unset !important;
-  background-color: #d7ddf4 !important;
+    box-shaow: unset !important;
+    background-color: #d7ddf4 !important;
 }
 
 .ant-form-item-control-input-content input,
 .ant-form-item-control-input-content:hover input,
 .ant-input-outlined:hover {
-  background: #ffffff !important;
+    background: #ffffff !important;
 }
 
 .ant-upload-wrapper .ant-upload-drag .ant-upload {
-  @apply p-0 overflow-hidden;
+    @apply p-0 overflow-hidden;
 }
 
 .ant-modal-content {
-  border-radius: 16px !important;
+    border-radius: 16px !important;
+}
+
+.detail_inject_content span {
+    @apply text-black;
 }

@@ -93,25 +93,24 @@ const Competition = () => {
         <div className={`mt-6 justify-between ${showMore ? "flex" : "hidden"}`}>
           <ul className="flex flex-col gap-4 w-3/5">
             {CompetitionDetails(poolInfo, stage).map(
-              ({ icon, label, value }) => {
+              ({ icon, label, value, detail }) => {
                 return (
-                  <li className="flex items-center gap-1 text-sm" key={label}>
-                    <img src={icon} className="w-4 h-4" />
-                    <span className="text-black">{label}:</span>
-                    <span className="text-black50">{value}</span>
+                  <li className="text-sm" key={label}>
+                    <div className="flex items-center gap-1">
+                      <img src={icon} className="w-4 h-4" />
+                      <span className="text-black">{label}:</span>
+                      {value && <span className="text-black50">{value}</span>}
+                    </div>
+                    {detail && (
+                      <p
+                        className="mt-2 text-black50 px-5 leading-relaxed text-wrap break-words whitespace-pre-wrap detail_inject_content"
+                        dangerouslySetInnerHTML={{ __html: detail }}
+                      ></p>
+                    )}
                   </li>
                 );
               },
             )}
-            <li className="text-sm">
-              <div className="flex items-center gap-1 mb-3">
-                <img src={ImgCompetition.IconAlignLeft} className="w-4 h-4" />
-                <span className="text-black">Requirements:</span>
-              </div>
-              <p className="text-black50 px-5 leading-relaxed text-wrap break-words whitespace-pre-line">
-                {poolInfo.metadata.description}
-              </p>
-            </li>
           </ul>
           <TwitterVideo videoLink={poolInfo.metadata.video} />
         </div>

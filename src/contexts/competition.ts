@@ -19,6 +19,7 @@ export interface PoolInfo {
     description: string;
     dataset: string;
     video: string;
+    duration_desc?: string;
   };
 }
 
