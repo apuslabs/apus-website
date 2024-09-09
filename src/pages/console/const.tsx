@@ -112,11 +112,11 @@ export const TableColumns = (
       key: "operations",
       align: "right",
       render: (_: string, item: any) => {
-        return isFinished(item) ? (
+        return (
           <Link to={`../playground/${poolid}?dataset_id=${item.dataset_hash}`}>
             <div className="btn-default btn-small">Chat</div>
           </Link>
-        ) : null;
+        );
       },
     },
   ];
