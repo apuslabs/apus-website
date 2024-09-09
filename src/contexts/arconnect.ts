@@ -2,7 +2,7 @@ import { PermissionType } from "arconnect";
 import React, { useContext, useEffect, useState } from "react";
 
 const ArweaveContext = React.createContext<ReturnType<typeof useArweave>>(
-  null as any
+  null as any,
 );
 
 const initialPermissions: PermissionType[] = [
@@ -20,7 +20,9 @@ function useArweave() {
       setWalletLoaded(walletLoaded);
       const userPermissions = await window.arweaveWallet.getPermissions();
       setPermissions(userPermissions);
-      init();
+      if (userPermissions.includes("ACCESS_ADDRESS")) {
+        init();
+      }
     });
   }, []);
 
@@ -36,7 +38,6 @@ function useArweave() {
     const address = await window.arweaveWallet.getActiveAddress();
     setActiveAddress(address);
   };
-
 
   return {
     hasWallet: () => window.arweaveWallet != null,

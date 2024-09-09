@@ -97,12 +97,10 @@ export function useCompetitionPool(
   const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
 
   useEffect(() => {
-    if (!activeAddress || !poolID) return;
+    if (!poolID) return;
     getPool({}, poolID);
     getLeaderboard({ FromAddress: activeAddress ?? "" }, poolID);
-    if (activeAddress) {
-      getDashboard({ FromAddress: activeAddress }, poolID);
-    }
+    getDashboard({ FromAddress: activeAddress ?? "" }, poolID);
   }, [activeAddress, poolID]);
 
   const poolInfoMsg =
@@ -156,8 +154,6 @@ export function useCompetitionPool(
     leaderboardLoading ||
     dashboardLoading ||
     poolInfoLoading;
-  // TODO: remove online
-  isQuickBtnDisabled = false;
   const quickBtnOnClick = (
     setJoinCompetitionModalVisible: (visible: boolean) => void,
   ) => {
@@ -182,7 +178,7 @@ export function useCompetitionPool(
   };
 
   return {
-    dashboard: activeAddress ? dashboard : DefaultDashboard,
+    dashboard: dashboard,
     isPoolStarted,
     isQuickBtnDisabled,
     joinPool: joinPoolRefresh,
