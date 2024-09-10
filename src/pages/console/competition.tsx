@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { ImgCompetition } from "../../assets/image";
 import { ConfigProvider, Table } from "antd";
 import "./competition.css";
 import { useCompetitionPool } from "../../contexts/competition";

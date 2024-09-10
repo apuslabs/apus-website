@@ -12,7 +12,7 @@ import {
   redLabelStyle,
   yellowLabelStyle,
 } from "../config/console";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
 
@@ -192,32 +192,34 @@ export const messageWrapper = (process: string) => (Action: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
-  const msg = async (
-    tags: Record<string, string> = {},
-    data?: string | number | Record<string, any>,
-  ) => {
-    setLoading(true);
-    try {
-      const result = await messageResultWrapper(process, import.meta.env.DEV)(
-        { ...tags, Action },
-        data,
-      );
-      console.log(result);
-      if (result == null) {
-        throw new Error("No result");
+  const msg = useCallback(
+    async (
+      tags: Record<string, string> = {},
+      data?: string | number | Record<string, any>,
+    ) => {
+      setLoading(true);
+      try {
+        const result = await messageResultWrapper(process, import.meta.env.DEV)(
+          { ...tags, Action },
+          data,
+        );
+        if (result == null) {
+          throw new Error("No result");
+        }
+        if (result.Error) {
+          throw result.Error;
+        }
+        setResult(result as any);
+        return result;
+      } catch (e) {
+        setError(toString(e));
+        throw e;
+      } finally {
+        setLoading(false);
       }
-      if (result.Error) {
-        throw result.Error;
-      }
-      setResult(result as any);
-      return result;
-    } catch (e) {
-      setError(toString(e));
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [],
+  );
 
   return {
     result,
@@ -237,30 +239,33 @@ export const dryrunWrapper =
     const [loading, setLoading] = useState(autoLoad);
     const [error, setError] = useState<string>();
 
-    const msg = async (
-      tags: Record<string, string> = {},
-      data?: string | number | Record<string, any>,
-    ) => {
-      setLoading(true);
-      try {
-        const result = await dryrunResultWrapper(process, import.meta.env.DEV)(
-          { ...tags, Action },
-          data,
-        );
-        if (result == null) {
-          throw new Error("No result");
+    const msg = useCallback(
+      async (
+        tags: Record<string, string> = {},
+        data?: string | number | Record<string, any>,
+      ) => {
+        setLoading(true);
+        try {
+          const result = await dryrunResultWrapper(
+            process,
+            import.meta.env.DEV,
+          )({ ...tags, Action }, data);
+          if (result == null) {
+            throw new Error("No result");
+          }
+          if (result.Error) {
+            setError(toString(result.Error));
+          }
+          setResult(result as any);
+          return result;
+        } catch (e) {
+          setError(toString(e));
+        } finally {
+          setLoading(false);
         }
-        if (result.Error) {
-          setError(toString(result.Error));
-        }
-        setResult(result as any);
-        return result;
-      } catch (e) {
-        setError(toString(e));
-      } finally {
-        setLoading(false);
-      }
-    };
+      },
+      [],
+    );
 
     return {
       result,

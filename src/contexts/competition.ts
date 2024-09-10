@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
 import { useArweaveContext } from "./arconnect";
@@ -78,7 +78,7 @@ export function useCompetitionPool(
   poolID: string | undefined,
   onJoinPool: () => void,
 ) {
-  const { activeAddress } = useArweaveContext();
+  const { activeAddress, setOnInit } = useArweaveContext();
 
   const {
     result: poolInfoResult,
@@ -99,12 +99,19 @@ export function useCompetitionPool(
   const { msg: checkPermission, loading: checkingPermission } =
     useBenchmarkDryrun("Check-Permission");
 
+  const loadData = useCallback(
+    (address?: string) => {
+      if (poolID) {
+        getPool({}, poolID);
+        getDashboard({ FromAddress: address || "" }, poolID);
+        getLeaderboard({ FromAddress: address || "" }, poolID);
+      }
+    },
+    [poolID, getDashboard, getLeaderboard, getPool],
+  );
   useEffect(() => {
-    if (!poolID) return;
-    getPool({}, poolID);
-    getLeaderboard({ FromAddress: activeAddress ?? "" }, poolID);
-    getDashboard({ FromAddress: activeAddress ?? "" }, poolID);
-  }, [activeAddress, poolID]);
+    setOnInit(loadData);
+  }, []);
 
   const poolInfoMsg =
     poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);

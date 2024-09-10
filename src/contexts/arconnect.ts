@@ -14,6 +14,9 @@ function useArweave() {
   const [permissions, setPermissions] = useState(initialPermissions);
   const [walletLoaded, setWalletLoaded] = useState(false);
   const [activeAddress, setActiveAddress] = useState<string>();
+  const [onInit, setOnInit] = useState<
+    ((address?: string) => void) | undefined
+  >();
 
   useEffect(() => {
     window.addEventListener("arweaveWalletLoaded", async () => {
@@ -22,9 +25,11 @@ function useArweave() {
       setPermissions(userPermissions);
       if (userPermissions.includes("ACCESS_ADDRESS")) {
         init();
+      } else {
+        onInit?.();
       }
     });
-  }, []);
+  }, [onInit]);
 
   const connectWallet = async () => {
     if (!window.arweaveWallet) {
@@ -37,6 +42,7 @@ function useArweave() {
   const init = async () => {
     const address = await window.arweaveWallet.getActiveAddress();
     setActiveAddress(address);
+    onInit?.(address);
   };
 
   return {
@@ -45,6 +51,7 @@ function useArweave() {
     init,
     connectWallet,
     activeAddress,
+    setOnInit,
     disconnect: async () => {
       await window.arweaveWallet.disconnect();
       setActiveAddress(undefined);
