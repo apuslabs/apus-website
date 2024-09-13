@@ -1,3 +1,3 @@
 export const POOL_PROCESS = "NcgWkb377fZRWQDT0t8Xnhb2JYDlJ1pOmXfYZZxb4LM";
-export const EMBEDDING_PROCESS = "gz2KXnRRyQ8yOC7Oj43Lqo1S9dwrCt-W2v4b2MS863w";
+export const EMBEDDING_PROCESS = "GbCrfjYRxhrVx-UNYPgCOB8-KW_j_6cKfhmKpSoUXFY";
 export const CHAT_PROCESS = "K0zJBT9HQ4KOGE6gCDYFa0tldMB0jdppOyCNH9loe38";

@@ -1,4 +1,3 @@
-import { Tooltip } from "antd";
 import { ImgCompetition } from "../../../assets/image";
 import { PoolInfo } from "../../../contexts/competition";
 import { formatNumberWithSuffix, timeFormat } from "../../../utils/utils";
