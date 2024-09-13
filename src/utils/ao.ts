@@ -80,9 +80,10 @@ function handleResult(
   }
   if (result?.Messages?.[0]) {
     const msg = result?.Messages?.[0];
-    if (msg.Tags?.Status) {
-      if (msg.Tags?.Status !== "200") {
-        throw new Error(msg.Tags?.Status + " " + msg.Data);
+    const Status = msg.Tags?.find((tag: any) => tag.name === "Status");
+    if (Status) {
+      if (Status.value != "200") {
+        throw new Error(Status.value + " " + msg.Data);
       }
     }
   }

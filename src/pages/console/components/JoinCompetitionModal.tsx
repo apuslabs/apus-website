@@ -64,6 +64,8 @@ export const JoinCompetitionModal: FC<{
         { PoolID: poolid! },
         { dataset_hash: hash, dataset_name: formData.name },
       );
+      form.resetFields();
+      setFileList([]);
       onOk();
     } catch (e: any) {
       if ("errorFields" in e) {
