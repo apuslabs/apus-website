@@ -25,7 +25,7 @@ export const HeaderMenuList: menuType[] = [
   },
   {
     name: "Roadmap",
-    path: "#roadmap",
+    path: "/?anchor=roadmap",
   },
   {
     name: "Litepaper",

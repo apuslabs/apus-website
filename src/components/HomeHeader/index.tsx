@@ -1,8 +1,19 @@
-import { FC, useState } from "react";
+import { FC, useEffect, useLayoutEffect, useState } from "react";
 import { ImgHomepage } from "../../assets/image";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../../utils/react-use";
 import { HeaderMenuList } from "../../config/menu";
+
+function scrollToAnchor(anchor: string) {
+  if (!anchor) return;
+  const target = document.querySelector("#" + anchor);
+  if (target) {
+    window.scrollTo({
+      top: target.getBoundingClientRect().top + window.scrollY - 80,
+      behavior: "smooth",
+    });
+  }
+}
 
 const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
   showUserInfo = false,
@@ -11,6 +22,15 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
   const isTablet = breakpoint === "mobile";
   const [menuShow, setMenuShow] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  useLayoutEffect(() => {
+    const realpath = window.location.hash.replace("#", "").split("?")[1];
+    const params = new URLSearchParams(realpath);
+    const anchor = params.get("anchor");
+    if (anchor) {
+      scrollToAnchor(anchor);
+    }
+  }, []);
 
   return (
     <div
@@ -52,34 +72,22 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
             md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
             z-20"
           >
-            {HeaderMenuList.map((item) =>
-              item.path.startsWith("#") ? (
-                <li
-                  className="menu-colorful cursor-pointer"
-                  key={item.name}
-                  onClick={() => {
-                    const target = document.querySelector(item.path);
-                    if (target) {
-                      window.scrollTo({
-                        top:
-                          target.getBoundingClientRect().top +
-                          window.scrollY -
-                          80,
-                        behavior: "smooth",
-                      });
-                    }
-                  }}
-                >
+            {HeaderMenuList.map((item) => (
+              <Link
+                key={item.name}
+                to={item.path}
+                onClick={(e) => {
+                  if (item.path.includes("?anchor")) {
+                    const anchor = item.path.split("?anchor=")[1];
+                    scrollToAnchor(anchor);
+                  }
+                }}
+              >
+                <li className="menu-colorful" key={item.name}>
                   {item.name}
                 </li>
-              ) : (
-                <Link key={item.name} to={item.path}>
-                  <li className="menu-colorful" key={item.name}>
-                    {item.name}
-                  </li>
-                </Link>
-              ),
-            )}
+              </Link>
+            ))}
           </ul>
         </div>
       ) : null}

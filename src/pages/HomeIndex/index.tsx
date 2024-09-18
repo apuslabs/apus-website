@@ -71,7 +71,7 @@ const HomeIndex: FC = () => {
         </div>
       ) : null}
       {/* Hero */}
-      <div className="section-container h-screen min-h-[56vw] relative">
+      <div className="section-container h-screen min-h-[960px] relative">
         <video
           className="absolute h-full right-0 bottom-0 object-cover -z-10"
           autoPlay
@@ -81,23 +81,23 @@ const HomeIndex: FC = () => {
           <source src={Video} type="video/mp4" />
         </video>
         <div className="section h-full flex flex-col items-center md:items-start">
-          <div className="mt-56 md:mt-[400px] md:text-left text-[#333333] text-center font-bold text-5xl md:text-8xl leading-[1.1]">
+          <div className="mt-56 md:mt-[320px] md:text-left text-[#333333] text-center font-bold text-5xl md:text-8xl leading-[1.1]">
             Trustless {isMobile ? <br /> : ""}GPU Network
             <br />
             for AI on AO
           </div>
-          <div className="flex gap-4 md:gap-6 mt-[1.625rem] md:mt-12 justify-center md:justify-start items-center flex-wrap">
+          <div className="flex gap-4 md:gap-6 md:mt-20 justify-center md:justify-start items-center flex-wrap">
             {FooterSocialMediaList.map(({ name, path, icon }) => (
               <Link
                 to={path}
                 key={name}
                 className="hover:scale-105 transition-transform duration-300"
               >
-                <img src={icon} alt={name} className="h-4 md:h-[2.25rem]" />
+                <img src={icon} alt={name} className="h-4 md:h-[1.75rem]" />
               </Link>
             ))}
             <div
-              className="h-[1.75rem] md:h-[3.625rem] w-[16.25rem] md:w-[35.75rem] px-2 flex items-center
+              className="h-[1.75rem] md:h-[2.865rem] w-[16.25rem] md:w-[28rem] px-2 flex items-center
             bg-[#fbfbfb] drop-shadow-lg rounded-sm md:rounded-lg"
             >
               <img
@@ -107,19 +107,19 @@ const HomeIndex: FC = () => {
               />
               <input
                 placeholder="youremail@gmail.com"
-                className="flex-1 h-full md:mx-2 px-2 text-[10px]"
+                className="flex-1 h-full md:mx-2 px-2 text-[10px] md:text-base"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               ></input>
               <div
-                className="h-[1.125rem] md:h-10 w-16 md:w-36 text-center bg-gray33 leading-[1.125rem] md:leading-10 font-bold text-[10px] md:text-sm text-white rounded-sm md:rounded-lg cursor-pointer"
+                className="h-[1.125rem] md:h-8 w-16 md:w-32 text-center bg-gray33 leading-[1.125rem] md:leading-8 font-bold text-[10px] md:text-sm text-white rounded-sm md:rounded-lg cursor-pointer"
                 onClick={subscribe}
               >
                 SUBSCRIBE
               </div>
             </div>
           </div>
-          <div className="w-full flex-1 flex justify-center items-center gap-6 pb-24 z-10">
+          <div className="w-full md:mt-32 flex justify-center items-center gap-6 z-10">
             <div className="btn-colorful btn-main active">
               Go To Competition Pools &amp; Playground
             </div>
@@ -167,7 +167,7 @@ const HomeIndex: FC = () => {
                   img: ImgHomepage.FeaturesCost,
                 },
               ].map(({ title, describe, img }) => (
-                <div key={title} className="benifits-item boreder-benifits ">
+                <div key={title} className="benifits-item card-dark">
                   <div className="relative p-5 rounded-2xl h-full flex flex-col overflow-hidden gap-[1.75rem]">
                     <img src={img} className="rounded-2xl" />
                     <div
@@ -236,7 +236,7 @@ const HomeIndex: FC = () => {
               id="benifits"
               className="md:grid md:grid-cols-2 md:grid-rows-2 flex flex-col gap-5 md:gap-10 w-full"
             >
-              <div className="md:col-span-1 md:row-span-1 boreder-benifits">
+              <div className="md:col-span-1 md:row-span-1 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
                   <img
                     src={ImgHomepage.BiconGood}
@@ -266,7 +266,7 @@ const HomeIndex: FC = () => {
                   />
                 </div>
               </div>
-              <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 boreder-benifits">
+              <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
                   <img
                     src={ImgHomepage.BiconEnergy}
@@ -286,11 +286,11 @@ const HomeIndex: FC = () => {
                         ? ImgHomepage.BenifitsEnergyMobile
                         : ImgHomepage.BenifitsEnergy
                     }
-                    className={`md:absolute top-0 h-full`}
+                    className={`md:absolute top-0 right-0 h-full`}
                   />
                 </div>
               </div>
-              <div className="md:row-span-2 boreder-benifits">
+              <div className="md:row-span-2 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden">
                   <img
                     src={ImgHomepage.BiconAccessibility}
@@ -393,7 +393,7 @@ const HomeIndex: FC = () => {
               to={FooterSocialMediaList[0].path}
               className="mb-24 md:mb-[16rem] mt-6"
             >
-              <div className="btn-colorful btn-main">Get Our Updates</div>
+              <div className="btn-colorful btn-main z-10">Get Our Updates</div>
             </Link>
           </div>
           <img
