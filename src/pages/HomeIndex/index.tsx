@@ -86,7 +86,7 @@ const HomeIndex: FC = () => {
             <br />
             for AI on AO
           </div>
-          <div className="flex gap-4 md:gap-6 md:mt-20 justify-center md:justify-start items-center flex-wrap">
+          <div className="flex gap-4 md:gap-6 mt-20 justify-center md:justify-start items-center flex-wrap">
             {FooterSocialMediaList.map(({ name, path, icon }) => (
               <Link
                 to={path}
@@ -119,7 +119,7 @@ const HomeIndex: FC = () => {
               </div>
             </div>
           </div>
-          <div className="w-full md:mt-32 flex justify-center items-center gap-6 z-10">
+          <div className="w-full mt-32 flex justify-center items-center gap-6 z-10">
             <div className="btn-colorful btn-main active">
               Go To Competition Pools &amp; Playground
             </div>

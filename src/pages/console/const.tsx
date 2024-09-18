@@ -31,7 +31,7 @@ export const TableColumns = (
     const isOver1Day = dayjs
       .unix(item.created_at)
       .isBefore(dayjs().subtract(1, "day"));
-    return item.progress === 1 || isOver1Day;
+    return item.progress === 1;
   };
   return [
     {
