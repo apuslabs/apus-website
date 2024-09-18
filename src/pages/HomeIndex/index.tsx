@@ -325,6 +325,7 @@ const HomeIndex: FC = () => {
         </div>
 
         <div
+          id="roadmap"
           className="section-container relative md:pt-none"
           style={{
             paddingBottom: isMobile ? 0 : "unset",

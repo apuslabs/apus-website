@@ -52,13 +52,34 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
             md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
             z-20"
           >
-            {HeaderMenuList.map((item) => (
-              <Link key={item.name} to={item.path}>
-                <li className="menu-colorful" key={item.name}>
+            {HeaderMenuList.map((item) =>
+              item.path.startsWith("#") ? (
+                <li
+                  className="menu-colorful cursor-pointer"
+                  key={item.name}
+                  onClick={() => {
+                    const target = document.querySelector(item.path);
+                    if (target) {
+                      window.scrollTo({
+                        top:
+                          target.getBoundingClientRect().top +
+                          window.scrollY -
+                          80,
+                        behavior: "smooth",
+                      });
+                    }
+                  }}
+                >
                   {item.name}
                 </li>
-              </Link>
-            ))}
+              ) : (
+                <Link key={item.name} to={item.path}>
+                  <li className="menu-colorful" key={item.name}>
+                    {item.name}
+                  </li>
+                </Link>
+              ),
+            )}
           </ul>
         </div>
       ) : null}
