@@ -99,7 +99,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
             navigate("/console/competition/1002");
           }}
         >
-          {"Console"}
+          {"Competition Pools"}
         </div>
       ) : (
         <img

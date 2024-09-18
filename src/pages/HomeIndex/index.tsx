@@ -73,7 +73,7 @@ const HomeIndex: FC = () => {
       {/* Hero */}
       <div className="section-container h-screen min-h-[960px] relative">
         <video
-          className="absolute h-full right-0 bottom-0 object-cover -z-10"
+          className="absolute w-full h-full right-0 bottom-0 object-cover -z-10"
           autoPlay
           muted
           loop
@@ -243,7 +243,7 @@ const HomeIndex: FC = () => {
                     className="w-10 h-10 mb-4 md:mb-6"
                   />
                   <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap text-white font-semibold">
-                    Public Goods
+                    Public Good
                   </div>
                   <div className="flex-1 text-xs md:text-base md:w-2/3 opacity-50 text-white">
                     Apus Network's economic model incentivizes the development
@@ -387,14 +387,45 @@ const HomeIndex: FC = () => {
             </div>
             <TwitterVideo className="mt-6" />
             <div className="section-header text-center mt-24 md:mt-40">
-              Let's Build Together
+              Stay Up to Date - Subscribe Now
             </div>
-            <Link
-              to={FooterSocialMediaList[0].path}
-              className="mb-24 md:mb-[16rem] mt-6"
+            <div className="section-description text-center text-gray33">
+              Follow us on our social media or subscribe to our email newsletter
+              to get the latest updates
+            </div>
+            <div className="flex gap-4 md:gap-6 mt-8 md:mt-16 justify-center md:justify-start items-center flex-wrap">
+              {FooterSocialMediaList.map(({ name, path, icon }) => (
+                <Link
+                  to={path}
+                  key={name}
+                  className="hover:scale-105 transition-transform duration-300"
+                >
+                  <img src={icon} alt={name} className="h-4 md:h-[1.75rem]" />
+                </Link>
+              ))}
+            </div>
+            <div
+              className="h-[1.75rem] md:h-[2.865rem] w-[16.25rem] md:w-[28rem] px-2 flex items-center mt-4 md:mt-8 mb-10 md:mb-20 z-10
+                bg-[#fbfbfb] drop-shadow-lg rounded-sm md:rounded-lg"
             >
-              <div className="btn-colorful btn-main z-10">Get Our Updates</div>
-            </Link>
+              <img
+                src={IconEmail}
+                alt="icon-email"
+                className="w-4 h-[0.625rem] md:w-8 md:h-6"
+              />
+              <input
+                placeholder="youremail@gmail.com"
+                className="flex-1 h-full md:mx-2 px-2 text-[10px] md:text-base"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              ></input>
+              <div
+                className="h-[1.125rem] md:h-8 w-16 md:w-32 text-center bg-gray33 leading-[1.125rem] md:leading-8 font-bold text-[10px] md:text-sm text-white rounded-sm md:rounded-lg cursor-pointer"
+                onClick={subscribe}
+              >
+                SUBSCRIBE
+              </div>
+            </div>
           </div>
           <img
             src={ImgHomepage.BgBottom}
