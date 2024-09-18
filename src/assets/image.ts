@@ -18,6 +18,7 @@ import ResolutionDizuo from "./homepage/resolution-dizuo.png";
 import BenifitsAccessibility from "./homepage/benifits-accessibility.png";
 import BenifitsAccessibilityMobile from "./homepage/benifits-accessibility-mobile.png";
 import BenifitsEnergy from "./homepage/benifits-energy.png";
+import BenifitsEnergyMobile from "./homepage/benifits-energy-mobile.png";
 import BenifitsGood from "./homepage/benifits-good.png";
 import BenifitsGoodPc from "./homepage/benifits-good-pc.png";
 import BiconAccessibility from "./homepage/bicon-accessibility.png";
@@ -25,6 +26,8 @@ import BiconEnergy from "./homepage/bicon-energy.png";
 import BiconGood from "./homepage/bicon-good.png";
 import BgBottom from "./homepage/bg_bottom.png";
 import IconAnnouncement from "./homepage/icon-announcement.png";
+import Roadmap from "./homepage/roadmap.png";
+import RoadmapVtl from "./homepage/roadmap-vtl.png";
 
 import LogoHorizonalSimple from "./competition/logo_horizonal_simple.png";
 import ChevronDown from "./competition/chevron-down.png";
@@ -57,12 +60,15 @@ export const ImgHomepage = {
   BiconEnergy,
   BiconGood,
   BenifitsEnergy,
+  BenifitsEnergyMobile,
   BenifitsAccessibility,
   BenifitsGood,
   BgBottom,
   BenifitsAccessibilityMobile,
   BenifitsGoodPc,
   IconAnnouncement,
+  Roadmap,
+  RoadmapVtl,
 };
 
 export const ImgCompetition = {

@@ -6,11 +6,16 @@ import Competition from "./pages/console/competition";
 import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
 import Playground from "./pages/console/playground";
+import Team from "./pages/team";
 
 const router = createHashRouter([
   {
     path: "/",
     element: <HomeIndex />,
+  },
+  {
+    path: "team",
+    element: <Team />,
   },
   {
     path: "console",

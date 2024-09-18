@@ -22,7 +22,10 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
         background: menuShow ? "#4c4c4c" : "rgba(255,255,255,0.33)",
       }}
     >
-      <div className="h-full flex items-center" onClick={() => navigate("/")}>
+      <div
+        className="h-full flex items-center cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <img
           src={
             menuShow

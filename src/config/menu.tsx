@@ -1,27 +1,36 @@
+import {
+  IconDiscord,
+  IconMedium,
+  IconTelegram,
+  IconX,
+  IconLinkedin,
+} from "../assets/common/common";
+
 interface menuType {
   name: string;
   path: string;
+  icon?: string;
 }
 
 export const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
 export const HeaderMenuList: menuType[] = [
-  // {
-  //   name: 'AI on AO',
-  //   path: "https://apus-network.gitbook.io/apus-console-docs/ao/inference-on-ao"
-  // },
+  {
+    name: "Team",
+    path: "/team",
+  },
   {
     name: "Doc",
     path: DocLink,
   },
-  // {
-  //   name: 'Ecosystem',
-  //   path: '/home/ecosystem'
-  // },
-  // {
-  //   name: 'Playground',
-  //   path: 'https://playground.apus.network/'
-  // },
+  {
+    name: "Roadmap",
+    path: "/home/ecosystem",
+  },
+  {
+    name: "Litepaper",
+    path: "https://www.linkedin.com/in/conorthacker/?profileId=ACoAACo60jUBcCHNCmVdbhMpc2mj4rHreF_FKsM",
+  },
   // {
   //   name: 'Task',
   //   path: '/home/task'
@@ -63,22 +72,27 @@ export const FooterSocialMediaList: menuType[] = [
   {
     name: "Twitter",
     path: "https://twitter.com/intent/follow?screen_name=apus_network",
+    icon: IconX,
   },
   {
     name: "Telegram",
     path: "https://t.me/apus_network",
+    icon: IconTelegram,
   },
   {
     name: "Discord",
     path: "https://discord.gg/NVqpWB2m8k",
-  },
-  {
-    name: "Medium",
-    path: "https://medium.com/@apusnetwork",
+    icon: IconDiscord,
   },
   {
     name: "LinkedIn",
     path: "https://sg.linkedin.com/company/apus-network",
+    icon: IconLinkedin,
+  },
+  {
+    name: "Medium",
+    path: "https://medium.com/@apusnetwork",
+    icon: IconMedium,
   },
 ];
 

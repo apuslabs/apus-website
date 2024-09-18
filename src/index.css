@@ -109,7 +109,9 @@
     @apply relative font-semibold text-white text-sm flex items-center justify-center rounded-xl overflow-hidden cursor-pointer;
     border: 1px solid rgba(255, 255, 255, 0.3);
     /* inner shadow white 20%  16px */
-    width: 160px;
+    min-width: 160px;
+    padding-left: 2rem;
+    padding-right: 2rem;
     height: 40px;
     background-color: #4c4c4c;
     &:hover {
