@@ -393,7 +393,7 @@ const HomeIndex: FC = () => {
               Follow us on our social media or subscribe to our email newsletter
               to get the latest updates
             </div>
-            <div className="flex gap-4 md:gap-6 mt-8 md:mt-16 justify-center md:justify-start items-center flex-wrap">
+            <div className="flex gap-4 md:gap-6 mt-8 md:mt-16 justify-center md:justify-start items-center flex-wrap z-10">
               {FooterSocialMediaList.map(({ name, path, icon }) => (
                 <Link
                   to={path}

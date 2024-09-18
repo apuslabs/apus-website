@@ -1,3 +1,4 @@
+import { notification } from "antd";
 import {
   IconDiscord,
   IconMedium,
@@ -10,6 +11,7 @@ interface menuType {
   name: string;
   path: string;
   icon?: string;
+  onClick?: () => void;
 }
 
 export const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
@@ -20,7 +22,7 @@ export const HeaderMenuList: menuType[] = [
     path: "/team",
   },
   {
-    name: "Doc",
+    name: "Docs",
     path: DocLink,
   },
   {
@@ -29,7 +31,14 @@ export const HeaderMenuList: menuType[] = [
   },
   {
     name: "Litepaper",
-    path: "https://www.linkedin.com/in/conorthacker/?profileId=ACoAACo60jUBcCHNCmVdbhMpc2mj4rHreF_FKsM",
+    path: "",
+    onClick: () => {
+      notification.open({
+        type: "info",
+        message: "Coming Soon!",
+        description: "Litepaper will be public soon.",
+      });
+    },
   },
   // {
   //   name: 'Task',

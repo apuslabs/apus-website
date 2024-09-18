@@ -76,12 +76,16 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({
               <Link
                 key={item.name}
                 to={item.path}
-                onClick={(e) => {
-                  if (item.path.includes("?anchor")) {
-                    const anchor = item.path.split("?anchor=")[1];
-                    scrollToAnchor(anchor);
-                  }
-                }}
+                onClick={
+                  item.onClick
+                    ? item.onClick
+                    : (e) => {
+                        if (item.path.includes("?anchor")) {
+                          const anchor = item.path.split("?anchor=")[1];
+                          scrollToAnchor(anchor);
+                        }
+                      }
+                }
               >
                 <li className="menu-colorful" key={item.name}>
                   {item.name}
