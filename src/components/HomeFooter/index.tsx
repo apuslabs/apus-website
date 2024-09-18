@@ -37,18 +37,6 @@ const HomeFooter: FC<HomeFooterProps> = () => {
           ))}
         </div>
       </div>
-      <div>
-        <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>
-          Social Media
-        </div>
-        <div className="flex flex-col gap-4">
-          {FooterSocialMediaList.map(({ name, path }) => (
-            <Link to={path} className="text-base text-white" key={name}>
-              {name}
-            </Link>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
