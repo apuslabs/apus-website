@@ -69,6 +69,7 @@ function handleResult(
   messageId = "",
   tags: any,
   data: any,
+  continueOnError?: boolean,
 ) {
   const msgErr = result.Error || (result as any).error;
   if (msgErr !== undefined) {
@@ -82,7 +83,7 @@ function handleResult(
     const msg = result?.Messages?.[0];
     const Status = msg.Tags?.find((tag: any) => tag.name === "Status");
     if (Status) {
-      if (Status.value != "200") {
+      if (!continueOnError && Status.value != "200") {
         throw new Error(Status.value + " " + msg.Data);
       }
     }
@@ -140,7 +141,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
   };
 }
 
-export function dryrunResultWrapper(process: string, debug?: boolean) {
+export function dryrunResultWrapper(process: string, debug?: boolean, continueOnError?: boolean) {
   return async function (
     tags: Record<string, string>,
     data?: string | Record<string, any> | number,
@@ -152,7 +153,7 @@ export function dryrunResultWrapper(process: string, debug?: boolean) {
         // signer: createDataItemSigner(window.arweaveWallet),
         data: toString(data),
       });
-      handleResult(debug, "DryRun", dryrunResult, undefined, tags, data);
+      handleResult(debug, "DryRun", dryrunResult, undefined, tags, data, continueOnError);
       return dryrunResult;
     } catch (e) {
       debug &&
@@ -235,7 +236,7 @@ export const messageWrapper = (process: string) => (Action: string) => {
 
 export const dryrunWrapper =
   (process: string) =>
-  (Action: string, autoLoad = false) => {
+  (Action: string, autoLoad = false, continueOnError = false) => {
     const [result, setResult] = useState<MessageResult>();
     const [loading, setLoading] = useState(autoLoad);
     const [error, setError] = useState<string>();
@@ -250,6 +251,7 @@ export const dryrunWrapper =
           const result = await dryrunResultWrapper(
             process,
             import.meta.env.DEV,
+            continueOnError,
           )({ ...tags, Action }, data);
           if (result == null) {
             throw new Error("No result");

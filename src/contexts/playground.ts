@@ -57,7 +57,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
   const { msg: chatQuestionMsg, loading: sendChatQuestioning } =
     usePlaygroundMessage("Chat-Question");
   const { msg: getChatAnswer, loading: getChatAnswering } =
-    usePlaygroundDryrun("Get-Chat-Answer");
+    usePlaygroundDryrun("Get-Chat-Answer", false, true);
 
   // auto get datasets when active address changes
   useEffect(() => {
