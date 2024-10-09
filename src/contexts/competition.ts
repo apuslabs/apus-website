@@ -65,6 +65,8 @@ export interface Leaderboard {
 
 const useBenchmarkMessage = messageWrapper(POOL_PROCESS);
 const useBenchmarkDryrun = dryrunWrapper(POOL_PROCESS);
+const useEmbeddingDryrun = dryrunWrapper(EMBEDDING_PROCESS);
+
 
 function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   return leaderboard.sort((a, b) => {
@@ -95,9 +97,8 @@ export function useCompetitionPool(
     loading: leaderboardLoading,
     msg: getLeaderboard,
   } = useBenchmarkDryrun("Get-Leaderboard");
-  const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
-  const { msg: checkPermission, loading: checkingPermission } =
-    useBenchmarkDryrun("Check-Permission");
+  // const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
+  const { msg: checkPermission, loading: checkingPermission } = useEmbeddingDryrun("Check-Permission");
 
   const loadData = useCallback(
     (address?: string) => {

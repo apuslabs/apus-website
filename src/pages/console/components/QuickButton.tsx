@@ -26,7 +26,7 @@ export const QuickButton: FC<{
               onJoinCompetition();
             } else {
               message.warning(
-                "You need to sign the permission to join the competition",
+                "You need to be whitelisted. Follow @apus_network on X for information.",
               );
             }
           }
