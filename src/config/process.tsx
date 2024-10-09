@@ -1,3 +1,3 @@
-export const POOL_PROCESS = "NcgWkb377fZRWQDT0t8Xnhb2JYDlJ1pOmXfYZZxb4LM";
-export const EMBEDDING_PROCESS = "b_y_QuM8BVEbzv91dcfDd4V7FQnUbxJUtkigs4U-2M8";
-export const CHAT_PROCESS = "K0zJBT9HQ4KOGE6gCDYFa0tldMB0jdppOyCNH9loe38";
+export const POOL_PROCESS = "jzZzZJ6SpxLKaZv8rx2rmkq-QwKGQliFyWqr-OK9CIo";
+export const EMBEDDING_PROCESS = "vp4pxoOsilVxdsRqTmLjP86CwwUwtj1RoKeGrFVxIVk";
+export const CHAT_PROCESS = "ZuZZeU2-JeNRdpBWBWU8p6IcjNXyZ0BFZ4M2Pwoj9vM";

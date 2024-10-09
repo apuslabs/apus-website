@@ -59,7 +59,7 @@ export const JoinCompetitionModal: FC<{
       if (contents.length === 0) {
         throw new Error("Invalid JSON file: empty content");
       }
-      await createDataset(hash, contents);
+      await createDataset(poolid!, hash, formData.name, contents);
       await joinPool(
         { PoolID: poolid! },
         { dataset_hash: hash, dataset_name: formData.name },

@@ -180,7 +180,7 @@ export function useCompetitionPool(
       message.error("Dataset name already exists");
       return;
     }
-    await joinPool(tags, data);
+    // await joinPool(tags, data);
     onJoinPool();
     if (activeAddress) {
       getDashboard({ FromAddress: activeAddress }, poolID);
@@ -221,8 +221,10 @@ export function useEmbedding() {
     msg,
   } = useEmbeddingMessage("Create-Dataset");
 
-  const createDataset = (hash: string, list: DatasetItem[]) =>
-    msg({}, { hash, list });
+  const createDataset = (PoolID: string, hash: string, name: string, list: DatasetItem[]) =>
+    msg({
+      PoolID
+    }, { hash, name, list });
 
   return {
     createDatasetResult,
