@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useAutoScroll } from "../../utils/react-use";
 import { useLocalStorage } from "react-use";
+import { useArweaveContext } from "../../contexts/arconnect";
 
 function truncateString(str: string, delimiters: string[] = ["<|"]) {
   let minIndex = str.length;
@@ -22,6 +23,7 @@ function truncateString(str: string, delimiters: string[] = ["<|"]) {
 }
 
 export const Playground = () => {
+  const { activeAddress, connectWallet } = useArweaveContext();
   const [selectedDataset, setSelectedDataset] =
     useLocalStorage<string>("selected-dataset");
   const { poolid } = useParams();
@@ -92,7 +94,9 @@ export const Playground = () => {
             return (
               <div
                 key={index}
-                className={`flex gap-2 ${isUser ? "flex-row-reverse justify-start" : ""}`}
+                className={`flex gap-2 ${
+                  isUser ? "flex-row-reverse justify-start" : ""
+                }`}
               >
                 <div className="flex-0 w-12 h-12">
                   <img
@@ -105,7 +109,9 @@ export const Playground = () => {
                   />
                 </div>
                 <div
-                  className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${isUser ? " bg-white50" : "bg-white"}`}
+                  className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${
+                    isUser ? " bg-white50" : "bg-white"
+                  }`}
                 >
                   {role !== "user" ? truncateString(message) : message}
                 </div>
@@ -136,6 +142,10 @@ export const Playground = () => {
                 className={`btn-gradient3 w-32`}
                 onClick={() => {
                   if (isBtnDisabled) return;
+                  if (!activeAddress) {
+                    connectWallet();
+                    return;
+                  }
                   if (isWaitingForAnswer) {
                     fetchResult();
                   } else {
@@ -149,7 +159,11 @@ export const Playground = () => {
                   }
                 }}
               >
-                {isWaitingForAnswer ? "Refresh" : "Send"}
+                {activeAddress
+                  ? isWaitingForAnswer
+                    ? "Refresh"
+                    : "Send"
+                  : "Connect"}
               </div>
             </Spin>
           </div>
