@@ -58,7 +58,7 @@
 
 .ant-modal-content,
 .ant-modal-title {
-    box-shaow: unset !important;
+    box-shadow: unset !important;
     background-color: #d7ddf4 !important;
 }
 
