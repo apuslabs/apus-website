@@ -355,7 +355,7 @@ const HomeIndex: FC = () => {
             <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">
               Powered By
             </div>
-            <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center md:flex-wrap mt-6 md:mt-12">
+            <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center mt-6 md:mt-12">
               {[
                 {
                   img: ImgHomepage.LogoArweave,
@@ -366,6 +366,10 @@ const HomeIndex: FC = () => {
                   height: isMobile ? "1.375rem" : "2.25rem",
                 },
                 {
+                  img: ImgHomepage.LogoArIO,
+                  height: isMobile ? "1.625rem" : "2.875rem",
+                },
+                {
                   img: ImgHomepage.LogoAO,
                   height: isMobile ? "0.875rem" : "1.625rem",
                 },
@@ -373,7 +377,7 @@ const HomeIndex: FC = () => {
               ].map(({ img, height }, i) => (
                 <div
                   key={i}
-                  className="flex-1 px-2 w-28 h-14 md:w-52 md:h-24 flex items-center justify-center rounded-lg -order-1 md:-order-none"
+                  className="px-2 w-28 h-14 md:w-52 md:h-24 flex items-center justify-center rounded-lg -order-1 md:-order-none"
                   style={{
                     backgroundColor: "#333333",
                     border: "1px solid rgba(255,255,255,0.1)",

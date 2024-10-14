@@ -5,6 +5,7 @@ import LogoHorizonalWhite from "./homepage/logo_horizonal_white.png";
 import LogoArweave from "./homepage/logo-arweave.png";
 import LogoAO from "./homepage/logo-ao.png";
 import LogoDephy from "./homepage/logo-dephy.png";
+import LogoArIO from "./homepage/logo-ario.png";
 import IconMenu from "./homepage/icon-menu.png";
 import IconMenuWhite from "./homepage/icon-menu-white.png";
 import BgSolution from "./homepage/solution.png";
@@ -45,6 +46,7 @@ export const ImgHomepage = {
   LogoHorizonalWhite,
   LogoArweave,
   LogoAO,
+  LogoArIO,
   LogoDephy,
   IconMenu,
   IconMenuWhite,
