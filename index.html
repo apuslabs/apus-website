@@ -1,17 +1,101 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
+    />
     <title>Apus Network</title>
-    <!-- <script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script> -->
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-9MDR5T7VSB"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-9MDR5T7VSB");
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/simplex-noise/2.4.0/simplex-noise.min.js"></script> -->
+    <script type="module">
+      import {
+        onCLS,
+        onINP,
+        onLCP,
+      } from "https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.js?module";
+
+      onLCP(sendToGoogleAnalytics);
+      onINP(sendToGoogleAnalytics);
+      onCLS(sendToGoogleAnalytics);
+
+      function getDebugInfo(name, attribution) {
+        // In some cases there won't be any entries (e.g. if CLS is 0,
+        // or for LCP after a bfcache restore), so we have to check first.
+        if (attribution) {
+          if (name === "LCP") {
+            return {
+              debug_url: attribution.url,
+              debug_time_to_first_byte: attribution.timeToFirstByte,
+              debug_resource_load_delay: attribution.resourceLoadDelay,
+              debug_resource_load_time: attribution.resourceLoadTime,
+              debug_element_render_delay: attribution.elementRenderDelay,
+              debug_target: attribution.element || "(not set)",
+            };
+          } else if (name === "INP") {
+            return {
+              debug_event: attribution.interactionType,
+              debug_time: Math.round(attribution.interactionTime),
+              debug_load_state: attribution.loadState,
+              debug_target: attribution.interactionTarget || "(not set)",
+              debug_interaction_delay: Math.round(attribution.inputDelay),
+              debug_processing_duration: Math.round(
+                attribution.processingDuration
+              ),
+              debug_presentation_delay: Math.round(
+                attribution.presentationDelay
+              ),
+            };
+          } else if (name === "CLS") {
+            return {
+              debug_time: attribution.largestShiftTime,
+              debug_load_state: attribution.loadState,
+              debug_target: attribution.largestShiftTarget || "(not set)",
+            };
+          }
+        }
+        // Return default/empty params in case there is no attribution.
+        return {
+          debug_target: "(not set)",
+        };
+      }
+      function sendToGoogleAnalytics({
+        name,
+        delta,
+        value,
+        id,
+        entries,
+        attribution,
+      }) {
+        gtag("event", name, {
+          // Built-in params:
+          value: delta, // Use `delta` so the value can be summed.
+          // Custom params:
+          metric_id: id, // Needed to aggregate events.
+          metric_value: value, // Value for querying in BQ
+          metric_delta: delta, // Delta for querying in BQ
+          // Send the returned values from getDebugInfo() as custom parameters
+          ...getDebugInfo(name, attribution),
+        });
+      }
+    </script>
   </body>
 </html>
