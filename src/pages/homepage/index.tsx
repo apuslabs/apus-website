@@ -1,16 +1,14 @@
-import { FC, useLayoutEffect, useState } from "react";
-import "./index.css";
+import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ImgHomepage } from "../../assets/image";
 import { useBreakpoint } from "../../utils/react-use";
 import { FooterSocialMediaList } from "../../config/menu";
-import HomeHeader from "../../components/HomeHeader";
-import HomeFooter from "../../components/HomeFooter";
 import { useSubscribe } from "./context";
 import { IconEmail } from "../../assets/common/common";
 import Video from "../../assets/video.mp4";
+import "./index.css";
 
-const HomeIndex: FC = () => {
+export default function HomeIndex() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
 
@@ -44,7 +42,7 @@ const HomeIndex: FC = () => {
   const { email, setEmail, subscribe } = useSubscribe();
 
   return (
-    <div className="-z-10 relative">
+    <div id="homepage" className="-z-10 relative">
       {announcementShow ? (
         <div
           className="bg-[#333333] rounded-lg bottom-3 md:bottom-auto md:top-24 left-1/2 -translate-x-1/2 p-6 flex items-center z-50"
@@ -362,19 +360,7 @@ const HomeIndex: FC = () => {
       </div>
     </div>
   );
-};
-
-const Homepage: FC = () => {
-  return (
-    <div id="homepage">
-      <HomeHeader />
-      <HomeIndex />
-      <HomeFooter />
-    </div>
-  );
-};
-
-export default Homepage;
+}
 
 const TwitterVideo = ({ className }: { className: string }) => (
   <iframe

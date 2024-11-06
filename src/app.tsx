@@ -1,32 +1,53 @@
-import { createHashRouter, RouterProvider } from "react-router-dom";
-import HomeIndex from "./pages/HomeIndex";
-import NoMatch from "./components/404";
-import ConsoleWrapper from "./pages/console/wrapper";
+import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
 import { lazy, Suspense } from "react";
+import HomeHeader from "./components/HomeHeader";
+import HomeFooter from "./components/HomeFooter";
+import ConsoleHeader from "./components/ConsoleHeader";
+const Homepage = lazy(() => import("./pages/homepage"));
 const Team = lazy(() => import("./pages/team"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
+const Page404 = lazy(() => import("./pages/404"));
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <HomeIndex />,
-  },
-  {
-    path: "team",
     element: (
       <Suspense>
-        <Team />
+        <HomeHeader />
+        <Outlet />
+        <HomeFooter />
       </Suspense>
     ),
+    children: [
+      {
+        path: "/",
+        element: (
+          <Suspense>
+            <Homepage />
+          </Suspense>
+        ),
+      },
+      {
+        path: "team",
+        element: (
+          <Suspense>
+            <Team />
+          </Suspense>
+        ),
+      },
+    ],
   },
   {
     path: "console",
     element: (
       <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-        <ConsoleWrapper />
+        <div className="bg-[#D7DDF4] min-h-screen pt-20">
+          <ConsoleHeader />
+          <Outlet />
+        </div>
       </ConfigProvider>
     ),
     children: [
@@ -50,7 +71,11 @@ const router = createHashRouter([
   },
   {
     path: "*",
-    element: <NoMatch />,
+    element: (
+      <Suspense>
+        <Page404 />
+      </Suspense>
+    ),
   },
 ]);
 
