@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CHAT_PROCESS, POOL_PROCESS } from "../config/process";
+import { CHAT_PROCESS, POOL_PROCESS } from "../utils/config";
 import { getDataFromMessage, getTagsFromMessage, dryrunWrapper, messageWrapper } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";

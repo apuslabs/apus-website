@@ -1,4 +1,6 @@
-import { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, MateoAvatar, PhobeAvatar } from "../../assets/team/team";
+import { ImgTeam } from "../../assets";
+
+const { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, MateoAvatar, PhobeAvatar } = ImgTeam;
 
 export const TeamMemebers = [
   {

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { ImgCompetition } from "../../../assets/image";
+import { ImgCompetition } from "../../../assets";
 
 export const ButtonShowMore: FC<{
   open: boolean;

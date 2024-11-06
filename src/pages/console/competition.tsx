@@ -6,7 +6,7 @@ import { QuickButton } from "./components/QuickButton";
 import { ButtonShowMore } from "./components/ButtonShowMore";
 import { CompetitionDetails } from "./components/CompetitionDetails";
 import { Statisitcs } from "./components/Statistics";
-import { RenderEmpty, TableColumns } from "./const";
+import { RenderEmpty, TableColumns } from "./constants";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
 import { useArweaveContext } from "../../contexts/arconnect";
 import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";

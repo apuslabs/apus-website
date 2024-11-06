@@ -73,7 +73,11 @@ const router = createHashRouter([
     path: "*",
     element: (
       <Suspense>
-        <Page404 />
+        <div className="min-h-screen flex flex-col">
+          <HomeHeader />
+          <Page404 />
+          <HomeFooter />
+        </div>
       </Suspense>
     ),
   },
@@ -82,7 +86,7 @@ const router = createHashRouter([
 export default function App() {
   const ar = useArweave();
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+    <ConfigProvider>
       <ArweaveContext.Provider value={ar}>
         <RouterProvider router={router} />
       </ArweaveContext.Provider>

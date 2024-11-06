@@ -1,5 +1,5 @@
 import { ConfigProvider, message, Select, Spin } from "antd";
-import { ImgPlayground } from "../../assets/image";
+import { ImgPlayground } from "../../assets";
 import "./playground.css";
 import TextArea from "antd/es/input/TextArea";
 import { usePlayground } from "../../contexts/playground";

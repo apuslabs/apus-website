@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
 import { useArweaveContext } from "./arconnect";
 import { dryrunWrapper, messageWrapper } from "../utils/ao";
-import { POOL_PROCESS, EMBEDDING_PROCESS } from "../config/process";
+import { POOL_PROCESS, EMBEDDING_PROCESS } from "../utils/config";
 import { message } from "antd";
 dayjs.extend(relativeTime);
 

@@ -1,4 +1,4 @@
-import { ImgCompetition } from "../../../assets/image";
+import { ImgCompetition } from "../../../assets";
 import { PoolInfo } from "../../../contexts/competition";
 import { formatNumberWithSuffix, timeFormat } from "../../../utils/utils";
 import { Link } from "react-router-dom";

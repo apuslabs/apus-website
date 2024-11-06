@@ -1,7 +1,7 @@
 import { ColumnType } from "antd/es/table";
 import { ShortAddress } from "../../utils/ao";
 import { Empty, Tooltip } from "antd";
-import { ImgCompetition } from "../../assets/image";
+import { ImgCompetition } from "../../assets";
 import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
 
@@ -40,7 +40,7 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       key: "score",
       render: (text: string, item: Leaderboard) => {
         const score = Number(text) / 2;
-        const progressTip = `(${Math.floor(item.progress * 100)}%)`;
+        const progressTip = item.progress === 1 ? "" : `(${Math.floor(item.progress * 100)}%)`;
         return (
           <BlueText text={item.progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
         );

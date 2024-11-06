@@ -1,8 +1,14 @@
 import { message, createDataItemSigner, dryrun, result } from "@permaweb/aoconnect";
-import { blueLabelStyle, greenLabelStyle, messageStyle, redLabelStyle } from "../config/console";
 import { useCallback, useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
+
+// 定义标签样式
+const redLabelStyle = "background: red; color: white; padding: 2px 4px; border-radius: 2px;";
+const blueLabelStyle = "background: blue; color: white; padding: 2px 4px; border-radius: 2px;";
+const greenLabelStyle = "background: green; color: white; padding: 2px 4px; border-radius: 2px;";
+// 定义消息样式
+const messageStyle = "color: #fff;";
 
 export const ShortAddress = (address: string) =>
   `${address.substring(0, 4)}...${address.substring(address.length - 5, address.length - 1)}`;

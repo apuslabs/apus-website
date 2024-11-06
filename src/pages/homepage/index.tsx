@@ -1,10 +1,10 @@
 import { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ImgHomepage } from "../../assets/image";
+import { ImgCommon, ImgHomepage } from "../../assets";
 import { useBreakpoint } from "../../utils/react-use";
-import { FooterSocialMediaList } from "../../config/menu";
-import { useSubscribe } from "./context";
-import { IconEmail } from "../../assets/common/common";
+import { FooterSocialMediaList } from "./constants";
+import { useSubscribe } from "./contexts";
+const { IconEmail } = ImgCommon;
 import Video from "../../assets/video.mp4";
 import "./index.css";
 

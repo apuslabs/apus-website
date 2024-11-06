@@ -1,8 +1,8 @@
 import { FC, useLayoutEffect, useState } from "react";
-import { ImgHomepage } from "../../assets/image";
+import { ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
-import { useBreakpoint } from "../../utils/react-use";
-import { HeaderMenuList } from "../../config/menu";
+import { useBreakpoint } from "../utils/react-use";
+import { HomeHeaderMenuList } from "./constants";
 
 function scrollToAnchor(anchor: string) {
   if (!anchor) return;
@@ -63,7 +63,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({ showUserInfo = false }) =>
             md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
             z-20"
           >
-            {HeaderMenuList.map((item) => (
+            {HomeHeaderMenuList.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}

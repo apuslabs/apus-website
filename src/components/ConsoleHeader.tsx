@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { ImgCompetition } from "../assets/image";
+import { ImgCompetition } from "../assets";
 import { Link, useLocation } from "react-router-dom";
-import { ConsoleHeaderList } from "../config/menu";
+import { ConsoleHeaderMenuList } from "./constants";
 import { ShortAddress } from "../utils/ao";
 import { useArweaveContext } from "../contexts/arconnect";
 import { Dropdown } from "antd";
@@ -39,7 +39,7 @@ export default function ConsoleHeader() {
       </Link>
       <nav className="flex-1">
         <ul className="flex items-center gap-10">
-          {ConsoleHeaderList.map(({ name, path }) => {
+          {ConsoleHeaderMenuList.map(({ name, path }) => {
             return (
               <li
                 key={name}

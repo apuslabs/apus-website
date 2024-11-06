@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { ImgHomepage } from "../../assets/image";
+import { ImgHomepage } from "../assets";
 import { Link } from "react-router-dom";
-import { FooterMenuList } from "../../config/menu";
+import { HomeFooterMenuList } from "./constants";
 
 interface HomeFooterProps {
   showCompany?: boolean;
@@ -30,7 +30,7 @@ const HomeFooter: FC<HomeFooterProps> = () => {
           Navigation
         </div>
         <div className="flex flex-col gap-4">
-          {FooterMenuList.map(({ name, path }) => (
+          {HomeFooterMenuList.map(({ name, path }) => (
             <Link to={path} className="text-base text-white" key={name}>
               {name}
             </Link>

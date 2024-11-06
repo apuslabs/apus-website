@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { IconLinkedIn } from "../../assets/team/team";
-import HomeFooter from "../../components/HomeFooter";
-import HomeHeader from "../../components/HomeHeader";
-import { TeamMemebers } from "./const";
+import { TeamMemebers } from "./constants";
+import { ImgTeam } from "../../assets";
+const { IconLinkedIn } = ImgTeam;
 
-function Team() {
+export default function Team() {
   return (
     <div className="flex flex-col items-center">
       <div className="text-gray33 text-6xl font-bold mt-40 mb-16">Team</div>
@@ -32,16 +31,6 @@ function Team() {
           );
         })}
       </div>
-    </div>
-  );
-}
-
-export default function TeamWrapper() {
-  return (
-    <div id="team">
-      <HomeHeader />
-      <Team />
-      <HomeFooter />
     </div>
   );
 }
