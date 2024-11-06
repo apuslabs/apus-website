@@ -123,7 +123,7 @@ export const Playground = () => {
           <div className={`absolute right-8 bottom-6`}>
             <Spin spinning={isBtnDisabled}>
               <div
-                className={`btn-gradient3 w-32`}
+                className={`btn-blueToPink135 w-32`}
                 onClick={() => {
                   if (isBtnDisabled) return;
                   if (!activeAddress) {

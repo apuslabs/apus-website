@@ -9,7 +9,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     label: "Reward Pool",
     value: (
       <div className="flex items-center gap-1">
-        <span className="text-gradient2 font-medium">
+        <span className="text-gradient bg-purpleToBlue45 font-medium">
           {(formatNumberWithSuffix(poolInfo.reward_pool) || "0") + " APUS_Tn1"}
         </span>
       </div>

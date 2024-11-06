@@ -157,7 +157,7 @@ export const JoinCompetitionModal: FC<{
           Cancel
         </div>
         <Spin spinning={submiting}>
-          <div className="btn-gradient3 w-32" onClick={onSubmit}>
+          <div className="btn-blueToPink135 w-32" onClick={onSubmit}>
             Submit
           </div>
         </Spin>

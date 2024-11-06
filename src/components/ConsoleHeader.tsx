@@ -23,7 +23,7 @@ const UserInfo: FC = function () {
       <div className="btn-default">{ShortAddress(activeAddress)}</div>
     </Dropdown>
   ) : (
-    <div className="btn-gradient3" onClick={connectWallet}>
+    <div className="btn-blueToPink135" onClick={connectWallet}>
       Connect Wallet
     </div>
   );
@@ -43,7 +43,7 @@ export default function ConsoleHeader() {
             return (
               <li
                 key={name}
-                className={`text-black50 font-medium ${location.pathname === path ? "text-gradient3" : ""}`}
+                className={`text-black50 font-medium ${location.pathname === path ? "text-gradient bg-blueToPink135" : ""}`}
               >
                 <Link to={path}>{name}</Link>
               </li>

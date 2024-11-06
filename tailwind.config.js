@@ -17,6 +17,13 @@ export default {
         "light-purple": "#D7DDF4",
         blue: "#061EFA",
       },
+      backgroundImage: {
+        purpleToBlue45: "linear-gradient(-45deg, #9b8aff 0%, #2806fa 100%)",
+        blueToPink135: "linear-gradient(135deg, #2806fa 0%, #a253fc 59%, #ffdbdb 100%)",
+      },
+      boxShadow: {
+        "inset-white-16": "inset 0 0 16px rgba(255, 255, 255, 0.25)",
+      },
     },
   },
   plugins: [],

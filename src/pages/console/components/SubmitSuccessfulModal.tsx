@@ -9,7 +9,7 @@ export default function SubmitSuccessfulModal({ visible, onCancel }: { visible: 
           Your ranking will be updated after 1 hour, please refresh the page after 1 hour.
         </div>
         <div className="mt-16 flex justify-end w-full">
-          <div className="w-32 btn-gradient3" onClick={onCancel}>
+          <div className="w-32 btn-blueToPink135" onClick={onCancel}>
             OK
           </div>
         </div>

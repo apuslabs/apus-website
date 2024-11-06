@@ -14,7 +14,7 @@ export const QuickButton: FC<{
   return (
     <Spin spinning={loading}>
       <div
-        className={`btn-gradient3 ${disabled ? "disabled" : " cursor-pointer"}`}
+        className={`btn-blueToPink135 ${disabled ? "disabled" : " cursor-pointer"}`}
         onClick={async () => {
           if (!activeAddress) {
             connectWallet();

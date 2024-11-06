@@ -2,11 +2,12 @@ import { createHashRouter, RouterProvider } from "react-router-dom";
 import HomeIndex from "./pages/HomeIndex";
 import NoMatch from "./components/404";
 import ConsoleWrapper from "./pages/console/wrapper";
-import Competition from "./pages/console/competition";
 import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
-import Playground from "./pages/console/playground";
-import Team from "./pages/team";
+import { lazy, Suspense } from "react";
+const Team = lazy(() => import("./pages/team"));
+const Competition = lazy(() => import("./pages/console/competition"));
+const Playground = lazy(() => import("./pages/console/playground"));
 
 const router = createHashRouter([
   {
@@ -15,7 +16,11 @@ const router = createHashRouter([
   },
   {
     path: "team",
-    element: <Team />,
+    element: (
+      <Suspense>
+        <Team />
+      </Suspense>
+    ),
   },
   {
     path: "console",
@@ -27,11 +32,19 @@ const router = createHashRouter([
     children: [
       {
         path: "competition/:poolid",
-        element: <Competition />,
+        element: (
+          <Suspense>
+            <Competition />
+          </Suspense>
+        ),
       },
       {
         path: "playground/:poolid",
-        element: <Playground />,
+        element: (
+          <Suspense>
+            <Playground />
+          </Suspense>
+        ),
       },
     ],
   },
