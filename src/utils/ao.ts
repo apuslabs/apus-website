@@ -1,20 +1,19 @@
 import { message, createDataItemSigner, dryrun, result } from "@permaweb/aoconnect";
-import { POOL_PROCESS } from "../config/process";
-import { blueLabelStyle, greenLabelStyle, messageStyle, redLabelStyle, yellowLabelStyle } from "../config/console";
+import { blueLabelStyle, greenLabelStyle, messageStyle, redLabelStyle } from "../config/console";
 import { useCallback, useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
 
 export const ShortAddress = (address: string) =>
   `${address.substring(0, 4)}...${address.substring(address.length - 5, address.length - 1)}`;
-function obj2tags(obj: Record<string, any>) {
+function obj2tags(obj: Record<string, unknown>) {
   return Object.entries(obj).map(([key, value]) => ({
     name: key,
     value: toString(value),
   }));
 }
 
-export function toString(value: any): string {
+export function toString(value: unknown): string {
   if (typeof value === "string") {
     return value;
   }
@@ -24,7 +23,7 @@ export function toString(value: any): string {
   try {
     return JSON.stringify(value);
   } catch {
-    return value.toString();
+    return String(value);
   }
 }
 
@@ -53,11 +52,11 @@ function handleResult(
   msgType: string,
   result: MessageResult,
   messageId = "",
-  tags: any,
-  data: any,
+  tags: Record<string, unknown>,
+  data: unknown,
   continueOnError?: boolean,
 ) {
-  const msgErr = result.Error || (result as any).error;
+  const msgErr = result.Error;
   if (msgErr !== undefined) {
     if (typeof msgErr === "string" || typeof msgErr === "number") {
       throw new Error(msgErr + "");
@@ -66,15 +65,15 @@ function handleResult(
     }
   }
   if (result?.Messages?.[0]) {
-    const msg = result?.Messages?.[0];
-    const Status = msg.Tags?.find((tag: any) => tag.name === "Status");
+    const msg: AOMessage | undefined = result?.Messages?.[0];
+    const Status = msg?.Tags?.find((tag) => tag.name === "Status");
     if (Status) {
       if (!continueOnError && Status.value != "200") {
-        throw new Error(Status.value + " " + msg.Data);
+        throw new Error(Status.value + " " + msg?.Data);
       }
     }
   }
-  debug &&
+  if (debug) {
     console.log(
       `%c${tags.Action ?? ""}%c %c${msgType}%c ${messageId}`,
       blueLabelStyle,
@@ -90,10 +89,11 @@ function handleResult(
         formatResult(result),
       ),
     );
+  }
 }
 
 export function messageResultWrapper(process: string, debug?: boolean) {
-  return async function (tags: Record<string, string>, data?: string | Record<string, any> | number) {
+  return async function (tags: Record<string, string>, data?: unknown) {
     const messageId = await message({
       process,
       tags: obj2tags(tags),
@@ -110,7 +110,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
       handleResult(debug, "Msg", messageReturn, messageId, tags, data);
       return messageReturn;
     } catch (e) {
-      debug &&
+      if (debug) {
         console.log(
           `%c${tags.Action ?? ""}%c %cMsg%c ${messageId}`,
           blueLabelStyle,
@@ -118,6 +118,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
           redLabelStyle,
           messageStyle,
         );
+      }
       console.error(e);
       throw e;
     }
@@ -125,7 +126,7 @@ export function messageResultWrapper(process: string, debug?: boolean) {
 }
 
 export function dryrunResultWrapper(process: string, debug?: boolean, continueOnError?: boolean) {
-  return async function (tags: Record<string, string>, data?: string | Record<string, any> | number) {
+  return async function (tags: Record<string, string>, data?: unknown) {
     try {
       const dryrunResult = await dryrun({
         process,
@@ -136,8 +137,9 @@ export function dryrunResultWrapper(process: string, debug?: boolean, continueOn
       handleResult(debug, "DryRun", dryrunResult, undefined, tags, data, continueOnError);
       return dryrunResult;
     } catch (e) {
-      debug &&
+      if (debug) {
         console.log(`%c${tags.Action ?? ""}%c %cDryRun%c`, blueLabelStyle, messageStyle, redLabelStyle, messageStyle);
+      }
       console.error(e);
     }
   };
@@ -148,7 +150,7 @@ export function getTagsFromMessage(
   index: number = 0,
 ): Record<string, string> | undefined {
   return message?.Messages?.[index]?.Tags?.reduce(
-    (acc: any, tag: any) => {
+    (acc: Record<string, string>, tag: AOMessageTag) => {
       acc[tag.name] = tag.value;
       return acc;
     },
@@ -156,7 +158,7 @@ export function getTagsFromMessage(
   );
 }
 
-export function getDataFromMessage<T = any>(
+export function getDataFromMessage<T = unknown>(
   message: MessageResult | DryRunResult | undefined,
   index: number = 0,
 ): T | undefined {
@@ -168,25 +170,28 @@ export const messageWrapper = (process: string) => (Action: string) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>();
 
-  const msg = useCallback(async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {
-    setLoading(true);
-    try {
-      const result = await messageResultWrapper(process, import.meta.env.DEV)({ ...tags, Action }, data);
-      if (result == null) {
-        throw new Error("No result");
+  const msg = useCallback(
+    async (tags: Record<string, string> = {}, data?: unknown) => {
+      setLoading(true);
+      try {
+        const result = await messageResultWrapper(process, import.meta.env.DEV)({ ...tags, Action }, data);
+        if (result == null) {
+          throw new Error("No result");
+        }
+        if (result.Error) {
+          throw result.Error;
+        }
+        setResult(result);
+        return result;
+      } catch (e) {
+        setError(toString(e));
+        throw e;
+      } finally {
+        setLoading(false);
       }
-      if (result.Error) {
-        throw result.Error;
-      }
-      setResult(result as any);
-      return result;
-    } catch (e) {
-      setError(toString(e));
-      throw e;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+    },
+    [Action],
+  );
 
   return {
     result,
@@ -206,28 +211,31 @@ export const dryrunWrapper =
     const [loading, setLoading] = useState(autoLoad);
     const [error, setError] = useState<string>();
 
-    const msg = useCallback(async (tags: Record<string, string> = {}, data?: string | number | Record<string, any>) => {
-      setLoading(true);
-      try {
-        const result = await dryrunResultWrapper(
-          process,
-          import.meta.env.DEV,
-          continueOnError,
-        )({ ...tags, Action }, data);
-        if (result == null) {
-          throw new Error("No result");
+    const msg = useCallback(
+      async (tags: Record<string, string> = {}, data?: unknown) => {
+        setLoading(true);
+        try {
+          const result = await dryrunResultWrapper(
+            process,
+            import.meta.env.DEV,
+            continueOnError,
+          )({ ...tags, Action }, data);
+          if (result == null) {
+            throw new Error("No result");
+          }
+          if (result.Error) {
+            setError(toString(result.Error));
+          }
+          setResult(result);
+          return result;
+        } catch (e) {
+          setError(toString(e));
+        } finally {
+          setLoading(false);
         }
-        if (result.Error) {
-          setError(toString(result.Error));
-        }
-        setResult(result as any);
-        return result;
-      } catch (e) {
-        setError(toString(e));
-      } finally {
-        setLoading(false);
-      }
-    }, []);
+      },
+      [Action, continueOnError],
+    );
 
     return {
       result,

@@ -7,20 +7,22 @@ import { POOL_PROCESS, EMBEDDING_PROCESS } from "../config/process";
 import { message } from "antd";
 dayjs.extend(relativeTime);
 
+interface PoolInfoMetadata {
+  competition_time: {
+    start: number;
+    end: number;
+  };
+  description: string;
+  dataset: string;
+  video: string;
+  duration_desc?: string;
+}
+
 export interface PoolInfo {
   title: string;
   reward_pool: number;
   // TODO: end_time, start_time
-  metadata: {
-    competition_time: {
-      start: number;
-      end: number;
-    };
-    description: string;
-    dataset: string;
-    video: string;
-    duration_desc?: string;
-  };
+  metadata: PoolInfoMetadata;
 }
 
 const DefaultPoolInfo = {
@@ -63,7 +65,6 @@ export interface Leaderboard {
   progress: number;
 }
 
-const useBenchmarkMessage = messageWrapper(POOL_PROCESS);
 const useBenchmarkDryrun = dryrunWrapper(POOL_PROCESS);
 const useEmbeddingDryrun = dryrunWrapper(EMBEDDING_PROCESS);
 
@@ -100,7 +101,7 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   );
   useEffect(() => {
     setOnInit(loadData);
-  }, []);
+  }, [loadData, setOnInit]);
 
   const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);
   const dashboardMsg = dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard);
@@ -111,7 +112,7 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg);
 
   // TODO: remove this
-  poolInfo.metadata = JSON.parse((poolInfo.metadata as any) || DefaultPoolInfo.meta_data);
+  poolInfo.metadata = JSON.parse((poolInfo.metadata as unknown as string) || DefaultPoolInfo.meta_data);
 
   const startTime = dayjs.unix(poolInfo.metadata.competition_time.start);
   const endTime = dayjs.unix(poolInfo.metadata.competition_time.end);
@@ -137,14 +138,14 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
 
   const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed";
 
-  let isQuickBtnDisabled =
+  const isQuickBtnDisabled =
     !poolOpening || hasSubmitted || leaderboardLoading || checkingPermission || dashboardLoading || poolInfoLoading;
   const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
     if (isQuickBtnDisabled) return;
     setJoinCompetitionModalVisible(true);
   };
 
-  const joinPoolRefresh = async (tags: Record<string, string>, data: Record<string, any>) => {
+  const joinPoolRefresh = async (tags: Record<string, string>, data: Record<string, string>) => {
     if (leaderboard?.some((item) => item.dataset_name === data.dataset_name)) {
       message.error("Dataset name already exists");
       return;

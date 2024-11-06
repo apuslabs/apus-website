@@ -1,10 +1,9 @@
 import { ColumnType } from "antd/es/table";
 import { ShortAddress } from "../../utils/ao";
-import { ConfigProvider, Empty, GetProp, Tooltip } from "antd";
+import { Empty, Tooltip } from "antd";
 import { ImgCompetition } from "../../assets/image";
 import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
-import dayjs from "dayjs";
 
 const BlueText = ({ text, isBlue }: { text: string | number; isBlue: boolean }) => (
   <span className={isBlue ? "text-blue" : ""}>{text}</span>
@@ -19,11 +18,7 @@ const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
   </div>
 );
 
-export const TableColumns = (poolid?: string, activeAddress?: string): ColumnType<any>[] => {
-  const isFinished = (item: Leaderboard) => {
-    const isOver1Day = dayjs.unix(item.created_at).isBefore(dayjs().subtract(1, "day"));
-    return item.progress === 1;
-  };
+export const TableColumns = (poolid?: string, activeAddress?: string): ColumnType<Leaderboard>[] => {
   return [
     {
       title: <TitleWithTip title="RANK" tip="If scores are tied, earlier submissions rank higher." />,
@@ -45,7 +40,7 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       key: "score",
       render: (text: string, item: Leaderboard) => {
         const score = Number(text) / 2;
-        const progressTip = isFinished(item) ? "" : `(${Math.floor(item.progress * 100)}%)`;
+        const progressTip = `(${Math.floor(item.progress * 100)}%)`;
         return (
           <BlueText text={item.progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
         );
@@ -76,7 +71,7 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       title: "USING AI MODELS",
       key: "operations",
       align: "right",
-      render: (_: string, item: any) => {
+      render: (_: string, item: Leaderboard) => {
         return (
           <Link to={`../playground/${poolid}?dataset_id=${item.dataset_hash}`}>
             <div className="btn-default btn-small">Chat</div>
@@ -87,18 +82,16 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
   ];
 };
 
-export const renderEmpty: GetProp<typeof ConfigProvider, "renderEmpty"> = (componentName) => {
-  if (componentName === "Table" /** 👈 5.20.0+ */) {
-    return (
-      <Empty
-        imageStyle={{ height: "auto" }}
-        image={
-          <div className="flex justify-center">
-            <img className="w-32 h-32" src={ImgCompetition.TableNull} />
-          </div>
-        }
-        description={<span className="text-black50">No Data Available At This Time</span>}
-      />
-    );
-  }
-};
+export function RenderEmpty() {
+  return (
+    <Empty
+      imageStyle={{ height: "auto" }}
+      image={
+        <div className="flex justify-center">
+          <img className="w-32 h-32" src={ImgCompetition.TableNull} />
+        </div>
+      }
+      description={<span className="text-black50">No Data Available At This Time</span>}
+    />
+  );
+}

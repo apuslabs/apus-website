@@ -4,7 +4,7 @@ import { createBreakpoint } from "react-use";
 export const useBreakpoint = createBreakpoint({ desktop: 768, mobile: 350 });
 
 export function useAutoScroll() {
-  const containerRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const container = containerRef.current;

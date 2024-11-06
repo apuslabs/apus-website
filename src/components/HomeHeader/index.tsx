@@ -1,4 +1,4 @@
-import { FC, useEffect, useLayoutEffect, useState } from "react";
+import { FC, useLayoutEffect, useState } from "react";
 import { ImgHomepage } from "../../assets/image";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../../utils/react-use";
@@ -70,7 +70,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({ showUserInfo = false }) =>
                 onClick={
                   item.onClick
                     ? item.onClick
-                    : (e) => {
+                    : () => {
                         if (item.path.includes("?anchor")) {
                           const anchor = item.path.split("?anchor=")[1];
                           scrollToAnchor(anchor);

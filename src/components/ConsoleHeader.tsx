@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { ImgCompetition } from "../assets/image";
-import { Link, useLocation, useMatch } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { ConsoleHeaderList } from "../config/menu";
 import { ShortAddress } from "../utils/ao";
 import { useArweaveContext } from "../contexts/arconnect";
@@ -29,7 +29,7 @@ const UserInfo: FC = function () {
   );
 };
 
-export default function () {
+export default function ConsoleHeader() {
   const location = useLocation();
 
   return (

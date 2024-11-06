@@ -1,4 +1,4 @@
-import { ConfigProvider, Form, Input, message, Select, Spin } from "antd";
+import { ConfigProvider, message, Select, Spin } from "antd";
 import { ImgPlayground } from "../../assets/image";
 import "./playground.css";
 import TextArea from "antd/es/input/TextArea";
@@ -52,7 +52,7 @@ export const Playground = () => {
         setInitDataset(true);
       }
     }
-  }, [datasets, initDataset, selectedDataset]);
+  }, [datasets, initDataset, selectedDataset, search, setSelectedDataset]);
 
   const [question, setQuestion] = useState<string>();
 
@@ -153,7 +153,7 @@ export const Playground = () => {
   );
 };
 
-export default function () {
+export default function PlaygroundWrapper() {
   return (
     <ConfigProvider
       theme={{

@@ -1,17 +1,10 @@
-import { Form, Input, message, Modal, Spin, Tooltip, Upload, UploadFile } from "antd";
+import { Form, Input, message, Modal, Spin, Upload, UploadFile } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { FC, useState } from "react";
 import { DeleteOutlined, FileOutlined } from "@ant-design/icons";
 import { useCompetitionPool, useEmbedding } from "../../../contexts/competition";
 import { sha1 } from "../../../utils/utils";
 import { useParams } from "react-router-dom";
-
-const normFile = (e: any) => {
-  if (Array.isArray(e)) {
-    return e;
-  }
-  return e?.fileList;
-};
 
 export const JoinCompetitionModal: FC<{
   visible: boolean;
@@ -38,7 +31,7 @@ export const JoinCompetitionModal: FC<{
         throw new Error("Invalid JSON file: should be an array");
       }
       const contents = [];
-      for (let i of jsonContent) {
+      for (const i of jsonContent) {
         if (typeof i.content !== "string") {
           throw new Error("Invalid JSON file: content should be string");
         }
@@ -52,16 +45,15 @@ export const JoinCompetitionModal: FC<{
       form.resetFields();
       setFileList([]);
       onOk();
-    } catch (e: any) {
-      if ("errorFields" in e) {
-        return;
-      }
+    } catch (e: unknown) {
       if (e instanceof Error) {
         if (e.message === "{}") {
           message.error("Unknown error, please try another dataset file or contact admin.");
         } else {
           message.error(e.message);
         }
+      } else if (typeof e === "object" && e !== null && "errorFields" in e) {
+        return;
       } else {
         message.error(JSON.stringify(e));
       }
@@ -93,7 +85,7 @@ export const JoinCompetitionModal: FC<{
           rules={[{ required: true, message: "Please upload your dataset file!" }]}
           label={<div className="text-xs text-black50 flex items-center gap-1">Dataset File</div>}
           valuePropName="fileList"
-          getValueFromEvent={normFile}
+          getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
         >
           <Upload.Dragger
             name="file"
@@ -127,7 +119,7 @@ export const JoinCompetitionModal: FC<{
                 }
                 setFileList([file]);
                 return false;
-              } catch (e) {
+              } catch {
                 message.error(`${file.name} is not a valid json file`);
                 return Upload.LIST_IGNORE;
               }

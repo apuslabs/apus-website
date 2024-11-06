@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CHAT_PROCESS, POOL_PROCESS } from "../config/process";
 import { getDataFromMessage, getTagsFromMessage, dryrunWrapper, messageWrapper } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
@@ -50,9 +50,12 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
     // if (activeAddress) {
     getDatasets({}, poolid);
     // }
-  }, []);
+  }, [getDatasets, poolid]);
 
-  const chatHistory = dataset_hash ? userHistory?.[dataset_hash] || [] : [];
+  const chatHistory = useMemo(
+    () => (dataset_hash ? userHistory?.[dataset_hash] || [] : []),
+    [dataset_hash, userHistory],
+  );
 
   const chatQuestion = async (question: string) => {
     if (dataset_hash && question) {
@@ -75,7 +78,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
 
   const isWaitingForAnswer = chatHistory.length != 0 && chatHistory[chatHistory.length - 1]?.role !== "assistant";
 
-  const fetchResult = async () => {
+  const fetchResult = useCallback(async () => {
     if (!isWaitingForAnswer) return;
     if (dataset_hash) {
       if (chatHistory.length) {
@@ -109,7 +112,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
         } else if (chatTags?.Status == "200") {
           chatHistory.push({
             role: "assistant",
-            message: chatAnswer,
+            message: String(chatAnswer),
             reference: lastChat.reference,
             timestamp: dayjs().valueOf(),
             expectedTime: lastChat.expectedTime,
@@ -118,7 +121,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
         }
       }
     }
-  };
+  }, [chatHistory, dataset_hash, getChatAnswer, isWaitingForAnswer, setUserHistory, userHistory]);
 
   useInterval(
     () => {
@@ -152,7 +155,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
       setNeedRefresh(false);
       fetchResult();
     }
-  }, [dataset_hash, JSON.stringify(userHistory), needRefresh]);
+  }, [dataset_hash, fetchResult, needRefresh, setUserHistory, userHistory]);
 
   const datasetsMsg = datasetsResult?.Messages?.[0]?.Data || JSON.stringify([]);
 

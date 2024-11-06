@@ -36,7 +36,7 @@ function Team() {
   );
 }
 
-export default function () {
+export default function TeamWrapper() {
   return (
     <div id="team">
       <HomeHeader />

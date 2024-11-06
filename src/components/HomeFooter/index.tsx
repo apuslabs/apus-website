@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { ImgHomepage } from "../../assets/image";
 import { Link } from "react-router-dom";
-import { FooterMenuList, FooterSocialMediaList } from "../../config/menu";
+import { FooterMenuList } from "../../config/menu";
 
 interface HomeFooterProps {
   showCompany?: boolean;

@@ -6,7 +6,7 @@ import { QuickButton } from "./components/QuickButton";
 import { ButtonShowMore } from "./components/ButtonShowMore";
 import { CompetitionDetails } from "./components/CompetitionDetails";
 import { Statisitcs } from "./components/Statistics";
-import { renderEmpty, TableColumns } from "./const";
+import { RenderEmpty, TableColumns } from "./const";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
 import { useArweaveContext } from "../../contexts/arconnect";
 import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";
@@ -121,7 +121,7 @@ const Competition = () => {
         <p className="mt-2 text-black50 text-xs">Leaderboard updated every 1 hours</p>
       </div>
       <div className="rounded-2xl">
-        <ConfigProvider renderEmpty={renderEmpty}>
+        <ConfigProvider renderEmpty={RenderEmpty}>
           <Table
             dataSource={leaderboard}
             rowKey="dataset_hash"

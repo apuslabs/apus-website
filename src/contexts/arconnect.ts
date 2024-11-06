@@ -1,15 +1,16 @@
 import { PermissionType } from "arconnect";
-import React, { useContext, useEffect, useState } from "react";
-
-const ArweaveContext = React.createContext<ReturnType<typeof useArweave>>(null as any);
-
-const initialPermissions: PermissionType[] = ["ACCESS_ADDRESS", "SIGN_TRANSACTION"];
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 function useArweave() {
   const [permissions, setPermissions] = useState(initialPermissions);
   const [walletLoaded, setWalletLoaded] = useState(false);
   const [activeAddress, setActiveAddress] = useState<string>();
   const [onInit, setOnInit] = useState<((address?: string) => void) | undefined>();
+  const init = useCallback(async () => {
+    const address = await window.arweaveWallet.getActiveAddress();
+    setActiveAddress(address);
+    onInit?.(address);
+  }, [onInit]);
 
   useEffect(() => {
     window.addEventListener("arweaveWalletLoaded", async () => {
@@ -22,7 +23,7 @@ function useArweave() {
         onInit?.();
       }
     });
-  }, [onInit]);
+  }, [onInit, init, walletLoaded]);
 
   const connectWallet = async () => {
     if (!window.arweaveWallet) {
@@ -30,12 +31,6 @@ function useArweave() {
     }
     await window.arweaveWallet.connect(initialPermissions);
     await init();
-  };
-
-  const init = async () => {
-    const address = await window.arweaveWallet.getActiveAddress();
-    setActiveAddress(address);
-    onInit?.(address);
   };
 
   return {
@@ -52,5 +47,17 @@ function useArweave() {
   };
 }
 
+type ArweaveContextType = ReturnType<typeof useArweave>;
+
+const ArweaveContext = React.createContext<ArweaveContextType | undefined>(undefined);
+
+const initialPermissions: PermissionType[] = ["ACCESS_ADDRESS", "SIGN_TRANSACTION"];
+
 export { ArweaveContext, useArweave };
-export const useArweaveContext = () => useContext(ArweaveContext);
+export const useArweaveContext = () => {
+  const context = useContext(ArweaveContext);
+  if (!context) {
+    throw new Error("useArweaveContext must be used within a ArweaveProvider");
+  }
+  return context;
+};

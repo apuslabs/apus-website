@@ -1,9 +1,6 @@
 import dayjs from "dayjs";
 
 export function formatNumberWithSuffix(value: number): string {
-  if (Number.isNaN(Number(value))) {
-    return value as any;
-  }
   const suffixes = ["", "K", "M", "B", "T"];
   let suffixIndex = 0;
 
@@ -23,7 +20,6 @@ export function formatNumberWithSuffix(value: number): string {
 export const formatNumber = new Intl.NumberFormat("en-US").format;
 
 export function timeFormat(value: number): string {
-  const date = new Date(value);
   return dayjs.unix(value).format("YYYY-MM-DD HH:mm");
 }
 
