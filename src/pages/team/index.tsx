@@ -20,19 +20,12 @@ function Team() {
               flex flex-col items-center
               hover:scale-105 transition-transform duration-300 ease-in-out"
             >
-              <img
-                src={avatar}
-                alt={name}
-                className="w-[16.875rem] h-[16.875rem] rounded-3xl"
-              />
+              <img src={avatar} alt={name} className="w-[16.875rem] h-[16.875rem] rounded-3xl" />
               <div className="font-bold text-[2rem] mt-3">{name}</div>
               <div className="font-medium text-2xl">{role}</div>
               {linkedin && (
                 <Link to={linkedin}>
-                  <img
-                    src={IconLinkedIn}
-                    className="mt-[1.125rem] w-[1.875rem] h-[1.875rem]"
-                  />
+                  <img src={IconLinkedIn} className="mt-[1.125rem] w-[1.875rem] h-[1.875rem]" />
                 </Link>
               )}
             </div>

@@ -1,51 +1,46 @@
 body,
 #root,
 #homepage {
-    position: relative;
+  position: relative;
 }
 
 body,
 #root {
-    z-index: -99;
+  z-index: -99;
 }
 
 #homepage {
-    /* background-color: #111111; */
-    color: #333333;
-    z-index: -98;
+  /* background-color: #111111; */
+  color: #333333;
+  z-index: -98;
 }
 
 .benifits-item {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s ease-out;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease-out;
 }
 
 @media screen and (max-width: 768px) {
-    .benifits-item {
-        transform: translateX(20px);
-    }
-    .benifits-item.active {
-        transform: translateX(0);
-    }
+  .benifits-item {
+    transform: translateX(20px);
+  }
+  .benifits-item.active {
+    transform: translateX(0);
+  }
 }
 
 .benifits-item.active {
-    opacity: 1;
-    transform: translateY(0);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .card-dark {
-    position: relative;
-    background-color: #333333;
-    background-blend-mode: hard-light;
-    border-radius: 16px;
+  position: relative;
+  background-color: #333333;
+  background-blend-mode: hard-light;
+  border-radius: 16px;
 }
 .card-dark:hover {
-    background: linear-gradient(
-            180deg,
-            rgba(74, 34, 235, 0) 0%,
-            rgba(74, 34, 235, 100) 100%
-        ),
-        #333333;
+  background: linear-gradient(180deg, rgba(74, 34, 235, 0) 0%, rgba(74, 34, 235, 100) 100%), #333333;
 }

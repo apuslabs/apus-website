@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import { CHAT_PROCESS, POOL_PROCESS } from "../config/process";
-import {
-  getDataFromMessage,
-  getTagsFromMessage,
-  dryrunWrapper,
-  messageWrapper,
-} from "../utils/ao";
+import { getDataFromMessage, getTagsFromMessage, dryrunWrapper, messageWrapper } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
 
@@ -44,20 +39,11 @@ const calculateInferenceTime = (question: string) => {
 };
 
 export function usePlayground(poolid?: string, dataset_hash?: string) {
-  const [userHistory, setUserHistory] = useLocalStorage<UserHistory>(
-    "session-history",
-    {},
-  );
+  const [userHistory, setUserHistory] = useLocalStorage<UserHistory>("session-history", {});
 
-  const {
-    msg: getDatasets,
-    result: datasetsResult,
-    loading: datasetsLoading,
-  } = usePoolDryrun("Get-Datasets", true);
-  const { msg: chatQuestionMsg, loading: sendChatQuestioning } =
-    usePlaygroundMessage("Chat-Question");
-  const { msg: getChatAnswer, loading: getChatAnswering } =
-    usePlaygroundDryrun("Get-Chat-Answer", false, true);
+  const { msg: getDatasets, result: datasetsResult, loading: datasetsLoading } = usePoolDryrun("Get-Datasets", true);
+  const { msg: chatQuestionMsg, loading: sendChatQuestioning } = usePlaygroundMessage("Chat-Question");
+  const { msg: getChatAnswer, loading: getChatAnswering } = usePlaygroundDryrun("Get-Chat-Answer", false, true);
 
   // auto get datasets when active address changes
   useEffect(() => {
@@ -70,10 +56,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
 
   const chatQuestion = async (question: string) => {
     if (dataset_hash && question) {
-      const cqResult = await chatQuestionMsg(
-        {},
-        { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS },
-      );
+      const cqResult = await chatQuestionMsg({}, { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS });
       const cqReference = cqResult?.Messages?.[1]?.Data || "";
       console.log(cqReference);
       if (cqReference) {
@@ -82,9 +65,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
           message: question,
           reference: cqReference,
           timestamp: dayjs().valueOf(),
-          expectedTime: dayjs()
-            .add(calculateInferenceTime(question), "seconds")
-            .valueOf(),
+          expectedTime: dayjs().add(calculateInferenceTime(question), "seconds").valueOf(),
         });
         setUserHistory({ ...userHistory, [dataset_hash]: chatHistory });
         setNeedRefresh(true);
@@ -92,9 +73,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
     }
   };
 
-  const isWaitingForAnswer =
-    chatHistory.length != 0 &&
-    chatHistory[chatHistory.length - 1]?.role !== "assistant";
+  const isWaitingForAnswer = chatHistory.length != 0 && chatHistory[chatHistory.length - 1]?.role !== "assistant";
 
   const fetchResult = async () => {
     if (!isWaitingForAnswer) return;
@@ -169,13 +148,7 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
       return;
     }
     // load chat history
-    if (
-      dataset_hash &&
-      userHistory &&
-      userHistory[dataset_hash] &&
-      userHistory[dataset_hash].length &&
-      needRefresh
-    ) {
+    if (dataset_hash && userHistory && userHistory[dataset_hash] && userHistory[dataset_hash].length && needRefresh) {
       setNeedRefresh(false);
       fetchResult();
     }

@@ -67,7 +67,6 @@ const useBenchmarkMessage = messageWrapper(POOL_PROCESS);
 const useBenchmarkDryrun = dryrunWrapper(POOL_PROCESS);
 const useEmbeddingDryrun = dryrunWrapper(EMBEDDING_PROCESS);
 
-
 function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   return leaderboard.sort((a, b) => {
     if (a.author === activeAddress) return -1;
@@ -76,22 +75,11 @@ function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   });
 }
 
-export function useCompetitionPool(
-  poolID: string | undefined,
-  onJoinPool: () => void,
-) {
+export function useCompetitionPool(poolID: string | undefined, onJoinPool: () => void) {
   const { activeAddress, setOnInit } = useArweaveContext();
 
-  const {
-    result: poolInfoResult,
-    loading: poolInfoLoading,
-    msg: getPool,
-  } = useBenchmarkDryrun("Get-Competition");
-  const {
-    result: dashboardResult,
-    loading: dashboardLoading,
-    msg: getDashboard,
-  } = useBenchmarkDryrun("Get-Dashboard");
+  const { result: poolInfoResult, loading: poolInfoLoading, msg: getPool } = useBenchmarkDryrun("Get-Competition");
+  const { result: dashboardResult, loading: dashboardLoading, msg: getDashboard } = useBenchmarkDryrun("Get-Dashboard");
   const {
     result: leaderboardResult,
     loading: leaderboardLoading,
@@ -114,10 +102,8 @@ export function useCompetitionPool(
     setOnInit(loadData);
   }, []);
 
-  const poolInfoMsg =
-    poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);
-  const dashboardMsg =
-    dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard);
+  const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);
+  const dashboardMsg = dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard);
   const leaderboardMsg = leaderboardResult?.Messages?.[0]?.Data || "[]";
 
   const poolInfo: PoolInfo = JSON.parse(poolInfoMsg);
@@ -125,9 +111,7 @@ export function useCompetitionPool(
   const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg);
 
   // TODO: remove this
-  poolInfo.metadata = JSON.parse(
-    (poolInfo.metadata as any) || DefaultPoolInfo.meta_data,
-  );
+  poolInfo.metadata = JSON.parse((poolInfo.metadata as any) || DefaultPoolInfo.meta_data);
 
   const startTime = dayjs.unix(poolInfo.metadata.competition_time.start);
   const endTime = dayjs.unix(poolInfo.metadata.competition_time.end);
@@ -136,9 +120,7 @@ export function useCompetitionPool(
   const isPoolEnded = endTime.isBefore(Date.now());
   const poolEndCountdown = endTime.fromNow(true);
   const poolOpening = isPoolStarted && !isPoolEnded;
-  const hasSubmitted = leaderboard.some(
-    (item) => item.author === activeAddress,
-  );
+  const hasSubmitted = leaderboard.some((item) => item.author === activeAddress);
 
   const quickBtnText = poolOpening
     ? hasSubmitted
@@ -153,30 +135,16 @@ export function useCompetitionPool(
       ? `Ends in ${poolEndCountdown}`
       : `Ends in ${poolEndCountdown} ago`;
 
-  const stage = !isPoolStarted
-    ? "Unplayed"
-    : poolOpening
-      ? "Active"
-      : "Completed";
+  const stage = !isPoolStarted ? "Unplayed" : poolOpening ? "Active" : "Completed";
 
   let isQuickBtnDisabled =
-    !poolOpening ||
-    hasSubmitted ||
-    leaderboardLoading ||
-    checkingPermission ||
-    dashboardLoading ||
-    poolInfoLoading;
-  const quickBtnOnClick = (
-    setJoinCompetitionModalVisible: (visible: boolean) => void,
-  ) => {
+    !poolOpening || hasSubmitted || leaderboardLoading || checkingPermission || dashboardLoading || poolInfoLoading;
+  const quickBtnOnClick = (setJoinCompetitionModalVisible: (visible: boolean) => void) => {
     if (isQuickBtnDisabled) return;
     setJoinCompetitionModalVisible(true);
   };
 
-  const joinPoolRefresh = async (
-    tags: Record<string, string>,
-    data: Record<string, any>,
-  ) => {
+  const joinPoolRefresh = async (tags: Record<string, string>, data: Record<string, any>) => {
     if (leaderboard?.some((item) => item.dataset_name === data.dataset_name)) {
       message.error("Dataset name already exists");
       return;
@@ -223,9 +191,12 @@ export function useEmbedding() {
   } = useEmbeddingMessage("Create-Dataset");
 
   const createDataset = (PoolID: string, hash: string, name: string, list: DatasetItem[]) =>
-    msg({
-      PoolID
-    }, { hash, name, list });
+    msg(
+      {
+        PoolID,
+      },
+      { hash, name, list },
+    );
 
   return {
     createDatasetResult,

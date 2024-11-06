@@ -1,11 +1,4 @@
-import {
-  BenAvatar,
-  ConorAvatar,
-  JasonAvatar,
-  JaxAvatar,
-  MateoAvatar,
-  PhobeAvatar,
-} from "../../assets/team/team";
+import { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, MateoAvatar, PhobeAvatar } from "../../assets/team/team";
 
 export const TeamMemebers = [
   {

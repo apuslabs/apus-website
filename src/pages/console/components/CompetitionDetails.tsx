@@ -19,9 +19,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     icon: ImgCompetition.IconCalendar,
     label: "Duration",
     value:
-      timeFormat(poolInfo.metadata.competition_time.start) +
-      " - " +
-      timeFormat(poolInfo.metadata.competition_time.end),
+      timeFormat(poolInfo.metadata.competition_time.start) + " - " + timeFormat(poolInfo.metadata.competition_time.end),
     detail: poolInfo.metadata.duration_desc,
   },
   {
@@ -42,10 +40,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     icon: ImgCompetition.IconFile,
     label: "FAQ",
     value: (
-      <Link
-        to="https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86"
-        className=" text-blue font-medium"
-      >
+      <Link to="https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86" className=" text-blue font-medium">
         {"https://medium.com/@apusnetwork/apus-network-faq-ac0b57614f86"}
       </Link>
     ),

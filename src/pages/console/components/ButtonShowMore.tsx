@@ -12,10 +12,7 @@ export const ButtonShowMore: FC<{
       onClick={onClick}
     >
       Show {open ? "Less" : "More"}{" "}
-      <img
-        src={ImgCompetition.ChevronDown}
-        className={`w-3 h-3 ${open ? "rotate-180" : ""}`}
-      />
+      <img src={ImgCompetition.ChevronDown} className={`w-3 h-3 ${open ? "rotate-180" : ""}`} />
     </div>
   );
 };

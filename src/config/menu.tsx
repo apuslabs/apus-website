@@ -1,11 +1,5 @@
 import { notification } from "antd";
-import {
-  IconDiscord,
-  IconMedium,
-  IconTelegram,
-  IconX,
-  IconLinkedin,
-} from "../assets/common/common";
+import { IconDiscord, IconMedium, IconTelegram, IconX, IconLinkedin } from "../assets/common/common";
 
 interface menuType {
   name: string;

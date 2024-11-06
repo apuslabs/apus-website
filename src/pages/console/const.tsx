@@ -6,13 +6,9 @@ import { Leaderboard } from "../../contexts/competition";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 
-const BlueText = ({
-  text,
-  isBlue,
-}: {
-  text: string | number;
-  isBlue: boolean;
-}) => <span className={isBlue ? "text-blue" : ""}>{text}</span>;
+const BlueText = ({ text, isBlue }: { text: string | number; isBlue: boolean }) => (
+  <span className={isBlue ? "text-blue" : ""}>{text}</span>
+);
 
 const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
   <div className="flex">
@@ -23,60 +19,35 @@ const TitleWithTip = ({ title, tip }: { title: string; tip: string }) => (
   </div>
 );
 
-export const TableColumns = (
-  poolid?: string,
-  activeAddress?: string,
-): ColumnType<any>[] => {
+export const TableColumns = (poolid?: string, activeAddress?: string): ColumnType<any>[] => {
   const isFinished = (item: Leaderboard) => {
-    const isOver1Day = dayjs
-      .unix(item.created_at)
-      .isBefore(dayjs().subtract(1, "day"));
+    const isOver1Day = dayjs.unix(item.created_at).isBefore(dayjs().subtract(1, "day"));
     return item.progress === 1;
   };
   return [
     {
-      title: (
-        <TitleWithTip
-          title="RANK"
-          tip="If scores are tied, earlier submissions rank higher."
-        />
-      ),
+      title: <TitleWithTip title="RANK" tip="If scores are tied, earlier submissions rank higher." />,
       dataIndex: "rank",
       key: "rank",
       render: (text: string, item: Leaderboard) => (
-        <BlueText
-          text={item.progress ? text : "N/A"}
-          isBlue={item.author === activeAddress}
-        />
+        <BlueText text={item.progress ? text : "N/A"} isBlue={item.author === activeAddress} />
       ),
     },
     {
       title: "DATASET",
       dataIndex: "dataset_name",
       key: "dataset_name",
-      render: (text: string, item: Leaderboard) => (
-        <BlueText text={text} isBlue={item.author === activeAddress} />
-      ),
+      render: (text: string, item: Leaderboard) => <BlueText text={text} isBlue={item.author === activeAddress} />,
     },
     {
-      title: (
-        <TitleWithTip
-          title="SCORE"
-          tip="The total score is out of 100, with higher scores ranking higher."
-        />
-      ),
+      title: <TitleWithTip title="SCORE" tip="The total score is out of 100, with higher scores ranking higher." />,
       dataIndex: "score",
       key: "score",
       render: (text: string, item: Leaderboard) => {
         const score = Number(text) / 2;
-        const progressTip = isFinished(item)
-          ? ""
-          : `(${Math.floor(item.progress * 100)}%)`;
+        const progressTip = isFinished(item) ? "" : `(${Math.floor(item.progress * 100)}%)`;
         return (
-          <BlueText
-            text={item.progress ? `${score} ${progressTip}` : "N/A"}
-            isBlue={item.author === activeAddress}
-          />
+          <BlueText text={item.progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
         );
       },
     },
@@ -85,10 +56,7 @@ export const TableColumns = (
       dataIndex: "author",
       key: "author",
       render: (text: string, item: Leaderboard) => (
-        <BlueText
-          text={ShortAddress(text)}
-          isBlue={item.author === activeAddress}
-        />
+        <BlueText text={ShortAddress(text)} isBlue={item.author === activeAddress} />
       ),
     },
     {
@@ -101,10 +69,7 @@ export const TableColumns = (
       dataIndex: "reward",
       key: "reward",
       render: (text: string, item: Leaderboard) => (
-        <BlueText
-          text={item.progress ? `${text || 0} APUS_Tn1` : "N/A"}
-          isBlue={item.author === activeAddress}
-        />
+        <BlueText text={item.progress ? `${text || 0} APUS_Tn1` : "N/A"} isBlue={item.author === activeAddress} />
       ),
     },
     {
@@ -122,9 +87,7 @@ export const TableColumns = (
   ];
 };
 
-export const renderEmpty: GetProp<typeof ConfigProvider, "renderEmpty"> = (
-  componentName,
-) => {
+export const renderEmpty: GetProp<typeof ConfigProvider, "renderEmpty"> = (componentName) => {
   if (componentName === "Table" /** 👈 5.20.0+ */) {
     return (
       <Empty
@@ -134,9 +97,7 @@ export const renderEmpty: GetProp<typeof ConfigProvider, "renderEmpty"> = (
             <img className="w-32 h-32" src={ImgCompetition.TableNull} />
           </div>
         }
-        description={
-          <span className="text-black50">No Data Available At This Time</span>
-        }
+        description={<span className="text-black50">No Data Available At This Time</span>}
       />
     );
   }

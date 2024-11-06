@@ -55,9 +55,8 @@ const HomeIndex: FC = () => {
         >
           <img src={ImgHomepage.IconAnnouncement} className="w-5 h-5 mr-4" />
           <div className="text-[10px] md:text-sm text-white flex-1 mr-6">
-            Apus Network has migrated to AO! Click on Console in the top right
-            to explore our testnet Competition Pools and Playground for the
-            chance to earn Apus_Tn1 token rewards.
+            Apus Network has migrated to AO! Click on Console in the top right to explore our testnet Competition Pools
+            and Playground for the chance to earn Apus_Tn1 token rewards.
           </div>
           <div
             className="btn-main btn-small btn-colorful"
@@ -72,13 +71,7 @@ const HomeIndex: FC = () => {
       ) : null}
       {/* Hero */}
       <div className="section-container h-screen min-h-[960px] relative">
-        <video
-          className="absolute w-full h-full right-0 bottom-0 object-cover -z-10"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
+        <video className="absolute w-full h-full right-0 bottom-0 object-cover -z-10" autoPlay muted loop playsInline>
           <source src={Video} type="video/mp4" />
         </video>
         <div className="section h-full flex flex-col items-center md:items-start">
@@ -89,11 +82,7 @@ const HomeIndex: FC = () => {
           </div>
           <div className="flex gap-4 md:gap-6 mt-20 justify-center md:justify-start items-center flex-wrap">
             {FooterSocialMediaList.map(({ name, path, icon }) => (
-              <Link
-                to={path}
-                key={name}
-                className="hover:scale-105 transition-transform duration-300"
-              >
+              <Link to={path} key={name} className="hover:scale-105 transition-transform duration-300">
                 <img src={icon} alt={name} className="h-4 md:h-[1.75rem]" />
               </Link>
             ))}
@@ -101,11 +90,7 @@ const HomeIndex: FC = () => {
               className="h-[1.75rem] md:h-[2.865rem] w-[16.25rem] md:w-[28rem] px-2 flex items-center
             bg-[#fbfbfb] drop-shadow-lg rounded-sm md:rounded-lg"
             >
-              <img
-                src={IconEmail}
-                alt="icon-email"
-                className="w-4 h-[0.625rem] md:w-8 md:h-6"
-              />
+              <img src={IconEmail} alt="icon-email" className="w-4 h-[0.625rem] md:w-8 md:h-6" />
               <input
                 placeholder="youremail@gmail.com"
                 className="flex-1 h-full md:mx-2 px-2 text-[10px] md:text-base"
@@ -121,28 +106,22 @@ const HomeIndex: FC = () => {
             </div>
           </div>
           <div className="w-full mt-32 flex justify-center items-center gap-6 z-10">
-            <div className="btn-colorful btn-main active">
-              Go To Competition Pools &amp; Playground
-            </div>
+            <div className="btn-colorful btn-main active">Go To Competition Pools &amp; Playground</div>
           </div>
         </div>
       </div>
       <div
         style={{
-          background:
-            "linear-gradient(to bottom, rgba(243,243,243,1) 0%, rgba(177,177,177,1) 100%)",
+          background: "linear-gradient(to bottom, rgba(243,243,243,1) 0%, rgba(177,177,177,1) 100%)",
         }}
       >
         {/* Benifits */}
         <div className="section-container md:py-[10rem]">
           <div className="section flex flex-col items-center justify-center">
-            <div className="section-header text-center mb-6 md:mb-[3rem]">
-              Key Features
-            </div>
+            <div className="section-header text-center mb-6 md:mb-[3rem]">Key Features</div>
             <div className="section-description mb-6 md:mb-[6rem] md:mx-auto text-center">
-              Apus Network is building towards a decentralized, trustless GPU
-              network dedicated to providing reliable, efficient, and low-cost
-              computational power for AI training and inference.
+              Apus Network is building towards a decentralized, trustless GPU network dedicated to providing reliable,
+              efficient, and low-cost computational power for AI training and inference.
             </div>
             <div
               id="benifits"
@@ -194,14 +173,11 @@ const HomeIndex: FC = () => {
           }}
         >
           <div className="section md:px-5 md:pt-[10rem] flex flex-col items-center">
-            <div className="section-header mt-12 md:mt-0 z-10">
-              How it works
-            </div>
+            <div className="section-header mt-12 md:mt-0 z-10">How it works</div>
             <div className="section-description text-center z-10">
-              Use a competitive pool mechanism to find the best models. Achieve
-              deterministic GPUs by modifying CUDA and other software. Implement
-              AI inference and training on the AO platform, allowing miners to
-              join permissionlessly, resulting in cost-effective AI.
+              Use a competitive pool mechanism to find the best models. Achieve deterministic GPUs by modifying CUDA and
+              other software. Implement AI inference and training on the AO platform, allowing miners to join
+              permissionlessly, resulting in cost-effective AI.
             </div>
           </div>
           <div
@@ -228,36 +204,22 @@ const HomeIndex: FC = () => {
               AI Compute Power
             </div>
             <div className="section-description mb-14 mx-auto text-center">
-              Built on a decentralized network using AO and Arweave, Apus
-              Network offers a seamless solution for AI tasks that demand
-              substantial computational resources. Our service features the
-              following benefits:
+              Built on a decentralized network using AO and Arweave, Apus Network offers a seamless solution for AI
+              tasks that demand substantial computational resources. Our service features the following benefits:
             </div>
-            <div
-              id="benifits"
-              className="md:grid md:grid-cols-2 md:grid-rows-2 flex flex-col gap-5 md:gap-10 w-full"
-            >
+            <div id="benifits" className="md:grid md:grid-cols-2 md:grid-rows-2 flex flex-col gap-5 md:gap-10 w-full">
               <div className="md:col-span-1 md:row-span-1 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
-                  <img
-                    src={ImgHomepage.BiconGood}
-                    className="w-10 h-10 mb-4 md:mb-6"
-                  />
+                  <img src={ImgHomepage.BiconGood} className="w-10 h-10 mb-4 md:mb-6" />
                   <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap text-white font-semibold">
                     Public Good
                   </div>
                   <div className="flex-1 text-xs md:text-base md:w-2/3 opacity-50 text-white">
-                    Apus Network's economic model incentivizes the development
-                    and execution of superior AI models. This competitive
-                    environment fosters innovation and ensures continuous
-                    advancements in AI technology.
+                    Apus Network's economic model incentivizes the development and execution of superior AI models. This
+                    competitive environment fosters innovation and ensures continuous advancements in AI technology.
                   </div>
                   <img
-                    src={
-                      isMobile
-                        ? ImgHomepage.BenifitsGood
-                        : ImgHomepage.BenifitsGoodPc
-                    }
+                    src={isMobile ? ImgHomepage.BenifitsGood : ImgHomepage.BenifitsGoodPc}
                     className={`max-w-none md:absolute md:right-0 md:top-0 md:h-full`}
                     style={{
                       width: isMobile ? "calc(100% + 5rem)" : "auto",
@@ -269,48 +231,32 @@ const HomeIndex: FC = () => {
               </div>
               <div className="md:row-start-2 md:row-end-2 md:col-start-1 md:col-end-1 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col rounded-2xl overflow-hidden">
-                  <img
-                    src={ImgHomepage.BiconEnergy}
-                    className="w-10 h-10 mb-4 md:mb-6"
-                  />
+                  <img src={ImgHomepage.BiconEnergy} className="w-10 h-10 mb-4 md:mb-6" />
                   <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap text-white font-semibold">
                     Energy Efficiency
                   </div>
                   <div className="text-xs md:text-base md:w-2/3 opacity-50 mb-4 md:mb-0 text-white">
-                    We optimize energy consumption by utilizing idle compute
-                    power across the network, contributing to a greener
-                    computing environment.
+                    We optimize energy consumption by utilizing idle compute power across the network, contributing to a
+                    greener computing environment.
                   </div>
                   <img
-                    src={
-                      isMobile
-                        ? ImgHomepage.BenifitsEnergyMobile
-                        : ImgHomepage.BenifitsEnergy
-                    }
+                    src={isMobile ? ImgHomepage.BenifitsEnergyMobile : ImgHomepage.BenifitsEnergy}
                     className={`md:absolute top-0 right-0 h-full`}
                   />
                 </div>
               </div>
               <div className="md:row-span-2 card-dark">
                 <div className="relative h-full p-10 pb-0 md:p-4 md:py-6 md:px-10 flex flex-col md:justify-end rounded-2xl overflow-hidden">
-                  <img
-                    src={ImgHomepage.BiconAccessibility}
-                    className="w-10 h-10 mb-4 md:mb-6"
-                  />
+                  <img src={ImgHomepage.BiconAccessibility} className="w-10 h-10 mb-4 md:mb-6" />
                   <div className="text-2xl mb-4 md:mb-6 md:text-2xl xl:text-3xl text-nowrap text-white font-semibold">
                     Accessibility
                   </div>
                   <div className="flex-1 md:flex-grow-0 text-xs md:text-base md:w-2/3 opacity-50 mb-4 md:mb-0 text-white">
-                    We provide simple interfaces and comprehensive usage guides,
-                    enabling non-professional users to fully leverage AI
-                    capabilities.
+                    We provide simple interfaces and comprehensive usage guides, enabling non-professional users to
+                    fully leverage AI capabilities.
                   </div>
                   <img
-                    src={
-                      isMobile
-                        ? ImgHomepage.BenifitsAccessibilityMobile
-                        : ImgHomepage.BenifitsAccessibility
-                    }
+                    src={isMobile ? ImgHomepage.BenifitsAccessibilityMobile : ImgHomepage.BenifitsAccessibility}
                     className={`md:absolute -mx-10 max-w-none md:mx-0 md:right-px md:top-px md:h-4/5 rounded-2xl`}
                     style={{
                       width: isMobile ? "calc(100% + 5rem)" : "auto",
@@ -333,14 +279,8 @@ const HomeIndex: FC = () => {
           }}
         >
           <div className="section flex flex-col items-center">
-            <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">
-              Roadmap
-            </div>
-            <img
-              className="mt-12"
-              src={isMobile ? ImgHomepage.RoadmapVtl : ImgHomepage.Roadmap}
-              alt="roadmap"
-            />
+            <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">Roadmap</div>
+            <img className="mt-12" src={isMobile ? ImgHomepage.RoadmapVtl : ImgHomepage.Roadmap} alt="roadmap" />
           </div>
         </div>
 
@@ -352,9 +292,7 @@ const HomeIndex: FC = () => {
           }}
         >
           <div className="section flex flex-col items-center">
-            <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">
-              Powered By
-            </div>
+            <div className="section-header md:text-5xl mt-12 md:mt-16 text-center">Powered By</div>
             <div className="flex flex-wrap gap-2 md:gap-6 items-center justify-center mt-6 md:mt-12">
               {[
                 {
@@ -387,24 +325,15 @@ const HomeIndex: FC = () => {
                 </div>
               ))}
             </div>
-            <div className="section-header text-center mt-24 md:mt-40">
-              Know Apus Better
-            </div>
+            <div className="section-header text-center mt-24 md:mt-40">Know Apus Better</div>
             <TwitterVideo className="mt-6" />
-            <div className="section-header text-center mt-24 md:mt-40">
-              Stay Up to Date - Subscribe Now
-            </div>
+            <div className="section-header text-center mt-24 md:mt-40">Stay Up to Date - Subscribe Now</div>
             <div className="section-description text-center text-gray33">
-              Follow us on our social media or subscribe to our email newsletter
-              to get the latest updates
+              Follow us on our social media or subscribe to our email newsletter to get the latest updates
             </div>
             <div className="flex gap-4 md:gap-6 mt-8 md:mt-16 justify-center md:justify-start items-center flex-wrap z-10">
               {FooterSocialMediaList.map(({ name, path, icon }) => (
-                <Link
-                  to={path}
-                  key={name}
-                  className="hover:scale-105 transition-transform duration-300"
-                >
+                <Link to={path} key={name} className="hover:scale-105 transition-transform duration-300">
                   <img src={icon} alt={name} className="h-4 md:h-[1.75rem]" />
                 </Link>
               ))}
@@ -413,11 +342,7 @@ const HomeIndex: FC = () => {
               className="h-[1.75rem] md:h-[2.865rem] w-[16.25rem] md:w-[28rem] px-2 flex items-center mt-4 md:mt-8 mb-10 md:mb-20 z-10
                 bg-[#fbfbfb] drop-shadow-lg rounded-sm md:rounded-lg"
             >
-              <img
-                src={IconEmail}
-                alt="icon-email"
-                className="w-4 h-[0.625rem] md:w-8 md:h-6"
-              />
+              <img src={IconEmail} alt="icon-email" className="w-4 h-[0.625rem] md:w-8 md:h-6" />
               <input
                 placeholder="youremail@gmail.com"
                 className="flex-1 h-full md:mx-2 px-2 text-[10px] md:text-base"
@@ -432,10 +357,7 @@ const HomeIndex: FC = () => {
               </div>
             </div>
           </div>
-          <img
-            src={ImgHomepage.BgBottom}
-            className="absolute bottom-0 md:w-[72rem] left-1/2 -translate-x-1/2"
-          />
+          <img src={ImgHomepage.BgBottom} className="absolute bottom-0 md:w-[72rem] left-1/2 -translate-x-1/2" />
         </div>
       </div>
     </div>

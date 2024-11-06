@@ -1,22 +1,15 @@
 import { PermissionType } from "arconnect";
 import React, { useContext, useEffect, useState } from "react";
 
-const ArweaveContext = React.createContext<ReturnType<typeof useArweave>>(
-  null as any,
-);
+const ArweaveContext = React.createContext<ReturnType<typeof useArweave>>(null as any);
 
-const initialPermissions: PermissionType[] = [
-  "ACCESS_ADDRESS",
-  "SIGN_TRANSACTION",
-];
+const initialPermissions: PermissionType[] = ["ACCESS_ADDRESS", "SIGN_TRANSACTION"];
 
 function useArweave() {
   const [permissions, setPermissions] = useState(initialPermissions);
   const [walletLoaded, setWalletLoaded] = useState(false);
   const [activeAddress, setActiveAddress] = useState<string>();
-  const [onInit, setOnInit] = useState<
-    ((address?: string) => void) | undefined
-  >();
+  const [onInit, setOnInit] = useState<((address?: string) => void) | undefined>();
 
   useEffect(() => {
     window.addEventListener("arweaveWalletLoaded", async () => {

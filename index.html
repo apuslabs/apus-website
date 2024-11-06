@@ -1,18 +1,12 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
     <title>Apus Network</title>
     <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-9MDR5T7VSB"
-    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9MDR5T7VSB"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -27,11 +21,7 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script type="module">
-      import {
-        onCLS,
-        onINP,
-        onLCP,
-      } from "https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.js?module";
+      import { onCLS, onINP, onLCP } from "https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.js?module";
 
       onLCP(sendToGoogleAnalytics);
       onINP(sendToGoogleAnalytics);
@@ -57,12 +47,8 @@
               debug_load_state: attribution.loadState,
               debug_target: attribution.interactionTarget || "(not set)",
               debug_interaction_delay: Math.round(attribution.inputDelay),
-              debug_processing_duration: Math.round(
-                attribution.processingDuration
-              ),
-              debug_presentation_delay: Math.round(
-                attribution.presentationDelay
-              ),
+              debug_processing_duration: Math.round(attribution.processingDuration),
+              debug_presentation_delay: Math.round(attribution.presentationDelay),
             };
           } else if (name === "CLS") {
             return {
@@ -77,14 +63,7 @@
           debug_target: "(not set)",
         };
       }
-      function sendToGoogleAnalytics({
-        name,
-        delta,
-        value,
-        id,
-        entries,
-        attribution,
-      }) {
+      function sendToGoogleAnalytics({ name, delta, value, id, entries, attribution }) {
         gtag("event", name, {
           // Built-in params:
           value: delta, // Use `delta` so the value can be summed.

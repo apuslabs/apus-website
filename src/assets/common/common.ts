@@ -5,11 +5,4 @@ import IconMedium from "./icon-medium.png";
 import IconLinkedin from "./icon-linkedin.png";
 import IconEmail from "./icon-email.png";
 
-export {
-  IconX,
-  IconTelegram,
-  IconDiscord,
-  IconMedium,
-  IconLinkedin,
-  IconEmail,
-};
+export { IconX, IconTelegram, IconDiscord, IconMedium, IconLinkedin, IconEmail };

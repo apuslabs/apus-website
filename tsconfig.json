@@ -17,6 +17,6 @@
 
     /* Linting */
     "strict": true,
-    "allowSyntheticDefaultImports": true,
-  },
+    "allowSyntheticDefaultImports": true
+  }
 }

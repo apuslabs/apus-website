@@ -4,12 +4,7 @@ import { formatNumber } from "../../../utils/utils";
 const DefaultDash = (val: number, suffix?: string): string =>
   val === -1 ? "-" : formatNumber(val) + (suffix != null ? ` ${suffix}` : "");
 
-export const Statisitcs = ({
-  participants,
-  granted_reward,
-  rank,
-  rewarded_tokens,
-}: Dashboard) => [
+export const Statisitcs = ({ participants, granted_reward, rank, rewarded_tokens }: Dashboard) => [
   {
     label: "Total Participants",
     value: DefaultDash(participants || 0),

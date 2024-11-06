@@ -6,7 +6,7 @@
 }
 
 .ant-select-dropdown {
- @apply bg-light;
+  @apply bg-light;
 }
 
 #playground textarea.ant-input {

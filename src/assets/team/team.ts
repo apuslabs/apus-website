@@ -6,12 +6,4 @@ import MateoAvatar from "./mateo.png";
 import PhobeAvatar from "./phoebe.png";
 import IconLinkedIn from "./icon-linkedin.png";
 
-export {
-  BenAvatar,
-  ConorAvatar,
-  JasonAvatar,
-  JaxAvatar,
-  MateoAvatar,
-  PhobeAvatar,
-  IconLinkedIn,
-};
+export { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, MateoAvatar, PhobeAvatar, IconLinkedIn };

@@ -1,20 +1,8 @@
-import {
-  Form,
-  Input,
-  message,
-  Modal,
-  Spin,
-  Tooltip,
-  Upload,
-  UploadFile,
-} from "antd";
+import { Form, Input, message, Modal, Spin, Tooltip, Upload, UploadFile } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { FC, useState } from "react";
 import { DeleteOutlined, FileOutlined } from "@ant-design/icons";
-import {
-  useCompetitionPool,
-  useEmbedding,
-} from "../../../contexts/competition";
+import { useCompetitionPool, useEmbedding } from "../../../contexts/competition";
 import { sha1 } from "../../../utils/utils";
 import { useParams } from "react-router-dom";
 
@@ -60,10 +48,7 @@ export const JoinCompetitionModal: FC<{
         throw new Error("Invalid JSON file: empty content");
       }
       await createDataset(poolid!, hash, formData.name, contents);
-      await joinPool(
-        { PoolID: poolid! },
-        { dataset_hash: hash, dataset_name: formData.name },
-      );
+      await joinPool({ PoolID: poolid! }, { dataset_hash: hash, dataset_name: formData.name });
       form.resetFields();
       setFileList([]);
       onOk();
@@ -73,9 +58,7 @@ export const JoinCompetitionModal: FC<{
       }
       if (e instanceof Error) {
         if (e.message === "{}") {
-          message.error(
-            "Unknown error, please try another dataset file or contact admin.",
-          );
+          message.error("Unknown error, please try another dataset file or contact admin.");
         } else {
           message.error(e.message);
         }
@@ -89,9 +72,7 @@ export const JoinCompetitionModal: FC<{
 
   return (
     <Modal
-      title={
-        <div className="font-bold text-black text-2xl">Submit Dataset</div>
-      }
+      title={<div className="font-bold text-black text-2xl">Submit Dataset</div>}
       open={visible}
       onCancel={onCancel}
       onOk={onOk}
@@ -101,27 +82,16 @@ export const JoinCompetitionModal: FC<{
         <Form.Item
           name="name"
           required
-          rules={[
-            { required: true, message: "Please input your dataset name!" },
-          ]}
+          rules={[{ required: true, message: "Please input your dataset name!" }]}
           label={<div className="text-xs text-black50">Dataset Name</div>}
         >
-          <Input
-            placeholder="Enter your dataset name (Example: Anna's Dataset)"
-            size="large"
-          />
+          <Input placeholder="Enter your dataset name (Example: Anna's Dataset)" size="large" />
         </Form.Item>
         <Form.Item
           name="dataset"
           required
-          rules={[
-            { required: true, message: "Please upload your dataset file!" },
-          ]}
-          label={
-            <div className="text-xs text-black50 flex items-center gap-1">
-              Dataset File
-            </div>
-          }
+          rules={[{ required: true, message: "Please upload your dataset file!" }]}
+          label={<div className="text-xs text-black50 flex items-center gap-1">Dataset File</div>}
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
@@ -166,16 +136,12 @@ export const JoinCompetitionModal: FC<{
           >
             {!fileList.length ? (
               <div className="h-14 bg-black5 border-black20 rounded-lg border border-solid flex justify-center items-center">
-                <div className="text-black50">
-                  Drag Here or Click To Upload Dataset File
-                </div>
+                <div className="text-black50">Drag Here or Click To Upload Dataset File</div>
               </div>
             ) : (
               <div className="h-14 px-4 flex bg-white items-center">
                 <FileOutlined />
-                <span className="flex-1 text-left ml-2">
-                  {fileList[0].name}
-                </span>
+                <span className="flex-1 text-left ml-2">{fileList[0].name}</span>
                 <DeleteOutlined
                   className="w-14 h-14 ml-2 flex justify-end text-red-700"
                   onClick={(e) => {

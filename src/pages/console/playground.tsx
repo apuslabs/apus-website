@@ -24,8 +24,7 @@ function truncateString(str: string, delimiters: string[] = ["<|"]) {
 
 export const Playground = () => {
   const { activeAddress, connectWallet } = useArweaveContext();
-  const [selectedDataset, setSelectedDataset] =
-    useLocalStorage<string>("selected-dataset");
+  const [selectedDataset, setSelectedDataset] = useLocalStorage<string>("selected-dataset");
   const { poolid } = useParams();
   const {
     datasets,
@@ -85,28 +84,13 @@ export const Playground = () => {
       </div>
       <div className="text-sm text-black50 mb-4 mt-8">Chat</div>
       <div className="rounded-2xl overflow-hidden bg-[#EBEFFF]">
-        <div
-          className="h-[534px] p-6 overflow-y-auto scroll-smooth"
-          ref={scrollRef}
-        >
+        <div className="h-[534px] p-6 overflow-y-auto scroll-smooth" ref={scrollRef}>
           {chatHistory.map(({ role, message }, index) => {
             const isUser = role === "user";
             return (
-              <div
-                key={index}
-                className={`flex gap-2 ${
-                  isUser ? "flex-row-reverse justify-start" : ""
-                }`}
-              >
+              <div key={index} className={`flex gap-2 ${isUser ? "flex-row-reverse justify-start" : ""}`}>
                 <div className="flex-0 w-12 h-12">
-                  <img
-                    src={
-                      isUser
-                        ? ImgPlayground.UserAvatar
-                        : ImgPlayground.ApusAvatar
-                    }
-                    className=""
-                  />
+                  <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
                 </div>
                 <div
                   className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${
@@ -159,11 +143,7 @@ export const Playground = () => {
                   }
                 }}
               >
-                {activeAddress
-                  ? isWaitingForAnswer
-                    ? "Refresh"
-                    : "Send"
-                  : "Connect"}
+                {activeAddress ? (isWaitingForAnswer ? "Refresh" : "Send") : "Connect"}
               </div>
             </Spin>
           </div>

@@ -25,9 +25,7 @@ export const QuickButton: FC<{
             if (result?.Messages?.[0]?.Data) {
               onJoinCompetition();
             } else {
-              message.warning(
-                "You need to be whitelisted. Follow @apus_network on X for information.",
-              );
+              message.warning("You need to be whitelisted. Follow @apus_network on X for information.");
             }
           }
         }}

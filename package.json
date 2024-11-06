@@ -1,31 +1,29 @@
 {
-  "name": "solana-hackthon-playground",
+  "name": "apus-website",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
     "build:test": "tsc && vite build --mode staging",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.5",
     "@permaweb/aoconnect": "^0.0.56",
     "antd": "^5.15.3",
-    "antd-style": "^3.6.2",
     "arconnect": "^1.0.3",
     "axios": "^1.6.8",
     "dayjs": "^1.11.12",
-    "qs": "^6.12.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
     "react-use": "^17.5.0"
   },
   "devDependencies": {
-    "@types/qs": "^6.9.14",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.1.1",
@@ -36,8 +34,12 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "postcss": "^8.4.38",
+    "prettier": "3.3.3",
     "tailwindcss": "^3.4.3",
     "typescript": "^5.2.2",
     "vite": "^5.1.6"
+  },
+  "prettier": {
+    "printWidth": 120
   }
 }

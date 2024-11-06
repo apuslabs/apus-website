@@ -9,16 +9,17 @@ import { Dropdown } from "antd";
 const UserInfo: FC = function () {
   const { activeAddress, connectWallet, disconnect } = useArweaveContext();
   return activeAddress ? (
-    <Dropdown placement="bottomRight" menu={{
-      items: [
-        { key: "logout", label: "Disconnect Wallet" },
-      ],
-      onClick: ({ key }) => {
-        if (key === "logout") {
-          disconnect();
-        }
-      },
-    }}>
+    <Dropdown
+      placement="bottomRight"
+      menu={{
+        items: [{ key: "logout", label: "Disconnect Wallet" }],
+        onClick: ({ key }) => {
+          if (key === "logout") {
+            disconnect();
+          }
+        },
+      }}
+    >
       <div className="btn-default">{ShortAddress(activeAddress)}</div>
     </Dropdown>
   ) : (
@@ -42,9 +43,7 @@ export default function () {
             return (
               <li
                 key={name}
-                className={`text-black50 font-medium ${
-                  location.pathname === path ? "text-gradient3" : ""
-                }`}
+                className={`text-black50 font-medium ${location.pathname === path ? "text-gradient3" : ""}`}
               >
                 <Link to={path}>{name}</Link>
               </li>
