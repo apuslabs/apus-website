@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
 import { useArweaveContext } from "./arconnect";
-import { dryrunWrapper, messageWrapper } from "../utils/ao";
+import { useAO } from "../utils/ao";
 import { POOL_PROCESS, EMBEDDING_PROCESS } from "../utils/config";
 import { message } from "antd";
 dayjs.extend(relativeTime);
@@ -27,7 +27,7 @@ export interface PoolInfo {
 
 const DefaultPoolInfo = {
   title: "",
-  prize_pool: 0,
+  reward_pool: 0,
   meta_data: JSON.stringify({
     // TODO: update
     competition_time: {
@@ -65,9 +65,6 @@ export interface Leaderboard {
   progress: number;
 }
 
-const useBenchmarkDryrun = dryrunWrapper(POOL_PROCESS);
-const useEmbeddingDryrun = dryrunWrapper(EMBEDDING_PROCESS);
-
 function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   return leaderboard.sort((a, b) => {
     if (a.author === activeAddress) return -1;
@@ -78,16 +75,26 @@ function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
 
 export function useCompetitionPool(poolID: string | undefined, onJoinPool: () => void) {
   const { activeAddress, setOnInit } = useArweaveContext();
-
-  const { result: poolInfoResult, loading: poolInfoLoading, msg: getPool } = useBenchmarkDryrun("Get-Competition");
-  const { result: dashboardResult, loading: dashboardLoading, msg: getDashboard } = useBenchmarkDryrun("Get-Dashboard");
+  const {
+    result: poolInfoResult,
+    loading: poolInfoLoading,
+    execute: getPool,
+  } = useAO(POOL_PROCESS, "Get-Competition", "dryrun");
+  const {
+    result: dashboardResult,
+    loading: dashboardLoading,
+    execute: getDashboard,
+  } = useAO(POOL_PROCESS, "Get-Dashboard", "dryrun");
   const {
     result: leaderboardResult,
     loading: leaderboardLoading,
-    msg: getLeaderboard,
-  } = useBenchmarkDryrun("Get-Leaderboard");
-  // const { msg: joinPool } = useBenchmarkMessage("Join-Pool");
-  const { msg: checkPermission, loading: checkingPermission } = useEmbeddingDryrun("Check-Permission");
+    execute: getLeaderboard,
+  } = useAO(POOL_PROCESS, "Get-Leaderboard", "dryrun");
+  const { loading: checkingPermission, execute: checkPermission } = useAO(
+    EMBEDDING_PROCESS,
+    "Check-Permission",
+    "dryrun",
+  );
 
   const loadData = useCallback(
     (address?: string) => {
@@ -175,8 +182,6 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   };
 }
 
-const useEmbeddingMessage = messageWrapper(EMBEDDING_PROCESS);
-
 interface DatasetItem {
   content: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -188,16 +193,13 @@ export function useEmbedding() {
     result: createDatasetResult,
     loading: createDatasetLoading,
     error: createDatasetError,
-    msg,
-  } = useEmbeddingMessage("Create-Dataset");
+    execute,
+  } = useAO(EMBEDDING_PROCESS, "Create-Dataset", "message");
 
-  const createDataset = (PoolID: string, hash: string, name: string, list: DatasetItem[]) =>
-    msg(
-      {
-        PoolID,
-      },
-      { hash, name, list },
-    );
+  const createDataset = useCallback(
+    (PoolID: string, hash: string, name: string, list: DatasetItem[]) => execute({ PoolID }, { hash, name, list }),
+    [execute],
+  );
 
   return {
     createDatasetResult,

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { CHAT_PROCESS, POOL_PROCESS } from "../utils/config";
-import { getDataFromMessage, getTagsFromMessage, dryrunWrapper, messageWrapper } from "../utils/ao";
+import { getDataFromMessage, getTagsFromMessage, useAO } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
 
@@ -11,10 +11,6 @@ const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
     : `Response time is about ${timeLeft}.Thanks for waiting! We are working hard to improve.😊`;
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
-
-const usePlaygroundMessage = messageWrapper(CHAT_PROCESS);
-const usePlaygroundDryrun = dryrunWrapper(CHAT_PROCESS);
-const usePoolDryrun = dryrunWrapper(POOL_PROCESS);
 
 interface DatasetItem {
   dataset_hash: string;
@@ -41,15 +37,18 @@ const calculateInferenceTime = (question: string) => {
 export function usePlayground(poolid?: string, dataset_hash?: string) {
   const [userHistory, setUserHistory] = useLocalStorage<UserHistory>("session-history", {});
 
-  const { msg: getDatasets, result: datasetsResult, loading: datasetsLoading } = usePoolDryrun("Get-Datasets", true);
-  const { msg: chatQuestionMsg, loading: sendChatQuestioning } = usePlaygroundMessage("Chat-Question");
-  const { msg: getChatAnswer, loading: getChatAnswering } = usePlaygroundDryrun("Get-Chat-Answer", false, true);
+  const {
+    execute: getDatasets,
+    result: datasetsResult,
+    loading: datasetsLoading,
+  } = useAO(POOL_PROCESS, "Get-Datasets", "dryrun", { autoLoad: true });
+  const { execute: chatQuestionMsg, loading: sendChatQuestioning } = useAO(CHAT_PROCESS, "Chat-Question", "message");
+  const { execute: getChatAnswer, loading: getChatAnswering } = useAO(CHAT_PROCESS, "Get-Chat-Answer", "dryrun", {
+    checkStatus: false,
+  });
 
-  // auto get datasets when active address changes
   useEffect(() => {
-    // if (activeAddress) {
     getDatasets({}, poolid);
-    // }
   }, [getDatasets, poolid]);
 
   const chatHistory = useMemo(
