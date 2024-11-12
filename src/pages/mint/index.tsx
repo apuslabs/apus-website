@@ -4,6 +4,7 @@ import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
 import { AO_MINT_PROCESS, TOKEN_PROCESS } from "../../utils/config";
 import { useArweaveContext } from "../../contexts/arconnect";
+import { useAOMint } from "./contexts";
 
 function TokenSlider({
   stETH,
@@ -95,6 +96,7 @@ function sleep() {
 }
 
 export default function Mint() {
+  useAOMint();
   const { activeAddress } = useArweaveContext();
   const [balance] = useState(99.6542);
   const [stETHAllocations, setSTETHAllocations] = useState([

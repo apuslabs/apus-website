@@ -11,6 +11,7 @@ const Mint = lazy(() => import("./pages/mint"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
 const Page404 = lazy(() => import("./pages/404"));
+const Pools = lazy(() => import("./pages/console/pools"));
 
 const router = createHashRouter([
   {
@@ -60,6 +61,14 @@ const router = createHashRouter([
       </ConfigProvider>
     ),
     children: [
+      {
+        path: "competitions",
+        element: (
+          <Suspense>
+            <Pools />
+          </Suspense>
+        ),
+      },
       {
         path: "competition/:poolid",
         element: (
