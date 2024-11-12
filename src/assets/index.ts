@@ -133,3 +133,15 @@ export const ImgPlayground = {
   SignalYellow,
   SignalRed,
 };
+
+import TokenomicsPie from "./mint/tokenomics-pie.svg";
+import ChevronRight from "./mint/chevron-small-double-right.svg";
+import StethLogo from "./mint/steth-logo.svg";
+import DaiLogo from "./mint/dai-logo.svg";
+
+export const ImgMint = {
+  TokenomicsPie,
+  ChevronRight,
+  StethLogo,
+  DaiLogo,
+};

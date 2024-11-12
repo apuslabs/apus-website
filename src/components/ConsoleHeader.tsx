@@ -6,7 +6,7 @@ import { ShortAddress } from "../utils/ao";
 import { useArweaveContext } from "../contexts/arconnect";
 import { Dropdown } from "antd";
 
-const UserInfo: FC = function () {
+export const UserInfo: FC = function () {
   const { activeAddress, connectWallet, disconnect } = useArweaveContext();
   return activeAddress ? (
     <Dropdown

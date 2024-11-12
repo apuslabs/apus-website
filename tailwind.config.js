@@ -7,7 +7,10 @@ export default {
         150: "37.5rem",
       },
       colors: {
+        gray21: "#212121",
         gray33: "#333333",
+        gray90: "#909090",
+        grayd8: "#D8D8D8",
         black5: "rgba(0, 0, 0, 0.05)",
         black20: "rgba(0, 0, 0, 0.2)",
         black50: "rgba(0, 0, 0, 0.5)",

@@ -7,6 +7,7 @@ import HomeFooter from "./components/HomeFooter";
 import ConsoleHeader from "./components/ConsoleHeader";
 const Homepage = lazy(() => import("./pages/homepage"));
 const Team = lazy(() => import("./pages/team"));
+const Mint = lazy(() => import("./pages/mint"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
 const Page404 = lazy(() => import("./pages/404"));
@@ -14,19 +15,15 @@ const Page404 = lazy(() => import("./pages/404"));
 const router = createHashRouter([
   {
     path: "/",
-    element: (
-      <Suspense>
-        <HomeHeader />
-        <Outlet />
-        <HomeFooter />
-      </Suspense>
-    ),
+    element: <Outlet />,
     children: [
       {
         path: "/",
         element: (
           <Suspense>
+            <HomeHeader />
             <Homepage />
+            <HomeFooter />
           </Suspense>
         ),
       },
@@ -34,7 +31,19 @@ const router = createHashRouter([
         path: "team",
         element: (
           <Suspense>
+            <HomeHeader />
             <Team />
+            <HomeFooter />
+          </Suspense>
+        ),
+      },
+      {
+        path: "mint",
+        element: (
+          <Suspense>
+            <HomeHeader showLogin={true} />
+            <Mint />
+            <HomeFooter />
           </Suspense>
         ),
       },

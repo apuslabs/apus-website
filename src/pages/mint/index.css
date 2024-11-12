@@ -1,0 +1,103 @@
+.card {
+  @apply max-w-[60rem] mx-auto my-12 flex gap-5
+        border border-solid border-grayd8 rounded-2xl;
+}
+
+.card-caption {
+  @apply font-semibold text-gray90;
+}
+
+.token-features-list {
+  @apply leading-7 text-gray21 list-disc pl-4;
+}
+
+.pie-legend-list {
+  @apply leading-tight text-gray21;
+  .pie-legend-square {
+    @apply inline-block w-[10px] h-[10px] mr-[5px];
+  }
+}
+
+.token-features-list span,
+.pie-legend-list span {
+  @apply font-bold;
+}
+
+#mint .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
+#mint .ant-tabs-card.ant-tabs-top > div > .ant-tabs-nav .ant-tabs-tab {
+  border-radius: 0;
+  padding: 10px 10px 12px;
+  border: 0;
+  background: transparent;
+}
+
+#mint .ant-tabs-card > .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active,
+#mint .ant-tabs-card > div > .ant-tabs-nav .ant-tabs-tab.ant-tabs-tab-active {
+  background-color: #212121;
+}
+
+#mint .ant-tabs .ant-tabs-tab .ant-tabs-tab-btn {
+  font-weight: semibold;
+  font-size: 20px;
+  color: #909090;
+  line-height: 1;
+}
+
+#mint .ant-tabs .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #ffffff;
+}
+
+#mint .ant-tabs-top > .ant-tabs-nav::before,
+#mint .ant-tabs-bottom > .ant-tabs-nav::before,
+#mint .ant-tabs-top > div > .ant-tabs-nav::before,
+#mint .ant-tabs-bottom > div > .ant-tabs-nav::before {
+  border-bottom: 1px solid #212121;
+}
+
+#mint .ant-slider .ant-slider-track {
+  background-color: #091dff;
+}
+
+#mint .ant-slider .ant-slider-rail {
+  background-color: #979797;
+}
+
+#mint .ant-slider-horizontal .ant-slider-rail {
+  height: 1px;
+  top: 16px;
+}
+
+#mint .ant-slider-horizontal .ant-slider-track,
+#mint .ant-slider-horizontal .ant-slider-tracks {
+  height: 10px;
+  top: 11px;
+}
+
+#mint .ant-slider-horizontal .ant-slider-dot {
+  opacity: 0;
+}
+
+#mint .ant-slider .ant-slider-handle {
+  height: 32px;
+  width: 22px;
+  border: 4px solid #ffffff;
+  background-color: #091dff;
+  border-radius: 8px;
+  box-sizing: border-box;
+  &:before,
+  &:after {
+    display: none;
+  }
+}
+
+#mint .ant-slider-horizontal .ant-slider-mark {
+  top: 24px;
+}
+
+#mint .btn-primary {
+  @apply h-12 font-semibold text-white leading-none px-8 py-4 rounded-lg cursor-pointer;
+  background-color: #091dff;
+  &:hover {
+    background-color: rgba(9, 29, 255, 0.9);
+  }
+}

@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
+    "@dha-team/arbundles": "^1.0.1",
     "@permaweb/aoconnect": "^0.0.61",
     "antd": "^5.21.6",
     "arconnect": "^1.0.4",

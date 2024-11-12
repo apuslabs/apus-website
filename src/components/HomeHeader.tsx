@@ -3,6 +3,7 @@ import { ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
+import { UserInfo } from "./ConsoleHeader";
 
 function scrollToAnchor(anchor: string) {
   if (!anchor) return;
@@ -15,7 +16,10 @@ function scrollToAnchor(anchor: string) {
   }
 }
 
-const HomeHeader: FC<{ showUserInfo?: boolean }> = ({ showUserInfo = false }) => {
+const HomeHeader: FC<{ showUserInfo?: boolean; showLogin?: boolean }> = ({
+  showUserInfo = false,
+  showLogin = false,
+}) => {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
   const [menuShow, setMenuShow] = useState<boolean>(false);
@@ -88,14 +92,18 @@ const HomeHeader: FC<{ showUserInfo?: boolean }> = ({ showUserInfo = false }) =>
       ) : null}
 
       {!isTablet ? (
-        <div
-          className="btn-main btn-colorful"
-          onClick={() => {
-            navigate("/console/competition/1003");
-          }}
-        >
-          {"Competition Pools"}
-        </div>
+        showLogin ? (
+          <UserInfo />
+        ) : (
+          <div
+            className="btn-main btn-colorful"
+            onClick={() => {
+              navigate("/console/competition/1003");
+            }}
+          >
+            {"Competition Pools"}
+          </div>
+        )
       ) : (
         <img
           src={!menuShow ? ImgHomepage.IconMenu : ImgHomepage.IconMenuWhite}
