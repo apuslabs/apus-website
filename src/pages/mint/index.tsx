@@ -129,7 +129,6 @@ export default function Mint() {
   const apusDAI = daiAllocations
     .filter((allocation) => allocation.Recipient === TOKEN_PROCESS)
     .reduce((acc, cur) => acc + cur.Amount, 0);
-  console.log(aoSTETH, aoDAI, apusSTETH, apusDAI);
 
   const [funcType, setFuncType] = useState<"increase" | "decrease">("increase");
 
