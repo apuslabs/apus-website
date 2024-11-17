@@ -98,7 +98,7 @@ const HomeHeader: FC<{ showUserInfo?: boolean; showLogin?: boolean }> = ({
           <div
             className="btn-main btn-colorful"
             onClick={() => {
-              navigate("/console/competition/1003");
+              navigate("/console/competitions");
             }}
           >
             {"Competition Pools"}

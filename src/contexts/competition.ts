@@ -8,10 +8,6 @@ import { message } from "antd";
 dayjs.extend(relativeTime);
 
 interface PoolInfoMetadata {
-  competition_time: {
-    start: number;
-    end: number;
-  };
   description: string;
   dataset: string;
   video: string;
@@ -21,19 +17,17 @@ interface PoolInfoMetadata {
 export interface PoolInfo {
   title: string;
   reward_pool: number;
-  // TODO: end_time, start_time
+  start_time: number;
+  end_time: number;
   metadata: PoolInfoMetadata;
 }
 
 const DefaultPoolInfo = {
   title: "",
   reward_pool: 0,
+  start_time: 0,
+  end_time: 0,
   meta_data: JSON.stringify({
-    // TODO: update
-    competition_time: {
-      start: 0,
-      end: 0,
-    },
     fine_tuning_tutorial_link: "",
     description: "",
     video: "",
@@ -121,8 +115,8 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   // TODO: remove this
   poolInfo.metadata = JSON.parse((poolInfo.metadata as unknown as string) || DefaultPoolInfo.meta_data);
 
-  const startTime = dayjs.unix(poolInfo.metadata.competition_time.start);
-  const endTime = dayjs.unix(poolInfo.metadata.competition_time.end);
+  const startTime = dayjs.unix(poolInfo.start_time);
+  const endTime = dayjs.unix(poolInfo.end_time);
   const isPoolStarted = startTime.isBefore(Date.now());
   const poolStartCountdown = startTime.fromNow(true);
   const isPoolEnded = endTime.isBefore(Date.now());

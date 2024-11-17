@@ -15,32 +15,32 @@ async function mockGetEstilimitedAPUS({ type, amount }: { type: "stETH" | "DAI";
 
 export function useAOMint() {
   const { activeAddress } = useArweaveContext();
-  // const {
-  //   result: balanceResult,
-  //   loading: balanceLoading,
-  //   execute: getBalance,
-  // } = useAO(TOKEN_PROCESS, "Balance", "dryrun");
-  // const {
-  //   result: allocationsResult,
-  //   loading: allocationLoading,
-  //   execute: getAllocations,
-  // } = useAO(AO_MINT_PROCESS, "Get-Allocations", "dryrun");
+  const {
+    result: balanceResult,
+    loading: balanceLoading,
+    execute: getBalance,
+  } = useAO(TOKEN_PROCESS, "Balance", "dryrun");
+  const {
+    result: allocationsResult,
+    loading: allocationLoading,
+    execute: getAllocations,
+  } = useAO(AO_MINT_PROCESS, "Deposit.Get-Allocations", "message");
 
-  // useEffect(() => {
-  //   getBalance();
-  //   getAllocations({ Token: "DAI" });
-  // }, [getBalance, getAllocations]);
-  // return {
-  //   apus: getDataFromMessage(balanceResult),
-  //   monthlyProjection: 10.1,
-  //   allocations: getDataFromMessage(allocationsResult),
-  // };
-
-  const { result, execute } = useAO(activeAddress || "", "Eval", "dryrun");
   useEffect(() => {
-    if (activeAddress) {
-      execute({}, "Inbox[#Inbox]");
-    }
-  }, [activeAddress, execute]);
-  console.log(result);
+    getBalance();
+    getAllocations({ Token: "DAI" });
+  }, [getBalance, getAllocations]);
+  return {
+    apus: getDataFromMessage(balanceResult),
+    monthlyProjection: 10.1,
+    allocations: getDataFromMessage(allocationsResult),
+  };
+
+  // const { result, execute } = useAO(activeAddress || "", "Eval", "dryrun");
+  // useEffect(() => {
+  //   if (activeAddress) {
+  //     execute({}, "Inbox[#Inbox]");
+  //   }
+  // }, [activeAddress, execute]);
+  // console.log(result);
 }

@@ -46,10 +46,10 @@ export const HomeFooterMenuList: NavigationMenuType[] = [
 export const ConsoleHeaderMenuList: NavigationMenuType[] = [
   {
     name: "Competition Pools",
-    path: "/console/competition/1003",
+    path: "/console/competitions",
   },
   {
     name: "Playground",
-    path: "/console/playground/1003",
+    path: "/console/playground/1004",
   },
 ];

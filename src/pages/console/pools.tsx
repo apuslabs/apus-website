@@ -6,17 +6,15 @@ import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
 interface PoolInfo {
-  id: number;
+  pool_id: number;
   title: string;
   reward_pool: number;
+  start_time: number;
+  end_time: number;
   metadata: string;
 }
 
 interface PoolInfoMetadata {
-  competition_time: {
-    start: number;
-    end: number;
-  };
   description: string;
   dataset: string;
   video: string;
@@ -24,20 +22,21 @@ interface PoolInfoMetadata {
 }
 
 interface Pool {
-  id: number;
+  pool_id: number;
   title: string;
   reward_pool: number;
+  start_time: number;
+  end_time: number;
   metadata: PoolInfoMetadata;
 }
 
-function CompetitionCard({ id, title, reward_pool, metadata }: Pool) {
+function CompetitionCard({ pool_id, title, reward_pool, start_time, end_time }: Pool) {
   const navigate = useNavigate();
   return (
     <Card className="w-80 flex-grow flex-shrink-0">
       <div className="font-medium text-xl leading-none mb-4">{title}</div>
       <div className="mb-12 text-xs text-black50">
-        Duration: {dayjs.unix(metadata.competition_time.start).format("YYYY.MM.DD 8:00")} -{" "}
-        {dayjs.unix(metadata.competition_time.end).format("YYYY.MM.DD 8:00")}
+        Duration: {dayjs.unix(start_time).format("YYYY.MM.DD 8:00")} - {dayjs.unix(end_time).format("YYYY.MM.DD 8:00")}
       </div>
       <div className="flex justify-between items-end">
         <div className="flex flex-col">
@@ -47,7 +46,7 @@ function CompetitionCard({ id, title, reward_pool, metadata }: Pool) {
         <div
           className="btn-main bg-blueToPink135"
           onClick={() => {
-            navigate(`/console/competition/${id}`);
+            navigate(`/console/competition/${pool_id}`);
           }}
         >
           Bid
@@ -68,12 +67,10 @@ export default function Pools() {
     metadata: JSON.parse(c.metadata) as PoolInfoMetadata,
   }));
   const activeCompetitions = competitionsWithMetadata?.filter(
-    (c) => c.metadata.competition_time.start < Date.now() / 1000 && c.metadata.competition_time.end > Date.now() / 1000,
+    (c) => c.start_time < Date.now() / 1000 && c.end_time > Date.now() / 1000,
   );
-  const upcomingCompetitions = competitionsWithMetadata?.filter(
-    (c) => c.metadata.competition_time.start > Date.now() / 1000,
-  );
-  const pastCompetitions = competitionsWithMetadata?.filter((c) => c.metadata.competition_time.end < Date.now() / 1000);
+  const upcomingCompetitions = competitionsWithMetadata?.filter((c) => c.start_time > Date.now() / 1000);
+  const pastCompetitions = competitionsWithMetadata?.filter((c) => c.end_time < Date.now() / 1000);
   return (
     <div className="max-w-[80rem] mx-auto py-6">
       {[
@@ -100,7 +97,7 @@ export default function Pools() {
               <div className="text-sm text-black50 mb-4">
                 <span className={`inline-block w-2 h-2 ${labelColorTag} rounded`}></span> {label}
               </div>
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 mb-4">
                 {competitions?.map((c) => <CompetitionCard key={c.title} {...c} />)}
               </div>
             </div>

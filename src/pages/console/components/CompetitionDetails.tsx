@@ -18,8 +18,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
   {
     icon: ImgCompetition.IconCalendar,
     label: "Duration",
-    value:
-      timeFormat(poolInfo.metadata.competition_time.start) + " - " + timeFormat(poolInfo.metadata.competition_time.end),
+    value: timeFormat(poolInfo.start_time) + " - " + timeFormat(poolInfo.end_time),
     detail: poolInfo.metadata.duration_desc,
   },
   {
