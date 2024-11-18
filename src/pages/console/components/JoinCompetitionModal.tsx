@@ -1,4 +1,4 @@
-import { Form, Input, message, Modal, Spin, Upload, UploadFile } from "antd";
+import { Form, Input, message, Modal, notification, Spin, Upload, UploadFile } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { FC, useState } from "react";
 import { DeleteOutlined, FileOutlined } from "@ant-design/icons";
@@ -50,7 +50,10 @@ export const JoinCompetitionModal: FC<{
         if (e.message === "{}") {
           message.error("Unknown error, please try another dataset file or contact admin.");
         } else {
-          message.error(e.message);
+          notification.error({
+            message: "Submit Failed",
+            description: e.message,
+          });
         }
       } else if (typeof e === "object" && e !== null && "errorFields" in e) {
         return;

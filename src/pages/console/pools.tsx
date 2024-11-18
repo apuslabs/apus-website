@@ -5,15 +5,6 @@ import { useLayoutEffect } from "react";
 import dayjs from "dayjs";
 import { useNavigate } from "react-router-dom";
 
-interface PoolInfo {
-  pool_id: number;
-  title: string;
-  reward_pool: number;
-  start_time: number;
-  end_time: number;
-  metadata: string;
-}
-
 interface PoolInfoMetadata {
   description: string;
   dataset: string;
@@ -33,7 +24,7 @@ interface Pool {
 function CompetitionCard({ pool_id, title, reward_pool, start_time, end_time }: Pool) {
   const navigate = useNavigate();
   return (
-    <Card className="w-80 flex-grow flex-shrink-0">
+    <Card>
       <div className="font-medium text-xl leading-none mb-4">{title}</div>
       <div className="mb-12 text-xs text-black50">
         Duration: {dayjs.unix(start_time).format("YYYY.MM.DD 8:00")} - {dayjs.unix(end_time).format("YYYY.MM.DD 8:00")}
@@ -44,7 +35,10 @@ function CompetitionCard({ pool_id, title, reward_pool, start_time, end_time }: 
           <div className="font-medium text-blue">{reward_pool} APUS</div>
         </div>
         <div
-          className="btn-main bg-blueToPink135"
+          className="btn-blueToPink135"
+          style={{
+            width: "6rem",
+          }}
           onClick={() => {
             navigate(`/console/competition/${pool_id}`);
           }}
@@ -61,18 +55,15 @@ export default function Pools() {
   useLayoutEffect(() => {
     getCompetitions();
   }, [getCompetitions]);
-  const competitions: PoolInfo[] = JSON.parse(getDataFromMessage<string>(competitionsResult) || "[]");
-  const competitionsWithMetadata: Pool[] = competitions.map((c) => ({
-    ...c,
-    metadata: JSON.parse(c.metadata) as PoolInfoMetadata,
-  }));
-  const activeCompetitions = competitionsWithMetadata?.filter(
+  const competitions: Pool[] = JSON.parse(getDataFromMessage<string>(competitionsResult) || "[]");
+  // console.log(typeof competitions);
+  const activeCompetitions = competitions?.filter(
     (c) => c.start_time < Date.now() / 1000 && c.end_time > Date.now() / 1000,
   );
-  const upcomingCompetitions = competitionsWithMetadata?.filter((c) => c.start_time > Date.now() / 1000);
-  const pastCompetitions = competitionsWithMetadata?.filter((c) => c.end_time < Date.now() / 1000);
+  const upcomingCompetitions = competitions?.filter((c) => c.start_time > Date.now() / 1000);
+  const pastCompetitions = competitions?.filter((c) => c.end_time < Date.now() / 1000);
   return (
-    <div className="max-w-[80rem] mx-auto py-6">
+    <div className="max-w-[80rem] mx-auto p-6">
       {[
         {
           label: "Active",
@@ -97,7 +88,7 @@ export default function Pools() {
               <div className="text-sm text-black50 mb-4">
                 <span className={`inline-block w-2 h-2 ${labelColorTag} rounded`}></span> {label}
               </div>
-              <div className="flex flex-wrap gap-4 mb-4">
+              <div className="grid grid-flow-row grid-cols-3 gap-4 mb-4">
                 {competitions?.map((c) => <CompetitionCard key={c.title} {...c} />)}
               </div>
             </div>

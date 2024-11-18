@@ -31,7 +31,7 @@ export const CompetitionDetails = (poolInfo: PoolInfo, stage: string) => [
     label: "Dataset",
     value: (
       <Link to={poolInfo.metadata.dataset} className="text-blue font-medium">
-        {poolInfo.metadata.dataset}
+        {poolInfo.metadata.dataset.split("/").pop()}
       </Link>
     ),
   },

@@ -22,16 +22,17 @@ export interface PoolInfo {
   metadata: PoolInfoMetadata;
 }
 
-const DefaultPoolInfo = {
+const DefaultPoolInfo: PoolInfo = {
   title: "",
   reward_pool: 0,
   start_time: 0,
   end_time: 0,
-  meta_data: JSON.stringify({
-    fine_tuning_tutorial_link: "",
+  metadata: {
     description: "",
     video: "",
-  }),
+    dataset: "",
+    duration_desc: "",
+  },
 };
 
 export interface Dashboard {
@@ -111,9 +112,6 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   const poolInfo: PoolInfo = JSON.parse(poolInfoMsg);
   const dashboard: Dashboard = JSON.parse(dashboardMsg);
   const leaderboard: Leaderboard[] = JSON.parse(leaderboardMsg);
-
-  // TODO: remove this
-  poolInfo.metadata = JSON.parse((poolInfo.metadata as unknown as string) || DefaultPoolInfo.meta_data);
 
   const startTime = dayjs.unix(poolInfo.start_time);
   const endTime = dayjs.unix(poolInfo.end_time);

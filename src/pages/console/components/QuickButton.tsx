@@ -18,7 +18,7 @@ export const QuickButton: FC<{
         onClick={async () => {
           if (!activeAddress) {
             connectWallet();
-          } else {
+          } else if (!disabled) {
             const result = await checkPermission({
               FromAddress: activeAddress,
             });
