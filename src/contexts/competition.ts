@@ -176,12 +176,6 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
   };
 }
 
-interface DatasetItem {
-  content: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  meta?: Record<string, any>;
-}
-
 export function useEmbedding() {
   const {
     result: createDatasetResult,
@@ -191,7 +185,8 @@ export function useEmbedding() {
   } = useAO(EMBEDDING_PROCESS, "Create-Dataset", "message");
 
   const createDataset = useCallback(
-    (PoolID: string, hash: string, name: string, list: DatasetItem[]) => execute({ PoolID }, { hash, name, list }),
+    (PoolID: string, hash: string, name: string, list: string[]) =>
+      execute({ PoolID }, { hash, name, list: btoa(JSON.stringify(list)) }),
     [execute],
   );
 
