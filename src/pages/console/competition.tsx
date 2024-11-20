@@ -118,7 +118,7 @@ const Competition = () => {
 
       <div className="flex flex-col mt-8 mb-4">
         <h2 className="text-xl font-semibold text-neutral-900">Leaderboard</h2>
-        <p className="mt-2 text-black50 text-xs">Leaderboard updated every 1 hours</p>
+        <p className="mt-2 text-black50 text-xs">Leaderboard will be published after event end!</p>
       </div>
       <div className="rounded-2xl">
         <ConfigProvider renderEmpty={RenderEmpty}>
