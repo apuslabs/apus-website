@@ -3,6 +3,8 @@ import { CHAT_PROCESS, POOL_PROCESS } from "../utils/config";
 import { getDataFromMessage, getTagsFromMessage, useAO } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
+dayjs.extend(relativeTime);
 
 const DEFAULT_OUTPUT_TOKENS = "20";
 const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
