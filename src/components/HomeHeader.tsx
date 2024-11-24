@@ -3,7 +3,6 @@ import { ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
-import { UserInfo } from "./ConsoleHeader";
 
 function scrollToAnchor(anchor: string) {
   if (!anchor) return;
@@ -16,10 +15,7 @@ function scrollToAnchor(anchor: string) {
   }
 }
 
-const HomeHeader: FC<{ showUserInfo?: boolean; showLogin?: boolean }> = ({
-  showUserInfo = false,
-  showLogin = false,
-}) => {
+const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
   const [menuShow, setMenuShow] = useState<boolean>(false);
@@ -51,50 +47,46 @@ const HomeHeader: FC<{ showUserInfo?: boolean; showLogin?: boolean }> = ({
           className="h-6 md:h-10"
         />
       </div>
-      {!showUserInfo ? (
-        <div
-          className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative
-            ${isTablet ? "bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl" : ""}
-            md:text-[#333333] text-white`}
-          style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
-          onClick={() => {
-            setMenuShow(false);
-          }}
+      <div
+        className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative
+          ${isTablet ? "bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl" : ""}
+          md:text-[#333333] text-white`}
+        style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
+        onClick={() => {
+          setMenuShow(false);
+        }}
+      >
+        <ul
+          className="flex-col justify-center items-center gap-12
+          font-semibold text-xl
+          md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
+          z-20"
         >
-          <ul
-            className="flex-col justify-center items-center gap-12
-            font-semibold text-xl
-            md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
-            z-20"
-          >
-            {HomeHeaderMenuList.map((item) => (
-              <Link
-                key={item.name}
-                to={item.path}
-                onClick={
-                  item.onClick
-                    ? item.onClick
-                    : () => {
-                        if (item.path.includes("?anchor")) {
-                          const anchor = item.path.split("?anchor=")[1];
-                          scrollToAnchor(anchor);
-                        }
+          {HomeHeaderMenuList.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={
+                item.onClick
+                  ? item.onClick
+                  : () => {
+                      if (item.path.includes("?anchor")) {
+                        const anchor = item.path.split("?anchor=")[1];
+                        scrollToAnchor(anchor);
                       }
-                }
-              >
-                <li className="menu-colorful" key={item.name}>
-                  {item.name}
-                </li>
-              </Link>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+                    }
+              }
+            >
+              <li className="menu-colorful" key={item.name}>
+                {item.name}
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </div>
 
       {!isTablet ? (
-        showLogin ? (
-          <UserInfo />
-        ) : (
+        Userbox || (
           <div
             className="btn-main btn-colorful"
             onClick={() => {

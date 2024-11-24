@@ -2,25 +2,22 @@ import { Divider, Form, Input, message, Modal, Select, Slider, Spin, Tabs } from
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
-import { AO_MINT_PROCESS, TOKEN_PROCESS } from "../../utils/config";
-import { useArweaveContext } from "../../contexts/arconnect";
 import { useAOMint } from "./contexts";
+import { ethers } from "ethers";
 
 function TokenSlider({
-  stETH,
-  dai,
-  type,
+  totalAmount,
+  tab,
   amount,
   setAmount,
   tokenType,
   setTokenType,
 }: {
-  stETH: number;
-  dai: number;
-  type: "increase" | "decrease";
+  totalAmount: number;
+  tab: "increase" | "decrease";
   amount: number;
   setAmount: (v: number) => void;
-  tokenType: "stETH" | "DAI";
+  tokenType?: "stETH" | "DAI";
   setTokenType: (v: "stETH" | "DAI") => void;
 }) {
   const [percent, setPercent] = useState(0);
@@ -60,8 +57,8 @@ function TokenSlider({
           className="w-[23.25rem] text-right"
           value={amount}
           onChange={(v) => {
-            setAmount(Number(parseFloat(v.target.value).toFixed(4)));
-            setPercent(Math.round((parseFloat(v.target.value) / (tokenType === "stETH" ? stETH : dai)) * 100));
+            setAmount(Number(parseFloat(v.target.value).toFixed(8)));
+            setPercent(Math.round((parseFloat(v.target.value) / totalAmount) * 100));
           }}
         />
       </div>
@@ -74,16 +71,16 @@ function TokenSlider({
         value={percent}
         onChange={(v) => {
           setPercent(v);
-          setAmount(Number(((v * (tokenType === "stETH" ? stETH : dai)) / 100).toFixed(4)));
+          setAmount(Number(((v * totalAmount) / 100).toFixed(8)));
         }}
       />
       <div className="w-full text-right -mt-5">
         <span className="font-bold text-[#091dff]">
-          {amount} {type} ({percent}%)
+          {amount} {tab} ({percent}%)
         </span>{" "}
         Will Be Redelegated
         <br />
-        To Mint {type === "increase" ? "APUS" : "AO"}
+        To Mint {tab === "increase" ? "APUS" : "AO"}
       </div>
     </>
   );
@@ -96,135 +93,45 @@ function sleep() {
 }
 
 export default function Mint() {
-  useAOMint();
-  const { activeAddress } = useArweaveContext();
-  const [balance] = useState(99.6542);
-  const [stETHAllocations, setSTETHAllocations] = useState([
-    {
-      Amount: 200,
-      Recipient: AO_MINT_PROCESS,
-    },
-    {
-      Amount: 0,
-      Recipient: TOKEN_PROCESS,
-    },
-  ]);
-  const [daiAllocations, setDAIAllocations] = useState([
-    {
-      Amount: 5000,
-      Recipient: AO_MINT_PROCESS,
-    },
-    {
-      Amount: 5000,
-      Recipient: TOKEN_PROCESS,
-    },
-  ]);
-  const aoSTETH = stETHAllocations
-    .filter((allocation) => allocation.Recipient === AO_MINT_PROCESS)
-    .reduce((acc, cur) => acc + cur.Amount, 0);
-  const aoDAI = daiAllocations
-    .filter((allocation) => allocation.Recipient === AO_MINT_PROCESS)
-    .reduce((acc, cur) => acc + cur.Amount, 0);
-  const apusSTETH = stETHAllocations
-    .filter((allocation) => allocation.Recipient === TOKEN_PROCESS)
-    .reduce((acc, cur) => acc + cur.Amount, 0);
-  const apusDAI = daiAllocations
-    .filter((allocation) => allocation.Recipient === TOKEN_PROCESS)
-    .reduce((acc, cur) => acc + cur.Amount, 0);
-
-  const [funcType, setFuncType] = useState<"increase" | "decrease">("increase");
-
-  const [delegateAmount, setDelegateAmount] = useState(0);
-  const [withdrawAmount, setWithdrawAmount] = useState(0);
-  const [tokenType, setTokenType] = useState<"stETH" | "DAI">("stETH");
-
-  const reAllocate = () => {
-    if (tokenType === "stETH") {
-      if (funcType === "increase") {
-        // Minus delegateAmount from AO to APUS
-        setSTETHAllocations(
-          stETHAllocations.map((allocation) => {
-            if (allocation.Recipient === AO_MINT_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount - delegateAmount };
-            }
-            if (allocation.Recipient === TOKEN_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount + delegateAmount };
-            }
-            return allocation;
-          }),
-        );
-      } else {
-        // Minus delegateAmount from APUS to AO
-        setSTETHAllocations(
-          stETHAllocations.map((allocation) => {
-            if (allocation.Recipient === AO_MINT_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount + withdrawAmount };
-            }
-            if (allocation.Recipient === TOKEN_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount - withdrawAmount };
-            }
-            return allocation;
-          }),
-        );
-      }
-    } else {
-      if (funcType === "increase") {
-        // Minus delegateAmount from AO to APUS
-        setDAIAllocations(
-          daiAllocations.map((allocation) => {
-            if (allocation.Recipient === AO_MINT_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount - delegateAmount };
-            }
-            if (allocation.Recipient === TOKEN_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount + delegateAmount };
-            }
-            return allocation;
-          }),
-        );
-      } else {
-        // Minus delegateAmount from APUS to AO
-        setDAIAllocations(
-          daiAllocations.map((allocation) => {
-            if (allocation.Recipient === AO_MINT_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount + withdrawAmount };
-            }
-            if (allocation.Recipient === TOKEN_PROCESS) {
-              return { ...allocation, Amount: allocation.Amount - withdrawAmount };
-            }
-            return allocation;
-          }),
-        );
-      }
-    }
-  };
+  const {
+    apus,
+    tokenType,
+    setTokenType,
+    increaseApusAllocation,
+    decreaseApusAllocation,
+    apusAllocationBalance,
+    userAllocationBalance,
+  } = useAOMint();
+  const [tab, setTab] = useState<"increase" | "decrease">("increase");
+  const [amount, setAmount] = useState<number>(0);
 
   const [loading, setLoading] = useState(false);
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [arweaveAddress, setArweaveAddress] = useState("");
+
   const approve = async () => {
-    if (!activeAddress) {
-      message.error("Please connect your wallet");
-      return;
-    }
-    if (funcType === "increase") {
-      if (delegateAmount === 0) {
-        message.warning("Please select the amount");
-        return;
-      }
-    } else {
-      if (withdrawAmount === 0) {
-        message.warning("Please select the amount");
-        return;
-      }
-    }
     setLoading(true);
     await sleep();
-    reAllocate();
-    setDelegateAmount(0);
+    if (tab === "increase") {
+      await increaseApusAllocation(ethers.utils.parseUnits(amount.toString(), 18), arweaveAddress);
+    } else {
+      await decreaseApusAllocation(ethers.utils.parseUnits(amount.toString(), 18), arweaveAddress);
+    }
+    setAmount(0);
     message.success("Approve successfully");
     setLoading(false);
   };
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [arweaveAddress, setArweaveAddress] = useState("");
+  const switchTab = (key: "increase" | "decrease") => {
+    setTab(key);
+    setAmount(0);
+  };
+
+  const switchToken = (key: "stETH" | "DAI") => {
+    setTokenType(key);
+    setAmount(0);
+  };
 
   return (
     <div id="mint" className="pt-20">
@@ -232,11 +139,11 @@ export default function Mint() {
         <div className="flex-1 flex flex-col gap-5 p-7 items-center">
           <div className="card-caption h-10 w-full">DASHBOARD</div>
           <div className="text-gray90">Your APUS</div>
-          <div className="font-medium text-gray21 text-[40px]">{balance}</div>
+          <div className="font-medium text-gray21 text-[40px]">{apus}</div>
           <Divider orientation="center" className="m-0" />
           <div className="text-gray90">30 Day Projection</div>
           <div className="font-medium text-gray21 text-[40px]">
-            <span className="text-[#03C407] font-normal">+</span> {apusSTETH * 0.9 + apusDAI * 0.0005}
+            <span className="text-[#03C407] font-normal">+</span> {0}
           </div>
         </div>
         <Divider type="vertical" className="h-64 my-auto" />
@@ -281,9 +188,9 @@ export default function Mint() {
           type="card"
           defaultActiveKey="1"
           centered
-          activeKey={funcType}
+          activeKey={tab}
           onChange={(key) => {
-            setFuncType(key as "increase" | "decrease");
+            switchTab(key as "increase" | "decrease");
           }}
           items={[
             {
@@ -295,24 +202,25 @@ export default function Mint() {
                   text-gray21"
                 >
                   <div className="w-full text-right">
-                    <span className="font-bold text-[#091dff]">{aoSTETH} stETH</span> Available To Mint APUS
+                    <span className="font-bold text-[#091dff]">
+                      {ethers.utils.formatUnits(userAllocationBalance, 18)} {tokenType}
+                    </span>{" "}
+                    Available To Mint APUS
                   </div>
                   <TokenSlider
-                    stETH={aoSTETH}
-                    dai={aoDAI}
-                    type="increase"
-                    amount={delegateAmount}
-                    setAmount={setDelegateAmount}
+                    totalAmount={Number(ethers.utils.formatUnits(userAllocationBalance, 18))}
+                    tab="increase"
+                    amount={amount}
+                    setAmount={setAmount}
                     tokenType={tokenType}
-                    setTokenType={setTokenType}
+                    setTokenType={switchToken}
                   />
                   <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                   <div>Next 30 Days Receivable APUS Projection</div>
                   <div className="flex items-center gap-5">
                     <img src={ImgMint.ChevronRight} />
                     <div className="text-[40px] font-medium text-gray21 leading-none">
-                      <span className="text-[#03c407]">+</span>{" "}
-                      {(delegateAmount * (tokenType === "stETH" ? 0.9 : 0.0005)).toFixed(4)}
+                      <span className="text-[#03c407]">+</span> {amount}
                     </div>
                     <img src={ImgMint.ChevronRight} className="rotate-180" />
                   </div>
@@ -334,18 +242,17 @@ export default function Mint() {
                 >
                   <div className="w-full text-right">
                     <span className="font-bold text-[#091dff]">
-                      {tokenType === "stETH" ? apusSTETH : apusDAI} {tokenType}
+                      {ethers.utils.formatUnits(apusAllocationBalance, 18)} {tokenType}
                     </span>{" "}
                     Available To Mint APUS
                   </div>
                   <TokenSlider
-                    stETH={apusSTETH}
-                    dai={apusDAI}
-                    type="decrease"
-                    amount={withdrawAmount}
-                    setAmount={setWithdrawAmount}
+                    totalAmount={Number(ethers.utils.formatUnits(apusAllocationBalance, 18))}
+                    tab="decrease"
+                    amount={amount}
+                    setAmount={setAmount}
                     tokenType={tokenType}
-                    setTokenType={setTokenType}
+                    setTokenType={switchToken}
                   />
                   <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                   <Spin spinning={loading}>

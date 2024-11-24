@@ -41,8 +41,4 @@ const HomeFooter: FC<HomeFooterProps> = () => {
   );
 };
 
-HomeFooter.defaultProps = {
-  showCompany: true,
-};
-
 export default HomeFooter;

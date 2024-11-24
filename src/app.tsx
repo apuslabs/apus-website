@@ -5,6 +5,8 @@ import { lazy, Suspense } from "react";
 import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
 import ConsoleHeader from "./components/ConsoleHeader";
+import MintUserbox from "./components/MintUserbox";
+import { EthWalletContext, useEthWallet } from "./contexts/ethwallet";
 const Homepage = lazy(() => import("./pages/homepage"));
 const Team = lazy(() => import("./pages/team"));
 const Mint = lazy(() => import("./pages/mint"));
@@ -42,7 +44,7 @@ const router = createHashRouter([
         path: "mint",
         element: (
           <Suspense>
-            <HomeHeader showLogin={true} />
+            <HomeHeader Userbox={<MintUserbox />} />
             <Mint />
             <HomeFooter />
           </Suspense>
@@ -103,10 +105,14 @@ const router = createHashRouter([
 
 export default function App() {
   const ar = useArweave();
+  const eth = useEthWallet();
+
   return (
     <ConfigProvider>
       <ArweaveContext.Provider value={ar}>
-        <RouterProvider router={router} />
+        <EthWalletContext.Provider value={eth}>
+          <RouterProvider router={router} />
+        </EthWalletContext.Provider>
       </ArweaveContext.Provider>
     </ConfigProvider>
   );
