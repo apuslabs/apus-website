@@ -25,6 +25,13 @@ export function useEthWallet() {
     setIsEthereumSupported(typeof window.ethereum !== "undefined");
 
     if (window.ethereum) {
+      // 自动获取当前账户地址
+      window.ethereum.request({ method: "eth_accounts" }).then((accounts: string[]) => {
+        if (accounts.length > 0) {
+          setWalletAddress(accounts[0]);
+        }
+      });
+
       // 监听账户切换事件
       window.ethereum.on("accountsChanged", handleAccountsChanged);
 

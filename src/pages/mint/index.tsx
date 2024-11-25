@@ -1,4 +1,4 @@
-import { Divider, Form, Input, message, Modal, Select, Slider, Spin, Tabs } from "antd";
+import { Divider, Form, Input, InputNumber, message, Modal, Select, Slider, Spin, Tabs } from "antd";
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
@@ -52,13 +52,16 @@ function TokenSlider({
             </div>
           </Select.Option>
         </Select>
-        <Input
+        <InputNumber
           size="large"
           className="w-[23.25rem] text-right"
           value={amount}
+          max={totalAmount}
           onChange={(v) => {
-            setAmount(Number(parseFloat(v.target.value).toFixed(8)));
-            setPercent(Math.round((parseFloat(v.target.value) / totalAmount) * 100));
+            if (v !== null) {
+              setAmount(v);
+              setPercent(Math.round((v / totalAmount) * 100));
+            }
           }}
         />
       </div>
