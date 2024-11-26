@@ -9,7 +9,7 @@ import MintUserbox from "./components/MintUserbox";
 import { EthWalletContext, useEthWallet } from "./contexts/ethwallet";
 const Homepage = lazy(() => import("./pages/homepage"));
 const Team = lazy(() => import("./pages/team"));
-const Mint = lazy(() => import("./pages/mint"));
+const Mint = lazy(() => import("./pages/mint/mint"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
 const Page404 = lazy(() => import("./pages/404"));

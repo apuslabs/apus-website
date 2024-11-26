@@ -55,6 +55,7 @@ function TokenSlider({
         <InputNumber
           size="large"
           className="w-[23.25rem] text-right"
+          disabled={tokenType === undefined}
           value={amount}
           max={totalAmount}
           onChange={(v) => {
@@ -67,6 +68,7 @@ function TokenSlider({
       </div>
       <Slider
         className="w-[31rem]"
+        disabled={tokenType === undefined}
         marks={{ 0: "0%", 100: "100%" }}
         min={0}
         max={100}
@@ -98,6 +100,9 @@ function sleep() {
 export default function Mint() {
   const {
     apus,
+    estimatedApus,
+    fetchEstimatedApusToken,
+    userEstimatedApusToken,
     tokenType,
     setTokenType,
     increaseApusAllocation,
@@ -142,11 +147,11 @@ export default function Mint() {
         <div className="flex-1 flex flex-col gap-5 p-7 items-center">
           <div className="card-caption h-10 w-full">DASHBOARD</div>
           <div className="text-gray90">Your APUS</div>
-          <div className="font-medium text-gray21 text-[40px]">{apus}</div>
+          <div className="font-medium text-gray21 text-[40px]">{apus || 0}</div>
           <Divider orientation="center" className="m-0" />
           <div className="text-gray90">30 Day Projection</div>
           <div className="font-medium text-gray21 text-[40px]">
-            <span className="text-[#03C407] font-normal">+</span> {0}
+            <span className="text-[#03C407] font-normal">+</span> {userEstimatedApusToken || 0}
           </div>
         </div>
         <Divider type="vertical" className="h-64 my-auto" />
@@ -214,7 +219,12 @@ export default function Mint() {
                     totalAmount={Number(ethers.utils.formatUnits(userAllocationBalance, 18))}
                     tab="increase"
                     amount={amount}
-                    setAmount={setAmount}
+                    setAmount={(v) => {
+                      setAmount(v);
+                      if (tokenType) {
+                        fetchEstimatedApusToken(ethers.utils.parseUnits(v.toString(), 18), tokenType);
+                      }
+                    }}
                     tokenType={tokenType}
                     setTokenType={switchToken}
                   />
@@ -223,7 +233,7 @@ export default function Mint() {
                   <div className="flex items-center gap-5">
                     <img src={ImgMint.ChevronRight} />
                     <div className="text-[40px] font-medium text-gray21 leading-none">
-                      <span className="text-[#03c407]">+</span> {amount}
+                      <span className="text-[#03c407]">+</span> {ethers.utils.formatUnits(estimatedApus || 0, 18)}
                     </div>
                     <img src={ImgMint.ChevronRight} className="rotate-180" />
                   </div>
