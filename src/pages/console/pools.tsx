@@ -27,7 +27,8 @@ function CompetitionCard({ pool_id, title, reward_pool, start_time, end_time }: 
     <Card>
       <div className="font-medium text-xl leading-none mb-4">{title}</div>
       <div className="mb-12 text-xs text-black50">
-        Duration: {dayjs.unix(start_time).format("YYYY.MM.DD 8:00")} - {dayjs.unix(end_time).format("YYYY.MM.DD 8:00")}
+        Duration: {dayjs.unix(start_time).format("YYYY.MM.DD HH:mm")} -{" "}
+        {dayjs.unix(end_time).format("YYYY.MM.DD HH:mm")}
       </div>
       <div className="flex justify-between items-end">
         <div className="flex flex-col">
