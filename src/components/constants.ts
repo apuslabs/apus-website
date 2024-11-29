@@ -7,10 +7,10 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
     name: "Team",
     path: "/team",
   },
-  {
-    name: "Mint",
-    path: "/mint",
-  },
+  // {
+  //   name: "Mint",
+  //   path: "/mint",
+  // },
   {
     name: "Docs",
     path: DocLink,

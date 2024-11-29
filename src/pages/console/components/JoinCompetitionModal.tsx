@@ -104,9 +104,9 @@ export const JoinCompetitionModal: FC<{
                 message.error(`${file.name} is not a json file`);
                 return Upload.LIST_IGNORE;
               }
-              const isLt2M = file.size / 1024 / 1024 > 1;
-              if (isLt2M) {
-                message.error("File must smaller than 1MB!");
+              const isLt512 = file.size / 1024 > 512;
+              if (isLt512) {
+                message.error("File must smaller than 512KB!");
                 return Upload.LIST_IGNORE;
               }
               const fileContent = await file.text();
