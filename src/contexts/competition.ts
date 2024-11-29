@@ -64,7 +64,8 @@ function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
   return leaderboard.sort((a, b) => {
     if (a.author === activeAddress) return -1;
     if (b.author === activeAddress) return 1;
-    return b.score - a.score;
+    // return b.score - a.score;
+    return 1;
   });
 }
 
