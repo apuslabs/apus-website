@@ -104,7 +104,9 @@ export default function HomeIndex() {
             </div>
           </div>
           <div className="w-full mt-32 flex justify-center items-center gap-6 z-10">
-            <div className="btn-colorful btn-main active">Go To Competition Pools &amp; Playground</div>
+            <Link to="/console/competitions">
+              <div className="btn-colorful btn-main active">Go To Competition Pools &amp; Playground</div>
+            </Link>
           </div>
         </div>
       </div>
