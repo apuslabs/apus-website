@@ -1,11 +1,11 @@
-import { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { message as messageUI } from "antd";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_MINT_PROCESS } from "../../utils/config";
-import { EthWalletContext } from "../../contexts/ethwallet";
 import { getDataFromMessage, useAO } from "../../utils/ao";
 import { sendEthMessage } from "../../utils/ethHelpers";
+import { useConnectWallet } from "@web3-onboard/react";
 
 interface AllocationItem {
   Recipient: string;
@@ -33,45 +33,22 @@ function getBalanceOfAllocation(allocations: Allocation, recipient?: string) {
 }
 
 export function useAOMint() {
-  const { walletAddress } = useContext(EthWalletContext);
+  const [{ wallet }] = useConnectWallet();
+  const walletAddress = wallet?.accounts?.[0]?.address;
   const {
     result: balanceResult,
     loading: balanceLoading,
     execute: getBalance,
   } = useAO(APUS_MINT_PROCESS, "User.Balance", "dryrun");
-  const {
-    result: estimatedApusToken,
-    loading: estimatedApusTokenLoading,
-    execute: getEstimatedApusToken,
-  } = useAO(APUS_MINT_PROCESS, "User.Get-Estimated-Apus-Token", "dryrun");
-  const {
-    result: userEstimatedApusToken,
-    loading: userEstimatedApusTokenLoading,
-    execute: getUserEstimatedApusToken,
-  } = useAO(APUS_MINT_PROCESS, "User.Get-User-Estimated-Apus-Token", "dryrun");
-
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const fetchEstimatedApusToken = useCallback(
-    (amount: BigNumber, tokenType: string) => {
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = setTimeout(() => {
-        getEstimatedApusToken({
-          Amount: amount.toString(),
-          Token: tokenType,
-        });
-      }, 1000);
-    },
-    [getEstimatedApusToken, debounceTimeout],
-  );
+  const { result: recipientResult, execute: getRecipient } = useAO(APUS_MINT_PROCESS, "User.Get-Recipient", "dryrun");
+  const { execute: updateRecipient } = useAO(APUS_MINT_PROCESS, "User.Update-Recipient", "message");
 
   useEffect(() => {
     if (walletAddress) {
       getBalance({ Recipient: walletAddress });
-      getUserEstimatedApusToken({ Recipient: walletAddress });
+      getRecipient({ User: walletAddress });
     }
-  }, [getBalance, getUserEstimatedApusToken, walletAddress]);
+  }, [getBalance, getRecipient, walletAddress]);
 
   const [tokenType, setTokenType] = useState<TokenType>();
   const [allocations, setAllocations] = useState<Allocation>([]);
@@ -143,42 +120,8 @@ export function useAOMint() {
     [check, walletAddress, tokenType],
   );
 
-  const increaseStaking = useCallback(
-    async (arAddress: string, increasedAmount: string, currentAmount: string) => {
-      if (!check(true)) {
-        return;
-      }
-      await sendEthMessage(walletAddress!, {
-        process: APUS_MINT_PROCESS,
-        tags: [
-          { name: "Action", value: "User.Increase-Staking" },
-          { name: "Token", value: tokenType! },
-        ],
-        data: JSON.stringify({ arAddress, increasedAmount, currentAmount }),
-      });
-    },
-    [check, walletAddress, tokenType],
-  );
-
-  const decreaseStaking = useCallback(
-    async (arAddress: string, decreasedAmount: string, currentAmount: string) => {
-      if (!check(true)) {
-        return;
-      }
-      await sendEthMessage(walletAddress!, {
-        process: APUS_MINT_PROCESS,
-        tags: [
-          { name: "Action", value: "User.Decrease-Staking" },
-          { name: "Token", value: tokenType! },
-        ],
-        data: JSON.stringify({ arAddress, decreasedAmount, currentAmount }),
-      });
-    },
-    [check, walletAddress, tokenType],
-  );
-
   const increaseApusAllocation = useCallback(
-    async (amount: BigNumber, arAddress: string) => {
+    async (amount: BigNumber) => {
       if (amount.gt(userAllocationBalance)) {
         messageUI.error("Insufficient balance");
         return;
@@ -198,23 +141,13 @@ export function useAOMint() {
       ];
 
       await updateAllocations(newAllocations);
-      await increaseStaking(arAddress, totalReduced.toString(), apusAllocationBalance.add(totalReduced).toString());
       await fetchAllocations();
-      await getUserEstimatedApusToken();
     },
-    [
-      userAllocationBalance,
-      allocations,
-      apusAllocationBalance,
-      updateAllocations,
-      increaseStaking,
-      fetchAllocations,
-      getUserEstimatedApusToken,
-    ],
+    [userAllocationBalance, allocations, apusAllocationBalance, updateAllocations, fetchAllocations],
   );
 
   const decreaseApusAllocation = useCallback(
-    async (amount: BigNumber, arAddress: string) => {
+    async (amount: BigNumber) => {
       if (amount.gt(apusAllocationBalance)) {
         messageUI.error("Insufficient balance");
         return;
@@ -233,31 +166,17 @@ export function useAOMint() {
         { Recipient: APUS_MINT_PROCESS, Amount: apusAllocationBalance.sub(totalIncreased) },
       ];
       await updateAllocations(newAllocations);
-      await decreaseStaking(arAddress, totalIncreased.toString(), apusAllocationBalance.sub(totalIncreased).toString());
       await fetchAllocations();
-      await getUserEstimatedApusToken();
     },
-    [
-      apusAllocationBalance,
-      allocations,
-      userAllocationBalance,
-      updateAllocations,
-      decreaseStaking,
-      fetchAllocations,
-      getUserEstimatedApusToken,
-    ],
+    [apusAllocationBalance, allocations, userAllocationBalance, updateAllocations, fetchAllocations],
   );
 
   return {
     apus: getDataFromMessage<number>(balanceResult),
     balanceLoading,
+    recipient: getDataFromMessage<string>(recipientResult),
+    updateRecipient,
     getBalance,
-    userEstimatedApusToken: getDataFromMessage<number>(userEstimatedApusToken),
-    userEstimatedApusTokenLoading,
-    getUserEstimatedApusToken,
-    estimatedApus: getDataFromMessage<number>(estimatedApusToken),
-    estimatedApusTokenLoading,
-    fetchEstimatedApusToken,
     tokenType,
     setTokenType,
     apusAllocationBalance,

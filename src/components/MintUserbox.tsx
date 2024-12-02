@@ -1,6 +1,6 @@
-import { Dropdown } from "antd";
-import { EthWalletContext } from "../contexts/ethwallet";
-import { useContext } from "react";
+import { Dropdown, Spin } from "antd";
+import { useConnectWallet } from "@web3-onboard/react";
+import "../contexts/ethwallet";
 
 function shortenAddress(address?: string): string {
   if (!address) {
@@ -9,26 +9,38 @@ function shortenAddress(address?: string): string {
   return address.substring(0, 6) + "..." + address.substring(address.length - 4);
 }
 
-export default function EthUserbox() {
-  const { walletAddress, connectWallet, disconnectWallet } = useContext(EthWalletContext);
+export default function EthUserbox({ onRecipient }: { onRecipient: () => void }) {
+  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
 
-  return walletAddress ? (
+  return wallet?.accounts.length ? (
     <Dropdown
       placement="bottomRight"
       menu={{
-        items: [{ key: "logout", label: "Disconnect Wallet" }],
+        items: [
+          { key: "update-recipient", label: "Recipient Address" },
+          { key: "logout", label: "Disconnect Wallet" },
+        ],
         onClick: ({ key }) => {
           if (key === "logout") {
-            disconnectWallet();
+            disconnect(wallet);
+          } else if (key === "update-recipient") {
+            onRecipient();
           }
         },
       }}
     >
-      <div className="btn-default">{shortenAddress(walletAddress)}</div>
+      <div className="btn-default">{shortenAddress(wallet.accounts[0].address)}</div>
     </Dropdown>
   ) : (
-    <div className="btn-blueToPink135" onClick={connectWallet}>
-      Connect Wallet
-    </div>
+    <Spin spinning={connecting}>
+      <div
+        className="btn-blueToPink135"
+        onClick={() => {
+          connect();
+        }}
+      >
+        Connect Wallet
+      </div>
+    </Spin>
   );
 }

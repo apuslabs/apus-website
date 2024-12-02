@@ -94,8 +94,8 @@
   top: 24px;
 }
 
-#mint .btn-primary {
-  @apply h-12 font-semibold text-white leading-none px-8 py-4 rounded-lg cursor-pointer;
+.btn-primary {
+  @apply h-12 font-semibold text-white text-center leading-none px-8 py-4 rounded-lg cursor-pointer;
   background-color: #091dff;
   &:hover {
     background-color: rgba(9, 29, 255, 0.9);
