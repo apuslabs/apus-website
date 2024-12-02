@@ -6,7 +6,7 @@ import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
 const isEnvDev = import.meta.env.DEV;
 
 export const ShortAddress = (address: string) =>
-  `${address.substring(0, 4)}...${address.substring(address.length - 5, address.length - 1)}`;
+  `${address.substring(0, 4)}...${address.substring(address.length - 4, address.length)}`;
 
 function obj2tags(obj: Record<string, unknown>) {
   return Object.entries(obj).map(([key, value]) => ({
