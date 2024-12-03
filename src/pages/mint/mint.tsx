@@ -1,4 +1,4 @@
-import { Divider, Input, InputNumber, message, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
+import { Divider, Input, message, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
@@ -18,16 +18,16 @@ function TokenSlider({
   tokenType,
   setTokenType,
 }: {
-  totalAmount: number;
+  totalAmount: BigNumber;
   tab: "increase" | "decrease";
-  amount: number;
-  setAmount: (v: number) => void;
+  amount: string;
+  setAmount: (v: string) => void;
   tokenType?: "stETH" | "DAI";
   setTokenType: (v: "stETH" | "DAI") => void;
 }) {
   const [percent, setPercent] = useState(0);
   useEffect(() => {
-    if (amount === 0) {
+    if (amount === "0") {
       setPercent(0);
     }
   }, [amount, setPercent]);
@@ -41,8 +41,7 @@ function TokenSlider({
           placeholder={"Select Token"}
           onChange={(v) => {
             setTokenType(v as "stETH" | "DAI");
-            setAmount(0);
-            setPercent(0);
+            setAmount("0");
           }}
         >
           <Select.Option key="stETH">
@@ -58,16 +57,17 @@ function TokenSlider({
             </div>
           </Select.Option>
         </Select>
-        <InputNumber
+        <Input
           size="large"
           className="w-[23.25rem] text-right"
           disabled={tokenType === undefined}
           value={amount}
-          max={totalAmount}
           onChange={(v) => {
             if (v !== null) {
-              setAmount(v);
-              setPercent(Math.round((v / totalAmount) * 100));
+              const numericValue = v.target.value.replace(/[^0-9.]/g, "");
+              const bigAmount = ethers.utils.parseUnits(numericValue, 18);
+              setAmount(numericValue);
+              setPercent(Math.round(bigAmount.mul(100).div(totalAmount).toNumber()));
             }
           }}
         />
@@ -101,12 +101,12 @@ function TokenSlider({
         value={percent}
         onChange={(v) => {
           setPercent(v);
-          setAmount(Number(((v * totalAmount) / 100).toFixed(8)));
+          setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
         }}
       />
       <div className="w-full text-right -mt-5">
         <span className="font-bold text-[#091dff]">
-          {amount} {tab} ({percent}%)
+          {Number(amount).toFixed(4)} {tab} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -141,38 +141,71 @@ export default function Mint() {
     userAllocationBalance,
   } = useAOMint();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
-  const [amount, setAmount] = useState<number>(0);
-
-  const [loading, setLoading] = useState(false);
+  const [amount, setAmount] = useState<string>("0");
 
   const [modalOpen, setModalOpen] = useState(false);
   const [arweaveAddress, setArweaveAddress] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const approve = async () => {
     if (!recipient) {
       message.warning("Please set recipient first");
       setModalOpen(true);
       return;
     }
-    setLoading(true);
-    if (tab === "increase") {
-      await increaseApusAllocation(ethers.utils.parseUnits(amount.toString(), 18));
-    } else {
-      await decreaseApusAllocation(ethers.utils.parseUnits(amount.toString(), 18));
+    try {
+      setLoading(true);
+      if (tab === "increase") {
+        await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
+      } else {
+        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18));
+      }
+      setAmount("0");
+      message.success("Approve successfully");
+    } catch (e: unknown) {
+      if (e instanceof Error) {
+        message.error(e.message);
+      } else {
+        message.error("Failed to approve");
+      }
+    } finally {
+      setLoading(false);
     }
-    setAmount(0);
-    message.success("Approve successfully");
-    setLoading(false);
+  };
+
+  const [loadingRecipient, setLoadingRecipient] = useState(false);
+  const onSubmitRecipient = async () => {
+    if (arweaveAddress.length === 43) {
+      if (loadingRecipient) {
+        return;
+      }
+      try {
+        setLoadingRecipient(true);
+        const result = await updateRecipient(arweaveAddress);
+        message.success(result?.Messages[0].Data);
+        setModalOpen(false);
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          message.error(e.message);
+        } else {
+          message.error("Failed to update recipient");
+        }
+      } finally {
+        setLoadingRecipient(false);
+      }
+    } else {
+      message.error("Invalid Arweave Address");
+    }
   };
 
   const switchTab = (key: "increase" | "decrease") => {
     setTab(key);
-    setAmount(0);
+    setAmount("0");
   };
 
   const switchToken = (key: "stETH" | "DAI") => {
     setTokenType(key);
-    setAmount(0);
+    setAmount("0");
   };
 
   return (
@@ -194,11 +227,11 @@ export default function Mint() {
               Your APUS
               <InfoCircleOutlined className="pl-1" />
             </div>
-            <div className="font-medium text-gray21 text-[40px]">{apus || 0}</div>
+            <div className="font-medium text-gray21 text-[40px]">{ethers.utils.formatUnits(apus, 12)}</div>
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
             <div className="font-medium text-gray21 text-[40px]">
-              <span className="text-[#03C407] font-normal">+</span> {0}
+              <span className="text-[#03C407] font-normal">+</span> {ethers.utils.formatUnits(apus, 4)}
             </div>
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
@@ -261,27 +294,22 @@ export default function Mint() {
                     <div className="w-full flex justify-between">
                       <div>
                         <span className="font-bold text-[#091dff]">
-                          {ethers.utils.formatUnits(apusAllocationBalance, 18)} {tokenType}
+                          {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4)} {tokenType}
                         </span>{" "}
                         Allocated
                       </div>
                       <div className="text-right">
                         <span className="font-bold text-[#091dff]">
-                          {ethers.utils.formatUnits(userAllocationBalance, 18)} {tokenType}
+                          {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4)} {tokenType}
                         </span>{" "}
                         Available To Mint APUS
                       </div>
                     </div>
                     <TokenSlider
-                      totalAmount={Number(ethers.utils.formatUnits(userAllocationBalance, 18))}
+                      totalAmount={userAllocationBalance}
                       tab="increase"
                       amount={amount}
-                      setAmount={(v) => {
-                        setAmount(v);
-                        if (tokenType) {
-                          // fetchEstimatedApusToken(ethers.utils.parseUnits(v.toString(), 18), tokenType);
-                        }
-                      }}
+                      setAmount={setAmount}
                       tokenType={tokenType}
                       setTokenType={switchToken}
                     />
@@ -291,7 +319,7 @@ export default function Mint() {
                       <img src={ImgMint.ChevronRight} />
                       <div className="text-[40px] font-medium text-gray21 leading-none">
                         <span className="text-[#03c407]">+</span>{" "}
-                        {ethers.utils.formatUnits(apusAllocationBalance.mul(getChargeRate(tokenType)) || 0, 18)}
+                        {apusAllocationBalance.mul(getChargeRate(tokenType)).div(1e14).toNumber() / 1e4}
                       </div>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
@@ -317,12 +345,12 @@ export default function Mint() {
                   >
                     <div className="w-full text-right">
                       <span className="font-bold text-[#091dff]">
-                        {ethers.utils.formatUnits(apusAllocationBalance, 18)} {tokenType}
+                        {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
                       </span>{" "}
                       Allocated
                     </div>
                     <TokenSlider
-                      totalAmount={Number(ethers.utils.formatUnits(apusAllocationBalance, 18))}
+                      totalAmount={apusAllocationBalance}
                       tab="decrease"
                       amount={amount}
                       setAmount={setAmount}
@@ -366,31 +394,7 @@ export default function Mint() {
           </div>
           <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
           <Spin spinning={loading}>
-            <div
-              className="w-32 btn-primary mx-auto"
-              onClick={async () => {
-                if (arweaveAddress.length === 43) {
-                  setLoading(true);
-                  try {
-                    const result = await updateRecipient({
-                      Recipient: arweaveAddress,
-                    });
-                    message.success(result.Messages[0].Data);
-                    setModalOpen(false);
-                  } catch (e: unknown) {
-                    if (e instanceof Error) {
-                      message.error(e.message);
-                    } else {
-                      message.error("Failed to update recipient");
-                    }
-                  } finally {
-                    setLoading(false);
-                  }
-                } else {
-                  message.error("Invalid Arweave Address");
-                }
-              }}
-            >
+            <div className="w-32 btn-primary mx-auto" onClick={onSubmitRecipient}>
               Submit
             </div>
           </Spin>
