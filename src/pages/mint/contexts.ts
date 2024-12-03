@@ -41,14 +41,30 @@ export function useAOMint() {
     execute: getBalance,
   } = useAO(APUS_MINT_PROCESS, "User.Balance", "dryrun");
   const { result: recipientResult, execute: getRecipient } = useAO(APUS_MINT_PROCESS, "User.Get-Recipient", "dryrun");
-  const { execute: updateRecipient } = useAO(APUS_MINT_PROCESS, "User.Update-Recipient", "message");
 
   useEffect(() => {
     if (walletAddress) {
       getBalance({ Recipient: walletAddress });
-      getRecipient({ User: walletAddress });
+      getRecipient({ User: ethers.utils.getAddress(walletAddress) });
     }
   }, [getBalance, getRecipient, walletAddress]);
+
+  const updateRecipient = useCallback(
+    async (recipient: string) => {
+      if (!walletAddress) {
+        return;
+      }
+      return await sendEthMessage(walletAddress!, {
+        process: APUS_MINT_PROCESS,
+        tags: [
+          { name: "Action", value: "User.Update-Recipient" },
+          { name: "Recipient", value: recipient },
+        ],
+        data: dayjs().unix().toFixed(0),
+      });
+    },
+    [walletAddress],
+  );
 
   const [tokenType, setTokenType] = useState<TokenType>();
   const [allocations, setAllocations] = useState<Allocation>([]);
@@ -62,13 +78,13 @@ export function useAOMint() {
     (showError?: boolean) => {
       if (!walletAddress) {
         if (showError) {
-          messageUI.error("Please connect your wallet");
+          throw new Error("Please connect your wallet");
         }
         return false;
       }
       if (!tokenType) {
         if (showError) {
-          messageUI.error("Please select token type");
+          throw new Error("Please select token type");
         }
         return false;
       }
@@ -172,7 +188,7 @@ export function useAOMint() {
   );
 
   return {
-    apus: getDataFromMessage<number>(balanceResult),
+    apus: getDataFromMessage<number>(balanceResult) || 0,
     balanceLoading,
     recipient: getDataFromMessage<string>(recipientResult),
     updateRecipient,
