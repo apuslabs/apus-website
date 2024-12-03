@@ -17,7 +17,7 @@ export class EthereumSigner {
     this.walletAddress = walletAddress;
     this.pk = "";
     const provider = new ethers.providers.Web3Provider(window.ethereum);
-    this.signer = provider.getSigner();
+    this.signer = provider.getSigner(this.walletAddress);
   }
 
   async getPublicKey() {
