@@ -2,6 +2,8 @@ import { message, createDataItemSigner, dryrun, result as fetchResult } from "@p
 import { useCallback, useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
+import { sendEthMessage } from "./ethHelpers";
+import { useConnectWallet } from "@web3-onboard/react";
 
 const isEnvDev = import.meta.env.DEV;
 
@@ -182,6 +184,49 @@ export function useAO(
   );
   return {
     result,
+    loading,
+    error,
+    execute,
+  };
+}
+
+export function useEthMessage<T = unknown>(process: string, action: string) {
+  const [{ wallet }] = useConnectWallet();
+  const [result, setResult] = useState<MessageResult>();
+  const [data, setData] = useState<T>();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string>();
+
+  const execute = useCallback(
+    async (tags: Record<string, string> = {}, data?: unknown) => {
+      if (!wallet || !wallet.accounts.length) {
+        throw new Error("Wallet not connected");
+      }
+      setLoading(true);
+      try {
+        const result = await sendEthMessage(wallet, {
+          process,
+          tags: obj2tags({ ...tags, Action: action }),
+          data: toString(data),
+        });
+        setResult(result);
+        if (result.Error) {
+          throw new Error(result.Error);
+        }
+        setData(getDataFromMessage(result));
+        return result;
+      } catch (e) {
+        setError(toString(e));
+        throw e;
+      } finally {
+        setLoading(false);
+      }
+    },
+    [action, process, wallet],
+  );
+  return {
+    result,
+    data,
     loading,
     error,
     execute,

@@ -2,8 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_MINT_PROCESS } from "../../utils/config";
-import { getDataFromMessage, useAO } from "../../utils/ao";
-import { sendEthMessage } from "../../utils/ethHelpers";
+import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { useConnectWallet } from "@web3-onboard/react";
 
 interface AllocationItem {
@@ -24,11 +23,11 @@ function divideBigNumbers(a: BigNumber, b: BigNumber, precision = 18): number {
   return Number(ethers.utils.formatUnits(a, precision)) / Number(ethers.utils.formatUnits(b, precision));
 }
 
-function getBalanceOfAllocation(allocations: Allocation, recipient?: string) {
+function getBalanceOfAllocation(allocations?: Allocation, recipient?: string) {
   if (!recipient) {
-    return allocations.reduce((acc, a) => acc.add(BigNumber.from(a.Amount)), BigNumber.from(0));
+    return allocations?.reduce((acc, a) => acc.add(BigNumber.from(a.Amount)), BigNumber.from(0)) || BigNumber.from(0);
   }
-  return allocations.find((a) => a.Recipient === recipient)?.Amount || BigNumber.from(0);
+  return allocations?.find((a) => a.Recipient === recipient)?.Amount || BigNumber.from(0);
 }
 
 export function useAOMint() {
@@ -40,100 +39,71 @@ export function useAOMint() {
     execute: getBalance,
   } = useAO(APUS_MINT_PROCESS, "User.Balance", "dryrun");
   const { result: recipientResult, execute: getRecipient } = useAO(APUS_MINT_PROCESS, "User.Get-Recipient", "dryrun");
+  // const { data: userEstimatedApus, execute: getUserEstimatedApus, loading: loadingEstimate } = useEthMessage(TOKEN_MIRROR_PROCESS, "User.Get-Estimated-Apus-Token");
 
   useEffect(() => {
     if (walletAddress) {
       getBalance({ Recipient: walletAddress });
       getRecipient({ User: ethers.utils.getAddress(walletAddress) });
+      // getUserEstimatedApus({}, {
+      //   user: ethers.utils.getAddress(walletAddress),
+      // });
     }
   }, [getBalance, getRecipient, walletAddress]);
+  const { execute: sendUpdateRecipientMsg } = useEthMessage(APUS_MINT_PROCESS, "User.Update-Recipient");
 
   const updateRecipient = useCallback(
     async (recipient: string) => {
-      if (!walletAddress) {
-        return;
-      }
-      return await sendEthMessage(wallet, {
-        process: APUS_MINT_PROCESS,
-        tags: [
-          { name: "Action", value: "User.Update-Recipient" },
-          { name: "Recipient", value: recipient },
-        ],
-        data: dayjs().unix().toFixed(0),
-      });
+      sendUpdateRecipientMsg({ Recipient: recipient }, dayjs().unix());
     },
-    [wallet, walletAddress],
+    [sendUpdateRecipientMsg],
   );
 
   const [tokenType, setTokenType] = useState<TokenType>();
-  const [allocations, setAllocations] = useState<Allocation>([]);
+  const {
+    data: allocationsData,
+    loading: allocationsLoading,
+    execute: fetchAllocationsMsg,
+  } = useEthMessage<string>(AO_MINT_PROCESS, "User.Get-Allocation");
+  const allocations = useMemo(() => {
+    if (allocationsData) {
+      return JSON.parse(allocationsData).map((a: { Recipient: string; Amount: string }) => ({
+        Recipient: a.Recipient,
+        Amount: BigNumber.from(a.Amount),
+      }));
+    }
+    return [];
+  }, [allocationsData]);
   const apusAllocationBalance = useMemo(() => getBalanceOfAllocation(allocations, APUS_MINT_PROCESS), [allocations]);
   const userAllocationBalance = useMemo(
     () => getBalanceOfAllocation(allocations).sub(getBalanceOfAllocation(allocations, APUS_MINT_PROCESS)),
     [allocations],
   );
 
-  const check = useCallback(
-    (showError?: boolean) => {
-      if (!walletAddress) {
-        if (showError) {
-          throw new Error("Please connect your wallet");
-        }
-        return false;
-      }
-      if (!tokenType) {
-        if (showError) {
-          throw new Error("Please select token type");
-        }
-        return false;
-      }
-      return true;
-    },
-    [tokenType, walletAddress],
-  );
-
   const fetchAllocations = useCallback(async () => {
-    if (!check()) {
-      return;
+    if (tokenType) {
+      fetchAllocationsMsg({ Token: tokenType }, dayjs().unix().toFixed(0));
     }
-    const retMessage = await sendEthMessage(wallet!, {
-      process: AO_MINT_PROCESS,
-      tags: [
-        { name: "Action", value: "User.Get-Allocation" },
-        { name: "Token", value: tokenType! },
-      ],
-      data: dayjs().unix().toFixed(0),
-    });
-    const dataStr = getDataFromMessage<string>(retMessage);
-    console.log("Allocations", dataStr);
-    if (!dataStr) {
-      setAllocations([]);
-    } else {
-      const data: Allocation = JSON.parse(dataStr);
-      setAllocations(data.map((a) => ({ ...a, Amount: BigNumber.from(a.Amount) })));
-    }
-  }, [check, wallet, tokenType]);
+  }, [fetchAllocationsMsg, tokenType]);
 
   useEffect(() => {
     fetchAllocations();
   }, [fetchAllocations]);
 
+  const { execute: updateAllocationsMsg } = useEthMessage(AO_MINT_PROCESS, "User.Update-Allocation");
   const updateAllocations = useCallback(
     async (newAllocations: Allocation) => {
-      if (!check(true)) {
-        return;
+      if (tokenType) {
+        await updateAllocationsMsg(
+          {
+            Token: tokenType,
+            _n: dayjs().unix().toFixed(0),
+          },
+          JSON.stringify(newAllocations.map((a) => ({ ...a, Amount: a.Amount.toString() }))),
+        );
       }
-      await sendEthMessage(wallet!, {
-        process: AO_MINT_PROCESS,
-        tags: [
-          { name: "Action", value: "User.Update-Allocation" },
-          { name: "Token", value: tokenType! },
-          { name: "_n", value: dayjs().unix().toFixed(0) },
-        ],
-        data: JSON.stringify(newAllocations.map((a) => ({ ...a, Amount: a.Amount.toString() }))),
-      });
     },
-    [check, wallet, tokenType],
+    [tokenType, updateAllocationsMsg],
   );
 
   const increaseApusAllocation = useCallback(
@@ -197,5 +167,9 @@ export function useAOMint() {
     userAllocationBalance,
     increaseApusAllocation,
     decreaseApusAllocation,
+    allocationsLoading,
+    // userEstimatedApus,
+    // getUserEstimatedApus,
+    // loadingEstimate,
   };
 }

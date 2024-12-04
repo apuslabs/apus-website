@@ -4,7 +4,7 @@ import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
 import { useAOMint } from "./contexts";
 import { BigNumber, ethers } from "ethers";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
@@ -131,6 +131,7 @@ function getChargeRate(tokenType?: "stETH" | "DAI") {
 export default function Mint() {
   const {
     apus,
+    balanceLoading,
     recipient,
     updateRecipient,
     tokenType,
@@ -139,6 +140,7 @@ export default function Mint() {
     decreaseApusAllocation,
     apusAllocationBalance,
     userAllocationBalance,
+    allocationsLoading,
   } = useAOMint();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
   const [amount, setAmount] = useState<string>("0");
@@ -181,8 +183,8 @@ export default function Mint() {
       }
       try {
         setLoadingRecipient(true);
-        const result = await updateRecipient(arweaveAddress);
-        message.success(result?.Messages[0].Data);
+        await updateRecipient(arweaveAddress);
+        message.success("Update recipient successfully");
         setModalOpen(false);
       } catch (e: unknown) {
         if (e instanceof Error) {
@@ -227,7 +229,11 @@ export default function Mint() {
               Your APUS
               <InfoCircleOutlined className="pl-1" />
             </div>
-            <div className="font-medium text-gray21 text-[40px]">{ethers.utils.formatUnits(apus, 12)}</div>
+            <div className="font-medium text-gray21 text-[40px]">
+              <Spin indicator={<LoadingOutlined spin />} size="small" spinning={balanceLoading}>
+                {ethers.utils.formatUnits(apus, 12)}
+              </Spin>
+            </div>
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
             <div className="font-medium text-gray21 text-[40px]">
@@ -294,13 +300,17 @@ export default function Mint() {
                     <div className="w-full flex justify-between">
                       <div>
                         <span className="font-bold text-[#091dff]">
-                          {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4)} {tokenType}
+                          <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
+                            {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4)} {tokenType}
+                          </Spin>
                         </span>{" "}
                         Allocated
                       </div>
                       <div className="text-right">
                         <span className="font-bold text-[#091dff]">
-                          {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4)} {tokenType}
+                          <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
+                            {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4)} {tokenType}
+                          </Spin>
                         </span>{" "}
                         Available To Mint APUS
                       </div>
@@ -345,7 +355,9 @@ export default function Mint() {
                   >
                     <div className="w-full text-right">
                       <span className="font-bold text-[#091dff]">
-                        {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
+                        <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
+                          {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
+                        </Spin>
                       </span>{" "}
                       Allocated
                     </div>
