@@ -4,7 +4,7 @@ const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
 export const HomeHeaderMenuList: NavigationMenuType[] = [
   {
-    name: "Team",
+    name: "TEAM",
     path: "/team",
   },
   // {
@@ -12,15 +12,15 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   //   path: "/mint",
   // },
   {
-    name: "Docs",
-    path: DocLink,
-  },
-  {
-    name: "Roadmap",
+    name: "ROADMAP",
     path: "/?anchor=roadmap",
   },
   {
-    name: "Litepaper",
+    name: "DOCS",
+    path: DocLink,
+  },
+  {
+    name: "LITEPAPER",
     path: "",
     onClick: () => {
       notification.open({
