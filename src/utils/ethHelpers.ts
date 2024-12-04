@@ -1,7 +1,7 @@
 import { message, result } from "@permaweb/aoconnect";
 import { SendMessageArgs } from "@permaweb/aoconnect/dist/lib/message";
 import { createData } from "@dha-team/arbundles";
-import { EthereumSigner } from "../pages/mint/ethsigner";
+import { EthereumSigner } from "./ethsigner";
 import { WalletState } from "@web3-onboard/core";
 
 const EthereumSignerMap = new Map<string, EthereumSigner>();
