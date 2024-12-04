@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
-import { AO_MINT_PROCESS, APUS_MINT_PROCESS } from "../../utils/config";
+import { AO_MINT_PROCESS, APUS_MINT_PROCESS, TOKEN_MIRROR_PROCESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { useConnectWallet } from "@web3-onboard/react";
 
@@ -39,17 +39,24 @@ export function useAOMint() {
     execute: getBalance,
   } = useAO(APUS_MINT_PROCESS, "User.Balance", "dryrun");
   const { result: recipientResult, execute: getRecipient } = useAO(APUS_MINT_PROCESS, "User.Get-Recipient", "dryrun");
-  // const { data: userEstimatedApus, execute: getUserEstimatedApus, loading: loadingEstimate } = useEthMessage(TOKEN_MIRROR_PROCESS, "User.Get-Estimated-Apus-Token");
+  const {
+    result: userEstimatedApus,
+    execute: getUserEstimatedApus,
+    loading: loadingUserEstimate,
+  } = useAO(TOKEN_MIRROR_PROCESS, "User.Get-User-Estimated-Apus-Token", "dryrun");
 
   useEffect(() => {
     if (walletAddress) {
       getBalance({ Recipient: walletAddress });
       getRecipient({ User: ethers.utils.getAddress(walletAddress) });
-      // getUserEstimatedApus({}, {
-      //   user: ethers.utils.getAddress(walletAddress),
-      // });
+      getUserEstimatedApus(
+        {
+          User: ethers.utils.getAddress(walletAddress),
+        },
+        dayjs().unix(),
+      );
     }
-  }, [getBalance, getRecipient, walletAddress]);
+  }, [getBalance, getRecipient, getUserEstimatedApus, walletAddress]);
   const { execute: sendUpdateRecipientMsg } = useEthMessage(APUS_MINT_PROCESS, "User.Update-Recipient");
 
   const updateRecipient = useCallback(
@@ -67,7 +74,8 @@ export function useAOMint() {
   } = useEthMessage<string>(AO_MINT_PROCESS, "User.Get-Allocation");
   const allocations = useMemo(() => {
     if (allocationsData) {
-      return JSON.parse(allocationsData).map((a: { Recipient: string; Amount: string }) => ({
+      const data: { Recipient: string; Amount: string }[] = JSON.parse(allocationsData);
+      return data.map((a) => ({
         Recipient: a.Recipient,
         Amount: BigNumber.from(a.Amount),
       }));
@@ -85,10 +93,37 @@ export function useAOMint() {
       fetchAllocationsMsg({ Token: tokenType }, dayjs().unix().toFixed(0));
     }
   }, [fetchAllocationsMsg, tokenType]);
-
   useEffect(() => {
     fetchAllocations();
   }, [fetchAllocations]);
+
+  const {
+    result: estimatedApus,
+    execute: getEstimatedApus,
+    loading: loadingEstimate,
+  } = useAO(TOKEN_MIRROR_PROCESS, "User.Get-Estimated-Apus-Token", "dryrun");
+
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const fetchEstimatedApus = useCallback(
+    (amount: BigNumber, tokenType: string) => {
+      if (!tokenType) {
+        return;
+      }
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      debounceTimeout.current = setTimeout(() => {
+        getEstimatedApus(
+          {
+            Amount: amount.toString(),
+            Token: tokenType,
+          },
+          dayjs().unix(),
+        );
+      }, 1000);
+    },
+    [getEstimatedApus, debounceTimeout],
+  );
 
   const { execute: updateAllocationsMsg } = useEthMessage(AO_MINT_PROCESS, "User.Update-Allocation");
   const updateAllocations = useCallback(
@@ -168,8 +203,11 @@ export function useAOMint() {
     increaseApusAllocation,
     decreaseApusAllocation,
     allocationsLoading,
-    // userEstimatedApus,
-    // getUserEstimatedApus,
-    // loadingEstimate,
+    userEstimatedApus: BigNumber.from(getDataFromMessage<string>(userEstimatedApus) || 0),
+    getUserEstimatedApus,
+    loadingEstimate,
+    estimatedApus: BigNumber.from(getDataFromMessage<string>(estimatedApus) || 0),
+    loadingUserEstimate,
+    fetchEstimatedApus,
   };
 }
