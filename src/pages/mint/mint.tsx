@@ -116,18 +116,6 @@ function TokenSlider({
   );
 }
 
-const ChargeRate = {
-  stETH: BigNumber.from(100),
-  DAI: BigNumber.from(1),
-};
-
-function getChargeRate(tokenType?: "stETH" | "DAI") {
-  if (tokenType === undefined) {
-    return 0;
-  }
-  return ChargeRate[tokenType];
-}
-
 export default function Mint() {
   const {
     apus,
@@ -141,6 +129,11 @@ export default function Mint() {
     apusAllocationBalance,
     userAllocationBalance,
     allocationsLoading,
+    fetchEstimatedApus,
+    userEstimatedApus,
+    estimatedApus,
+    loadingEstimate,
+    loadingUserEstimate,
   } = useAOMint();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
   const [amount, setAmount] = useState<string>("0");
@@ -149,6 +142,13 @@ export default function Mint() {
   const [arweaveAddress, setArweaveAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (tokenType && amount !== "0") {
+      fetchEstimatedApus(BigNumber.from(ethers.utils.parseUnits(amount, 18)), tokenType);
+    }
+  }, [amount, fetchEstimatedApus, tokenType]);
+
   const approve = async () => {
     if (!recipient) {
       message.warning("Please set recipient first");
@@ -237,7 +237,9 @@ export default function Mint() {
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
             <div className="font-medium text-gray21 text-[40px]">
-              <span className="text-[#03C407] font-normal">+</span> {ethers.utils.formatUnits(apus, 4)}
+              <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingUserEstimate}>
+                <span className="text-[#03C407] font-normal">+</span> {userEstimatedApus.div(12).toNumber().toFixed(4)}
+              </Spin>
             </div>
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
@@ -298,16 +300,16 @@ export default function Mint() {
                   text-gray21"
                   >
                     <div className="w-full flex justify-between">
-                      <div>
-                        <span className="font-bold text-[#091dff]">
+                      <div className="flex">
+                        <span className="font-bold text-[#091dff] mr-1">
                           <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
                             {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4)} {tokenType}
                           </Spin>
-                        </span>{" "}
+                        </span>
                         Allocated
                       </div>
-                      <div className="text-right">
-                        <span className="font-bold text-[#091dff]">
+                      <div className="text-right flex">
+                        <span className="font-bold text-[#091dff] mr-1">
                           <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
                             {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4)} {tokenType}
                           </Spin>
@@ -327,15 +329,24 @@ export default function Mint() {
                     <div>Next 30 Days Receivable APUS Projection</div>
                     <div className="flex items-center gap-5">
                       <img src={ImgMint.ChevronRight} />
-                      <div className="text-[40px] font-medium text-gray21 leading-none">
-                        <span className="text-[#03c407]">+</span>{" "}
-                        {apusAllocationBalance.mul(getChargeRate(tokenType)).div(1e14).toNumber() / 1e4}
-                      </div>
+                      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
+                        <div className="text-[40px] font-medium text-gray21 leading-none">
+                          <span className="text-[#03c407]">+</span> {estimatedApus.div(1e8).toNumber() / 1e4}
+                        </div>
+                      </Spin>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    <div>
+                    <div className="flex">
                       <span className="font-bold">1</span>
-                      {tokenType} = <span className="font-bold">{getChargeRate(tokenType).toString()}</span>APUS
+                      {tokenType} ={" "}
+                      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
+                        <span className="font-bold">
+                          {amount === "0"
+                            ? "0"
+                            : estimatedApus.mul(1e8).div(ethers.utils.parseUnits(amount, 18)).toNumber() / 100}
+                        </span>
+                      </Spin>
+                      APUS
                     </div>
                     <Spin spinning={loading}>
                       <div className="btn-primary" onClick={approve}>
@@ -353,7 +364,7 @@ export default function Mint() {
                     className="w-[35rem] mx-auto p-5 flex flex-col gap-5 items-center
               text-gray21"
                   >
-                    <div className="w-full text-right">
+                    <div className="w-full text-right flex">
                       <span className="font-bold text-[#091dff]">
                         <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
                           {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
