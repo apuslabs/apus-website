@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Instrument Sans", "Inter", sans-serif;
+  font-family: "Inter", sans-serif;
   --black50: rgba(0, 0, 0, 0.5);
   --black20: rgba(0, 0, 0, 0.2);
 }

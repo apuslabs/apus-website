@@ -3,6 +3,7 @@ import { ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
+import "./headerfooter.css";
 
 function scrollToAnchor(anchor: string) {
   if (!anchor) return;
@@ -32,10 +33,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
 
   return (
     <div
-      className="h-16 md:h-20 w-full
-      fixed t-0 l-0 r-0 px-5 md:px-12
-      flex items-center justify-between
-      backdrop-blur-3xl z-20"
+      className="header-container"
       style={{
         background: menuShow ? "#4c4c4c" : "rgba(255,255,255,0.33)",
       }}
@@ -44,13 +42,13 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         <img
           src={menuShow ? ImgHomepage.LogoHorizonalWhite : ImgHomepage.LogoHorizonal}
           alt="Apus Logo"
-          className="h-6 md:h-10"
+          className="md:w-40"
         />
       </div>
       <div
         className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative
           ${isTablet ? "bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl" : ""}
-          md:text-[#333333] text-white`}
+          md:text-gray21 text-white`}
         style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
         onClick={() => {
           setMenuShow(false);
@@ -58,7 +56,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
       >
         <ul
           className="flex-col justify-center items-center gap-12
-          font-semibold text-xl
+          font-medium text-base
           md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
           z-20"
         >
