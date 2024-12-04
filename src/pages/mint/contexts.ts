@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { message as messageUI } from "antd";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_MINT_PROCESS } from "../../utils/config";
@@ -54,7 +53,7 @@ export function useAOMint() {
       if (!walletAddress) {
         return;
       }
-      return await sendEthMessage(walletAddress!, {
+      return await sendEthMessage(wallet, {
         process: APUS_MINT_PROCESS,
         tags: [
           { name: "Action", value: "User.Update-Recipient" },
@@ -63,7 +62,7 @@ export function useAOMint() {
         data: dayjs().unix().toFixed(0),
       });
     },
-    [walletAddress],
+    [wallet, walletAddress],
   );
 
   const [tokenType, setTokenType] = useState<TokenType>();
@@ -97,7 +96,7 @@ export function useAOMint() {
     if (!check()) {
       return;
     }
-    const retMessage = await sendEthMessage(walletAddress!, {
+    const retMessage = await sendEthMessage(wallet!, {
       process: AO_MINT_PROCESS,
       tags: [
         { name: "Action", value: "User.Get-Allocation" },
@@ -113,7 +112,7 @@ export function useAOMint() {
       const data: Allocation = JSON.parse(dataStr);
       setAllocations(data.map((a) => ({ ...a, Amount: BigNumber.from(a.Amount) })));
     }
-  }, [check, walletAddress, tokenType]);
+  }, [check, wallet, tokenType]);
 
   useEffect(() => {
     fetchAllocations();
@@ -124,23 +123,23 @@ export function useAOMint() {
       if (!check(true)) {
         return;
       }
-      await sendEthMessage(walletAddress!, {
+      await sendEthMessage(wallet!, {
         process: AO_MINT_PROCESS,
         tags: [
           { name: "Action", value: "User.Update-Allocation" },
           { name: "Token", value: tokenType! },
+          { name: "_n", value: dayjs().unix().toFixed(0) },
         ],
         data: JSON.stringify(newAllocations.map((a) => ({ ...a, Amount: a.Amount.toString() }))),
       });
     },
-    [check, walletAddress, tokenType],
+    [check, wallet, tokenType],
   );
 
   const increaseApusAllocation = useCallback(
     async (amount: BigNumber) => {
       if (amount.gt(userAllocationBalance)) {
-        messageUI.error("Insufficient balance");
-        return;
+        throw new Error("Insufficient balance");
       }
       const reduceRatio = divideBigNumbers(amount, userAllocationBalance);
       const userAllocations = allocations.filter((a) => a.Recipient !== APUS_MINT_PROCESS);
@@ -165,8 +164,7 @@ export function useAOMint() {
   const decreaseApusAllocation = useCallback(
     async (amount: BigNumber) => {
       if (amount.gt(apusAllocationBalance)) {
-        messageUI.error("Insufficient balance");
-        return;
+        throw new Error("Insufficient balance");
       }
       const userAllocations = allocations.filter((a) => a.Recipient !== APUS_MINT_PROCESS);
       const increaseRatio = divideBigNumbers(amount, userAllocationBalance);
