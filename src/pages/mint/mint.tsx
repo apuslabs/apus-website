@@ -60,7 +60,7 @@ function TokenSlider({
         <Input
           size="large"
           className="w-[23.25rem] text-right"
-          disabled={tokenType === undefined}
+          disabled={tokenType === undefined || totalAmount.isZero()}
           value={amount}
           onChange={(v) => {
             if (v !== null) {
@@ -93,7 +93,7 @@ function TokenSlider({
       )}
       <Slider
         className="w-[31rem]"
-        disabled={tokenType === undefined}
+        disabled={tokenType === undefined || totalAmount.isZero()}
         marks={{ 0: "0%", 100: "100%" }}
         min={0}
         max={100}
@@ -336,18 +336,20 @@ export default function Mint() {
                       </Spin>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    <div className="flex">
-                      <span className="font-bold">1</span>
-                      {tokenType} ={" "}
-                      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
-                        <span className="font-bold">
-                          {amount === "0"
-                            ? "0"
-                            : estimatedApus.mul(1e8).div(ethers.utils.parseUnits(amount, 18)).toNumber() / 100}
-                        </span>
-                      </Spin>
-                      APUS
-                    </div>
+                    {tokenType && (
+                      <div className="flex">
+                        <span className="font-bold mr-1">1</span>
+                        {tokenType + "="}
+                        <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
+                          <span className="font-bold mx-1">
+                            {amount === "0"
+                              ? "0"
+                              : estimatedApus.mul(1e8).div(ethers.utils.parseUnits(amount, 18)).toNumber() / 100}
+                          </span>
+                        </Spin>
+                        APUS
+                      </div>
+                    )}
                     <Spin spinning={loading}>
                       <div className="btn-primary" onClick={approve}>
                         Approve
