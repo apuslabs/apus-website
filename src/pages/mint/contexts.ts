@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_MINT_PROCESS, TOKEN_MIRROR_PROCESS } from "../../utils/config";
@@ -62,8 +62,9 @@ export function useAOMint() {
   const updateRecipient = useCallback(
     async (recipient: string) => {
       sendUpdateRecipientMsg({ Recipient: recipient }, dayjs().unix());
+      getRecipient({ User: ethers.utils.getAddress(walletAddress!) });
     },
-    [sendUpdateRecipientMsg],
+    [getRecipient, sendUpdateRecipientMsg, walletAddress],
   );
 
   const [tokenType, setTokenType] = useState<TokenType>();
@@ -103,27 +104,17 @@ export function useAOMint() {
     loading: loadingEstimate,
   } = useAO(TOKEN_MIRROR_PROCESS, "User.Get-Estimated-Apus-Token", "dryrun");
 
-  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
-  const fetchEstimatedApus = useCallback(
-    (amount: BigNumber, tokenType: string) => {
-      if (!tokenType) {
-        return;
-      }
-      if (debounceTimeout.current) {
-        clearTimeout(debounceTimeout.current);
-      }
-      debounceTimeout.current = setTimeout(() => {
-        getEstimatedApus(
-          {
-            Amount: amount.toString(),
-            Token: tokenType,
-          },
-          dayjs().unix(),
-        );
-      }, 1000);
-    },
-    [getEstimatedApus, debounceTimeout],
-  );
+  useEffect(() => {
+    if (tokenType) {
+      getEstimatedApus(
+        {
+          Amount: (1e18).toString(),
+          Token: tokenType,
+        },
+        dayjs().unix(),
+      );
+    }
+  }, [getEstimatedApus, tokenType]);
 
   const { execute: updateAllocationsMsg } = useEthMessage(AO_MINT_PROCESS, "User.Update-Allocation");
   const updateAllocations = useCallback(
@@ -203,11 +194,10 @@ export function useAOMint() {
     increaseApusAllocation,
     decreaseApusAllocation,
     allocationsLoading,
-    userEstimatedApus: BigNumber.from(getDataFromMessage<string>(userEstimatedApus) || 0),
+    userEstimatedApus: getDataFromMessage<string>(userEstimatedApus) || "0",
     getUserEstimatedApus,
     loadingEstimate,
-    estimatedApus: BigNumber.from(getDataFromMessage<string>(estimatedApus) || 0),
+    estimatedApus: getDataFromMessage<string>(estimatedApus) || "0",
     loadingUserEstimate,
-    fetchEstimatedApus,
   };
 }

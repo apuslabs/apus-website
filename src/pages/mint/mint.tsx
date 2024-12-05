@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
 import MintUserbox from "../../components/MintUserbox";
+import Decimal from "decimal.js";
 
 function TokenSlider({
   totalAmount,
@@ -66,6 +67,11 @@ function TokenSlider({
             if (v !== null) {
               const numericValue = v.target.value.replace(/[^0-9.]/g, "");
               const bigAmount = ethers.utils.parseUnits(numericValue, 18);
+              if (bigAmount.gt(totalAmount)) {
+                setAmount(ethers.utils.formatUnits(totalAmount, 18));
+                setPercent(100);
+                return;
+              }
               setAmount(numericValue);
               setPercent(Math.round(bigAmount.mul(100).div(totalAmount).toNumber()));
             }
@@ -116,6 +122,14 @@ function TokenSlider({
   );
 }
 
+function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: boolean; children?: React.ReactNode }) {
+  return (
+    <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loading}>
+      {hide || loading ? `--` : children}
+    </Spin>
+  );
+}
+
 export default function Mint() {
   const {
     apus,
@@ -129,7 +143,6 @@ export default function Mint() {
     apusAllocationBalance,
     userAllocationBalance,
     allocationsLoading,
-    fetchEstimatedApus,
     userEstimatedApus,
     estimatedApus,
     loadingEstimate,
@@ -142,12 +155,6 @@ export default function Mint() {
   const [arweaveAddress, setArweaveAddress] = useState("");
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (tokenType && amount !== "0") {
-      fetchEstimatedApus(BigNumber.from(ethers.utils.parseUnits(amount, 18)), tokenType);
-    }
-  }, [amount, fetchEstimatedApus, tokenType]);
 
   const approve = async () => {
     if (!recipient) {
@@ -236,10 +243,11 @@ export default function Mint() {
             </div>
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
-            <div className="font-medium text-gray21 text-[40px]">
-              <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingUserEstimate}>
-                <span className="text-[#03C407] font-normal">+</span> {userEstimatedApus.div(12).toNumber().toFixed(4)}
-              </Spin>
+            <div className="flex font-medium text-gray21 text-[40px]">
+              <span className="text-[#03C407] font-normal">+</span>{" "}
+              <LoadingNumber loading={loadingUserEstimate}>
+                {new Decimal(userEstimatedApus).div(1e12).toFixed(4)}
+              </LoadingNumber>
             </div>
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
@@ -302,17 +310,17 @@ export default function Mint() {
                     <div className="w-full flex justify-between">
                       <div className="flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
-                            {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4)} {tokenType}
-                          </Spin>
+                          <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
+                            {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
+                          </LoadingNumber>
                         </span>
                         Allocated
                       </div>
                       <div className="text-right flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
-                            {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4)} {tokenType}
-                          </Spin>
+                          <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
+                            {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
+                          </LoadingNumber>
                         </span>{" "}
                         Available To Mint APUS
                       </div>
@@ -329,24 +337,21 @@ export default function Mint() {
                     <div>Next 30 Days Receivable APUS Projection</div>
                     <div className="flex items-center gap-5">
                       <img src={ImgMint.ChevronRight} />
-                      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
+                      <LoadingNumber loading={loadingUserEstimate}>
                         <div className="text-[40px] font-medium text-gray21 leading-none">
-                          <span className="text-[#03c407]">+</span> {estimatedApus.div(1e8).toNumber() / 1e4}
+                          <span className="text-[#03c407]">+</span>{" "}
+                          {new Decimal(amount).mul(estimatedApus).div(1e12).toFixed(4)}
                         </div>
-                      </Spin>
+                      </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
                     {tokenType && (
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
-                        <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingEstimate}>
-                          <span className="font-bold mx-1">
-                            {amount === "0"
-                              ? "0"
-                              : estimatedApus.mul(1e8).div(ethers.utils.parseUnits(amount, 18)).toNumber() / 100}
-                          </span>
-                        </Spin>
+                        <LoadingNumber hide={tokenType === undefined} loading={loadingEstimate}>
+                          <span className="font-bold mx-1">{new Decimal(estimatedApus).div(1e12).toFixed(4)}</span>
+                        </LoadingNumber>
                         APUS
                       </div>
                     )}
@@ -368,9 +373,9 @@ export default function Mint() {
                   >
                     <div className="w-full text-right flex">
                       <span className="font-bold text-[#091dff]">
-                        <Spin indicator={<LoadingOutlined spin />} size="small" spinning={allocationsLoading}>
+                        <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
                           {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
-                        </Spin>
+                        </LoadingNumber>
                       </span>{" "}
                       Allocated
                     </div>
