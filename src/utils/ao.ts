@@ -169,11 +169,13 @@ export function useAO(
           throw new Error("No result");
         }
         if (result.Error) {
+          setResult(undefined);
           setError(toString(result.Error));
         }
         setResult(result);
         return result;
       } catch (e) {
+        setResult(undefined);
         setError(toString(e));
         throw e;
       } finally {
@@ -211,11 +213,13 @@ export function useEthMessage<T = unknown>(process: string, action: string) {
         });
         setResult(result);
         if (result.Error) {
+          setResult(undefined);
           throw new Error(result.Error);
         }
         setData(getDataFromMessage(result));
         return result;
       } catch (e) {
+        setResult(undefined);
         setError(toString(e));
         throw e;
       } finally {

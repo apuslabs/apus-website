@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
-import { AO_MINT_PROCESS, APUS_MINT_PROCESS, TOKEN_MIRROR_PROCESS } from "../../utils/config";
+import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { useConnectWallet } from "@web3-onboard/react";
 
@@ -31,23 +31,24 @@ function getBalanceOfAllocation(allocations?: Allocation, recipient?: string) {
 }
 
 export function useAOMint() {
+  const [ProcAddr, setProcAddr] = useState(APUS_ADDRESS);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
     result: balanceResult,
     loading: balanceLoading,
     execute: getBalance,
-  } = useAO(APUS_MINT_PROCESS, "User.Balance", "dryrun");
-  const { result: recipientResult, execute: getRecipient } = useAO(APUS_MINT_PROCESS, "User.Get-Recipient", "dryrun");
+  } = useAO(ProcAddr.Mint, "User.Balance", "dryrun");
+  const { result: recipientResult, execute: getRecipient } = useAO(ProcAddr.Mint, "User.Get-Recipient", "dryrun");
   const {
     result: userEstimatedApus,
     execute: getUserEstimatedApus,
     loading: loadingUserEstimate,
-  } = useAO(TOKEN_MIRROR_PROCESS, "User.Get-User-Estimated-Apus-Token", "dryrun");
+  } = useAO(ProcAddr.Mirror, "User.Get-User-Estimated-Apus-Token", "dryrun");
 
-  useEffect(() => {
+  const init = useCallback(async () => {
     if (walletAddress) {
-      getBalance({ Recipient: walletAddress });
+      getBalance({ Recipient: ethers.utils.getAddress(walletAddress) });
       getRecipient({ User: ethers.utils.getAddress(walletAddress) });
       getUserEstimatedApus(
         {
@@ -57,7 +58,23 @@ export function useAOMint() {
       );
     }
   }, [getBalance, getRecipient, getUserEstimatedApus, walletAddress]);
-  const { execute: sendUpdateRecipientMsg } = useEthMessage(APUS_MINT_PROCESS, "User.Update-Recipient");
+
+  useEffect(() => {
+    init();
+  }, [init]);
+
+  window.setApusContract = (Mint: string) =>
+    setProcAddr((o) => ({
+      ...o,
+      Mint,
+    }));
+  window.setMirrorContract = (Mirror: string) =>
+    setProcAddr((o) => ({
+      ...o,
+      Mirror,
+    }));
+
+  const { execute: sendUpdateRecipientMsg } = useEthMessage(ProcAddr.Mint, "User.Update-Recipient");
 
   const updateRecipient = useCallback(
     async (recipient: string) => {
@@ -83,10 +100,13 @@ export function useAOMint() {
     }
     return [];
   }, [allocationsData]);
-  const apusAllocationBalance = useMemo(() => getBalanceOfAllocation(allocations, APUS_MINT_PROCESS), [allocations]);
+  const apusAllocationBalance = useMemo(
+    () => getBalanceOfAllocation(allocations, ProcAddr.Mint),
+    [ProcAddr.Mint, allocations],
+  );
   const userAllocationBalance = useMemo(
-    () => getBalanceOfAllocation(allocations).sub(getBalanceOfAllocation(allocations, APUS_MINT_PROCESS)),
-    [allocations],
+    () => getBalanceOfAllocation(allocations).sub(getBalanceOfAllocation(allocations, ProcAddr.Mint)),
+    [ProcAddr.Mint, allocations],
   );
 
   const fetchAllocations = useCallback(async () => {
@@ -102,7 +122,7 @@ export function useAOMint() {
     result: estimatedApus,
     execute: getEstimatedApus,
     loading: loadingEstimate,
-  } = useAO(TOKEN_MIRROR_PROCESS, "User.Get-Estimated-Apus-Token", "dryrun");
+  } = useAO(ProcAddr.Mirror, "User.Get-Estimated-Apus-Token", "dryrun");
 
   useEffect(() => {
     if (tokenType) {
@@ -138,7 +158,7 @@ export function useAOMint() {
         throw new Error("Insufficient balance");
       }
       const reduceRatio = divideBigNumbers(amount, userAllocationBalance);
-      const userAllocations = allocations.filter((a) => a.Recipient !== APUS_MINT_PROCESS);
+      const userAllocations = allocations.filter((a) => a.Recipient !== ProcAddr.Mint);
       let totalReduced = BigNumber.from(0);
       for (let i = 0; i < userAllocations.length; i++) {
         const a = userAllocations[i];
@@ -148,13 +168,13 @@ export function useAOMint() {
       }
       const newAllocations = [
         ...userAllocations,
-        { Recipient: APUS_MINT_PROCESS, Amount: apusAllocationBalance.add(totalReduced) },
+        { Recipient: ProcAddr.Mint, Amount: apusAllocationBalance.add(totalReduced) },
       ];
 
       await updateAllocations(newAllocations);
       await fetchAllocations();
     },
-    [userAllocationBalance, allocations, apusAllocationBalance, updateAllocations, fetchAllocations],
+    [userAllocationBalance, allocations, ProcAddr.Mint, apusAllocationBalance, updateAllocations, fetchAllocations],
   );
 
   const decreaseApusAllocation = useCallback(
@@ -162,7 +182,7 @@ export function useAOMint() {
       if (amount.gt(apusAllocationBalance)) {
         throw new Error("Insufficient balance");
       }
-      const userAllocations = allocations.filter((a) => a.Recipient !== APUS_MINT_PROCESS);
+      const userAllocations = allocations.filter((a) => a.Recipient !== ProcAddr.Mint);
       const increaseRatio = divideBigNumbers(amount, userAllocationBalance);
       let totalIncreased = BigNumber.from(0);
       for (let i = 0; i < userAllocations.length; i++) {
@@ -173,12 +193,12 @@ export function useAOMint() {
       }
       const newAllocations = [
         ...userAllocations,
-        { Recipient: APUS_MINT_PROCESS, Amount: apusAllocationBalance.sub(totalIncreased) },
+        { Recipient: ProcAddr.Mint, Amount: apusAllocationBalance.sub(totalIncreased) },
       ];
       await updateAllocations(newAllocations);
       await fetchAllocations();
     },
-    [apusAllocationBalance, allocations, userAllocationBalance, updateAllocations, fetchAllocations],
+    [apusAllocationBalance, allocations, userAllocationBalance, ProcAddr.Mint, updateAllocations, fetchAllocations],
   );
 
   return {
