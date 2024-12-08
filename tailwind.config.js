@@ -19,6 +19,7 @@ export default {
         light: "#EDF2FF",
         "light-purple": "#D7DDF4",
         blue: "#061EFA",
+        mainblue: "#091DFF",
       },
       backgroundImage: {
         purpleToBlue45: "linear-gradient(-45deg, #9b8aff 0%, #2806fa 100%)",
@@ -26,6 +27,9 @@ export default {
       },
       boxShadow: {
         "inset-white-16": "inset 0 0 16px rgba(255, 255, 255, 0.25)",
+      },
+      borderWidth: {
+        1: "1px",
       },
     },
   },

@@ -1,5 +1,5 @@
 import { FC, useLayoutEffect, useState } from "react";
-import { ImgHomepage } from "../assets";
+import { ImgCommon, ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
@@ -16,10 +16,57 @@ function scrollToAnchor(anchor: string) {
   }
 }
 
+function HomeHeaderMobile() {
+  const [menuShow, setMenuShow] = useState<boolean>(false);
+  return (
+    <>
+      <div className="header-container bg-white">
+        <img src={ImgCommon.IconMenu} onClick={() => setMenuShow(!menuShow)} />
+        <Link to="/">
+          <img src={ImgCommon.IconLogo} />
+        </Link>
+        <img src={ImgCommon.IconWallet} />
+      </div>
+      <div
+        className={`fixed top-[60px] left-0 right-0 flex-1 h-screen`}
+        style={{
+          display: menuShow ? "block" : "none",
+          background: "rgba(255,255,255,0.95)",
+        }}
+        onClick={() => {
+          setMenuShow(false);
+        }}
+      >
+        <ul className="flex-col justify-center items-center gap-12 font-medium z-20 bg-white border-t-1 border-solid border-grayd8">
+          {HomeHeaderMenuList.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={
+                item.onClick
+                  ? item.onClick
+                  : () => {
+                      if (item.path.includes("?anchor")) {
+                        const anchor = item.path.split("?anchor=")[1];
+                        scrollToAnchor(anchor);
+                      }
+                    }
+              }
+            >
+              <li className="h-[60px] px-5 leading-[60px] border-b-1 border-solid border-grayd8" key={item.name}>
+                {item.name}
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </div>
+    </>
+  );
+}
+
 const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
-  const [menuShow, setMenuShow] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useLayoutEffect(() => {
@@ -31,29 +78,21 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
     }
   }, []);
 
+  if (isTablet) {
+    return <HomeHeaderMobile />;
+  }
+
   return (
     <div
       className="header-container"
       style={{
-        background: menuShow ? "#4c4c4c" : "rgba(255,255,255,0.33)",
+        background: "rgba(255,255,255,0.9)",
       }}
     >
       <div className="h-full flex items-center cursor-pointer" onClick={() => navigate("/")}>
-        <img
-          src={menuShow ? ImgHomepage.LogoHorizonalWhite : ImgHomepage.LogoHorizonal}
-          alt="Apus Logo"
-          className="md:w-40"
-        />
+        <img src={ImgHomepage.LogoHorizonal} alt="Apus Logo" className="md:w-40" />
       </div>
-      <div
-        className={`fixed top-16 left-0 right-0 flex-1 h-screen md:h-full md:top-0 md:relative
-          ${isTablet ? "bg-[rgba(0,0,0,0.5)] backdrop-blur-3xl" : ""}
-          md:text-gray21 text-white`}
-        style={isTablet ? (menuShow ? {} : { display: "none" }) : {}}
-        onClick={() => {
-          setMenuShow(false);
-        }}
-      >
+      <div className={`fixed md:h-full md:top-0 md:relative md:text-gray21 text-white`}>
         <ul
           className="flex-col justify-center items-center gap-12
           font-medium text-base
@@ -75,33 +114,21 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
                     }
               }
             >
-              <li className="menu-colorful" key={item.name}>
-                {item.name}
-              </li>
+              <li key={item.name}>{item.name}</li>
             </Link>
           ))}
         </ul>
       </div>
 
-      {!isTablet ? (
-        Userbox || (
-          <div
-            className="btn-main btn-colorful"
-            onClick={() => {
-              navigate("/console/competitions");
-            }}
-          >
-            {"Competition Pools"}
-          </div>
-        )
-      ) : (
-        <img
-          src={!menuShow ? ImgHomepage.IconMenu : ImgHomepage.IconMenuWhite}
-          className="w-6 h-6"
+      {Userbox || (
+        <div
+          className="btn-main btn-colorful"
           onClick={() => {
-            setMenuShow((show) => !show);
+            navigate("/console/competitions");
           }}
-        />
+        >
+          {"Competition Pools"}
+        </div>
       )}
     </div>
   );

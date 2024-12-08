@@ -1,4 +1,4 @@
-export { default as ApusLogo } from "./logo-apus.png";
+export { default as ApusLogo } from "./logo.svg";
 
 import IconX from "./common/icon-x.png";
 import IconTelegram from "./common/icon-telegram.png";
@@ -6,6 +6,9 @@ import IconDiscord from "./common/icon-discord.png";
 import IconMedium from "./common/icon-medium.png";
 import IconLinkedin from "./common/icon-linkedin.png";
 import IconEmail from "./common/icon-email.png";
+import IconMenu from "./common/menu.svg";
+import IconLogo from "./common/logo.svg";
+import IconWallet from "./common/wallet.svg";
 
 export const ImgCommon = {
   IconX,
@@ -14,68 +17,40 @@ export const ImgCommon = {
   IconMedium,
   IconLinkedin,
   IconEmail,
+  IconMenu,
+  IconLogo,
+  IconWallet,
 };
 
 import LogoHorizonal from "./homepage/logo_horizonal.png";
-import LogoHorizonalWhite from "./homepage/logo_horizonal_white.png";
-import LogoArweave from "./homepage/logo-arweave.png";
-import LogoAO from "./homepage/logo-ao.png";
-import LogoDephy from "./homepage/logo-dephy.png";
-import LogoArIO from "./homepage/logo-ario.png";
-import IconMenu from "./homepage/icon-menu.png";
-import IconMenuWhite from "./homepage/icon-menu-white.png";
-import BgSolution from "./homepage/solution.png";
-import BgHero from "./homepage/bg_kv.png";
-import BgHeroMobile from "./homepage/bg_kv_mobile.png";
-import BgArch from "./homepage/bg-arch.png";
-import FeaturesCost from "./homepage/features-cost.png";
-import FeaturesExecution from "./homepage/features-execution.png";
-import FeaturesIncentive from "./homepage/features-incentive.png";
-import ResolutionDizuo from "./homepage/resolution-dizuo.png";
-import BenifitsAccessibility from "./homepage/benifits-accessibility.png";
-import BenifitsAccessibilityMobile from "./homepage/benifits-accessibility-mobile.png";
-import BenifitsEnergy from "./homepage/benifits-energy.png";
-import BenifitsEnergyMobile from "./homepage/benifits-energy-mobile.png";
-import BenifitsGood from "./homepage/benifits-good.png";
-import BenifitsGoodPc from "./homepage/benifits-good-pc.png";
-import BiconAccessibility from "./homepage/bicon-accessibility.png";
-import BiconEnergy from "./homepage/bicon-energy.png";
-import BiconGood from "./homepage/bicon-good.png";
-import BgBottom from "./homepage/bg_bottom.png";
-import IconAnnouncement from "./homepage/icon-announcement.png";
-import Roadmap from "./homepage/roadmap.png";
 import RoadmapVtl from "./homepage/roadmap-vtl.png";
+import Feature1 from "./homepage/feature1.svg";
+import Feature2 from "./homepage/feature2.svg";
+import Feature3 from "./homepage/feature3.svg";
+import Tech from "./homepage/tech.svg";
+import Roadmap from "./homepage/roadmap.svg";
+import LogoAO from "./homepage/logo_ao.svg";
+import LogoArweave from "./homepage/logo_arweave.svg";
+import LogoDephy from "./homepage/logo_dephy.svg";
+import LogoArio from "./homepage/logo_ario.svg";
+import TechMobile from "./homepage/tech-mobile.svg";
+import RoadmapMobile from "./homepage/roadmap-mobile.svg";
 
 export const ImgHomepage = {
   LogoHorizonal,
-  LogoHorizonalWhite,
-  LogoArweave,
-  LogoAO,
-  LogoArIO,
-  LogoDephy,
   IconMenu,
-  IconMenuWhite,
-  BgHero,
-  BgHeroMobile,
-  BgArch,
-  BgSolution,
-  FeaturesCost,
-  FeaturesExecution,
-  FeaturesIncentive,
-  ResolutionDizuo,
-  BiconAccessibility,
-  BiconEnergy,
-  BiconGood,
-  BenifitsEnergy,
-  BenifitsEnergyMobile,
-  BenifitsAccessibility,
-  BenifitsGood,
-  BgBottom,
-  BenifitsAccessibilityMobile,
-  BenifitsGoodPc,
-  IconAnnouncement,
   Roadmap,
   RoadmapVtl,
+  Feature1,
+  Feature2,
+  Feature3,
+  Tech,
+  LogoAO,
+  LogoArweave,
+  LogoDephy,
+  LogoArio,
+  TechMobile,
+  RoadmapMobile,
 };
 
 import LogoHorizonalSimple from "./competition/logo_horizonal_simple.png";
