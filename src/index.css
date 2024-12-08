@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: "Instrument Sans", "Inter", sans-serif;
+  font-family: "Inter", sans-serif;
   --black50: rgba(0, 0, 0, 0.5);
   --black20: rgba(0, 0, 0, 0.2);
 }
@@ -73,5 +73,13 @@
   }
   &.btn-small {
     @apply text-xs w-24 md:w-28 h-12 rounded-xl;
+  }
+}
+
+.btn-primary {
+  @apply h-12 font-semibold text-white text-center leading-none px-4 md:px-8 py-4 rounded-lg cursor-pointer;
+  background-color: #091dff;
+  &:hover {
+    background-color: rgba(9, 29, 255, 0.9);
   }
 }

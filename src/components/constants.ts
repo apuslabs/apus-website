@@ -4,7 +4,7 @@ const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
 export const HomeHeaderMenuList: NavigationMenuType[] = [
   {
-    name: "Team",
+    name: "TEAM",
     path: "/team",
   },
   // {
@@ -12,15 +12,15 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   //   path: "/mint",
   // },
   {
-    name: "Docs",
-    path: DocLink,
-  },
-  {
-    name: "Roadmap",
+    name: "ROADMAP",
     path: "/?anchor=roadmap",
   },
   {
-    name: "Litepaper",
+    name: "DOCS",
+    path: DocLink,
+  },
+  {
+    name: "LITEPAPER",
     path: "",
     onClick: () => {
       notification.open({
@@ -29,17 +29,6 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
         description: "Litepaper will be public soon.",
       });
     },
-  },
-];
-
-export const HomeFooterMenuList: NavigationMenuType[] = [
-  {
-    name: "Docs",
-    path: "https://apus-network.gitbook.io/apus-console-docs/",
-  },
-  {
-    name: "Brand Kits",
-    path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4",
   },
 ];
 

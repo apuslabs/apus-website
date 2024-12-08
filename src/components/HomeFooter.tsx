@@ -1,44 +1,78 @@
-import { FC } from "react";
 import { ImgHomepage } from "../assets";
 import { Link } from "react-router-dom";
-import { HomeFooterMenuList } from "./constants";
+import { SocialMediaList } from "./SocialMediaList";
+import { useBreakpoint } from "../utils/react-use";
 
-interface HomeFooterProps {
-  showCompany?: boolean;
-}
+const HomeFooterMenuList: NavigationMenuType[] = [
+  {
+    name: "Docs",
+    path: "https://apus-network.gitbook.io/apus-console-docs/",
+  },
+  {
+    name: "Brand Kits",
+    path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4",
+  },
+];
 
-const HomeFooter: FC<HomeFooterProps> = () => {
+function HomeFooterMobile() {
   return (
-    <div
-      className="flex px-5 py-28 md:px-12 md:py-16 md:justify-end gap-32 relative"
-      style={{
-        backgroundColor: "#4c4c4c",
-      }}
-    >
-      <img
-        src={ImgHomepage.LogoHorizonalWhite}
-        className="absolute left-5 top-12 md:left-12 md:top-16 h-6 md:h-11 w-28 md:w-52"
-      />
+    <div className="flex flex-col items-center py-10 gap-10 bg-[#191919] text-white">
+      <img src={ImgHomepage.LogoHorizonal} className="invert h-[25px]" />
+      <div className="flex flex-col gap-4">
+        <div style={{ color: "rgba(255,255,255,0.5)" }}>Navigation</div>
+        {HomeFooterMenuList.map(({ name, path }) => (
+          <Link to={path} className="text-white" key={name}>
+            {name}
+          </Link>
+        ))}
+      </div>
+      <SocialMediaList className="invert small" />
       <div
-        className="absolute left-5 bottom-12 md:bottom-16 md:left-12 text-base"
-        style={{ color: "rgba(255,255,255,0.5)" }}
+        style={{
+          color: "rgba(255,255,255,0.5)",
+        }}
       >
         Copyright © Apus.Network 2024. All rights reserved
       </div>
-      <div>
-        <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>
-          Navigation
+    </div>
+  );
+}
+
+function HomeFooter() {
+  const breakpoint = useBreakpoint();
+  const isTablet = breakpoint === "mobile";
+  if (isTablet) {
+    return <HomeFooterMobile />;
+  }
+  return (
+    <div className="px-[268px] pt-[64px] pb-[44px] bg-[#191919] text-white">
+      <div className="flex mb-[120px]">
+        <img src={ImgHomepage.LogoHorizonal} className="invert h-[30px] mr-[100px]" />
+        <div>
+          <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>
+            Navigation
+          </div>
+          <div className="flex flex-col gap-4">
+            {HomeFooterMenuList.map(({ name, path }) => (
+              <Link to={path} className="text-white" key={name}>
+                {name}
+              </Link>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4">
-          {HomeFooterMenuList.map(({ name, path }) => (
-            <Link to={path} className="text-base text-white" key={name}>
-              {name}
-            </Link>
-          ))}
+      </div>
+      <div className="flex justify-between">
+        <div
+          style={{
+            color: "rgba(255,255,255,0.5)",
+          }}
+        >
+          Copyright © Apus.Network 2024. All rights reserved
         </div>
+        <SocialMediaList className="invert" />
       </div>
     </div>
   );
-};
+}
 
 export default HomeFooter;
