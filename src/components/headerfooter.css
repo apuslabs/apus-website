@@ -1,6 +1,11 @@
 .header-container {
-  @apply h-16 md:h-[100px] w-full
+  @apply h-[60px] md:h-[100px] w-full
     fixed top-0 left-0 right-0 px-5 md:px-[170px]
     flex items-center justify-between z-20;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+@media screen and (min-width: 768px) {
+  .header-container {
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.05);
+  }
 }

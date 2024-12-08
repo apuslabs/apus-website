@@ -32,17 +32,6 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   },
 ];
 
-export const HomeFooterMenuList: NavigationMenuType[] = [
-  {
-    name: "Docs",
-    path: "https://apus-network.gitbook.io/apus-console-docs/",
-  },
-  {
-    name: "Brand Kits",
-    path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4",
-  },
-];
-
 export const ConsoleHeaderMenuList: NavigationMenuType[] = [
   {
     name: "Competition Pools",
