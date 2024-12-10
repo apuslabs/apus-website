@@ -54,6 +54,11 @@ export function useAOMint() {
     execute: getUserEstimatedApus,
     loading: loadingUserEstimate,
   } = useAO(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
+  const {
+    result: allocationResult,
+    loading: allocationLoading,
+    execute: getAllocation,
+  } = useAO(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
 
   const init = useCallback(async () => {
     if (walletAddress) {
@@ -82,22 +87,18 @@ export function useAOMint() {
     [getRecipient, sendUpdateRecipientMsg, walletAddress],
   );
 
-  const [tokenType, setTokenType] = useState<TokenType>();
-  const {
-    data: allocationsData,
-    loading: allocationsLoading,
-    execute: fetchAllocationsMsg,
-  } = useEthMessage<string>(AO_MINT_PROCESS, "User.Get-Allocation");
+  const [tokenType, setTokenType] = useState<TokenType>("stETH");
   const allocations = useMemo(() => {
-    if (allocationsData) {
-      const data: { Recipient: string; Amount: string }[] = JSON.parse(allocationsData);
-      return data.map((a) => ({
+    if (allocationResult) {
+      const data: { Recipient: string; Amount: string }[] = JSON.parse(getDataFromMessage(allocationResult) || "[]");
+      return data?.map((a) => ({
         Recipient: a.Recipient,
         Amount: BigNumber.from(a.Amount),
       }));
     }
     return [];
-  }, [allocationsData]);
+  }, [allocationResult]);
+  console.log(allocationResult);
   const apusAllocationBalance = useMemo(
     () => getBalanceOfAllocation(allocations, MintProcess),
     [MintProcess, allocations],
@@ -107,14 +108,12 @@ export function useAOMint() {
     [MintProcess, allocations],
   );
 
-  const fetchAllocations = useCallback(async () => {
-    if (tokenType) {
-      fetchAllocationsMsg({ Token: tokenType }, dayjs().unix().toFixed(0));
-    }
-  }, [fetchAllocationsMsg, tokenType]);
   useEffect(() => {
-    fetchAllocations();
-  }, [fetchAllocations]);
+    if (!walletAddress || !tokenType) {
+      return;
+    }
+    getAllocation({ Owner: ethers.utils.getAddress(walletAddress), Token: tokenType });
+  }, [getAllocation, walletAddress, tokenType]);
 
   const {
     result: estimatedApus,
@@ -150,54 +149,48 @@ export function useAOMint() {
     [tokenType, updateAllocationsMsg],
   );
 
-  const increaseApusAllocation = useCallback(
-    async (amount: BigNumber) => {
-      if (amount.gt(userAllocationBalance)) {
-        throw new Error("Insufficient balance");
-      }
-      const reduceRatio = divideBigNumbers(amount, userAllocationBalance);
-      const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
-      let totalReduced = BigNumber.from(0);
-      for (let i = 0; i < userAllocations.length; i++) {
-        const a = userAllocations[i];
-        const reduced = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), reduceRatio);
-        totalReduced = totalReduced.add(reduced);
-        a.Amount = a.Amount.sub(reduced);
-      }
-      const newAllocations = [
-        ...userAllocations,
-        { Recipient: MintProcess, Amount: apusAllocationBalance.add(totalReduced) },
-      ];
+  const increaseApusAllocation = async (amount: BigNumber) => {
+    if (amount.gt(userAllocationBalance)) {
+      throw new Error("Insufficient balance");
+    }
+    const reduceRatio = divideBigNumbers(amount, userAllocationBalance);
+    const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
+    let totalReduced = BigNumber.from(0);
+    for (let i = 0; i < userAllocations.length; i++) {
+      const a = userAllocations[i];
+      const reduced = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), reduceRatio);
+      totalReduced = totalReduced.add(reduced);
+      a.Amount = a.Amount.sub(reduced);
+    }
+    const newAllocations = [
+      ...userAllocations,
+      { Recipient: MintProcess, Amount: apusAllocationBalance.add(totalReduced) },
+    ];
 
-      await updateAllocations(newAllocations);
-      await fetchAllocations();
-    },
-    [userAllocationBalance, allocations, MintProcess, apusAllocationBalance, updateAllocations, fetchAllocations],
-  );
+    await updateAllocations(newAllocations);
+    await getAllocation({ Owner: ethers.utils.getAddress(walletAddress!), Token: tokenType! });
+  };
 
-  const decreaseApusAllocation = useCallback(
-    async (amount: BigNumber) => {
-      if (amount.gt(apusAllocationBalance)) {
-        throw new Error("Insufficient balance");
-      }
-      const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
-      const increaseRatio = divideBigNumbers(amount, userAllocationBalance);
-      let totalIncreased = BigNumber.from(0);
-      for (let i = 0; i < userAllocations.length; i++) {
-        const a = userAllocations[i];
-        const increased = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), increaseRatio);
-        totalIncreased = totalIncreased.add(increased);
-        a.Amount = a.Amount.add(increased);
-      }
-      const newAllocations = [
-        ...userAllocations,
-        { Recipient: MintProcess, Amount: apusAllocationBalance.sub(totalIncreased) },
-      ];
-      await updateAllocations(newAllocations);
-      await fetchAllocations();
-    },
-    [apusAllocationBalance, allocations, userAllocationBalance, MintProcess, updateAllocations, fetchAllocations],
-  );
+  const decreaseApusAllocation = async (amount: BigNumber) => {
+    if (amount.gt(apusAllocationBalance)) {
+      throw new Error("Insufficient balance");
+    }
+    const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
+    const increaseRatio = divideBigNumbers(amount, userAllocationBalance);
+    let totalIncreased = BigNumber.from(0);
+    for (let i = 0; i < userAllocations.length; i++) {
+      const a = userAllocations[i];
+      const increased = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), increaseRatio);
+      totalIncreased = totalIncreased.add(increased);
+      a.Amount = a.Amount.add(increased);
+    }
+    const newAllocations = [
+      ...userAllocations,
+      { Recipient: MintProcess, Amount: apusAllocationBalance.sub(totalIncreased) },
+    ];
+    await updateAllocations(newAllocations);
+    await getAllocation({ Owner: ethers.utils.getAddress(walletAddress!), Token: tokenType! });
+  };
 
   return {
     apus: getDataFromMessage<number>(balanceResult) || 0,
@@ -211,7 +204,7 @@ export function useAOMint() {
     userAllocationBalance,
     increaseApusAllocation,
     decreaseApusAllocation,
-    allocationsLoading,
+    allocationLoading,
     userEstimatedApus: getDataFromMessage<string>(userEstimatedApus) || "0",
     getUserEstimatedApus,
     loadingEstimate,
