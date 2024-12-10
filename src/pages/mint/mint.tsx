@@ -142,7 +142,7 @@ export default function Mint() {
     decreaseApusAllocation,
     apusAllocationBalance,
     userAllocationBalance,
-    allocationsLoading,
+    allocationLoading,
     userEstimatedApus,
     estimatedApus,
     loadingEstimate,
@@ -310,7 +310,7 @@ export default function Mint() {
                     <div className="w-full flex justify-between">
                       <div className="flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
+                          <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
                             {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
                           </LoadingNumber>
                         </span>
@@ -318,7 +318,7 @@ export default function Mint() {
                       </div>
                       <div className="text-right flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
+                          <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
                             {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
                           </LoadingNumber>
                         </span>{" "}
@@ -373,7 +373,7 @@ export default function Mint() {
                   >
                     <div className="w-full text-right flex">
                       <span className="font-bold text-[#091dff]">
-                        <LoadingNumber hide={tokenType === undefined} loading={allocationsLoading}>
+                        <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
                           {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
                         </LoadingNumber>
                       </span>{" "}
