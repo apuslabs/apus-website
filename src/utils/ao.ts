@@ -1,7 +1,7 @@
 import { message, createDataItemSigner, dryrun, result as fetchResult } from "@permaweb/aoconnect";
 import { useCallback, useState } from "react";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
-import { DryRunResult } from "@permaweb/aoconnect/dist/lib/dryrun";
+import { DryRunResult, MessageInput } from "@permaweb/aoconnect/dist/lib/dryrun";
 import { sendEthMessage } from "./ethHelpers";
 import { useConnectWallet } from "@web3-onboard/react";
 
@@ -89,18 +89,20 @@ async function executeResult(
 ) {
   try {
     let msgResult;
+    const options: MessageInput = {
+      process,
+      tags: obj2tags(tags),
+      data: toString(data),
+    };
+    if (tags.Owner) {
+      options.Owner = tags.Owner;
+    }
     if (isDryRun) {
-      msgResult = await dryrun({
-        process,
-        tags: obj2tags(tags),
-        data: toString(data),
-      });
+      msgResult = await dryrun(options);
     } else {
       const messageId = await message({
-        process,
-        tags: obj2tags(tags),
+        ...options,
         signer: createDataItemSigner(window.arweaveWallet),
-        data: toString(data),
       });
       msgResult = await fetchResult({
         message: messageId,
