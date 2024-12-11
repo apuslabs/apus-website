@@ -100,4 +100,7 @@
   &:hover {
     background-color: rgba(9, 29, 255, 0.9);
   }
+  &.disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
 }
