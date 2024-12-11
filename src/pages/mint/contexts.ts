@@ -5,6 +5,7 @@ import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { useConnectWallet } from "@web3-onboard/react";
 import { useLocation } from "react-router-dom";
+import Decimal from "decimal.js";
 
 interface AllocationItem {
   Recipient: string;
@@ -15,13 +16,12 @@ type Allocation = AllocationItem[];
 
 type TokenType = "stETH" | "DAI";
 
-function multiplyBigNumberWithDecimal(bigNumber: BigNumber, decimal: number, precision = 18) {
-  const decimalInt = ethers.utils.parseUnits(decimal.toString(), precision);
-  return bigNumber.mul(decimalInt).div(ethers.BigNumber.from(10).pow(precision));
+function multiplyBigNumberWithDecimal(bigNumber: BigNumber, decimal: number): BigNumber {
+  return BigNumber.from(new Decimal(bigNumber.toString()).mul(new Decimal(decimal)).toFixed(0));
 }
 
-function divideBigNumbers(a: BigNumber, b: BigNumber, precision = 18): number {
-  return Number(ethers.utils.formatUnits(a, precision)) / Number(ethers.utils.formatUnits(b, precision));
+function divideBigNumbers(a: BigNumber, b: BigNumber): number {
+  return new Decimal(a.toString()).div(new Decimal(b.toString())).toNumber();
 }
 
 function getBalanceOfAllocation(allocations?: Allocation, recipient?: string) {
@@ -98,7 +98,6 @@ export function useAOMint() {
     }
     return [];
   }, [allocationResult]);
-  console.log(allocationResult);
   const apusAllocationBalance = useMemo(
     () => getBalanceOfAllocation(allocations, MintProcess),
     [MintProcess, allocations],
@@ -158,7 +157,7 @@ export function useAOMint() {
     let totalReduced = BigNumber.from(0);
     for (let i = 0; i < userAllocations.length; i++) {
       const a = userAllocations[i];
-      const reduced = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), reduceRatio);
+      const reduced = multiplyBigNumberWithDecimal(a.Amount, reduceRatio);
       totalReduced = totalReduced.add(reduced);
       a.Amount = a.Amount.sub(reduced);
     }
