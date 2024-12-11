@@ -157,6 +157,9 @@ export default function Mint() {
   const [loading, setLoading] = useState(false);
 
   const approve = async () => {
+    if (amount === "0") {
+      return;
+    }
     if (!recipient) {
       message.warning("Please set recipient first");
       setModalOpen(true);
@@ -311,7 +314,8 @@ export default function Mint() {
                       <div className="flex">
                         <span className="font-bold text-[#091dff] mr-1">
                           <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                            {Number(ethers.utils.formatUnits(apusAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
+                            {new Decimal(apusAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
+                              ` ${tokenType}`}
                           </LoadingNumber>
                         </span>
                         Allocated
@@ -319,7 +323,8 @@ export default function Mint() {
                       <div className="text-right flex">
                         <span className="font-bold text-[#091dff] mr-1">
                           <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                            {Number(ethers.utils.formatUnits(userAllocationBalance, 18)).toFixed(4) + ` ${tokenType}`}
+                            {new Decimal(userAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
+                              ` ${tokenType}`}
                           </LoadingNumber>
                         </span>{" "}
                         Available To Mint APUS
@@ -356,7 +361,7 @@ export default function Mint() {
                       </div>
                     )}
                     <Spin spinning={loading}>
-                      <div className="btn-primary" onClick={approve}>
+                      <div className={`btn-primary ${amount === "0" ? "disabled" : ""}`} onClick={approve}>
                         Approve
                       </div>
                     </Spin>
@@ -374,7 +379,8 @@ export default function Mint() {
                     <div className="w-full text-right flex">
                       <span className="font-bold text-[#091dff]">
                         <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                          {apusAllocationBalance.div(1e14).toNumber() / 1e4} {tokenType}
+                          {new Decimal(apusAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
+                            ` ${tokenType}`}
                         </LoadingNumber>
                       </span>{" "}
                       Allocated
