@@ -2,7 +2,7 @@ import { Divider, Input, message, Modal, Select, Slider, Spin, Tabs, Tooltip } f
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
-import { useAOMint } from "./contexts";
+import { useAOMint, useCountDate, useParams } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
 import MintUserbox from "../../components/MintUserbox";
 import Decimal from "decimal.js";
+import dayjs from "dayjs";
 
 function TokenSlider({
   totalAmount,
@@ -156,8 +157,13 @@ export default function Mint() {
 
   const [loading, setLoading] = useState(false);
 
+  const { TGETime } = useParams();
+  const { duration } = useCountDate(TGETime);
+
+  const canApprove = amount !== "0" && dayjs().isAfter(dayjs(TGETime));
+
   const approve = async () => {
-    if (amount === "0") {
+    if (!canApprove) {
       return;
     }
     if (!recipient) {
@@ -361,8 +367,15 @@ export default function Mint() {
                       </div>
                     )}
                     <Spin spinning={loading}>
-                      <div className={`btn-primary ${amount === "0" ? "disabled" : ""}`} onClick={approve}>
+                      <div className={`btn-primary ${canApprove ? "" : "disabled"}`} onClick={approve}>
                         Approve
+                      </div>
+                      <div className="mt-2 text-xs">
+                        {dayjs().isBefore(dayjs(TGETime)) && (
+                          <div>
+                            TGE starts in <span className="text-[#091dff]">{`${duration}`}</span>
+                          </div>
+                        )}
                       </div>
                     </Spin>
                   </div>
@@ -395,7 +408,7 @@ export default function Mint() {
                     />
                     <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                     <Spin spinning={loading}>
-                      <div className="btn-primary" onClick={approve}>
+                      <div className={`btn-primary ${canApprove ? "" : "disabled"}`} onClick={approve}>
                         Approve
                       </div>
                     </Spin>
