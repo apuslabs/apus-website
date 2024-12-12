@@ -1,4 +1,4 @@
-import { Divider, Input, message, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
+import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
@@ -11,6 +11,12 @@ import HomeHeader from "../../components/HomeHeader";
 import MintUserbox from "../../components/MintUserbox";
 import Decimal from "decimal.js";
 import dayjs from "dayjs";
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const message: any = {};
+message.success = (msg: string) => notification.success({ message: msg });
+message.error = (msg: string) => notification.error({ message: msg, duration: null });
+message.warning = (msg: string) => notification.warning({ message: msg });
 
 function TokenSlider({
   totalAmount,
@@ -420,8 +426,18 @@ export default function Mint() {
         </div>
         <Modal
           open={modalOpen}
-          onClose={() => setModalOpen(false)}
-          onCancel={() => setModalOpen(false)}
+          onClose={() => {
+            if (loadingRecipient) {
+              return;
+            }
+            setModalOpen(false);
+          }}
+          onCancel={() => {
+            if (loadingRecipient) {
+              return;
+            }
+            setModalOpen(false);
+          }}
           title={null}
           footer={null}
         >
@@ -442,7 +458,7 @@ export default function Mint() {
             </ul>
           </div>
           <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <Spin spinning={loading}>
+          <Spin spinning={loadingRecipient}>
             <div className="w-32 btn-primary mx-auto" onClick={onSubmitRecipient}>
               Submit
             </div>
