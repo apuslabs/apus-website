@@ -94,8 +94,8 @@ export function useAOMint() {
 
   const updateRecipient = useCallback(
     async (recipient: string) => {
-      sendUpdateRecipientMsg({ Recipient: recipient }, dayjs().unix());
-      getRecipient({ User: ethers.utils.getAddress(walletAddress!) });
+      await sendUpdateRecipientMsg({ Recipient: recipient }, dayjs().unix());
+      await getRecipient({ User: ethers.utils.getAddress(walletAddress!) });
     },
     [getRecipient, sendUpdateRecipientMsg, walletAddress],
   );
