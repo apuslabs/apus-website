@@ -373,13 +373,16 @@ export default function Mint() {
                       </div>
                     )}
                     <Spin spinning={loading}>
-                      <div className={`btn-primary ${canApprove ? "" : "disabled"}`} onClick={approve}>
-                        Approve
+                      <div
+                        className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
+                        onClick={approve}
+                      >
+                        {!recipient ? "Set Recipient" : "Approve"}
                       </div>
                       <div className="mt-2 text-xs">
                         {dayjs().isBefore(dayjs(TGETime)) && (
                           <div>
-                            TGE starts in <span className="text-[#091dff]">{`${duration}`}</span>
+                            Allocation opened in <span className="text-[#091dff]">{`${duration}`}</span>
                           </div>
                         )}
                       </div>
@@ -414,8 +417,11 @@ export default function Mint() {
                     />
                     <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                     <Spin spinning={loading}>
-                      <div className={`btn-primary ${canApprove ? "" : "disabled"}`} onClick={approve}>
-                        Approve
+                      <div
+                        className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
+                        onClick={approve}
+                      >
+                        {!recipient ? "Set Recipient" : "Approve"}
                       </div>
                     </Spin>
                   </div>
