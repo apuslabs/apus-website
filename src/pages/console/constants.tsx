@@ -25,8 +25,8 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       dataIndex: "rank",
       key: "rank",
       render: (text: string, item: Leaderboard) => (
-        // <BlueText text={item.progress ? text : "N/A"} isBlue={item.author === activeAddress} />
-        <BlueText text={"*"} isBlue={item.author === activeAddress} />
+        <BlueText text={item.progress ? text : "N/A"} isBlue={item.author === activeAddress} />
+        // <BlueText text={"*"} isBlue={item.author === activeAddress} />
       ),
     },
     {
@@ -40,11 +40,11 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       dataIndex: "score",
       key: "score",
       render: (text: string, item: Leaderboard) => {
-        // const score = Number(text) / 2;
-        // const progressTip = item.progress === 1 ? "" : `(${Math.floor(item.progress * 100)}%)`;
+        const score = Number(text) / 2;
+        const progressTip = item.progress === 1 ? "" : `(${Math.floor(item.progress * 100)}%)`;
         return (
-          <BlueText text={"*"} isBlue={item.author === activeAddress} />
-          // <BlueText text={item.progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
+          // <BlueText text={"*"} isBlue={item.author === activeAddress} />
+          <BlueText text={item.progress ? `${score} ${progressTip}` : "N/A"} isBlue={item.author === activeAddress} />
         );
       },
     },
@@ -66,8 +66,8 @@ export const TableColumns = (poolid?: string, activeAddress?: string): ColumnTyp
       dataIndex: "reward",
       key: "reward",
       render: (text: string, item: Leaderboard) => (
-        // <BlueText text={item.progress ? `${text || 0} APUS_Tn1` : "N/A"} isBlue={item.author === activeAddress} />
-        <BlueText text={"*"} isBlue={item.author === activeAddress} />
+        <BlueText text={item.progress ? `${text || 0} APUS_Tn1` : "N/A"} isBlue={item.author === activeAddress} />
+        // <BlueText text={"*"} isBlue={item.author === activeAddress} />
       ),
     },
     {
