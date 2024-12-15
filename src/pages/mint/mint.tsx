@@ -2,21 +2,16 @@ import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Toolti
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
-import { useAOMint, useCountDate, useParams } from "./contexts";
+import { useAOMint, useCountDate, useParams, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
 import MintUserbox from "../../components/MintUserbox";
-import Decimal from "decimal.js";
 import dayjs from "dayjs";
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const message: any = {};
-message.success = (msg: string) => notification.success({ message: msg });
-message.error = (msg: string) => notification.error({ message: msg, duration: null });
-message.warning = (msg: string) => notification.warning({ message: msg });
+import { useConnectWallet } from "@web3-onboard/react";
+import { formatBigNumber, splitBigNumber } from "./utils";
 
 function TokenSlider({
   totalAmount,
@@ -41,7 +36,7 @@ function TokenSlider({
   }, [amount, setPercent]);
   return (
     <>
-      <div className="flex gap-5">
+      <div className="w-full flex gap-5">
         <Select
           size="large"
           className="w-[9rem] font-medium text-sm"
@@ -67,7 +62,7 @@ function TokenSlider({
         </Select>
         <Input
           size="large"
-          className="w-[23.25rem] text-right"
+          className="text-right"
           disabled={tokenType === undefined || totalAmount.isZero()}
           value={amount}
           onChange={(v) => {
@@ -105,7 +100,7 @@ function TokenSlider({
         </div>
       )}
       <Slider
-        className="w-[31rem]"
+        className="w-full max-w-[31rem]"
         disabled={tokenType === undefined || totalAmount.isZero()}
         marks={{ 0: "0%", 100: "100%" }}
         min={0}
@@ -117,9 +112,9 @@ function TokenSlider({
           setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
         }}
       />
-      <div className="w-full text-right -mt-5">
+      <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
         <span className="font-bold text-[#091dff]">
-          {Number(amount).toFixed(4)} {tab} ({percent}%)
+          {parseFloat(amount).toFixed(4)} {tab} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -138,33 +133,62 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
 }
 
 export default function Mint() {
+  const { MintProcess, MirrorProcess, TGETime } = useParams();
+  const duration = useCountDate(TGETime);
+  const [{ wallet }] = useConnectWallet();
+  const walletAddress = wallet?.accounts?.[0]?.address;
   const {
-    apus,
-    balanceLoading,
-    recipient,
-    updateRecipient,
     tokenType,
     setTokenType,
+    apus,
+    apusStETH,
+    apusDAI,
+    apusToken,
+    otherToken,
+    apusStETHEstimatedApus,
+    apusDAIEstimatedApus,
+    tokenEstimatedApus,
+    userEstimatedApus,
+    loadingApus,
+    loadingTokenAllocation,
+    loadingTokenEstimatedApus,
+    loadingUserEstimatedApus,
+    loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
-    apusAllocationBalance,
-    userAllocationBalance,
-    allocationLoading,
-    userEstimatedApus,
-    estimatedApus,
-    loadingEstimate,
-    loadingUserEstimate,
-  } = useAOMint();
+  } = useAOMint({
+    wallet: walletAddress,
+    MintProcess,
+    MirrorProcess,
+  });
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apus);
+  const {
+    modalOpen,
+    closeModal,
+    setModalOpen,
+    arweaveAddress,
+    setArweaveAddress,
+    recipient,
+    loadingRecipient,
+    loadingUpdateRecipient,
+    submitRecipient,
+  } = useRecipientModal({
+    wallet: walletAddress,
+    MintProcess,
+  });
+  const {
+    modalOpen: tipModalOpen,
+    closeModal: closeTipModal,
+    title: tipModalTitle,
+    showSigTip,
+    closeAndNotAskAgain,
+  } = useSignatureModal();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
   const [amount, setAmount] = useState<string>("0");
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [arweaveAddress, setArweaveAddress] = useState("");
-
-  const [loading, setLoading] = useState(false);
-
-  const { TGETime } = useParams();
-  const { duration } = useCountDate(TGETime);
+  const estimatedApus = ethers.utils
+    .parseUnits(amount, 18)
+    .mul(tokenType === "stETH" ? apusStETHEstimatedApus : apusDAIEstimatedApus)
+    .div(BigNumber.from(1).pow(18));
 
   const canApprove = amount !== "0" && dayjs().isAfter(dayjs(TGETime));
 
@@ -173,57 +197,31 @@ export default function Mint() {
       return;
     }
     if (!recipient) {
-      message.warning("Please set recipient first");
+      notification.warning({ message: "Please set recipient first" });
       setModalOpen(true);
       return;
     }
     try {
-      setLoading(true);
       if (tab === "increase") {
+        await showSigTip("Allocating assets");
         await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
       } else {
-        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18));
+        await showSigTip("Removing assets");
+        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), recipient);
       }
       setAmount("0");
-      message.success("Approve successfully");
+      notification.success({ message: "Approve successfully" });
     } catch (e: unknown) {
       if (e instanceof Error) {
-        message.error(e.message);
+        notification.error({ message: e.message, duration: 0 });
       } else {
-        message.error("Failed to approve");
+        notification.error({ message: "Failed to approve", duration: 0 });
       }
-    } finally {
-      setLoading(false);
     }
   };
 
-  const [loadingRecipient, setLoadingRecipient] = useState(false);
-  const onSubmitRecipient = async () => {
-    if (arweaveAddress.length === 43) {
-      if (loadingRecipient) {
-        return;
-      }
-      try {
-        setLoadingRecipient(true);
-        await updateRecipient(arweaveAddress);
-        message.success("Update recipient successfully");
-        setModalOpen(false);
-      } catch (e: unknown) {
-        if (e instanceof Error) {
-          message.error(e.message);
-        } else {
-          message.error("Failed to update recipient");
-        }
-      } finally {
-        setLoadingRecipient(false);
-      }
-    } else {
-      message.error("Invalid Arweave Address");
-    }
-  };
-
-  const switchTab = (key: "increase" | "decrease") => {
-    setTab(key);
+  const switchTab = (key: string) => {
+    setTab(key as "increase" | "decrease");
     setAmount("0");
   };
 
@@ -245,28 +243,64 @@ export default function Mint() {
       />
       <div id="mint" className="pt-20">
         <div className="card">
-          <div className="flex-1 flex flex-col gap-5 p-7 items-center">
-            <div className="card-caption h-10 w-full">DASHBOARD</div>
+          <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
+            <div className="card-caption w-full">DASHBOARD</div>
             <div className="text-gray90">
               Your APUS
               <InfoCircleOutlined className="pl-1" />
             </div>
-            <div className="font-medium text-gray21 text-[40px]">
-              <Spin indicator={<LoadingOutlined spin />} size="small" spinning={balanceLoading}>
-                {ethers.utils.formatUnits(apus, 12)}
+            <div className="font-medium text-gray21 text-[30px] leading-none">
+              <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
+                <span className="text-[30px]">{apusInteger}</span>
+                <span>.</span>
+                <span className="text-[20px]">{apusDecimal}</span>
               </Spin>
             </div>
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
-            <div className="flex font-medium text-gray21 text-[40px]">
-              <span className="text-[#03C407] font-normal">+</span>{" "}
-              <LoadingNumber loading={loadingUserEstimate}>
-                {new Decimal(userEstimatedApus).div(1e12).toFixed(4)}
+            <div className="flex items-center font-medium text-gray21 text-[30px] leading-none">
+              <span className="text-[#03C407] font-normal mr-2 text-[40px]">+</span>
+              <LoadingNumber loading={loadingUserEstimatedApus}>
+                {formatBigNumber(userEstimatedApus, 12, 4)}
               </LoadingNumber>
             </div>
+            <table className="table-assets">
+              <thead>
+                <tr>
+                  <th>Asset</th>
+                  <th>Allocation</th>
+                  <th>30 Day Projection</th>
+                </tr>
+              </thead>
+              <tbody>
+                {!loadingUserEstimatedApus &&
+                  [
+                    {
+                      asset: "stETH",
+                      allocation: apusStETH,
+                      projection: apusStETHEstimatedApus,
+                    },
+                    {
+                      asset: "DAI",
+                      allocation: apusDAI,
+                      projection: apusDAIEstimatedApus,
+                    },
+                  ].map((item) => (
+                    <tr key={item.asset}>
+                      <td>{item.asset}</td>
+                      <td>
+                        <LoadingNumber loading={false}>{formatBigNumber(item.allocation, 18, 4)}</LoadingNumber>
+                      </td>
+                      <td>
+                        <LoadingNumber loading={false}>{formatBigNumber(item.projection, 12, 4)}</LoadingNumber>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
-          <div className="flex-1 flex flex-col gap-5 p-7">
+          <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-5 p-7">
             <div className="card-caption">APUS Community Launch Tokenomics</div>
             <ol className="token-features-list">
               <li>
@@ -305,45 +339,41 @@ export default function Mint() {
           <div className="card-caption">ALLOCATE</div>
           <div className="text-gray21">Allocating Assets will trigger the APUS minting mechanism.</div>
           <Tabs
-            className="w-full"
+            className="w-full mt-8"
             type="card"
             defaultActiveKey="1"
             centered
             activeKey={tab}
-            onChange={(key) => {
-              switchTab(key as "increase" | "decrease");
-            }}
+            onChange={switchTab}
             items={[
               {
                 key: "increase",
                 label: "Allocate",
                 children: (
                   <div
-                    className="w-[35rem] mx-auto p-5 flex flex-col gap-5 items-center
+                    className="w-full mx-auto p-5 flex flex-col gap-5 items-center
                   text-gray21"
                   >
                     <div className="w-full flex justify-between">
                       <div className="flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                            {new Decimal(apusAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
-                              ` ${tokenType}`}
+                          <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
+                            {`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                           </LoadingNumber>
                         </span>
                         Allocated
                       </div>
                       <div className="text-right flex">
                         <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                            {new Decimal(userAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
-                              ` ${tokenType}`}
+                          <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
+                            {`${formatBigNumber(otherToken, 18, 4)} ${tokenType}`}
                           </LoadingNumber>
                         </span>{" "}
                         Available To Mint APUS
                       </div>
                     </div>
                     <TokenSlider
-                      totalAmount={userAllocationBalance}
+                      totalAmount={otherToken}
                       tab="increase"
                       amount={amount}
                       setAmount={setAmount}
@@ -354,10 +384,9 @@ export default function Mint() {
                     <div>Next 30 Days Receivable APUS Projection</div>
                     <div className="flex items-center gap-5">
                       <img src={ImgMint.ChevronRight} />
-                      <LoadingNumber loading={loadingUserEstimate}>
+                      <LoadingNumber loading={loadingTokenEstimatedApus}>
                         <div className="text-[40px] font-medium text-gray21 leading-none">
-                          <span className="text-[#03c407]">+</span>{" "}
-                          {new Decimal(amount).mul(estimatedApus).div(1e12).toFixed(4)}
+                          <span className="text-[#03c407]">+</span> {formatBigNumber(estimatedApus, 12, 4)}
                         </div>
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
@@ -366,18 +395,18 @@ export default function Mint() {
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
-                        <LoadingNumber hide={tokenType === undefined} loading={loadingEstimate}>
-                          <span className="font-bold mx-1">{new Decimal(estimatedApus).div(1e12).toFixed(4)}</span>
+                        <LoadingNumber hide={tokenType === undefined} loading={loadingTokenEstimatedApus}>
+                          <span className="font-bold mx-1">{formatBigNumber(tokenEstimatedApus, 12, 4)}</span>
                         </LoadingNumber>
                         APUS
                       </div>
                     )}
-                    <Spin spinning={loading}>
+                    <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
                       <div
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Approve"}
+                        {!recipient ? "Set Recipient" : "Add Allocation"}
                       </div>
                       <div className="mt-2 text-xs">
                         {dayjs().isBefore(dayjs(TGETime)) && (
@@ -395,20 +424,19 @@ export default function Mint() {
                 label: "Remove",
                 children: (
                   <div
-                    className="w-[35rem] mx-auto p-5 flex flex-col gap-5 items-center
+                    className="w-full mx-auto p-5 flex flex-col gap-5 items-center
               text-gray21"
                   >
                     <div className="w-full text-right flex">
                       <span className="font-bold text-[#091dff]">
-                        <LoadingNumber hide={tokenType === undefined} loading={allocationLoading}>
-                          {new Decimal(apusAllocationBalance.toString()).div(1e18).toNumber().toFixed(4) +
-                            ` ${tokenType}`}
+                        <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
+                          {`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         </LoadingNumber>
                       </span>{" "}
                       Allocated
                     </div>
                     <TokenSlider
-                      totalAmount={apusAllocationBalance}
+                      totalAmount={apusToken}
                       tab="decrease"
                       amount={amount}
                       setAmount={setAmount}
@@ -416,12 +444,12 @@ export default function Mint() {
                       setTokenType={switchToken}
                     />
                     <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
-                    <Spin spinning={loading}>
+                    <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
                       <div
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Approve"}
+                        {!recipient ? "Set Recipient" : "Remove Allocation"}
                       </div>
                     </Spin>
                   </div>
@@ -430,24 +458,8 @@ export default function Mint() {
             ]}
           ></Tabs>
         </div>
-        <Modal
-          open={modalOpen}
-          onClose={() => {
-            if (loadingRecipient) {
-              return;
-            }
-            setModalOpen(false);
-          }}
-          onCancel={() => {
-            if (loadingRecipient) {
-              return;
-            }
-            setModalOpen(false);
-          }}
-          title={null}
-          footer={null}
-        >
-          <div className="mb-10 text-gray21 font-semibold text-3xl">RECEIVE APUS</div>
+        <Modal open={modalOpen} onClose={closeModal} onCancel={closeModal} title={null} footer={null}>
+          <div className="mb-10 text-gray21 font-semibold text-3xl text-center">RECEIVE APUS</div>
           <div className="text-gray21 mb-2">Selected Arweave Address:</div>
           <div className="text-[#091dff] font-semibold mb-5">{recipient || ""}</div>
           <Input
@@ -464,11 +476,42 @@ export default function Mint() {
             </ul>
           </div>
           <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <Spin spinning={loadingRecipient}>
-            <div className="w-32 btn-primary mx-auto" onClick={onSubmitRecipient}>
+          <Spin spinning={loadingUpdateRecipient || loadingRecipient}>
+            <div
+              className="w-32 btn-primary mx-auto"
+              onClick={async () => {
+                try {
+                  await showSigTip("Setting recipient");
+                  await submitRecipient();
+                  notification.success({ message: "Recipient updated successfully" });
+                } catch (e: unknown) {
+                  if (e instanceof Error) {
+                    notification.error({ message: e.message, duration: 0 });
+                  } else {
+                    notification.error({ message: "Failed to update recipient", duration: 0 });
+                  }
+                }
+              }}
+            >
               Submit
             </div>
           </Spin>
+        </Modal>
+        <Modal open={tipModalOpen} onClose={closeTipModal} onCancel={() => {}} title={null} footer={null}>
+          <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {tipModalTitle}</div>
+          <div className="mt-5 text-xs">
+            * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
+            correct it soon. There is no risk!
+          </div>
+          <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
+          <div className="flex justify-center gap-5">
+            <div className="btn-primary" onClick={closeTipModal}>
+              Continue
+            </div>
+            <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
+              I'm Good! No More Tips!
+            </div>
+          </div>
         </Modal>
       </div>
       <HomeFooter />

@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
-import { useConnectWallet } from "@web3-onboard/react";
 import { useLocation } from "react-router-dom";
-import Decimal from "decimal.js";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
+import { useLocalStorage } from "react-use";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
@@ -20,19 +20,24 @@ type Allocation = AllocationItem[];
 
 type TokenType = "stETH" | "DAI";
 
-function multiplyBigNumberWithDecimal(bigNumber: BigNumber, decimal: number): BigNumber {
-  return BigNumber.from(new Decimal(bigNumber.toString()).mul(new Decimal(decimal)).toFixed(0));
-}
-
-function divideBigNumbers(a: BigNumber, b: BigNumber): number {
-  return new Decimal(a.toString()).div(new Decimal(b.toString())).toNumber();
-}
-
-function getBalanceOfAllocation(allocations?: Allocation, recipient?: string) {
+function getBalanceOfAllocation(allocations: Allocation, recipient?: string) {
   if (!recipient) {
-    return allocations?.reduce((acc, a) => acc.add(BigNumber.from(a.Amount)), BigNumber.from(0)) || BigNumber.from(0);
+    return allocations.reduce((acc, a) => acc.add(a.Amount), BigNumber.from(0));
   }
-  return allocations?.find((a) => a.Recipient === recipient)?.Amount || BigNumber.from(0);
+  return allocations.find((a) => a.Recipient === recipient)?.Amount || BigNumber.from(0);
+}
+
+function getAllocationFromMessage(message?: MessageResult): Allocation {
+  try {
+    const data: { Recipient: string; Amount: string }[] = JSON.parse(getDataFromMessage(message) || "[]");
+    return data.map((a) => ({
+      Recipient: a.Recipient,
+      Amount: BigNumber.from(a.Amount),
+    }));
+  } catch {
+    console.error("Failed to parse allocation message", message);
+    return [];
+  }
 }
 
 export function useParams() {
@@ -52,176 +57,202 @@ export function useParams() {
   return { MintProcess, MirrorProcess, TGETime };
 }
 
-export function useAOMint() {
-  const { MintProcess, MirrorProcess } = useParams();
-  const [{ wallet }] = useConnectWallet();
-  const walletAddress = wallet?.accounts?.[0]?.address;
-  const {
-    result: balanceResult,
-    loading: balanceLoading,
-    execute: getBalance,
-  } = useAO(MintProcess, "User.Balance", "dryrun");
-  const { result: recipientResult, execute: getRecipient } = useAO(MintProcess, "User.Get-Recipient", "dryrun");
-  const {
-    result: userEstimatedApus,
-    execute: getUserEstimatedApus,
-    loading: loadingUserEstimate,
-  } = useAO(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
-  const {
-    result: allocationResult,
-    loading: allocationLoading,
-    execute: getAllocation,
-  } = useAO(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
+function getApusAllocation(msg?: MessageResult) {
+  return getBalanceOfAllocation(getAllocationFromMessage(msg), APUS_ADDRESS.Mint);
+}
 
-  const init = useCallback(async () => {
-    if (walletAddress) {
-      getBalance({ Recipient: ethers.utils.getAddress(walletAddress) });
-      getRecipient({ User: ethers.utils.getAddress(walletAddress) });
-      getUserEstimatedApus(
-        {
-          User: ethers.utils.getAddress(walletAddress),
-        },
-        dayjs().unix(),
-      );
-    }
-  }, [getBalance, getRecipient, getUserEstimatedApus, walletAddress]);
+function getOtherAllocation(msg?: MessageResult) {
+  return getBalanceOfAllocation(getAllocationFromMessage(msg)).sub(getApusAllocation(msg));
+}
 
-  useEffect(() => {
-    init();
-  }, [init]);
+function getEstimatedApus(
+  stETHEstimatedApus: BigNumber,
+  daiEstimatedApus: BigNumber,
+  apusStETHAllocation: BigNumber,
+  apusDAIAllocation: BigNumber,
+) {
+  const stETHApus = apusStETHAllocation.mul(stETHEstimatedApus).div(BigNumber.from(1).pow(18));
+  const daiApus = apusDAIAllocation.mul(daiEstimatedApus).div(BigNumber.from(1).pow(18));
+  return {
+    user: stETHApus.add(daiApus),
+    stETH: stETHApus,
+    dai: daiApus,
+  };
+}
 
-  const { execute: sendUpdateRecipientMsg } = useEthMessage(MintProcess, "User.Update-Recipient");
-
-  const updateRecipient = useCallback(
-    async (recipient: string) => {
-      await sendUpdateRecipientMsg({ Recipient: recipient }, dayjs().unix());
-      await getRecipient({ User: ethers.utils.getAddress(walletAddress!) });
-    },
-    [getRecipient, sendUpdateRecipientMsg, walletAddress],
-  );
-
+export function useAOMint({
+  wallet,
+  MintProcess,
+  MirrorProcess,
+}: {
+  wallet?: string;
+  MintProcess: string;
+  MirrorProcess: string;
+}) {
   const [tokenType, setTokenType] = useState<TokenType>("stETH");
-  const allocations = useMemo(() => {
-    if (allocationResult) {
-      const data: { Recipient: string; Amount: string }[] = JSON.parse(getDataFromMessage(allocationResult) || "[]");
-      return data?.map((a) => ({
-        Recipient: a.Recipient,
-        Amount: BigNumber.from(a.Amount),
-      }));
-    }
-    return [];
-  }, [allocationResult]);
-  const apusAllocationBalance = useMemo(
-    () => getBalanceOfAllocation(allocations, MintProcess),
-    [MintProcess, allocations],
-  );
-  const userAllocationBalance = useMemo(
-    () => getBalanceOfAllocation(allocations).sub(getBalanceOfAllocation(allocations, MintProcess)),
-    [MintProcess, allocations],
-  );
-
-  useEffect(() => {
-    if (!walletAddress || !tokenType) {
-      return;
-    }
-    getAllocation({ Owner: ethers.utils.getAddress(walletAddress), Token: tokenType });
-  }, [getAllocation, walletAddress, tokenType]);
-
+  const { data: apus, loading: loadingApus, execute: getApus } = useAO<string>(MintProcess, "User.Balance", "dryrun");
+  // const {
+  //   data: userEstimatedApus,
+  //   loading: loadingUserEstimateApus,
+  //   execute: getUserEstimatedApus,
+  // } = useAO<string>(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
   const {
-    result: estimatedApus,
-    execute: getEstimatedApus,
-    loading: loadingEstimate,
-  } = useAO(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
+    data: stETHEstimatedApus,
+    loading: loadingStETHEstimatedApus,
+    execute: getStETHEstimatedApus,
+  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
+  const {
+    data: daiEstimatedApus,
+    loading: loadingDaiEstimatedApus,
+    execute: getDaiEstimatedApus,
+  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
+  const {
+    result: stETHAllocationResult,
+    loading: loadingStETHAllocation,
+    execute: getStETHAllocation,
+  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
+  const {
+    result: daiAllocationResult,
+    loading: loadingDaiAllocation,
+    execute: getDaiAllocation,
+  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
 
   useEffect(() => {
-    if (tokenType) {
-      getEstimatedApus(
-        {
-          Amount: (1e18).toString(),
-          Token: tokenType,
-        },
-        dayjs().unix(),
-      );
+    if (wallet) {
+      getApus({ Recipient: ethers.utils.getAddress(wallet) });
+      // getUserEstimatedApus({ User: ethers.utils.getAddress(wallet) }, dayjs().unix());
+      getStETHAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "stETH" });
+      getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
+      getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
     }
-  }, [getEstimatedApus, tokenType]);
+  }, [getApus, getDaiAllocation, getDaiEstimatedApus, getStETHAllocation, getStETHEstimatedApus, wallet]);
 
-  const { execute: updateAllocationsMsg } = useEthMessage(AO_MINT_PROCESS, "User.Update-Allocation");
-  const updateAllocations = useCallback(
+  const { loading: loadingUpdateAllocation, execute: updateAllocationMsg } = useEthMessage(
+    AO_MINT_PROCESS,
+    "User.Update-Allocation",
+  );
+  const updateAllocation = useCallback(
     async (newAllocations: Allocation) => {
       if (tokenType) {
-        await updateAllocationsMsg(
-          {
-            Token: tokenType,
-            _n: dayjs().unix().toFixed(0),
-          },
+        await updateAllocationMsg(
+          { Token: tokenType, _n: dayjs().unix().toFixed(0) },
           JSON.stringify(newAllocations.map((a) => ({ ...a, Amount: a.Amount.toString() }))),
         );
       }
     },
-    [tokenType, updateAllocationsMsg],
+    [tokenType, updateAllocationMsg],
   );
 
+  const refreshAfterAllocation = async () => {
+    if (tokenType === "stETH") {
+      await getStETHAllocation({ Owner: ethers.utils.getAddress(wallet!), Token: "stETH" });
+    } else {
+      await getDaiAllocation({ Owner: ethers.utils.getAddress(wallet!), Token: "DAI" });
+    }
+    // await getUserEstimatedApus();
+  };
+  const getCurrentAllocation = async () => {
+    const allocationResult = tokenType === "stETH" ? stETHAllocationResult : daiAllocationResult;
+    return {
+      allocation: getAllocationFromMessage(allocationResult),
+      apus: getApusAllocation(allocationResult),
+      other: getOtherAllocation(allocationResult),
+    };
+  };
   const increaseApusAllocation = async (amount: BigNumber) => {
-    if (amount.gt(userAllocationBalance)) {
+    const { allocation, apus, other } = await getCurrentAllocation();
+    if (amount.gt(other) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
-    const reduceRatio = divideBigNumbers(amount, userAllocationBalance);
-    const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
-    let totalReduced = BigNumber.from(0);
-    for (let i = 0; i < userAllocations.length; i++) {
-      const a = userAllocations[i];
-      const reduced = multiplyBigNumberWithDecimal(a.Amount, reduceRatio);
-      totalReduced = totalReduced.add(reduced);
+    const otherAllocation = allocation.filter((a) => a.Recipient !== MintProcess);
+    // reduce other allocations one by one, until amount is satisfied
+    let remaining = amount;
+    for (let i = 0; i < otherAllocation.length; i++) {
+      const a = otherAllocation[i];
+      if (remaining.lte(0)) {
+        break;
+      }
+      const reduced = a.Amount.gte(remaining) ? remaining : a.Amount;
+      remaining = remaining.sub(reduced);
       a.Amount = a.Amount.sub(reduced);
     }
-    const newAllocations = [
-      ...userAllocations,
-      { Recipient: MintProcess, Amount: apusAllocationBalance.add(totalReduced) },
-    ];
-
-    await updateAllocations(newAllocations);
-    await getAllocation({ Owner: ethers.utils.getAddress(walletAddress!), Token: tokenType! });
+    const newAllocations = [...otherAllocation, { Recipient: MintProcess, Amount: apus.add(amount) }];
+    await updateAllocation(newAllocations);
+    refreshAfterAllocation();
   };
 
-  const decreaseApusAllocation = async (amount: BigNumber) => {
-    if (amount.gt(apusAllocationBalance)) {
+  const decreaseApusAllocation = async (amount: BigNumber, recipient: string) => {
+    if (!recipient) {
+      throw new Error("Recipient not set");
+    }
+    const { allocation, apus } = await getCurrentAllocation();
+    if (amount.gt(apus) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
-    const userAllocations = allocations.filter((a) => a.Recipient !== MintProcess);
-    const increaseRatio = divideBigNumbers(amount, userAllocationBalance);
-    let totalIncreased = BigNumber.from(0);
-    for (let i = 0; i < userAllocations.length; i++) {
-      const a = userAllocations[i];
-      const increased = multiplyBigNumberWithDecimal(BigNumber.from(a.Amount), increaseRatio);
-      totalIncreased = totalIncreased.add(increased);
-      a.Amount = a.Amount.add(increased);
+    const otherAllocation = allocation.filter((a) => ![MintProcess, recipient].includes(a.Recipient));
+    let recipientAllocation = allocation.find((a) => a.Recipient === recipient);
+    if (recipientAllocation) {
+      recipientAllocation.Amount = recipientAllocation.Amount.add(amount);
+    } else {
+      recipientAllocation = { Recipient: recipient, Amount: amount };
     }
     const newAllocations = [
-      ...userAllocations,
-      { Recipient: MintProcess, Amount: apusAllocationBalance.sub(totalIncreased) },
+      ...otherAllocation,
+      recipientAllocation,
+      { Recipient: MintProcess, Amount: apus.sub(amount) },
     ];
-    await updateAllocations(newAllocations);
-    await getAllocation({ Owner: ethers.utils.getAddress(walletAddress!), Token: tokenType! });
+    await updateAllocation(newAllocations);
+    refreshAfterAllocation();
   };
 
+  const apusStETH = getApusAllocation(stETHAllocationResult);
+  const apusDAI = getApusAllocation(daiAllocationResult);
+  const otherStETH = getOtherAllocation(stETHAllocationResult);
+  const otherDAI = getOtherAllocation(daiAllocationResult);
+  const {
+    user: userEstimatedApus,
+    stETH: apusStETHEstimatedApus,
+    dai: apusDAIEstimatedApus,
+  } = getEstimatedApus(
+    BigNumber.from(stETHEstimatedApus || 0),
+    BigNumber.from(daiEstimatedApus || 0),
+    apusStETH,
+    apusDAI,
+  );
+
   return {
-    apus: getDataFromMessage<number>(balanceResult) || 0,
-    balanceLoading,
-    recipient: getDataFromMessage<string>(recipientResult),
-    updateRecipient,
-    getBalance,
     tokenType,
     setTokenType,
-    apusAllocationBalance,
-    userAllocationBalance,
+    apus: BigNumber.from(apus || 0),
+    // userEstimatedApus,
+    stETHEstimatedApus: BigNumber.from(stETHEstimatedApus || 0),
+    daiEstimatedApus: BigNumber.from(daiEstimatedApus || 0),
+    tokenEstimatedApus: BigNumber.from((tokenType === "stETH" ? stETHEstimatedApus : daiEstimatedApus) || 0),
+    stETHAllocationResult,
+    daiAllocationResult,
+    loadingApus,
+    // loadingUserEstimateApus,
+    loadingStETHEstimatedApus,
+    loadingDaiEstimatedApus,
+    loadingTokenEstimatedApus: tokenType === "stETH" ? loadingStETHEstimatedApus : loadingDaiEstimatedApus,
+    loadingStETHAllocation,
+    loadingDaiAllocation,
+    loadingTokenAllocation: tokenType === "stETH" ? loadingStETHAllocation : loadingDaiAllocation,
+    loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
-    allocationLoading,
-    userEstimatedApus: getDataFromMessage<string>(userEstimatedApus) || "0",
-    getUserEstimatedApus,
-    loadingEstimate,
-    estimatedApus: getDataFromMessage<string>(estimatedApus) || "0",
-    loadingUserEstimate,
+    apusStETH,
+    apusDAI,
+    apusToken: tokenType === "stETH" ? apusStETH : apusDAI,
+    otherStETH,
+    otherDAI,
+    otherToken: tokenType === "stETH" ? otherStETH : otherDAI,
+    apusStETHEstimatedApus,
+    apusDAIEstimatedApus,
+    loadingUserEstimatedApus:
+      loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation,
+    userEstimatedApus,
   };
 }
 
@@ -243,4 +274,96 @@ export function useCountDate(date: string) {
   }, [date]);
 
   return { day, hour, minute, second, duration: dayjs.duration(diff, "seconds").humanize() };
+}
+
+export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; MintProcess: string }) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [arweaveAddress, setArweaveAddress] = useState("");
+
+  const {
+    data: recipient,
+    loading: loadingRecipient,
+    execute: getRecipient,
+  } = useAO<string>(MintProcess, "User.Get-Recipient", "dryrun");
+  const { loading: loadingUpdateRecipient, execute: updateRecipientMsg } = useEthMessage(
+    MintProcess,
+    "User.Update-Recipient",
+  );
+
+  useEffect(() => {
+    if (wallet) {
+      getRecipient({ User: ethers.utils.getAddress(wallet) });
+    }
+  }, [getRecipient, wallet]);
+
+  const submitRecipient = async () => {
+    if (!wallet) {
+      return;
+    }
+    if (arweaveAddress.length !== 43) {
+      throw new Error("Invalid Arweave Address");
+    }
+    await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
+    await getRecipient({ User: ethers.utils.getAddress(wallet) });
+    setModalOpen(false);
+  };
+
+  const closeModal = () => {
+    if (loadingRecipient) {
+      return;
+    }
+    setModalOpen(false);
+  };
+
+  return {
+    modalOpen,
+    setModalOpen,
+    closeModal,
+    arweaveAddress,
+    setArweaveAddress,
+    recipient,
+    loadingRecipient,
+    loadingUpdateRecipient,
+    submitRecipient,
+  };
+}
+
+export function useSignatureModal() {
+  const [modalOpen, setModalOpen] = useState(false);
+  const modalOpenRef = useRef(modalOpen);
+  const [title, setTitle] = useState("");
+  const [notAskAgain, setNotAskAgain] = useLocalStorage("sig-not-ask-again", false);
+
+  useEffect(() => {
+    modalOpenRef.current = modalOpen;
+  }, [modalOpen]);
+
+  const showSigTip = (t: string) =>
+    new Promise<void>((resolve) => {
+      if (notAskAgain) {
+        resolve();
+      } else {
+        setTitle(t);
+        setModalOpen(true);
+        setTitle("Signature Tip");
+
+        const tipInterval = setInterval(() => {
+          if (!modalOpenRef.current) {
+            clearInterval(tipInterval);
+            resolve();
+          }
+        }, 200);
+      }
+    });
+
+  const closeModal = () => {
+    setModalOpen(false);
+  };
+
+  const closeAndNotAskAgain = () => {
+    setNotAskAgain(true);
+    setModalOpen(false);
+  };
+
+  return { modalOpen, title, showSigTip, closeModal, closeAndNotAskAgain };
 }
