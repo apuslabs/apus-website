@@ -82,7 +82,7 @@ function logDebugInfo(tags: Record<string, unknown>, msgType: string, data: unkn
 
 async function executeResult(
   process: string,
-  isDryRun: boolean,
+  msgType: "message" | "dryrun",
   tags: Record<string, string>,
   data?: unknown,
   checkStatus?: boolean,
@@ -97,7 +97,7 @@ async function executeResult(
     if (tags.Owner) {
       options.Owner = tags.Owner;
     }
-    if (isDryRun) {
+    if (msgType === "dryrun") {
       msgResult = await dryrun(options);
     } else {
       const messageId = await message({
@@ -109,13 +109,14 @@ async function executeResult(
         process,
       });
     }
-    handleResult(isDryRun ? "DryRun" : "Msg", msgResult, tags, data, checkStatus ?? true);
+    handleResult(msgType, msgResult, tags, data, checkStatus ?? true);
     return msgResult;
   } catch (e) {
     if (isEnvDev) {
-      logError(tags, isDryRun ? "DryRun" : "Msg");
+      logError(tags, msgType);
+    } else {
+      console.error(e);
     }
-    console.error(e);
     throw e;
   }
 }
@@ -124,17 +125,14 @@ function logError(tags: Record<string, string>, msgType: string) {
   console.log(`${tags.Action ?? ""} ${msgType}`);
 }
 
-export function getTagsFromMessage(
+export function getTagsFromMessage<U extends Record<string, string>>(
   message: MessageResult | DryRunResult | undefined,
   index: number = 0,
-): Record<string, string> | undefined {
-  return message?.Messages?.[index]?.Tags?.reduce(
-    (acc: Record<string, string>, tag: AOMessageTag) => {
-      acc[tag.name] = tag.value;
-      return acc;
-    },
-    {} as Record<string, string>,
-  );
+): U | undefined {
+  return message?.Messages?.[index]?.Tags?.reduce((acc: Record<string, string>, tag: AOMessageTag) => {
+    acc[tag.name] = tag.value;
+    return acc;
+  }, {} as U);
 }
 
 export function getDataFromMessage<T = unknown>(
@@ -144,7 +142,7 @@ export function getDataFromMessage<T = unknown>(
   return message?.Messages?.[index]?.Data;
 }
 
-export function useAO(
+export function useAO<T>(
   process: string,
   action: string,
   msgType: "message" | "dryrun",
@@ -156,7 +154,6 @@ export function useAO(
     checkStatus: true,
   },
 ) {
-  const isDryRun = msgType === "dryrun";
   const { autoLoad, checkStatus } = options;
   const [result, setResult] = useState<MessageResult>();
   const [loading, setLoading] = useState(autoLoad || false);
@@ -166,7 +163,7 @@ export function useAO(
     async (tags: Record<string, string> = {}, data?: unknown) => {
       setLoading(true);
       try {
-        const result = await executeResult(process, isDryRun, { ...tags, Action: action }, data, checkStatus);
+        const result = await executeResult(process, msgType, { ...tags, Action: action }, data, checkStatus);
         if (result == null) {
           throw new Error("No result");
         }
@@ -184,10 +181,12 @@ export function useAO(
         setLoading(false);
       }
     },
-    [process, action, checkStatus, isDryRun],
+    [process, action, checkStatus, msgType],
   );
   return {
     result,
+    data: getDataFromMessage<T>(result),
+    tags: getTagsFromMessage(result),
     loading,
     error,
     execute,
