@@ -58,7 +58,7 @@ export function useParams() {
 }
 
 function getApusAllocation(msg?: MessageResult) {
-  return getBalanceOfAllocation(getAllocationFromMessage(msg), APUS_ADDRESS.Mint);
+  return getBalanceOfAllocation(getAllocationFromMessage(msg), APUS_ADDRESS.Recipient);
 }
 
 function getOtherAllocation(msg?: MessageResult) {
@@ -150,7 +150,6 @@ export function useAOMint({
     } else {
       await getDaiAllocation({ Owner: ethers.utils.getAddress(wallet!), Token: "DAI" });
     }
-    // await getUserEstimatedApus();
   };
   const getCurrentAllocation = async () => {
     const allocationResult = tokenType === "stETH" ? stETHAllocationResult : daiAllocationResult;
@@ -165,7 +164,7 @@ export function useAOMint({
     if (amount.gt(other) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
-    const otherAllocation = allocation.filter((a) => a.Recipient !== MintProcess);
+    const otherAllocation = allocation.filter((a) => a.Recipient !== APUS_ADDRESS.Recipient);
     // reduce other allocations one by one, until amount is satisfied
     let remaining = amount;
     for (let i = 0; i < otherAllocation.length; i++) {
@@ -177,7 +176,7 @@ export function useAOMint({
       remaining = remaining.sub(reduced);
       a.Amount = a.Amount.sub(reduced);
     }
-    const newAllocations = [...otherAllocation, { Recipient: MintProcess, Amount: apus.add(amount) }];
+    const newAllocations = [...otherAllocation, { Recipient: APUS_ADDRESS.Recipient, Amount: apus.add(amount) }];
     await updateAllocation(newAllocations);
     refreshAfterAllocation();
   };
@@ -190,7 +189,7 @@ export function useAOMint({
     if (amount.gt(apus) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
-    const otherAllocation = allocation.filter((a) => ![MintProcess, recipient].includes(a.Recipient));
+    const otherAllocation = allocation.filter((a) => ![APUS_ADDRESS.Recipient, recipient].includes(a.Recipient));
     let recipientAllocation = allocation.find((a) => a.Recipient === recipient);
     if (recipientAllocation) {
       recipientAllocation.Amount = recipientAllocation.Amount.add(amount);
@@ -200,7 +199,7 @@ export function useAOMint({
     const newAllocations = [
       ...otherAllocation,
       recipientAllocation,
-      { Recipient: MintProcess, Amount: apus.sub(amount) },
+      { Recipient: APUS_ADDRESS.Recipient, Amount: apus.sub(amount) },
     ];
     await updateAllocation(newAllocations);
     refreshAfterAllocation();
