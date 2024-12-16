@@ -71,8 +71,8 @@ function getEstimatedApus(
   apusStETHAllocation: BigNumber,
   apusDAIAllocation: BigNumber,
 ) {
-  const stETHApus = apusStETHAllocation.mul(stETHEstimatedApus).div(BigNumber.from(1).pow(18));
-  const daiApus = apusDAIAllocation.mul(daiEstimatedApus).div(BigNumber.from(1).pow(18));
+  const stETHApus = apusStETHAllocation.mul(stETHEstimatedApus).div(BigNumber.from(10).pow(18));
+  const daiApus = apusDAIAllocation.mul(daiEstimatedApus).div(BigNumber.from(10).pow(18));
   return {
     user: stETHApus.add(daiApus),
     stETH: stETHApus,

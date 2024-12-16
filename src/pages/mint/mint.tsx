@@ -114,7 +114,7 @@ function TokenSlider({
       />
       <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
         <span className="font-bold text-[#091dff]">
-          {parseFloat(amount).toFixed(4)} {tab} ({percent}%)
+          {amount} {tab} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -185,10 +185,7 @@ export default function Mint() {
   } = useSignatureModal();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
   const [amount, setAmount] = useState<string>("0");
-  const estimatedApus = ethers.utils
-    .parseUnits(amount, 18)
-    .mul(tokenType === "stETH" ? apusStETHEstimatedApus : apusDAIEstimatedApus)
-    .div(BigNumber.from(1).pow(18));
+  const estimatedApus = ethers.utils.parseUnits(amount, 18).mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
   const canApprove = amount !== "0" && dayjs().isAfter(dayjs(TGETime));
 
