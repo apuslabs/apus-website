@@ -16,7 +16,7 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
-import { PRE_TGE_TIME, TGE_TIME } from "../../utils/config";
+import { PRE_TGE_TIME } from "../../utils/config";
 import { useCountDate } from "../../utils/react-use";
 
 function TokenSlider({
@@ -120,7 +120,7 @@ function TokenSlider({
       />
       <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
         <span className="font-bold text-[#091dff]">
-          {amount} {tab} ({percent}%)
+          {amount} {tokenType} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -140,7 +140,7 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
 
 export default function Mint() {
   const { MintProcess, MirrorProcess } = useParams();
-  const { duration } = useCountDate(PRE_TGE_TIME);
+  const { leftTimeStr } = useCountDate(PRE_TGE_TIME);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
@@ -411,19 +411,14 @@ export default function Mint() {
                       >
                         {!recipient ? "Set Recipient" : "Add Allocation"}
                       </div>
-                      <div className="mt-2 text-xs">
-                        {dayjs().isBefore(dayjs(PRE_TGE_TIME)) ? (
-                          <div>
-                            Allocation opened in <span className="text-[#091dff]">{`${duration}`}</span>
-                          </div>
-                        ) : null}
-                        {dayjs().isAfter(PRE_TGE_TIME) && dayjs().isBefore(TGE_TIME) ? (
-                          <div>
-                            Allocation opened in <span className="text-[#091dff]">{`${duration}`}</span>
-                          </div>
-                        ) : null}
-                      </div>
                     </Spin>
+                    <div className="mt-2 text-xs">
+                      {dayjs().isBefore(dayjs(PRE_TGE_TIME)) ? (
+                        <div>
+                          Allocation opened in <span className="text-[#091dff]">{`${leftTimeStr}`}</span>
+                        </div>
+                      ) : null}
+                    </div>
                   </div>
                 ),
               },

@@ -38,5 +38,7 @@ export function useCountDate(date: dayjs.Dayjs) {
     return () => clearInterval(interval);
   }, [date]);
 
-  return { day, hour, minute, second, duration: dayjs.duration(diff, "seconds").humanize() };
+  const leftTimeStr = `${day > 0 ? day + "d" : ""} ${hour > 0 ? hour + "h" : ""} ${minute > 0 ? minute + "m" : ""} ${second > 0 ? second + "s" : ""}`;
+
+  return { day, hour, minute, second, leftTimeStr, duration: dayjs.duration(diff, "seconds").humanize() };
 }

@@ -239,7 +239,7 @@ function SectionRoadmap() {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
   return (
-    <div className="section section-roadmap">
+    <div id="roadmap" className="section section-roadmap">
       <div className="section-divider"></div>
       <div className="section-title">Roadmap</div>
       <div className="section-description md:px-[100px]">
