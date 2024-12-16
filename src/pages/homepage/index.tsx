@@ -1,33 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
 import { ApusLogo, ImgHomepage } from "../../assets";
 import { useSubscribe } from "./contexts";
 import "./index.css";
-import dayjs from "dayjs";
 import { Input } from "antd";
 import React from "react";
 import { Link } from "react-router-dom";
 import { SocialMediaList } from "../../components/SocialMediaList";
-import { useBreakpoint } from "../../utils/react-use";
-
-function useCountDate(date: dayjs.Dayjs) {
-  const [diff, setDiff] = useState(0);
-  const day = useMemo(() => Math.floor(diff / 86400), [diff]);
-  const hour = useMemo(() => Math.floor((diff % 86400) / 3600), [diff]);
-  const minute = useMemo(() => Math.floor((diff % 3600) / 60), [diff]);
-  const second = useMemo(() => Math.floor(diff % 60), [diff]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = dayjs();
-      const target = dayjs(date);
-      const diff = target.diff(now, "second");
-      setDiff(diff);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [date]);
-
-  return { day, hour, minute, second };
-}
+import { useBreakpoint, useCountDate } from "../../utils/react-use";
+import { TGE_TIME } from "../../utils/config";
 
 function TwitterVideo({ className, videoID }: { className: string; videoID: string }) {
   return (
@@ -61,7 +40,7 @@ function Email() {
 }
 
 function SectionHero() {
-  const { day, hour, minute, second } = useCountDate(dayjs.unix(1734973200));
+  const { day, hour, minute, second } = useCountDate(TGE_TIME);
   return (
     <div className="section section-hero">
       <div className="launchbox-container">
@@ -113,21 +92,21 @@ const features = [
     title: "Verifiable Decentralized AI Inference",
     description:
       "Apus Network introduces Fast Provable Inference Faults(FPIF) to combine deterministic computations, cryptographic attestations, and economic incentives for fast, secure, and inexpensive verification.",
-    link: "",
+    link: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
   },
   {
     icon: ImgHomepage.Feature2,
     title: "100% Community Launch",
     description:
       "$APUS, with a fixed 1 billion supply and deflationary mechanisms, ensures long-term value through fair, decentralized distribution with no pre-allocation for the team or early investors.",
-    link: "",
+    link: "https://3csodbzc3eweix6qkukrbfzr42v3stx7rh6xpg5vlkebap4p6eza.arweave.net/2KThhyLZLERf0FUVEJcx5qu5Tv-J_XebtVqIED-P8TI",
   },
   {
     icon: ImgHomepage.Feature3,
     title: "Competitive Incentive for AI Models",
     description:
       "Apus Network's economic model competitively incentivizes the development and execution of the top-tier AI models, aligning computational integrity with community-driven rewards.",
-    link: "",
+    link: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
   },
 ];
 function SectionFeatures() {
@@ -144,7 +123,7 @@ function SectionFeatures() {
             <img src={icon} className="section-features-item-icon" />
             <div className="section-features-item-title">{title}</div>
             <div className="section-features-item-description">{description}</div>
-            <Link to={link} className="section-features-item-link">
+            <Link to={link} className="section-features-item-link" target="_blank">
               <div className="btn-primary">Learn More</div>
             </Link>
           </li>

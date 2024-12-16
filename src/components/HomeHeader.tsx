@@ -4,17 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
 import "./headerfooter.css";
-
-function scrollToAnchor(anchor: string) {
-  if (!anchor) return;
-  const target = document.querySelector("#" + anchor);
-  if (target) {
-    window.scrollTo({
-      top: target.getBoundingClientRect().top + window.scrollY - 80,
-      behavior: "smooth",
-    });
-  }
-}
+import { scrollToAnchor } from "../utils/scroll";
 
 function HomeHeaderMobile() {
   const [menuShow, setMenuShow] = useState<boolean>(false);
@@ -42,16 +32,8 @@ function HomeHeaderMobile() {
             <Link
               key={item.name}
               to={item.path}
-              onClick={
-                item.onClick
-                  ? item.onClick
-                  : () => {
-                      if (item.path.includes("?anchor")) {
-                        const anchor = item.path.split("?anchor=")[1];
-                        scrollToAnchor(anchor);
-                      }
-                    }
-              }
+              target={item.path.indexOf("http") !== -1 ? "_blank" : ""}
+              onClick={item.onClick}
             >
               <li className="h-[60px] px-5 leading-[60px] border-b-1 border-solid border-grayd8" key={item.name}>
                 {item.name}

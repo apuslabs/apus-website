@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 export const POOL_PROCESS = "HJV6BxQGakxlQe6rfGxOMiifKSFYRz5WEwZOKPLPWEg";
 export const EMBEDDING_PROCESS = "q7QJTZbOI_avjaltnF-kP21kpL3qCs8sJSP6Wdl9wzM";
 export const CHAT_PROCESS = "4_zjOJp75rooSI6-f3lUwPJxwgcG1MXITCVqrPd_o5k";
@@ -10,3 +12,5 @@ export const APUS_ADDRESS = {
   Mirror: "7c1arjsZatQs52RacXi76qe8VtHUOFDLBFux_CORjKA",
   Recipient: "gd66FHg7Q1nMYm25lRzXuUGZv5jw5d0bKaPhHp9mkBI",
 };
+export const TGE_TIME = dayjs.unix(1734973200); // 2024-12-23T17:00:00Z
+export const PRE_TGE_TIME = dayjs.unix(1734973200).subtract(2, "day"); // 2024-12-21T17:00:00Z
