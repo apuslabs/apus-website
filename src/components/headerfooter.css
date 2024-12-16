@@ -1,6 +1,6 @@
 .header-container {
   @apply h-[60px] md:h-[100px] w-full
-    fixed top-0 left-0 right-0 px-5 md:px-[170px]
+    fixed top-0 left-0 right-0 px-5 md:px-[120px]
     flex items-center justify-between z-20;
 }
 

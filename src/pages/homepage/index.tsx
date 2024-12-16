@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { SocialMediaList } from "../../components/SocialMediaList";
 import { useBreakpoint } from "../../utils/react-use";
 
-function useCountDate(date: string) {
+function useCountDate(date: dayjs.Dayjs) {
   const [diff, setDiff] = useState(0);
   const day = useMemo(() => Math.floor(diff / 86400), [diff]);
   const hour = useMemo(() => Math.floor((diff % 86400) / 3600), [diff]);
@@ -29,11 +29,11 @@ function useCountDate(date: string) {
   return { day, hour, minute, second };
 }
 
-function TwitterVideo({ className }: { className: string }) {
+function TwitterVideo({ className, videoID }: { className: string; videoID: string }) {
   return (
     <iframe
       className={`w-full h-[220px] md:w-[730px] md:h-[412px] ${className}`}
-      src="https://www.youtube.com/embed/-rPbCeCbJVc?si=778KTA2eKneoQLDF"
+      src={`https://www.youtube.com/embed/${videoID}`}
       title="YouTube video player"
       frameBorder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -61,7 +61,7 @@ function Email() {
 }
 
 function SectionHero() {
-  const { day, hour, minute, second } = useCountDate("2024-12-25 00:00:00");
+  const { day, hour, minute, second } = useCountDate(dayjs.unix(1734973200));
   return (
     <div className="section section-hero">
       <div className="launchbox-container">
@@ -134,7 +134,7 @@ function SectionFeatures() {
   return (
     <div className="section section-features">
       <div className="section-title">KEY Features</div>
-      <div className="section-description md:px-[100px]">
+      <div className="section-description md:max-w-[768px]">
         Apus Network is building towards a decentralized, trustless GPU network dedicated to empowering verifiable deAI
         inference through deterministic GPU computing.
       </div>
@@ -154,6 +154,76 @@ function SectionFeatures() {
   );
 }
 
+const {
+  LogoBulbaswap,
+  LogoVeritas,
+  LogoDephy,
+  Logo0rbit,
+  LogoDecentramind,
+  LogoAstra,
+  LogoBuildify,
+  LogoAogames,
+  LogoFd,
+  LogoWeb3amsterdam,
+  LogoCredible,
+  LogoGlobalstake,
+  LogoPrimus,
+} = ImgHomepage;
+const partners = [
+  {
+    Logo: LogoBulbaswap,
+    height: 50,
+  },
+  {
+    Logo: LogoVeritas,
+    height: 30,
+  },
+  {
+    Logo: LogoDephy,
+    height: 43,
+  },
+  {
+    Logo: Logo0rbit,
+    height: 48,
+  },
+  {
+    Logo: LogoDecentramind,
+    height: 44,
+  },
+  {
+    Logo: LogoAstra,
+    height: 34,
+  },
+  {
+    Logo: LogoBuildify,
+    height: 52,
+  },
+  {
+    Logo: LogoAogames,
+    height: 57,
+  },
+  {
+    Logo: LogoFd,
+    height: 61,
+  },
+  {
+    Logo: LogoWeb3amsterdam,
+    height: 44,
+  },
+  {
+    Logo: LogoCredible,
+    height: 24,
+  },
+  {
+    Logo: LogoGlobalstake,
+    height: 26,
+  },
+  {
+    Logo: LogoPrimus,
+    height: 34,
+  },
+];
+
 function SectionTech() {
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
@@ -162,7 +232,7 @@ function SectionTech() {
     <div className="section section-tech">
       <div className="section-divider px-5 md:px-0"></div>
       <div className="section-title px-5 md:px-0">How It Works</div>
-      <div className="section-description px-5 md:px-[100px]">
+      <div className="section-description px-5">
         Apus Network leverages deterministic GPU computation and the Fast Provable Inference Faults (FPIF) protocol to
         ensure computational integrity and efficiency. Integrated with Arweave’s immutable storage and AO’s trustless
         infrastructure, it prevents unauthorized model manipulation and maintains tamper-proof records, enabling
@@ -170,8 +240,18 @@ function SectionTech() {
       </div>
       <img src={isTablet ? ImgHomepage.TechMobile : ImgHomepage.Tech} className="mt-10 md:my-10 px-5 md:px-0" />
       <div className="px-5 md:px-0 text-gray21 font-semibold md:text-[40px]">Verifiable AI Inference</div>
-      <div className="m-2 md:mb-8 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px]">Tech Video</div>
-      <TwitterVideo className="mb-10" />
+      <div className="m-2 md:m-0 md:my-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
+        Introduction
+      </div>
+      <TwitterVideo className="md:mb-4" videoID="-rPbCeCbJVc?si=778KTA2eKneoQLDF" />
+      <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
+        Technology
+      </div>
+      <TwitterVideo className="md:mb-4" videoID="m-TPFEfegM0?si=kqr5eAJVI5VA0Nqf" />
+      <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
+        Tokenomics
+      </div>
+      <TwitterVideo className="mb-10" videoID="nMl9iW9WPt8?si=7zrmAW_bNczyQXbd" />
     </div>
   );
 }
@@ -193,7 +273,7 @@ function SectionRoadmap() {
   );
 }
 
-const Partners = [
+const PoweredBy = [
   {
     icon: ImgHomepage.LogoAO,
     height: 40,
@@ -206,10 +286,6 @@ const Partners = [
     icon: ImgHomepage.LogoArio,
     height: 71,
   },
-  {
-    icon: ImgHomepage.LogoDephy,
-    height: 49,
-  },
 ];
 
 function SectionPartners() {
@@ -219,14 +295,21 @@ function SectionPartners() {
     <div className="section section-partners">
       {isTablet && <div className="section-divider mb-10"></div>}
       <div className="section-title mb-10">Powered by</div>
-      <div className="section-partners-list mb-10 md:mt-[100px] md:mb-[150px]">
-        {Partners.map(({ icon, height }) => (
-          <div className="section-partners-item" key={icon}>
+      <div className="section-powered-list mb-10 md:mt-[100px] md:mb-[150px]">
+        {PoweredBy.map(({ icon, height }) => (
+          <div className="section-powered-item" key={icon}>
             <img src={icon} style={{ height: height * (isTablet ? 0.625 : 1) }} />
           </div>
         ))}
       </div>
-      {isTablet && <div className="section-divider"></div>}
+      <div className="section-divider"></div>
+      <div className="section-title mb-10">Partners</div>
+      <div className="section-partner-list">
+        {partners.map(({ Logo, height }) => (
+          <img src={Logo} style={{ height: height * (isTablet ? 0.73 : 1) }} />
+        ))}
+      </div>
+      <div className="section-divider"></div>
       <div className="text-gray21 text-[35px] md:text-[50px] text-center leading-none mb-2 md:mb-4">
         Stay Up to Date - Subscribe Now
       </div>

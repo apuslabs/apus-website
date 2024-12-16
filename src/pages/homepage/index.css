@@ -48,7 +48,7 @@
 }
 
 .hero-title {
-  @apply px-5 md:max-w-[960px] font-medium text-[25px] md:text-[50px] text-gray21 text-center leading-tight;
+  @apply px-5 md:max-w-[960px] font-medium text-[25px] md:text-[40px] text-gray21 text-center leading-tight;
 }
 
 .hero-more-container {
@@ -98,11 +98,11 @@ img.invert {
 }
 
 .section-title {
-  @apply mb-5 text-gray21 text-[35px] md:text-[90px] leading-none;
+  @apply mb-5 text-gray21 text-[35px] md:text-[50px] leading-none;
 }
 
 .section-description {
-  @apply text-gray21 text-sm md:text-[26px] text-center leading-normal;
+  @apply text-gray21 text-sm md:text-[18px] text-center leading-normal;
 }
 
 .section-features-list {
@@ -110,7 +110,7 @@ img.invert {
 }
 
 .section-features-item {
-  @apply h-[400px] mt-10 md:w-[600px] md:h-[800px] md:mt-[100px] mx-auto p-5 md:p-10 flex flex-col items-center gap-5 md:gap-10 rounded-[14px] border-1 border-solid border-grayd8;
+  @apply h-[400px] mt-10 md:w-[600px] md:h-[560px] md:mt-[100px] mx-auto p-5 md:p-10 flex flex-col items-center gap-5 md:gap-10 rounded-[14px] border-1 border-solid border-grayd8;
   background-color: rgba(255, 255, 255, 0.85);
 }
 
@@ -119,15 +119,15 @@ img.invert {
 } */
 
 .section-features-item-icon {
-  @apply h-[120px] md:h-[200px];
+  @apply h-[120px] md:h-[160px];
 }
 
 .section-features-item-title {
-  @apply h-[45px] md:h-[220px] text-gray21 text-[25px] md:text-[60px] text-center leading-none;
+  @apply h-[45px] md:h-[110px] text-gray21 text-[25px] md:text-[40px] text-center leading-none;
 }
 
 .section-features-item-description {
-  @apply flex-1 flex items-center text-gray21 md:text-[26px] text-center leading-[1.1];
+  @apply flex-1 flex items-center text-gray21 md:text-[18px] text-center leading-[1.1];
 }
 
 .section-features-item-link {
@@ -166,12 +166,16 @@ img.invert {
   @apply px-5 md:px-[100px] md:py-[100px];
 }
 
-.section-partners-list {
+.section-powered-list {
   @apply flex flex-wrap justify-center items-center gap-4 md:gap-6;
 }
 
-.section-partners-item {
+.section-powered-item {
   @apply w-[156px] h-[76px] md:w-[250px] md:h-[120px] bg-black flex justify-center items-center rounded-2xl;
+}
+
+.section-partner-list {
+  @apply mt-[30px] md:mt-[40px] mb-[40px] md:mb-[60px] flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
 }
 
 @media screen and (max-width: 768px) {
