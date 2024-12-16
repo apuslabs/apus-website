@@ -6,7 +6,7 @@ export const TOKEN_PROCESS = "al1xXXnWnfJD8qyZJvttVGq60z1VPGn4M5y6uCcMBUM";
 // export const AO_MINT_PROCESS = "LPK-D_3gZkXtia6ywwU1wRwgFOZ-eLFRMP9pfAFRfuw";
 export const AO_MINT_PROCESS = "1OEAToQGhSKV76oa1MFIGZ9bYxCJoxpXqtksApDdcu8";
 export const APUS_ADDRESS = {
-  Mint: "YB6KR9AdVCiOOJFRyHSBFxkgyMD-WOaN0AC6LTQ1MMQ",
-  Mirror: "zmr4sqL_fQjjvHoUJDkT8eqCiLFEM3RV5M96Wd59ffU",
+  Mint: "uCAJoVuo2iqPJnQczIAxxa_KSOi-2WhXapnW6kV0WbU",
+  Mirror: "7c1arjsZatQs52RacXi76qe8VtHUOFDLBFux_CORjKA",
   Recipient: "gd66FHg7Q1nMYm25lRzXuUGZv5jw5d0bKaPhHp9mkBI",
 };
