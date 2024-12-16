@@ -4,12 +4,8 @@ import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { useLocation } from "react-router-dom";
-import duration from "dayjs/plugin/duration";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
-dayjs.extend(duration);
-dayjs.extend(relativeTime);
 
 interface AllocationItem {
   Recipient: string;
