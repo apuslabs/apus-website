@@ -140,7 +140,7 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
 
 export default function Mint() {
   const { MintProcess, MirrorProcess } = useParams();
-  const duration = useCountDate(PRE_TGE_TIME);
+  const { duration } = useCountDate(PRE_TGE_TIME);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
