@@ -11,7 +11,9 @@ export function splitBigNumber(num: BigNumber, decimals: number = 18) {
 export function formatBigNumber(num: BigNumber, decimals: number = 18, fixed?: number) {
   const formattedValue = ethers.utils.formatUnits(num, decimals);
   if (fixed && fixed >= 1) {
-    return parseFloat(formattedValue).toFixed(fixed);
+    // split the number into integer and decimal parts, truncat the decimal part to fixed length
+    const { integer, decimal } = splitBigNumber(num, decimals);
+    return `${integer}.${decimal.slice(0, fixed)}`;
   } else {
     return formattedValue;
   }
