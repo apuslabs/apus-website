@@ -1,4 +1,4 @@
-import { notification } from "antd";
+import { scrollToAnchor } from "../utils/scroll";
 
 const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
@@ -8,12 +8,17 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
     path: "/team",
   },
   {
-    name: "Mint",
+    name: "MINT",
     path: "/mint",
   },
   {
     name: "ROADMAP",
-    path: "/?anchor=roadmap",
+    path: "/roadmap",
+    onClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      scrollToAnchor("roadmap");
+    },
   },
   {
     name: "DOCS",
@@ -21,14 +26,7 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   },
   {
     name: "LITEPAPER",
-    path: "",
-    onClick: () => {
-      notification.open({
-        type: "info",
-        message: "Coming Soon!",
-        description: "Litepaper will be public soon.",
-      });
-    },
+    path: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
   },
 ];
 

@@ -4,7 +4,7 @@ interface NavigationMenuType {
   name: string;
   path: string;
   icon?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
 // window.ethereum

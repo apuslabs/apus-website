@@ -2,7 +2,7 @@ import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Toolti
 import "./index.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
-import { useAOMint, useCountDate, useParams, useRecipientModal, useSignatureModal } from "./contexts";
+import { useAOMint, useParams, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -12,6 +12,8 @@ import MintUserbox from "../../components/MintUserbox";
 import dayjs from "dayjs";
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
+import { PRE_TGE_TIME, TGE_TIME } from "../../utils/config";
+import { useCountDate } from "../../utils/react-use";
 
 function TokenSlider({
   totalAmount,
@@ -133,8 +135,8 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
 }
 
 export default function Mint() {
-  const { MintProcess, MirrorProcess, TGETime } = useParams();
-  const duration = useCountDate(TGETime);
+  const { MintProcess, MirrorProcess } = useParams();
+  const duration = useCountDate(PRE_TGE_TIME);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
@@ -187,7 +189,7 @@ export default function Mint() {
   const [amount, setAmount] = useState<string>("0");
   const estimatedApus = ethers.utils.parseUnits(amount, 18).mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
-  const canApprove = amount !== "0" && dayjs().isAfter(dayjs(TGETime));
+  const canApprove = amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
 
   const approve = async () => {
     if (!canApprove) {
@@ -406,11 +408,16 @@ export default function Mint() {
                         {!recipient ? "Set Recipient" : "Add Allocation"}
                       </div>
                       <div className="mt-2 text-xs">
-                        {dayjs().isBefore(dayjs(TGETime)) && (
+                        {dayjs().isBefore(dayjs(PRE_TGE_TIME)) ? (
                           <div>
                             Allocation opened in <span className="text-[#091dff]">{`${duration}`}</span>
                           </div>
-                        )}
+                        ) : null}
+                        {dayjs().isAfter(PRE_TGE_TIME) && dayjs().isBefore(TGE_TIME) ? (
+                          <div>
+                            Allocation opened in <span className="text-[#091dff]">{`${duration}`}</span>
+                          </div>
+                        ) : null}
                       </div>
                     </Spin>
                   </div>
