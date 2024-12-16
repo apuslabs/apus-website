@@ -1,6 +1,10 @@
 import dayjs from "dayjs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createBreakpoint } from "react-use";
+import duration from "dayjs/plugin/duration";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 export const useBreakpoint = createBreakpoint({ desktop: 768, mobile: 350 });
 
