@@ -31,10 +31,22 @@ import Tech from "./homepage/tech.svg";
 import Roadmap from "./homepage/roadmap.svg";
 import LogoAO from "./homepage/logo_ao.svg";
 import LogoArweave from "./homepage/logo_arweave.svg";
-import LogoDephy from "./homepage/logo_dephy.svg";
 import LogoArio from "./homepage/logo_ario.svg";
 import TechMobile from "./homepage/tech-mobile.svg";
 import RoadmapMobile from "./homepage/roadmap-mobile.svg";
+import LogoBulbaswap from "./homepage/logo_bulbaswap.svg";
+import LogoVeritas from "./homepage/logo_veritas.svg";
+import LogoDephy from "./homepage/logo_dephy.svg";
+import Logo0rbit from "./homepage/logo_0rbit.svg";
+import LogoDecentramind from "./homepage/logo_decentramind.svg";
+import LogoAstra from "./homepage/logo_astra.svg";
+import LogoBuildify from "./homepage/logo_buildify.svg";
+import LogoAogames from "./homepage/logo_aogames.svg";
+import LogoFd from "./homepage/logo_fd.svg";
+import LogoWeb3amsterdam from "./homepage/logo_web3amsterdam.svg";
+import LogoCredible from "./homepage/logo_credible.svg";
+import LogoGlobalstake from "./homepage/logo_globalstake.svg";
+import LogoPrimus from "./homepage/logo_primus.svg";
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -51,6 +63,18 @@ export const ImgHomepage = {
   LogoArio,
   TechMobile,
   RoadmapMobile,
+  LogoBulbaswap,
+  LogoVeritas,
+  Logo0rbit,
+  LogoDecentramind,
+  LogoAstra,
+  LogoBuildify,
+  LogoAogames,
+  LogoFd,
+  LogoWeb3amsterdam,
+  LogoCredible,
+  LogoGlobalstake,
+  LogoPrimus,
 };
 
 import LogoHorizonalSimple from "./competition/logo_horizonal_simple.png";
