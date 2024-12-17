@@ -87,6 +87,7 @@ export function useAOMint({
 }) {
   const [tokenType, setTokenType] = useState<TokenType>("stETH");
   const { data: apus, loading: loadingApus, execute: getApus } = useAO<string>(MintProcess, "User.Balance", "dryrun");
+  const [apusDynamic, setApusDynamic] = useState<BigNumber>(BigNumber.from(0));
   // const {
   //   data: userEstimatedApus,
   //   loading: loadingUserEstimateApus,
@@ -215,11 +216,38 @@ export function useAOMint({
     apusStETH,
     apusDAI,
   );
+  const loadingUserEstimatedApus =
+    loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
+
+  // animate apus balance change
+  useEffect(() => {
+    if (loadingApus || !apus) {
+      return;
+    }
+    if (
+      loadingApus ||
+      loadingUserEstimatedApus ||
+      !apus ||
+      !userEstimatedApus ||
+      userEstimatedApus.isZero() ||
+      userEstimatedApus.lte(apus)
+    ) {
+      setApusDynamic(BigNumber.from(apus || 0));
+      return;
+    }
+    const diff = userEstimatedApus.sub(BigNumber.from(apus));
+    const step = diff.div(30 * 24 * 3600);
+    const interval = setInterval(() => {
+      setApusDynamic((v) => v.add(step));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [apus, userEstimatedApus, loadingApus, loadingUserEstimatedApus]);
 
   return {
     tokenType,
     setTokenType,
     apus: BigNumber.from(apus || 0),
+    apusDynamic,
     // userEstimatedApus,
     stETHEstimatedApus: BigNumber.from(stETHEstimatedApus || 0),
     daiEstimatedApus: BigNumber.from(daiEstimatedApus || 0),
@@ -245,8 +273,7 @@ export function useAOMint({
     otherToken: tokenType === "stETH" ? otherStETH : otherDAI,
     apusStETHEstimatedApus,
     apusDAIEstimatedApus,
-    loadingUserEstimatedApus:
-      loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation,
+    loadingUserEstimatedApus,
     userEstimatedApus,
   };
 }

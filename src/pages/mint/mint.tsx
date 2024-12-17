@@ -1,5 +1,5 @@
 import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
-import "./index.css";
+import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useRef, useState } from "react";
 import { useAOMint, useParams, useRecipientModal, useSignatureModal } from "./contexts";
@@ -17,6 +17,7 @@ dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
 import { PRE_TGE_TIME } from "../../utils/config";
+import FlipNumbers from "react-flip-numbers";
 
 function TokenSlider({
   totalAmount,
@@ -34,11 +35,12 @@ function TokenSlider({
   setTokenType: (v: "stETH" | "DAI") => void;
 }) {
   const [percent, setPercent] = useState(0);
+  const amountStr = amount.toString();
   useEffect(() => {
-    if (amount === "0") {
+    if (amountStr === "0") {
       setPercent(0);
     }
-  }, [amount, setPercent]);
+  }, [amountStr, setPercent]);
   return (
     <>
       <div className="w-full flex gap-5">
@@ -85,7 +87,7 @@ function TokenSlider({
           }}
         />
       </div>
-      {tab === "increase" && (
+      {tab === "increase" ? (
         <div className="w-full text-right">
           <Link to="https://ao.arweave.dev/#/mint" className="mr-2 text-blue underline">
             Bridge To AO
@@ -103,7 +105,7 @@ function TokenSlider({
             <InfoCircleOutlined className="pl-1" />
           </Tooltip>
         </div>
-      )}
+      ) : null}
       <Slider
         className="w-full max-w-[31rem]"
         disabled={tokenType === undefined || totalAmount.isZero()}
@@ -267,7 +269,7 @@ export default function Mint() {
   const {
     tokenType,
     setTokenType,
-    apus,
+    apusDynamic,
     apusStETH,
     apusDAI,
     apusToken,
@@ -292,7 +294,7 @@ export default function Mint() {
     wallet: walletAddress,
     MintProcess,
   });
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apus, 12);
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
 
   const {
     modalOpen: tipModalOpen,
@@ -367,9 +369,11 @@ export default function Mint() {
             </div>
             <div className="font-medium text-gray21 text-[30px] leading-none">
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
-                <span className="text-[30px]">{apusInteger}</span>
-                <span>.</span>
-                <span className="text-[20px]">{apusDecimal}</span>
+                <div className="flex items-end justify-center">
+                  <FlipNumbers height={30} width={20} color="#212121" play numbers={apusInteger} />
+                  <span>.</span>
+                  <FlipNumbers height={20} width={14} color="#212121" play numbers={apusDecimal} />
+                </div>
               </Spin>
             </div>
             <Divider orientation="center" className="m-0" />
