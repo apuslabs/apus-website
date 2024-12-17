@@ -8,8 +8,8 @@ export const TOKEN_PROCESS = "al1xXXnWnfJD8qyZJvttVGq60z1VPGn4M5y6uCcMBUM";
 // export const AO_MINT_PROCESS = "LPK-D_3gZkXtia6ywwU1wRwgFOZ-eLFRMP9pfAFRfuw";
 export const AO_MINT_PROCESS = "1OEAToQGhSKV76oa1MFIGZ9bYxCJoxpXqtksApDdcu8";
 export const APUS_ADDRESS = {
-  Mint: "uCAJoVuo2iqPJnQczIAxxa_KSOi-2WhXapnW6kV0WbU",
-  Mirror: "7c1arjsZatQs52RacXi76qe8VtHUOFDLBFux_CORjKA",
+  Mint: "sq_7jcV_Gide_gCXp4pYWy_c3XIcPKTO2MrD8BMneuQ",
+  Mirror: "wO8Lk7vJ_XxsHXoszKOCJdVHHlku2fwkXLq0thpeNmA",
   Recipient: "gd66FHg7Q1nMYm25lRzXuUGZv5jw5d0bKaPhHp9mkBI",
 };
 export const TGE_TIME = dayjs.unix(1734973200); // 2024-12-23T17:00:00Z

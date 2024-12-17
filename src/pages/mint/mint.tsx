@@ -1,7 +1,7 @@
 import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
 import "./index.css";
 import { ImgMint } from "../../assets";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAOMint, useParams, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -169,7 +169,7 @@ export function SigModal({
   title: string;
 }) {
   return (
-    <Modal open={open} onClose={close} onCancel={close} title={null} footer={null}>
+    <Modal open={open} maskClosable={false} onCancel={close} closeIcon={null} title={null} footer={null}>
       <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {title}</div>
       <div className="mt-5 text-xs">
         * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
@@ -182,6 +182,78 @@ export function SigModal({
         </div>
         <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
           I'm Good! No More Tips!
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function useRemoveRecipientModal({ recipient }: { recipient?: string }) {
+  const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState(recipient);
+  const closeModal = () => {
+    setOpen(false);
+  };
+  const addressRef = useRef<string>();
+  useEffect(() => {
+    addressRef.current = address;
+  }, [address]);
+  const openRef = useRef(false);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+  const getRemoveRecipient = (): Promise<string> => {
+    setOpen(true);
+    setAddress(recipient);
+    return new Promise((resolve) => {
+      const waitInterval = setInterval(() => {
+        if (openRef.current === false) {
+          clearInterval(waitInterval);
+          resolve(addressRef.current!);
+        }
+      }, 1000);
+    });
+  };
+  const onSubmit = () => {
+    if (address?.length !== 43) {
+      notification.error({ message: "Invalid Arweave Address" });
+      return;
+    }
+    closeModal();
+    setAddress(address);
+  };
+  return { open, closeModal, onSubmit, address, setAddress, getRemoveRecipient };
+}
+
+function RemoveRecipientModal({
+  open,
+  onClose,
+  address,
+  setAddress,
+  onSubmit,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  address?: string;
+  setAddress: (v: string) => void;
+}) {
+  return (
+    <Modal open={open} maskClosable={false} onCancel={onClose} closeIcon={null} title={null} footer={null}>
+      <div className="flex flex-col items-center">
+        <div className="mb-10 text-gray21 font-semibold text-xl text-center">Checking Recipient Address</div>
+        <Input
+          size="large"
+          placeholder="Input Arweave Address"
+          value={address}
+          onChange={(v) => setAddress(v.target.value)}
+        />
+        <div className="mt-5 text-xs">* Your removed assets will be returned to the wallet.</div>
+        <GrayDivider />
+        <div className="flex justify-center gap-5">
+          <div className="btn-primary" onClick={onSubmit}>
+            Continue
+          </div>
         </div>
       </div>
     </Modal>
@@ -248,8 +320,9 @@ export default function Mint() {
         await showSigTip("Allocating assets");
         await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
       } else {
+        const removeRecipient = await getRemoveRecipient();
         await showSigTip("Removing assets");
-        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), recipient);
+        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), removeRecipient);
       }
       setAmount("0");
       notification.success({ message: "Approve successfully" });
@@ -271,6 +344,15 @@ export default function Mint() {
     setTokenType(key);
     setAmount("0");
   };
+
+  const {
+    open: removeRecipientModalOpen,
+    closeModal: closeRemoveRecipientModal,
+    onSubmit: removeRecipient,
+    address: removeRecipientAddress,
+    setAddress: setRemoveRecipientAddress,
+    getRemoveRecipient,
+  } = useRemoveRecipientModal({ recipient });
 
   return (
     <>
@@ -491,6 +573,13 @@ export default function Mint() {
           close={closeTipModal}
           closeAndNotAskAgain={closeAndNotAskAgain}
           title={tipModalTitle}
+        />
+        <RemoveRecipientModal
+          open={removeRecipientModalOpen}
+          onClose={closeRemoveRecipientModal}
+          address={removeRecipientAddress}
+          setAddress={setRemoveRecipientAddress}
+          onSubmit={removeRecipient}
         />
       </div>
       <HomeFooter />
