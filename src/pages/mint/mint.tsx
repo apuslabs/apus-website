@@ -17,7 +17,6 @@ dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
 import { PRE_TGE_TIME } from "../../utils/config";
-import { useCountDate } from "../../utils/react-use";
 
 function TokenSlider({
   totalAmount,
@@ -138,9 +137,59 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
   );
 }
 
+export const GrayDivider = ({ className }: { className?: string }) => (
+  <Divider className={`min-w-0 w-[21rem] my-5 ${className} border-grayd8`} />
+);
+
+function SigTips() {
+  return (
+    <>
+      <GrayDivider className="my-0" />
+      <div className="text-xs">
+        <div className="font-bold">TIPS:</div>
+        <ul className="list-disc pl-5">
+          <li>Signatures are made on the AO network and do not affect Ethereum assets.</li>
+          <li>MetaMask may show some garbled text, but it will be fixed soon.</li>
+          <li>If garbled text appears, the system will notify you, and you can cancel the action at any time.</li>
+        </ul>
+      </div>
+    </>
+  );
+}
+
+export function SigModal({
+  open,
+  close,
+  closeAndNotAskAgain,
+  title,
+}: {
+  open: boolean;
+  close: () => void;
+  closeAndNotAskAgain: () => void;
+  title: string;
+}) {
+  return (
+    <Modal open={open} onClose={close} onCancel={close} title={null} footer={null}>
+      <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {title}</div>
+      <div className="mt-5 text-xs">
+        * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
+        correct it soon. There is no risk!
+      </div>
+      <GrayDivider />
+      <div className="flex justify-center gap-5">
+        <div className="btn-primary" onClick={close}>
+          Continue
+        </div>
+        <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
+          I'm Good! No More Tips!
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 export default function Mint() {
   const { MintProcess, MirrorProcess } = useParams();
-  const { leftTimeStr } = useCountDate(PRE_TGE_TIME);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
@@ -167,21 +216,12 @@ export default function Mint() {
     MintProcess,
     MirrorProcess,
   });
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apus, 12);
-  const {
-    modalOpen,
-    closeModal,
-    setModalOpen,
-    arweaveAddress,
-    setArweaveAddress,
-    recipient,
-    loadingRecipient,
-    loadingUpdateRecipient,
-    submitRecipient,
-  } = useRecipientModal({
+  const { goToRecipient, recipient, loadingRecipient } = useRecipientModal({
     wallet: walletAddress,
     MintProcess,
   });
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apus, 12);
+
   const {
     modalOpen: tipModalOpen,
     closeModal: closeTipModal,
@@ -200,8 +240,7 @@ export default function Mint() {
       return;
     }
     if (!recipient) {
-      notification.warning({ message: "Please set recipient first" });
-      setModalOpen(true);
+      goToRecipient();
       return;
     }
     try {
@@ -235,15 +274,7 @@ export default function Mint() {
 
   return (
     <>
-      <HomeHeader
-        Userbox={
-          <MintUserbox
-            onRecipient={() => {
-              setModalOpen(true);
-            }}
-          />
-        }
-      />
+      <HomeHeader Userbox={<MintUserbox onRecipient={goToRecipient} />} />
       <div id="mint" className="pt-20">
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
@@ -409,16 +440,10 @@ export default function Mint() {
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Add Allocation"}
+                        {!recipient ? "Submit Recipient Address" : "Add Allocation"}
                       </div>
                     </Spin>
-                    <div className="mt-2 text-xs">
-                      {dayjs().isBefore(dayjs(PRE_TGE_TIME)) ? (
-                        <div>
-                          Allocation opened in <span className="text-[#091dff]">{`${leftTimeStr}`}</span>
-                        </div>
-                      ) : null}
-                    </div>
+                    <SigTips />
                   </div>
                 ),
               },
@@ -446,76 +471,27 @@ export default function Mint() {
                       tokenType={tokenType}
                       setTokenType={switchToken}
                     />
-                    <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                     <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
                       <div
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Remove Allocation"}
+                        {!recipient ? "Submit Recipient Address" : "Remove Allocation"}
                       </div>
                     </Spin>
+                    <SigTips />
                   </div>
                 ),
               },
             ]}
           ></Tabs>
         </div>
-        <Modal open={modalOpen} onClose={closeModal} onCancel={closeModal} title={null} footer={null}>
-          <div className="mb-10 text-gray21 font-semibold text-3xl text-center">RECEIVE APUS</div>
-          <div className="text-gray21 mb-2">Selected Arweave Address:</div>
-          <div className="text-[#091dff] font-semibold mb-5">{recipient || ""}</div>
-          <Input
-            size="large"
-            placeholder="Input Arweave Address"
-            value={arweaveAddress}
-            onChange={(v) => setArweaveAddress(v.target.value)}
-          />
-          <div className="mt-5 text-xs">
-            <div className="font-bold">TIPS:</div>
-            <ul className="list-disc pl-5">
-              <li>Note: Minted APUS will be sent to the Arweave address provided above.</li>
-              <li>If you submit a new Arweave address, all future APUS yield will be Minted to the updated address.</li>
-            </ul>
-          </div>
-          <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <Spin spinning={loadingUpdateRecipient || loadingRecipient}>
-            <div
-              className="w-32 btn-primary mx-auto"
-              onClick={async () => {
-                try {
-                  await showSigTip("Setting recipient");
-                  await submitRecipient();
-                  notification.success({ message: "Recipient updated successfully" });
-                } catch (e: unknown) {
-                  if (e instanceof Error) {
-                    notification.error({ message: e.message, duration: 0 });
-                  } else {
-                    notification.error({ message: "Failed to update recipient", duration: 0 });
-                  }
-                }
-              }}
-            >
-              Submit
-            </div>
-          </Spin>
-        </Modal>
-        <Modal open={tipModalOpen} onClose={closeTipModal} onCancel={closeTipModal} title={null} footer={null}>
-          <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {tipModalTitle}</div>
-          <div className="mt-5 text-xs">
-            * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
-            correct it soon. There is no risk!
-          </div>
-          <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <div className="flex justify-center gap-5">
-            <div className="btn-primary" onClick={closeTipModal}>
-              Continue
-            </div>
-            <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
-              I'm Good! No More Tips!
-            </div>
-          </div>
-        </Modal>
+        <SigModal
+          open={tipModalOpen}
+          close={closeTipModal}
+          closeAndNotAskAgain={closeAndNotAskAgain}
+          title={tipModalTitle}
+        />
       </div>
       <HomeFooter />
     </>

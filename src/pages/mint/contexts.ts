@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
 
@@ -252,8 +252,8 @@ export function useAOMint({
 }
 
 export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; MintProcess: string }) {
-  const [modalOpen, setModalOpen] = useState(false);
   const [arweaveAddress, setArweaveAddress] = useState("");
+  const navigate = useNavigate();
 
   const {
     data: recipient,
@@ -279,21 +279,12 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
       throw new Error("Invalid Arweave Address");
     }
     await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
-    await getRecipient({ User: ethers.utils.getAddress(wallet) });
-    setModalOpen(false);
-  };
-
-  const closeModal = () => {
-    if (loadingRecipient) {
-      return;
-    }
-    setModalOpen(false);
+    // await getRecipient({ User: ethers.utils.getAddress(wallet) });
+    navigate("/mint");
   };
 
   return {
-    modalOpen,
-    setModalOpen,
-    closeModal,
+    goToRecipient: () => navigate("/mint/recipient"),
     arweaveAddress,
     setArweaveAddress,
     recipient,

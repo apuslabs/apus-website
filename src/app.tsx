@@ -5,10 +5,11 @@ import { lazy, Suspense } from "react";
 import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
 import ConsoleHeader from "./components/ConsoleHeader";
-import MintUserbox from "./components/MintUserbox";
-const Homepage = lazy(() => import("./pages/homepage"));
+import Homepage from "./pages/homepage";
+// const Homepage = lazy(() => import("./pages/homepage"));
 const Team = lazy(() => import("./pages/team"));
 const Mint = lazy(() => import("./pages/mint/mint"));
+const Recipient = lazy(() => import("./pages/mint/recipient"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
 const Page404 = lazy(() => import("./pages/404"));
@@ -44,6 +45,14 @@ const router = createHashRouter([
         element: (
           <Suspense>
             <Mint />
+          </Suspense>
+        ),
+      },
+      {
+        path: "mint/recipient",
+        element: (
+          <Suspense>
+            <Recipient />
           </Suspense>
         ),
       },
