@@ -13,4 +13,4 @@ export const APUS_ADDRESS = {
   Recipient: "gd66FHg7Q1nMYm25lRzXuUGZv5jw5d0bKaPhHp9mkBI",
 };
 export const TGE_TIME = dayjs.unix(1734973200); // 2024-12-23T17:00:00Z
-export const PRE_TGE_TIME = dayjs.unix(1734973200).subtract(2, "day"); // 2024-12-21T17:00:00Z
+export const PRE_TGE_TIME = dayjs.unix(1734973200).subtract(10, "day"); // 2024-12-21T17:00:00Z
