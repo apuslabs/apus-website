@@ -78,6 +78,10 @@
   top: 16px;
 }
 
+#mint .ant-slider-horizontal {
+  height: 36px;
+}
+
 #mint .ant-slider-horizontal .ant-slider-track,
 #mint .ant-slider-horizontal .ant-slider-tracks {
   height: 10px;
