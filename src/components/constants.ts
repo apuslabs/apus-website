@@ -28,6 +28,10 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
     name: "LITEPAPER",
     path: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
   },
+  {
+    name: "TOKENOMICS",
+    path: "https://3csodbzc3eweix6qkukrbfzr42v3stx7rh6xpg5vlkebap4p6eza.arweave.net/2KThhyLZLERf0FUVEJcx5qu5Tv-J_XebtVqIED-P8TI",
+  },
 ];
 
 export const ConsoleHeaderMenuList: NavigationMenuType[] = [
