@@ -172,7 +172,7 @@ export function SigModal({
 }) {
   return (
     <Modal open={open} maskClosable={false} onCancel={close} closeIcon={null} title={null} footer={null}>
-      <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {title}</div>
+      <div className="mb-10 text-gray21 font-semibold text-xl text-center">{title}</div>
       <div className="mt-5 text-xs">
         * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
         correct it soon. There is no risk!
