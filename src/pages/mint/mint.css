@@ -24,10 +24,14 @@
 }
 
 #mint {
-  background: url("../../assets/mint/bg.png") no-repeat;
+  /* background: url("../../assets/mint/bg.png") no-repeat;
   background-size: cover;
-  background-position: center;
+  background-position: center; */
   @apply pb-12;
+}
+
+#recipient .ant-modal .ant-modal-content {
+  @apply w-full h-full p-0;
 }
 
 #mint .card {

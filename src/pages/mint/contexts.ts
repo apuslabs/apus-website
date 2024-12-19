@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
 
@@ -117,7 +117,21 @@ export function useAOMint({
   useEffect(() => {
     if (wallet) {
       getApus({ Recipient: ethers.utils.getAddress(wallet) });
-      // getUserEstimatedApus({ User: ethers.utils.getAddress(wallet) }, dayjs().unix());
+    }
+    // refresh apus every 5 minutes
+    const interval = setInterval(
+      () => {
+        if (wallet) {
+          getApus({ Recipient: ethers.utils.getAddress(wallet) });
+        }
+      },
+      5 * 60 * 1000,
+    );
+    return () => clearInterval(interval);
+  }, [wallet, getApus]);
+
+  useEffect(() => {
+    if (wallet) {
       getStETHAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "stETH" });
       getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
       getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
@@ -280,7 +294,7 @@ export function useAOMint({
 
 export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; MintProcess: string }) {
   const [arweaveAddress, setArweaveAddress] = useState("");
-  const navigate = useNavigate();
+  const [recipientVisible, setRecipientVisible] = useState(false);
 
   const {
     data: recipient,
@@ -298,7 +312,7 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     }
   }, [getRecipient, wallet]);
 
-  const submitRecipient = async () => {
+  const submitRecipient = useCallback(async () => {
     if (!wallet) {
       return;
     }
@@ -306,12 +320,13 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
       throw new Error("Invalid Arweave Address");
     }
     await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
-    // await getRecipient({ User: ethers.utils.getAddress(wallet) });
-    navigate("/mint");
-  };
+    await getRecipient({ User: ethers.utils.getAddress(wallet) });
+    setRecipientVisible(true);
+  }, [arweaveAddress, getRecipient, updateRecipientMsg, wallet]);
 
   return {
-    goToRecipient: () => navigate("/mint/recipient"),
+    recipientVisible,
+    setRecipientVisible,
     arweaveAddress,
     setArweaveAddress,
     recipient,
@@ -331,23 +346,26 @@ export function useSignatureModal() {
     modalOpenRef.current = modalOpen;
   }, [modalOpen]);
 
-  const showSigTip = (t: string) =>
-    new Promise<void>((resolve) => {
-      if (notAskAgain) {
-        resolve();
-      } else {
-        setTitle(t);
-        setModalOpen(true);
-        setTitle("Signature Tip");
+  const showSigTip = useCallback(
+    (t: string) =>
+      new Promise<void>((resolve) => {
+        if (notAskAgain) {
+          resolve();
+        } else {
+          setTitle(t);
+          setModalOpen(true);
+          setTitle("Signature Tip");
 
-        const tipInterval = setInterval(() => {
-          if (!modalOpenRef.current) {
-            clearInterval(tipInterval);
-            resolve();
-          }
-        }, 200);
-      }
-    });
+          const tipInterval = setInterval(() => {
+            if (!modalOpenRef.current) {
+              clearInterval(tipInterval);
+              resolve();
+            }
+          }, 200);
+        }
+      }),
+    [notAskAgain],
+  );
 
   const closeModal = () => {
     setModalOpen(false);

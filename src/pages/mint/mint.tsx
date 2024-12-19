@@ -18,6 +18,7 @@ import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
 import { PRE_TGE_TIME } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
+import Recipient from "./recipient";
 
 function TokenSlider({
   totalAmount,
@@ -152,7 +153,6 @@ function SigTips() {
         <ul className="list-disc pl-5">
           <li>Signatures are made on the AO network and do not affect Ethereum assets.</li>
           <li>MetaMask may show some garbled text, but it will be fixed soon.</li>
-          <li>If garbled text appears, the system will notify you, and you can cancel the action at any time.</li>
         </ul>
       </div>
     </>
@@ -174,8 +174,8 @@ export function SigModal({
     <Modal open={open} maskClosable={false} onCancel={close} closeIcon={null} title={null} footer={null}>
       <div className="mb-10 text-gray21 font-semibold text-xl text-center">{title}</div>
       <div className="mt-5 text-xs">
-        * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
-        correct it soon. There is no risk!
+        * Please note that messages may appear garbled on MetaMask. The messages are signed on AO and will not effect
+        Ethereum assets - do not worry!
       </div>
       <GrayDivider />
       <div className="flex justify-center gap-5">
@@ -218,7 +218,7 @@ function useRemoveRecipientModal({ recipient }: { recipient?: string }) {
   };
   const onSubmit = () => {
     if (address?.length !== 43) {
-      notification.error({ message: "Invalid Arweave Address" });
+      notification.error({ message: "Invalid Arweave Address", placement: "bottom" });
       return;
     }
     closeModal();
@@ -290,10 +290,11 @@ export default function Mint() {
     MintProcess,
     MirrorProcess,
   });
-  const { goToRecipient, recipient, loadingRecipient } = useRecipientModal({
+  const recipientModal = useRecipientModal({
     wallet: walletAddress,
     MintProcess,
   });
+  const { recipientVisible, setRecipientVisible, recipient, loadingRecipient } = recipientModal;
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
 
   const {
@@ -314,25 +315,36 @@ export default function Mint() {
       return;
     }
     if (!recipient) {
-      goToRecipient();
+      setRecipientVisible(true);
       return;
     }
     try {
       if (tab === "increase") {
-        await showSigTip("Allocating assets");
+        await showSigTip("Notice");
         await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
       } else {
         const removeRecipient = await getRemoveRecipient();
-        await showSigTip("Removing assets");
+        await showSigTip("Notice");
         await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), removeRecipient);
       }
       setAmount("0");
-      notification.success({ message: "Approve successfully" });
+      notification.success({
+        message: `${tab === "increase" ? "Allocate" : "Remove"} Successful`,
+        placement: "bottom",
+      });
     } catch (e: unknown) {
       if (e instanceof Error) {
-        notification.error({ message: e.message, duration: 0 });
+        if (e.message.includes("fetch")) {
+          notification.error({
+            message: "The AO network is currently experiencing high traffic. Please try again later.",
+            duration: 0,
+            placement: "bottom",
+          });
+        } else {
+          notification.error({ message: e.message, duration: 0, placement: "bottom" });
+        }
       } else {
-        notification.error({ message: "Failed to approve", duration: 0 });
+        notification.error({ message: "Failed to approve", duration: 0, placement: "bottom" });
       }
     }
   };
@@ -358,8 +370,22 @@ export default function Mint() {
 
   return (
     <>
-      <HomeHeader Userbox={<MintUserbox onRecipient={goToRecipient} />} />
-      <div id="mint" className="pt-20">
+      <HomeHeader
+        Userbox={
+          <MintUserbox
+            onRecipient={() => {
+              setRecipientVisible(true);
+            }}
+          />
+        }
+      />
+      <div
+        id="mint"
+        className="pt-20 z-10"
+        style={{
+          opacity: recipientVisible ? 0 : 1,
+        }}
+      >
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
@@ -370,7 +396,16 @@ export default function Mint() {
             <div className="font-medium text-gray21 text-[30px] leading-none">
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
                 <div className="flex items-end justify-center">
-                  <FlipNumbers height={30} width={20} color="#212121" play numbers={apusInteger} />
+                  <FlipNumbers
+                    height={30}
+                    width={20}
+                    color="#212121"
+                    numberStyle={{
+                      zoom: "101%",
+                    }}
+                    play
+                    numbers={apusInteger}
+                  />
                   <span>.</span>
                   <FlipNumbers height={20} width={14} color="#212121" play numbers={apusDecimal} />
                 </div>
@@ -511,7 +546,7 @@ export default function Mint() {
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    {tokenType && (
+                    {tokenType && !tokenEstimatedApus.isZero() && (
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
@@ -586,6 +621,7 @@ export default function Mint() {
           onSubmit={removeRecipient}
         />
       </div>
+      <Recipient showSigTip={showSigTip} {...recipientModal} />
       <HomeFooter />
     </>
   );
