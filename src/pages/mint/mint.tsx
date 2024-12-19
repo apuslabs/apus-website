@@ -38,7 +38,7 @@ function TokenSlider({
   const [percent, setPercent] = useState(0);
   const amountStr = amount.toString();
   useEffect(() => {
-    if (amountStr === "0") {
+    if (amountStr === "" || amountStr === "0") {
       setPercent(0);
     }
   }, [amountStr, setPercent]);
@@ -52,7 +52,7 @@ function TokenSlider({
           placeholder={"Select Token"}
           onChange={(v) => {
             setTokenType(v as "stETH" | "DAI");
-            setAmount("0");
+            setAmount("");
           }}
         >
           <Select.Option key="stETH">
@@ -76,6 +76,11 @@ function TokenSlider({
           onChange={(v) => {
             if (v !== null) {
               const numericValue = v.target.value.replace(/[^0-9.]/g, "");
+              if (numericValue === "") {
+                setAmount("");
+                setPercent(0);
+                return;
+              }
               const bigAmount = ethers.utils.parseUnits(numericValue, 18);
               if (bigAmount.gt(totalAmount)) {
                 setAmount(ethers.utils.formatUnits(totalAmount, 18));
@@ -122,7 +127,7 @@ function TokenSlider({
       />
       <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
         <span className="font-bold text-[#091dff]">
-          {amount} {tokenType} ({percent}%)
+          {amount || "0"} {tokenType} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -243,14 +248,14 @@ function RemoveRecipientModal({
   return (
     <Modal open={open} maskClosable={false} onCancel={onClose} closeIcon={null} title={null} footer={null}>
       <div className="flex flex-col items-center">
-        <div className="mb-10 text-gray21 font-semibold text-xl text-center">Checking Recipient Address</div>
+        <div className="mb-10 text-gray21 font-semibold text-xl text-center">Check Recipient Address</div>
         <Input
           size="large"
           placeholder="Input Arweave Address"
           value={address}
           onChange={(v) => setAddress(v.target.value)}
         />
-        <div className="mt-5 text-xs">* Your removed assets will be returned to the wallet.</div>
+        <div className="mt-5 text-xs">* Your removed assets will be returned to this wallet.</div>
         <GrayDivider />
         <div className="flex justify-center gap-5">
           <div className="btn-primary" onClick={onSubmit}>
@@ -306,10 +311,11 @@ export default function Mint() {
     closeAndNotAskAgain,
   } = useSignatureModal();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
-  const [amount, setAmount] = useState<string>("0");
-  const estimatedApus = ethers.utils.parseUnits(amount, 18).mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
+  const [amount, setAmount] = useState<string>("");
+  const bigAmount = ethers.utils.parseUnits(amount || "0", 18);
+  const estimatedApus = bigAmount.mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
-  const canApprove = amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
+  const canApprove = amount !== "" && amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
 
   const approve = async () => {
     if (!canApprove) {
@@ -322,13 +328,13 @@ export default function Mint() {
     try {
       if (tab === "increase") {
         await showSigTip("Notice");
-        await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
+        await increaseApusAllocation(bigAmount);
       } else {
         const removeRecipient = await getRemoveRecipient();
         await showSigTip("Notice");
-        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), removeRecipient);
+        await decreaseApusAllocation(bigAmount, removeRecipient);
       }
-      setAmount("0");
+      setAmount("");
       notification.success({
         message: `${tab === "increase" ? "Allocate" : "Remove"} Successful`,
         placement: "bottom",
@@ -342,7 +348,7 @@ export default function Mint() {
             placement: "bottom",
           });
           refreshAfterAllocation();
-          setAmount("0");
+          setAmount("");
         } else {
           notification.error({ message: e.message, duration: 0, placement: "bottom" });
         }
@@ -354,12 +360,12 @@ export default function Mint() {
 
   const switchTab = (key: string) => {
     setTab(key as "increase" | "decrease");
-    setAmount("0");
+    setAmount("");
   };
 
   const switchToken = (key: "stETH" | "DAI") => {
     setTokenType(key);
-    setAmount("0");
+    setAmount("");
   };
 
   const {
