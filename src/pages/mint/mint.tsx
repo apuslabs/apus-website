@@ -2,7 +2,7 @@ import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Toolti
 import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useRef, useState } from "react";
-import { useAOMint, useParams, useRecipientModal, useSignatureModal } from "./contexts";
+import { useAOMint, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -16,7 +16,7 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
-import { PRE_TGE_TIME } from "../../utils/config";
+import { APUS_ADDRESS, PRE_TGE_TIME } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import Recipient from "./recipient";
 
@@ -268,7 +268,6 @@ function RemoveRecipientModal({
 }
 
 export default function Mint() {
-  const { MintProcess, MirrorProcess } = useParams();
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
@@ -281,7 +280,7 @@ export default function Mint() {
     otherToken,
     apusStETHEstimatedApus,
     apusDAIEstimatedApus,
-    tokenEstimatedApus,
+    biTokenEstimatedApus,
     userEstimatedApus,
     loadingApus,
     loadingTokenAllocation,
@@ -293,12 +292,12 @@ export default function Mint() {
     refreshAfterAllocation,
   } = useAOMint({
     wallet: walletAddress,
-    MintProcess,
-    MirrorProcess,
+    MintProcess: APUS_ADDRESS.Mint,
+    MirrorProcess: APUS_ADDRESS.Mirror,
   });
   const recipientModal = useRecipientModal({
     wallet: walletAddress,
-    MintProcess,
+    MintProcess: APUS_ADDRESS.Mint,
   });
   const { recipientVisible, setRecipientVisible, recipient, loadingRecipient } = recipientModal;
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
@@ -313,7 +312,7 @@ export default function Mint() {
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
   const [amount, setAmount] = useState<string>("");
   const bigAmount = ethers.utils.parseUnits(amount || "0", 18);
-  const estimatedApus = bigAmount.mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
+  const estimatedApus = bigAmount.mul(biTokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
   const canApprove = amount !== "" && amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
 
@@ -375,15 +374,7 @@ export default function Mint() {
 
   return (
     <>
-      <HomeHeader
-        Userbox={
-          <MintUserbox
-            onRecipient={() => {
-              setRecipientVisible(true);
-            }}
-          />
-        }
-      />
+      <HomeHeader Userbox={<MintUserbox setRecipientVisible={setRecipientVisible} />} />
       <div
         id="mint"
         className="pt-20 z-10"
@@ -551,12 +542,12 @@ export default function Mint() {
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    {tokenType && !tokenEstimatedApus.isZero() && (
+                    {tokenType && !biTokenEstimatedApus.isZero() && (
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
                         <LoadingNumber hide={tokenType === undefined} loading={loadingTokenEstimatedApus}>
-                          <span className="font-bold mx-1">{formatBigNumber(tokenEstimatedApus, 12, 4)}</span>
+                          <span className="font-bold mx-1">{formatBigNumber(biTokenEstimatedApus, 12, 4)}</span>
                         </LoadingNumber>
                         APUS
                       </div>

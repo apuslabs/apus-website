@@ -1,5 +1,3 @@
-import { scrollToAnchor } from "../utils/scroll";
-
 const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
 export const HomeHeaderMenuList: NavigationMenuType[] = [
@@ -13,12 +11,7 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   // },
   {
     name: "ROADMAP",
-    path: "/roadmap",
-    onClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      scrollToAnchor("roadmap");
-    },
+    path: "/?anchor=roadmap",
   },
   {
     name: "DOCS",

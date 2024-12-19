@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
-import { useLocation } from "react-router-dom";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
 
@@ -37,20 +36,20 @@ function getAllocationFromMessage(message?: MessageResult): Allocation {
 }
 
 export function useParams() {
-  const location = useLocation();
-  const MintProcess = useMemo(
-    () => new URLSearchParams(location.search).get("apus_process") || APUS_ADDRESS.Mint,
-    [location],
-  );
-  const MirrorProcess = useMemo(
-    () => new URLSearchParams(location.search).get("mirror_process") || APUS_ADDRESS.Mirror,
-    [location],
-  );
-  const TGETime = useMemo(
-    () => new URLSearchParams(location.search).get("tge_time") || "2024-12-12T09:00:00Z",
-    [location],
-  );
-  return { MintProcess, MirrorProcess, TGETime };
+  // const location = useLocation();
+  // const MintProcess = useMemo(
+  //   () => new URLSearchParams(location.search).get("apus_process") || APUS_ADDRESS.Mint,
+  //   [location],
+  // );
+  // const MirrorProcess = useMemo(
+  //   () => new URLSearchParams(location.search).get("mirror_process") || APUS_ADDRESS.Mirror,
+  //   [location],
+  // );
+  // const TGETime = useMemo(
+  //   () => new URLSearchParams(location.search).get("tge_time") || "2024-12-12T09:00:00Z",
+  //   [location],
+  // );
+  return { MintProcess: APUS_ADDRESS.Mint, MirrorProcess: APUS_ADDRESS.Mirror };
 }
 
 function getApusAllocation(msg?: MessageResult) {
@@ -226,19 +225,23 @@ export function useAOMint({
     }
   };
 
-  const apusStETH = getApusAllocation(stETHAllocationResult);
-  const apusDAI = getApusAllocation(daiAllocationResult);
-  const otherStETH = getOtherAllocation(stETHAllocationResult);
-  const otherDAI = getOtherAllocation(daiAllocationResult);
+  const apusStETH = useMemo(() => getApusAllocation(stETHAllocationResult), [stETHAllocationResult]);
+  const apusDAI = useMemo(() => getApusAllocation(daiAllocationResult), [daiAllocationResult]);
+  const otherStETH = useMemo(() => getOtherAllocation(stETHAllocationResult), [stETHAllocationResult]);
+  const otherDAI = useMemo(() => getOtherAllocation(daiAllocationResult), [daiAllocationResult]);
   const {
     user: userEstimatedApus,
     stETH: apusStETHEstimatedApus,
     dai: apusDAIEstimatedApus,
-  } = getEstimatedApus(
-    BigNumber.from(stETHEstimatedApus || 0),
-    BigNumber.from(daiEstimatedApus || 0),
-    apusStETH,
-    apusDAI,
+  } = useMemo(
+    () =>
+      getEstimatedApus(
+        BigNumber.from(stETHEstimatedApus || 0),
+        BigNumber.from(daiEstimatedApus || 0),
+        apusStETH,
+        apusDAI,
+      ),
+    [stETHEstimatedApus, daiEstimatedApus, apusStETH, apusDAI],
   );
   const loadingUserEstimatedApus =
     loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
@@ -267,15 +270,22 @@ export function useAOMint({
     return () => clearInterval(interval);
   }, [apus, userEstimatedApus, loadingApus, loadingUserEstimatedApus]);
 
+  const biStETHEstimatedApus = useMemo(() => BigNumber.from(stETHEstimatedApus || 0), [stETHEstimatedApus]);
+  const biDaiEstimatedApus = useMemo(() => BigNumber.from(daiEstimatedApus || 0), [daiEstimatedApus]);
+  const biTokenEstimatedApus = useMemo(
+    () => (tokenType === "stETH" ? biStETHEstimatedApus : biDaiEstimatedApus),
+    [tokenType, biStETHEstimatedApus, biDaiEstimatedApus],
+  );
+
   return {
     tokenType,
     setTokenType,
     apus: BigNumber.from(apus || 0),
     apusDynamic,
     // userEstimatedApus,
-    stETHEstimatedApus: BigNumber.from(stETHEstimatedApus || 0),
-    daiEstimatedApus: BigNumber.from(daiEstimatedApus || 0),
-    tokenEstimatedApus: BigNumber.from((tokenType === "stETH" ? stETHEstimatedApus : daiEstimatedApus) || 0),
+    biStETHEstimatedApus,
+    biDaiEstimatedApus,
+    biTokenEstimatedApus,
     stETHAllocationResult,
     daiAllocationResult,
     loadingApus,
