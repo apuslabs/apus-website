@@ -99,7 +99,7 @@ const features = [
     title: "100% Community Launch",
     description:
       "$APUS, with a fixed 1 billion supply and deflationary mechanisms, ensures long-term value through fair, decentralized distribution with no pre-allocation for the team or early investors.",
-    link: "https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s",
+    link: "https://3csodbzc3eweix6qkukrbfzr42v3stx7rh6xpg5vlkebap4p6eza.arweave.net/2KThhyLZLERf0FUVEJcx5qu5Tv-J_XebtVqIED-P8TI",
   },
   {
     icon: ImgHomepage.Feature3,
@@ -226,7 +226,7 @@ function SectionTech() {
       <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
         Technology
       </div>
-      <TwitterVideo className="md:mb-4" videoID="m-TPFEfegM0?si=kqr5eAJVI5VA0Nqf" />
+      <TwitterVideo className="md:mb-4" videoID="2ympIENaQYQ?si=JVN0KMTmDxVBVyAU" />
       <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
         Tokenomics
       </div>

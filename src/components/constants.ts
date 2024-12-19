@@ -1,5 +1,3 @@
-import { scrollToAnchor } from "../utils/scroll";
-
 const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
 
 export const HomeHeaderMenuList: NavigationMenuType[] = [
@@ -13,12 +11,7 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   // },
   {
     name: "ROADMAP",
-    path: "/roadmap",
-    onClick: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      e.preventDefault();
-      e.stopPropagation();
-      scrollToAnchor("roadmap");
-    },
+    path: "/?anchor=roadmap",
   },
   {
     name: "DOCS",
@@ -27,10 +20,6 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
   {
     name: "LITEPAPER",
     path: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
-  },
-  {
-    name: "TOKENOMICS",
-    path: "https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s",
   },
 ];
 

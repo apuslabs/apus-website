@@ -1,10 +1,9 @@
-import { FC, useLayoutEffect, useState } from "react";
+import { FC, useState } from "react";
 import { ImgCommon, ImgHomepage } from "../assets";
 import { useNavigate, Link } from "react-router-dom";
-import { useBreakpoint } from "../utils/react-use";
+import { useAnchor, useBreakpoint } from "../utils/react-use";
 import { HomeHeaderMenuList } from "./constants";
 import "./headerfooter.css";
-import { scrollToAnchor } from "../utils/scroll";
 
 function HomeHeaderMobile() {
   const [menuShow, setMenuShow] = useState<boolean>(false);
@@ -29,12 +28,7 @@ function HomeHeaderMobile() {
       >
         <ul className="flex-col justify-center items-center gap-12 font-medium z-20 bg-white border-t-1 border-solid border-grayd8">
           {HomeHeaderMenuList.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              target={item.path.indexOf("http") !== -1 ? "_blank" : ""}
-              onClick={item.onClick}
-            >
+            <Link key={item.name} to={item.path} target={item.path.indexOf("http") !== -1 ? "_blank" : ""}>
               <li className="h-[60px] px-5 leading-[60px] border-b-1 border-solid border-grayd8" key={item.name}>
                 {item.name}
               </li>
@@ -47,18 +41,10 @@ function HomeHeaderMobile() {
 }
 
 const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
+  useAnchor();
   const breakpoint = useBreakpoint();
   const isTablet = breakpoint === "mobile";
   const navigate = useNavigate();
-
-  useLayoutEffect(() => {
-    const realpath = window.location.hash.replace("#", "").split("?")[1];
-    const params = new URLSearchParams(realpath);
-    const anchor = params.get("anchor");
-    if (anchor) {
-      scrollToAnchor(anchor);
-    }
-  }, []);
 
   if (isTablet) {
     return <HomeHeaderMobile />;
@@ -82,20 +68,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
           z-20"
         >
           {HomeHeaderMenuList.map((item) => (
-            <Link
-              key={item.name}
-              to={item.path}
-              onClick={
-                item.onClick
-                  ? item.onClick
-                  : () => {
-                      if (item.path.includes("?anchor")) {
-                        const anchor = item.path.split("?anchor=")[1];
-                        scrollToAnchor(anchor);
-                      }
-                    }
-              }
-            >
+            <Link key={item.name} to={item.path}>
               <li key={item.name}>{item.name}</li>
             </Link>
           ))}

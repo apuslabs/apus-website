@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { ethers, BigNumber } from "ethers";
 import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
-import { useLocation } from "react-router-dom";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
 
@@ -37,20 +36,20 @@ function getAllocationFromMessage(message?: MessageResult): Allocation {
 }
 
 export function useParams() {
-  const location = useLocation();
-  const MintProcess = useMemo(
-    () => new URLSearchParams(location.search).get("apus_process") || APUS_ADDRESS.Mint,
-    [location],
-  );
-  const MirrorProcess = useMemo(
-    () => new URLSearchParams(location.search).get("mirror_process") || APUS_ADDRESS.Mirror,
-    [location],
-  );
-  const TGETime = useMemo(
-    () => new URLSearchParams(location.search).get("tge_time") || "2024-12-12T09:00:00Z",
-    [location],
-  );
-  return { MintProcess, MirrorProcess, TGETime };
+  // const location = useLocation();
+  // const MintProcess = useMemo(
+  //   () => new URLSearchParams(location.search).get("apus_process") || APUS_ADDRESS.Mint,
+  //   [location],
+  // );
+  // const MirrorProcess = useMemo(
+  //   () => new URLSearchParams(location.search).get("mirror_process") || APUS_ADDRESS.Mirror,
+  //   [location],
+  // );
+  // const TGETime = useMemo(
+  //   () => new URLSearchParams(location.search).get("tge_time") || "2024-12-12T09:00:00Z",
+  //   [location],
+  // );
+  return { MintProcess: APUS_ADDRESS.Mint, MirrorProcess: APUS_ADDRESS.Mirror };
 }
 
 function getApusAllocation(msg?: MessageResult) {
@@ -87,6 +86,7 @@ export function useAOMint({
 }) {
   const [tokenType, setTokenType] = useState<TokenType>("stETH");
   const { data: apus, loading: loadingApus, execute: getApus } = useAO<string>(MintProcess, "User.Balance", "dryrun");
+  const [apusDynamic, setApusDynamic] = useState<BigNumber>(BigNumber.from(0));
   // const {
   //   data: userEstimatedApus,
   //   loading: loadingUserEstimateApus,
@@ -116,7 +116,21 @@ export function useAOMint({
   useEffect(() => {
     if (wallet) {
       getApus({ Recipient: ethers.utils.getAddress(wallet) });
-      // getUserEstimatedApus({ User: ethers.utils.getAddress(wallet) }, dayjs().unix());
+    }
+    // refresh apus every 5 minutes
+    const interval = setInterval(
+      () => {
+        if (wallet) {
+          getApus({ Recipient: ethers.utils.getAddress(wallet) });
+        }
+      },
+      5 * 60 * 1000,
+    );
+    return () => clearInterval(interval);
+  }, [wallet, getApus]);
+
+  useEffect(() => {
+    if (wallet) {
       getStETHAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "stETH" });
       getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
       getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
@@ -173,8 +187,13 @@ export function useAOMint({
       a.Amount = a.Amount.sub(reduced);
     }
     const newAllocations = [...otherAllocation, { Recipient: APUS_ADDRESS.Recipient, Amount: apus.add(amount) }];
-    await updateAllocation(newAllocations);
-    refreshAfterAllocation();
+    try {
+      await updateAllocation(newAllocations);
+    } catch {
+      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } finally {
+      refreshAfterAllocation();
+    }
   };
 
   const decreaseApusAllocation = async (amount: BigNumber, recipient: string) => {
@@ -197,33 +216,76 @@ export function useAOMint({
       recipientAllocation,
       { Recipient: APUS_ADDRESS.Recipient, Amount: apus.sub(amount) },
     ];
-    await updateAllocation(newAllocations);
-    refreshAfterAllocation();
+    try {
+      await updateAllocation(newAllocations);
+    } catch {
+      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } finally {
+      refreshAfterAllocation();
+    }
   };
 
-  const apusStETH = getApusAllocation(stETHAllocationResult);
-  const apusDAI = getApusAllocation(daiAllocationResult);
-  const otherStETH = getOtherAllocation(stETHAllocationResult);
-  const otherDAI = getOtherAllocation(daiAllocationResult);
+  const apusStETH = useMemo(() => getApusAllocation(stETHAllocationResult), [stETHAllocationResult]);
+  const apusDAI = useMemo(() => getApusAllocation(daiAllocationResult), [daiAllocationResult]);
+  const otherStETH = useMemo(() => getOtherAllocation(stETHAllocationResult), [stETHAllocationResult]);
+  const otherDAI = useMemo(() => getOtherAllocation(daiAllocationResult), [daiAllocationResult]);
   const {
     user: userEstimatedApus,
     stETH: apusStETHEstimatedApus,
     dai: apusDAIEstimatedApus,
-  } = getEstimatedApus(
-    BigNumber.from(stETHEstimatedApus || 0),
-    BigNumber.from(daiEstimatedApus || 0),
-    apusStETH,
-    apusDAI,
+  } = useMemo(
+    () =>
+      getEstimatedApus(
+        BigNumber.from(stETHEstimatedApus || 0),
+        BigNumber.from(daiEstimatedApus || 0),
+        apusStETH,
+        apusDAI,
+      ),
+    [stETHEstimatedApus, daiEstimatedApus, apusStETH, apusDAI],
+  );
+  const loadingUserEstimatedApus =
+    loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
+
+  // animate apus balance change
+  useEffect(() => {
+    if (loadingApus || !apus) {
+      return;
+    }
+    if (
+      loadingApus ||
+      loadingUserEstimatedApus ||
+      !apus ||
+      !userEstimatedApus ||
+      userEstimatedApus.isZero() ||
+      userEstimatedApus.lte(apus)
+    ) {
+      setApusDynamic(BigNumber.from(apus || 0));
+      return;
+    }
+    const diff = userEstimatedApus.sub(BigNumber.from(apus));
+    const step = diff.div(30 * 24 * 3600);
+    const interval = setInterval(() => {
+      setApusDynamic((v) => v.add(step));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [apus, userEstimatedApus, loadingApus, loadingUserEstimatedApus]);
+
+  const biStETHEstimatedApus = useMemo(() => BigNumber.from(stETHEstimatedApus || 0), [stETHEstimatedApus]);
+  const biDaiEstimatedApus = useMemo(() => BigNumber.from(daiEstimatedApus || 0), [daiEstimatedApus]);
+  const biTokenEstimatedApus = useMemo(
+    () => (tokenType === "stETH" ? biStETHEstimatedApus : biDaiEstimatedApus),
+    [tokenType, biStETHEstimatedApus, biDaiEstimatedApus],
   );
 
   return {
     tokenType,
     setTokenType,
     apus: BigNumber.from(apus || 0),
+    apusDynamic,
     // userEstimatedApus,
-    stETHEstimatedApus: BigNumber.from(stETHEstimatedApus || 0),
-    daiEstimatedApus: BigNumber.from(daiEstimatedApus || 0),
-    tokenEstimatedApus: BigNumber.from((tokenType === "stETH" ? stETHEstimatedApus : daiEstimatedApus) || 0),
+    biStETHEstimatedApus,
+    biDaiEstimatedApus,
+    biTokenEstimatedApus,
     stETHAllocationResult,
     daiAllocationResult,
     loadingApus,
@@ -237,6 +299,7 @@ export function useAOMint({
     loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
+    refreshAfterAllocation,
     apusStETH,
     apusDAI,
     apusToken: tokenType === "stETH" ? apusStETH : apusDAI,
@@ -245,15 +308,14 @@ export function useAOMint({
     otherToken: tokenType === "stETH" ? otherStETH : otherDAI,
     apusStETHEstimatedApus,
     apusDAIEstimatedApus,
-    loadingUserEstimatedApus:
-      loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation,
+    loadingUserEstimatedApus,
     userEstimatedApus,
   };
 }
 
 export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; MintProcess: string }) {
-  const [modalOpen, setModalOpen] = useState(false);
   const [arweaveAddress, setArweaveAddress] = useState("");
+  const [recipientVisible, setRecipientVisible] = useState(false);
 
   const {
     data: recipient,
@@ -271,29 +333,26 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     }
   }, [getRecipient, wallet]);
 
-  const submitRecipient = async () => {
+  const submitRecipient = useCallback(async () => {
     if (!wallet) {
       return;
     }
     if (arweaveAddress.length !== 43) {
       throw new Error("Invalid Arweave Address");
     }
-    await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
-    await getRecipient({ User: ethers.utils.getAddress(wallet) });
-    setModalOpen(false);
-  };
-
-  const closeModal = () => {
-    if (loadingRecipient) {
-      return;
+    try {
+      await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
+      setRecipientVisible(false);
+    } catch {
+      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } finally {
+      getRecipient({ User: ethers.utils.getAddress(wallet) });
     }
-    setModalOpen(false);
-  };
+  }, [arweaveAddress, getRecipient, updateRecipientMsg, wallet]);
 
   return {
-    modalOpen,
-    setModalOpen,
-    closeModal,
+    recipientVisible,
+    setRecipientVisible,
     arweaveAddress,
     setArweaveAddress,
     recipient,
@@ -313,23 +372,25 @@ export function useSignatureModal() {
     modalOpenRef.current = modalOpen;
   }, [modalOpen]);
 
-  const showSigTip = (t: string) =>
-    new Promise<void>((resolve) => {
-      if (notAskAgain) {
-        resolve();
-      } else {
-        setTitle(t);
-        setModalOpen(true);
-        setTitle("Signature Tip");
+  const showSigTip = useCallback(
+    (t: string) =>
+      new Promise<void>((resolve) => {
+        if (notAskAgain) {
+          resolve();
+        } else {
+          setTitle(t);
+          setModalOpen(true);
 
-        const tipInterval = setInterval(() => {
-          if (!modalOpenRef.current) {
-            clearInterval(tipInterval);
-            resolve();
-          }
-        }, 200);
-      }
-    });
+          const tipInterval = setInterval(() => {
+            if (!modalOpenRef.current) {
+              clearInterval(tipInterval);
+              resolve();
+            }
+          }, 200);
+        }
+      }),
+    [notAskAgain],
+  );
 
   const closeModal = () => {
     setModalOpen(false);

@@ -1,5 +1,5 @@
 .card {
-  @apply max-w-[60rem] mx-auto my-12 flex
+  @apply max-w-[60rem] mx-auto mt-12 flex
         border border-solid border-grayd8 rounded-2xl;
 }
 
@@ -21,6 +21,21 @@
 .token-features-list span,
 .pie-legend-list span {
   @apply font-bold;
+}
+
+#mint {
+  /* background: url("../../assets/mint/bg.png") no-repeat;
+  background-size: cover;
+  background-position: center; */
+  @apply pb-12;
+}
+
+#recipient .ant-modal .ant-modal-content {
+  @apply w-full h-full p-0;
+}
+
+#mint .card {
+  background: rgba(255, 255, 255, 0.95);
 }
 
 #mint .ant-tabs-card.ant-tabs-top > .ant-tabs-nav .ant-tabs-tab,
@@ -65,6 +80,10 @@
 #mint .ant-slider-horizontal .ant-slider-rail {
   height: 1px;
   top: 16px;
+}
+
+#mint .ant-slider-horizontal {
+  height: 36px;
 }
 
 #mint .ant-slider-horizontal .ant-slider-track,

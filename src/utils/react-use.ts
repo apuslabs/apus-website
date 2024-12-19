@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createBreakpoint } from "react-use";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -19,6 +19,23 @@ export function useAutoScroll() {
   });
 
   return containerRef;
+}
+
+export function useAnchor() {
+  const scrollToAnchor = useCallback((anchor: string) => {
+    const el = document.getElementById(anchor);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    }
+  }, []);
+  useLayoutEffect(() => {
+    const realpath = window.location.hash.replace("#", "").split("?")[1];
+    const params = new URLSearchParams(realpath);
+    const anchor = params.get("anchor");
+    if (anchor) {
+      scrollToAnchor(anchor);
+    }
+  }, [scrollToAnchor]);
 }
 
 export function useCountDate(date: dayjs.Dayjs) {

@@ -9,7 +9,7 @@ function shortenAddress(address?: string): string {
   return address.substring(0, 6) + "..." + address.substring(address.length - 4);
 }
 
-export default function EthUserbox({ onRecipient }: { onRecipient: () => void }) {
+export default function EthUserbox({ setRecipientVisible }: { setRecipientVisible: (visible: boolean) => void }) {
   const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
 
   return wallet?.accounts.length ? (
@@ -24,7 +24,7 @@ export default function EthUserbox({ onRecipient }: { onRecipient: () => void })
           if (key === "logout") {
             disconnect(wallet);
           } else if (key === "update-recipient") {
-            onRecipient();
+            setRecipientVisible(true);
           }
         },
       }}

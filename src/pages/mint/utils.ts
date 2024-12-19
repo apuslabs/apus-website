@@ -2,8 +2,11 @@ import { BigNumber, ethers } from "ethers";
 
 export function splitBigNumber(num: BigNumber, decimals: number = 18) {
   const str = num.toString();
+  const integer = str.slice(0, -decimals) || "0";
+  // add , to the integer part
+  const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return {
-    integer: str.slice(0, -decimals) || "0",
+    integer: formattedInteger,
     decimal: str.slice(-decimals),
   };
 }

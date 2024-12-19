@@ -1,8 +1,9 @@
-import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
-import "./index.css";
+import { Divider, Input, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
+import { ToastContainer, toast, Bounce } from "react-toastify";
+import "./mint.css";
 import { ImgMint } from "../../assets";
-import { useEffect, useState } from "react";
-import { useAOMint, useParams, useRecipientModal, useSignatureModal } from "./contexts";
+import { useEffect, useRef, useState } from "react";
+import { useAOMint, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
@@ -16,8 +17,9 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
-import { PRE_TGE_TIME } from "../../utils/config";
-import { useCountDate } from "../../utils/react-use";
+import { APUS_ADDRESS, PRE_TGE_TIME } from "../../utils/config";
+import FlipNumbers from "react-flip-numbers";
+import Recipient from "./recipient";
 
 function TokenSlider({
   totalAmount,
@@ -35,11 +37,12 @@ function TokenSlider({
   setTokenType: (v: "stETH" | "DAI") => void;
 }) {
   const [percent, setPercent] = useState(0);
+  const amountStr = amount.toString();
   useEffect(() => {
-    if (amount === "0") {
+    if (amountStr === "" || amountStr === "0") {
       setPercent(0);
     }
-  }, [amount, setPercent]);
+  }, [amountStr, setPercent]);
   return (
     <>
       <div className="w-full flex gap-5">
@@ -50,7 +53,7 @@ function TokenSlider({
           placeholder={"Select Token"}
           onChange={(v) => {
             setTokenType(v as "stETH" | "DAI");
-            setAmount("0");
+            setAmount("");
           }}
         >
           <Select.Option key="stETH">
@@ -74,6 +77,11 @@ function TokenSlider({
           onChange={(v) => {
             if (v !== null) {
               const numericValue = v.target.value.replace(/[^0-9.]/g, "");
+              if (numericValue === "") {
+                setAmount("");
+                setPercent(0);
+                return;
+              }
               const bigAmount = ethers.utils.parseUnits(numericValue, 18);
               if (bigAmount.gt(totalAmount)) {
                 setAmount(ethers.utils.formatUnits(totalAmount, 18));
@@ -86,7 +94,7 @@ function TokenSlider({
           }}
         />
       </div>
-      {tab === "increase" && (
+      {tab === "increase" ? (
         <div className="w-full text-right">
           <Link to="https://ao.arweave.dev/#/mint" className="mr-2 text-blue underline">
             Bridge To AO
@@ -104,7 +112,7 @@ function TokenSlider({
             <InfoCircleOutlined className="pl-1" />
           </Tooltip>
         </div>
-      )}
+      ) : null}
       <Slider
         className="w-full max-w-[31rem]"
         disabled={tokenType === undefined || totalAmount.isZero()}
@@ -120,7 +128,7 @@ function TokenSlider({
       />
       <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
         <span className="font-bold text-[#091dff]">
-          {amount} {tokenType} ({percent}%)
+          {amount || "0"} {tokenType} ({percent}%)
         </span>{" "}
         Will Be Allocated
         {tab == "increase" ? <br /> : " "}
@@ -138,22 +146,142 @@ function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: b
   );
 }
 
+export const GrayDivider = ({ className }: { className?: string }) => (
+  <Divider className={`min-w-0 w-[21rem] my-5 ${className} border-grayd8`} />
+);
+
+function SigTips() {
+  return (
+    <>
+      <GrayDivider className="my-0" />
+      <div className="text-xs">
+        <div className="font-bold">TIPS:</div>
+        <ul className="list-disc pl-5">
+          <li>Signatures are made on the AO network and do not affect Ethereum assets.</li>
+          <li>MetaMask may show some garbled text, but it will be fixed soon.</li>
+        </ul>
+      </div>
+    </>
+  );
+}
+
+export function SigModal({
+  open,
+  close,
+  closeAndNotAskAgain,
+  title,
+}: {
+  open: boolean;
+  close: () => void;
+  closeAndNotAskAgain: () => void;
+  title: string;
+}) {
+  return (
+    <Modal open={open} maskClosable={false} onCancel={close} closeIcon={null} title={null} footer={null}>
+      <div className="mb-10 text-gray21 font-semibold text-xl text-center">{title}</div>
+      <div className="mt-5 text-xs">
+        * Please note that messages may appear garbled on MetaMask. The messages are signed on AO and will not effect
+        Ethereum assets - do not worry!
+      </div>
+      <GrayDivider />
+      <div className="flex justify-center gap-5">
+        <div className="btn-primary" onClick={close}>
+          Continue
+        </div>
+        <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
+          I'm Good! No More Tips!
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
+function useRemoveRecipientModal({ recipient }: { recipient?: string }) {
+  const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState(recipient);
+  const closeModal = () => {
+    setOpen(false);
+  };
+  const addressRef = useRef<string>();
+  useEffect(() => {
+    addressRef.current = address;
+  }, [address]);
+  const openRef = useRef(false);
+  useEffect(() => {
+    openRef.current = open;
+  }, [open]);
+  const getRemoveRecipient = (): Promise<string> => {
+    setOpen(true);
+    setAddress(recipient);
+    return new Promise((resolve) => {
+      const waitInterval = setInterval(() => {
+        if (openRef.current === false) {
+          clearInterval(waitInterval);
+          resolve(addressRef.current!);
+        }
+      }, 1000);
+    });
+  };
+  const onSubmit = () => {
+    if (address?.length !== 43) {
+      toast.error("Invalid Arweave Address", { autoClose: false });
+      return;
+    }
+    closeModal();
+    setAddress(address);
+  };
+  return { open, closeModal, onSubmit, address, setAddress, getRemoveRecipient };
+}
+
+function RemoveRecipientModal({
+  open,
+  onClose,
+  address,
+  setAddress,
+  onSubmit,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSubmit: () => void;
+  address?: string;
+  setAddress: (v: string) => void;
+}) {
+  return (
+    <Modal open={open} maskClosable={false} onCancel={onClose} closeIcon={null} title={null} footer={null}>
+      <div className="flex flex-col items-center">
+        <div className="mb-10 text-gray21 font-semibold text-xl text-center">Check Recipient Address</div>
+        <Input
+          size="large"
+          placeholder="Input Arweave Address"
+          value={address}
+          onChange={(v) => setAddress(v.target.value)}
+        />
+        <div className="mt-5 text-xs">* Your removed assets will be returned to this wallet.</div>
+        <GrayDivider />
+        <div className="flex justify-center gap-5">
+          <div className="btn-primary" onClick={onSubmit}>
+            Continue
+          </div>
+        </div>
+      </div>
+    </Modal>
+  );
+}
+
 export default function Mint() {
-  const { MintProcess, MirrorProcess } = useParams();
-  const { leftTimeStr } = useCountDate(PRE_TGE_TIME);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
   const {
     tokenType,
     setTokenType,
-    apus,
+    apusDynamic,
     apusStETH,
     apusDAI,
     apusToken,
     otherToken,
     apusStETHEstimatedApus,
     apusDAIEstimatedApus,
-    tokenEstimatedApus,
+    biTokenEstimatedApus,
     userEstimatedApus,
     loadingApus,
     loadingTokenAllocation,
@@ -162,26 +290,19 @@ export default function Mint() {
     loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
+    refreshAfterAllocation,
   } = useAOMint({
     wallet: walletAddress,
-    MintProcess,
-    MirrorProcess,
+    MintProcess: APUS_ADDRESS.Mint,
+    MirrorProcess: APUS_ADDRESS.Mirror,
   });
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apus, 12);
-  const {
-    modalOpen,
-    closeModal,
-    setModalOpen,
-    arweaveAddress,
-    setArweaveAddress,
-    recipient,
-    loadingRecipient,
-    loadingUpdateRecipient,
-    submitRecipient,
-  } = useRecipientModal({
+  const recipientModal = useRecipientModal({
     wallet: walletAddress,
-    MintProcess,
+    MintProcess: APUS_ADDRESS.Mint,
   });
+  const { recipientVisible, setRecipientVisible, recipient, loadingRecipient } = recipientModal;
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
+
   const {
     modalOpen: tipModalOpen,
     closeModal: closeTipModal,
@@ -190,61 +311,72 @@ export default function Mint() {
     closeAndNotAskAgain,
   } = useSignatureModal();
   const [tab, setTab] = useState<"increase" | "decrease">("increase");
-  const [amount, setAmount] = useState<string>("0");
-  const estimatedApus = ethers.utils.parseUnits(amount, 18).mul(tokenEstimatedApus).div(BigNumber.from(10).pow(18));
+  const [amount, setAmount] = useState<string>("");
+  const bigAmount = ethers.utils.parseUnits(amount || "0", 18);
+  const estimatedApus = bigAmount.mul(biTokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
-  const canApprove = amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
+  const canApprove = amount !== "" && amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
 
   const approve = async () => {
     if (!canApprove) {
       return;
     }
     if (!recipient) {
-      notification.warning({ message: "Please set recipient first" });
-      setModalOpen(true);
+      setRecipientVisible(true);
       return;
     }
     try {
       if (tab === "increase") {
-        await showSigTip("Allocating assets");
-        await increaseApusAllocation(ethers.utils.parseUnits(amount, 18));
+        await showSigTip("Notice");
+        await increaseApusAllocation(bigAmount);
       } else {
-        await showSigTip("Removing assets");
-        await decreaseApusAllocation(ethers.utils.parseUnits(amount, 18), recipient);
+        const removeRecipient = await getRemoveRecipient();
+        await showSigTip("Notice");
+        await decreaseApusAllocation(bigAmount, removeRecipient);
       }
-      setAmount("0");
-      notification.success({ message: "Approve successfully" });
+      setAmount("");
+      toast.success(`${tab === "increase" ? "Allocate" : "Remove"} Successful`);
     } catch (e: unknown) {
+      console.log(e);
       if (e instanceof Error) {
-        notification.error({ message: e.message, duration: 0 });
+        toast.error(e.message, { autoClose: false });
+        refreshAfterAllocation();
+        setAmount("");
       } else {
-        notification.error({ message: "Failed to approve", duration: 0 });
+        toast.error(`${tab === "increase" ? "Allocate" : "Remove"} Failed, Please Try Again.`, { autoClose: false });
       }
     }
   };
 
   const switchTab = (key: string) => {
     setTab(key as "increase" | "decrease");
-    setAmount("0");
+    setAmount("");
   };
 
   const switchToken = (key: "stETH" | "DAI") => {
     setTokenType(key);
-    setAmount("0");
+    setAmount("");
   };
+
+  const {
+    open: removeRecipientModalOpen,
+    closeModal: closeRemoveRecipientModal,
+    onSubmit: removeRecipient,
+    address: removeRecipientAddress,
+    setAddress: setRemoveRecipientAddress,
+    getRemoveRecipient,
+  } = useRemoveRecipientModal({ recipient });
 
   return (
     <>
-      <HomeHeader
-        Userbox={
-          <MintUserbox
-            onRecipient={() => {
-              setModalOpen(true);
-            }}
-          />
-        }
-      />
-      <div id="mint" className="pt-20">
+      <HomeHeader Userbox={<MintUserbox setRecipientVisible={setRecipientVisible} />} />
+      <div
+        id="mint"
+        className="pt-20 z-10"
+        style={{
+          opacity: recipientVisible ? 0 : 1,
+        }}
+      >
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
@@ -254,9 +386,20 @@ export default function Mint() {
             </div>
             <div className="font-medium text-gray21 text-[30px] leading-none">
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
-                <span className="text-[30px]">{apusInteger}</span>
-                <span>.</span>
-                <span className="text-[20px]">{apusDecimal}</span>
+                <div className="flex items-end justify-center">
+                  <FlipNumbers
+                    height={30}
+                    width={20}
+                    color="#212121"
+                    numberStyle={{
+                      zoom: "101%",
+                    }}
+                    play
+                    numbers={apusInteger}
+                  />
+                  <span>.</span>
+                  <FlipNumbers height={20} width={14} color="#212121" play numbers={apusDecimal} />
+                </div>
               </Spin>
             </div>
             <Divider orientation="center" className="m-0" />
@@ -329,7 +472,7 @@ export default function Mint() {
                   <div className="pie-legend-square bg-[#091DFF]" /> Ecosystem: <span>7% (TGE 100%)</span>
                 </li>
                 <li>
-                  <div className="pie-legend-square bg-[#3CDCE5]" /> Liquidity: <span>1%</span>
+                  <div className="pie-legend-square bg-[#3CDCE5]" /> Liquidity: <span>1% (TGE 100%)</span>
                 </li>
               </ol>
             </div>
@@ -394,12 +537,12 @@ export default function Mint() {
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    {tokenType && (
+                    {tokenType && !biTokenEstimatedApus.isZero() && (
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
                         <LoadingNumber hide={tokenType === undefined} loading={loadingTokenEstimatedApus}>
-                          <span className="font-bold mx-1">{formatBigNumber(tokenEstimatedApus, 12, 4)}</span>
+                          <span className="font-bold mx-1">{formatBigNumber(biTokenEstimatedApus, 12, 4)}</span>
                         </LoadingNumber>
                         APUS
                       </div>
@@ -409,16 +552,10 @@ export default function Mint() {
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Add Allocation"}
+                        {!recipient ? "Submit Recipient Address" : "Add Allocation"}
                       </div>
                     </Spin>
-                    <div className="mt-2 text-xs">
-                      {dayjs().isBefore(dayjs(PRE_TGE_TIME)) ? (
-                        <div>
-                          Allocation opened in <span className="text-[#091dff]">{`${leftTimeStr}`}</span>
-                        </div>
-                      ) : null}
-                    </div>
+                    <SigTips />
                   </div>
                 ),
               },
@@ -446,78 +583,50 @@ export default function Mint() {
                       tokenType={tokenType}
                       setTokenType={switchToken}
                     />
-                    <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                     <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
                       <div
                         className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
                         onClick={approve}
                       >
-                        {!recipient ? "Set Recipient" : "Remove Allocation"}
+                        {!recipient ? "Submit Recipient Address" : "Remove Allocation"}
                       </div>
                     </Spin>
+                    <SigTips />
                   </div>
                 ),
               },
             ]}
           ></Tabs>
         </div>
-        <Modal open={modalOpen} onClose={closeModal} onCancel={closeModal} title={null} footer={null}>
-          <div className="mb-10 text-gray21 font-semibold text-3xl text-center">RECEIVE APUS</div>
-          <div className="text-gray21 mb-2">Selected Arweave Address:</div>
-          <div className="text-[#091dff] font-semibold mb-5">{recipient || ""}</div>
-          <Input
-            size="large"
-            placeholder="Input Arweave Address"
-            value={arweaveAddress}
-            onChange={(v) => setArweaveAddress(v.target.value)}
-          />
-          <div className="mt-5 text-xs">
-            <div className="font-bold">TIPS:</div>
-            <ul className="list-disc pl-5">
-              <li>Note: Minted APUS will be sent to the Arweave address provided above.</li>
-              <li>If you submit a new Arweave address, all future APUS yield will be Minted to the updated address.</li>
-            </ul>
-          </div>
-          <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <Spin spinning={loadingUpdateRecipient || loadingRecipient}>
-            <div
-              className="w-32 btn-primary mx-auto"
-              onClick={async () => {
-                try {
-                  await showSigTip("Setting recipient");
-                  await submitRecipient();
-                  notification.success({ message: "Recipient updated successfully" });
-                } catch (e: unknown) {
-                  if (e instanceof Error) {
-                    notification.error({ message: e.message, duration: 0 });
-                  } else {
-                    notification.error({ message: "Failed to update recipient", duration: 0 });
-                  }
-                }
-              }}
-            >
-              Submit
-            </div>
-          </Spin>
-        </Modal>
-        <Modal open={tipModalOpen} onClose={closeTipModal} onCancel={closeTipModal} title={null} footer={null}>
-          <div className="mb-10 text-gray21 font-semibold text-xl text-center">You are {tipModalTitle}</div>
-          <div className="mt-5 text-xs">
-            * Please note that Metamask may not display the message correctly - we are are aware of this issue and will
-            correct it soon. There is no risk!
-          </div>
-          <Divider className="mx-auto min-w-0 w-[21rem] my-5 border-grayd8" />
-          <div className="flex justify-center gap-5">
-            <div className="btn-primary" onClick={closeTipModal}>
-              Continue
-            </div>
-            <div className="btn-primary btn-outline" onClick={closeAndNotAskAgain}>
-              I'm Good! No More Tips!
-            </div>
-          </div>
-        </Modal>
+        <SigModal
+          open={tipModalOpen}
+          close={closeTipModal}
+          closeAndNotAskAgain={closeAndNotAskAgain}
+          title={tipModalTitle}
+        />
+        <RemoveRecipientModal
+          open={removeRecipientModalOpen}
+          onClose={closeRemoveRecipientModal}
+          address={removeRecipientAddress}
+          setAddress={setRemoveRecipientAddress}
+          onSubmit={removeRecipient}
+        />
       </div>
+      <Recipient showSigTip={showSigTip} {...recipientModal} />
       <HomeFooter />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </>
   );
 }
