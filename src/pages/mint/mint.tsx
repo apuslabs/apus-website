@@ -1,4 +1,5 @@
-import { Divider, Input, notification, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
+import { Divider, Input, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd";
+import { ToastContainer, toast, Bounce } from "react-toastify";
 import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useRef, useState } from "react";
@@ -223,7 +224,7 @@ function useRemoveRecipientModal({ recipient }: { recipient?: string }) {
   };
   const onSubmit = () => {
     if (address?.length !== 43) {
-      notification.error({ message: "Invalid Arweave Address", placement: "bottom" });
+      toast.error("Invalid Arweave Address", { autoClose: false });
       return;
     }
     closeModal();
@@ -334,21 +335,15 @@ export default function Mint() {
         await decreaseApusAllocation(bigAmount, removeRecipient);
       }
       setAmount("");
-      notification.success({
-        message: `${tab === "increase" ? "Allocate" : "Remove"} Successful`,
-        placement: "bottom",
-      });
+      toast.success(`${tab === "increase" ? "Allocate" : "Remove"} Successful`);
     } catch (e: unknown) {
+      console.log(e);
       if (e instanceof Error) {
-        notification.error({
-          message: e.message,
-          duration: 0,
-          placement: "bottom",
-        });
+        toast.error(e.message, { autoClose: false });
         refreshAfterAllocation();
         setAmount("");
       } else {
-        notification.error({ message: "Failed to approve", duration: 0, placement: "bottom" });
+        toast.error(`${tab === "increase" ? "Allocate" : "Remove"} Failed, Please Try Again.`, { autoClose: false });
       }
     }
   };
@@ -619,6 +614,19 @@ export default function Mint() {
       </div>
       <Recipient showSigTip={showSigTip} {...recipientModal} />
       <HomeFooter />
+      <ToastContainer
+        position="bottom-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable={false}
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </>
   );
 }

@@ -1,4 +1,5 @@
-import { Input, notification, Spin } from "antd";
+import { Input, Spin } from "antd";
+import { toast } from "react-toastify";
 import { useRecipientModal } from "./contexts";
 import { GrayDivider } from "./mint";
 import { ImgMint } from "../../assets";
@@ -58,16 +59,12 @@ export default function Recipient({
                 await showSigTip("Notice");
                 await submitRecipient();
                 setRecipientVisible(false);
-                notification.success({ message: "Recipient Updated Successfully", placement: "bottom" });
+                toast.success("Recipient Updated Successfully");
               } catch (e: unknown) {
                 if (e instanceof Error) {
-                  notification.error({
-                    message: e.message,
-                    duration: 0,
-                    placement: "bottom",
-                  });
+                  toast.error(e.message, { autoClose: false });
                 } else {
-                  notification.error({ message: "Failed to Update Recipient", duration: 0, placement: "bottom" });
+                  toast.error("Update Recipient Failed! Please Trye Again!", { autoClose: false });
                 }
               }
             }}
