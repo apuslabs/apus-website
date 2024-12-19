@@ -7,6 +7,12 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "",
+  resolve: {
+    alias: {
+      crypto: "crypto-browserify",
+      stream: "stream-browserify",
+    },
+  },
   plugins: [
     react(),
     ViteImageOptimizer({
