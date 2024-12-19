@@ -38,6 +38,7 @@
     "react-dom": "^18.3.1",
     "react-flip-numbers": "^3.0.9",
     "react-router-dom": "^6.27.0",
+    "react-scan": "^0.0.51",
     "react-use": "^17.5.1",
     "usehooks-ts": "^3.1.0",
     "web-vitals": "^4.2.4"
