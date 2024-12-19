@@ -355,7 +355,7 @@ export function useSignatureModal() {
         } else {
           setTitle(t);
           setModalOpen(true);
-          setTitle("Signature Tip");
+          setTitle(t);
 
           const tipInterval = setInterval(() => {
             if (!modalOpenRef.current) {
