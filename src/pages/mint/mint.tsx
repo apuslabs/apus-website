@@ -339,22 +339,15 @@ export default function Mint() {
         message: `${tab === "increase" ? "Allocate" : "Remove"} Successful`,
         placement: "bottom",
       });
-    } catch (e: unknown) {
-      if (e instanceof Error) {
-        if (e.message.includes("fetch")) {
-          notification.error({
-            message: "The AO network is currently experiencing high traffic. Please try again later.",
-            duration: 0,
-            placement: "bottom",
-          });
-          refreshAfterAllocation();
-          setAmount("");
-        } else {
-          notification.error({ message: e.message, duration: 0, placement: "bottom" });
-        }
-      } else {
-        notification.error({ message: "Failed to approve", duration: 0, placement: "bottom" });
-      }
+    } catch {
+      notification.error({
+        message: "Unable to connect to AO Token Process",
+        description: `${tab === "increase" ? "Allocate" : "Remove"} will be available when network issues are solved, please try again later.`,
+        duration: 0,
+        placement: "bottom",
+      });
+      refreshAfterAllocation();
+      setAmount("");
     }
   };
 
