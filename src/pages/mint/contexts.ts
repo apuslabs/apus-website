@@ -332,11 +332,11 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     }
     try {
       await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
+      setRecipientVisible(false);
     } catch {
       throw new Error("Unable to connect to AO Process, please try again later.");
     } finally {
       getRecipient({ User: ethers.utils.getAddress(wallet) });
-      setRecipientVisible(false);
     }
   }, [arweaveAddress, getRecipient, updateRecipientMsg, wallet]);
 
