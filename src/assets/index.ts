@@ -23,7 +23,6 @@ export const ImgCommon = {
 };
 
 import LogoHorizonal from "./homepage/logo_horizonal.png";
-import RoadmapVtl from "./homepage/roadmap-vtl.png";
 import Feature1 from "./homepage/feature1.svg";
 import Feature2 from "./homepage/feature2.svg";
 import Feature3 from "./homepage/feature3.svg";
@@ -52,7 +51,6 @@ export const ImgHomepage = {
   LogoHorizonal,
   IconMenu,
   Roadmap,
-  RoadmapVtl,
   Feature1,
   Feature2,
   Feature3,

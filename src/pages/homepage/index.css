@@ -4,7 +4,7 @@
 
 .section-hero {
   @apply pt-[90px] md:pt-[140px] md:pb-[188px];
-  background-image: url("../../assets/homepage/bg.png");
+  background-image: url("../../assets/homepage/bg.jpg");
   background-size: cover;
 }
 
@@ -141,9 +141,9 @@ img.invert {
 }
 
 @media screen and (min-width: 768px) {
-  .section-tech {
+  /* .section-tech {
     background-image: url("../../assets/homepage/bg-tech.png");
-  }
+  } */
 }
 
 .section-divider {
@@ -157,7 +157,7 @@ img.invert {
 
 @media screen and (min-width: 768px) {
   .section-roadmap {
-    background-image: url("../../assets/homepage/bg-roadmap.png");
+    background-image: url("../../assets/homepage/bg-roadmap.jpg");
   }
 }
 
@@ -180,6 +180,6 @@ img.invert {
 
 @media screen and (max-width: 768px) {
   .section-hero {
-    background-image: url("../../assets/homepage/bg-mobile.png");
+    background-image: url("../../assets/homepage/bg-mobile.jpg");
   }
 }
