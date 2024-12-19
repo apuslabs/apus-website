@@ -83,3 +83,26 @@
     background-color: rgba(9, 29, 255, 0.9);
   }
 }
+
+.social-media-container {
+  @apply flex items-center gap-5;
+  a,
+  img {
+    height: 28px;
+  }
+}
+
+.social-media-container.small {
+  a,
+  img {
+    flex-shrink: 0;
+    height: 18px;
+  }
+}
+
+.social-media-container.invert {
+  a,
+  img {
+    filter: invert(1);
+  }
+}

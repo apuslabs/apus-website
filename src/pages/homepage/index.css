@@ -59,28 +59,6 @@
   @apply w-60 md:w-[316px] h-12 leading-[48px] text-gray21;
 }
 
-.social-media-container {
-  @apply flex items-center gap-5;
-  a,
-  img {
-    height: 28px;
-  }
-}
-
-.social-media-container.small {
-  a,
-  img {
-    height: 18px;
-  }
-}
-
-.social-media-container.invert {
-  a,
-  img {
-    filter: invert(1);
-  }
-}
-
 img.invert {
   filter: invert(1);
 }
