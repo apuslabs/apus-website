@@ -99,7 +99,7 @@ const features = [
     title: "100% Community Launch",
     description:
       "$APUS, with a fixed 1 billion supply and deflationary mechanisms, ensures long-term value through fair, decentralized distribution with no pre-allocation for the team or early investors.",
-    link: "https://3csodbzc3eweix6qkukrbfzr42v3stx7rh6xpg5vlkebap4p6eza.arweave.net/2KThhyLZLERf0FUVEJcx5qu5Tv-J_XebtVqIED-P8TI",
+    link: "https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s",
   },
   {
     icon: ImgHomepage.Feature3,
