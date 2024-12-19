@@ -59,13 +59,16 @@ export default function Recipient({
                 await submitRecipient();
                 setRecipientVisible(false);
                 notification.success({ message: "Recipient Updated Successfully", placement: "bottom" });
-              } catch {
-                notification.error({
-                  message: "Unable to connect to AO Token Process",
-                  description: "Recipient will be available when network issues are solved, please try again later.",
-                  duration: 0,
-                  placement: "bottom",
-                });
+              } catch (e: unknown) {
+                if (e instanceof Error) {
+                  notification.error({
+                    message: e.message,
+                    duration: 0,
+                    placement: "bottom",
+                  });
+                } else {
+                  notification.error({ message: "Failed to Update Recipient", duration: 0, placement: "bottom" });
+                }
               }
             }}
           >

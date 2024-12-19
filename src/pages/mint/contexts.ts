@@ -188,8 +188,13 @@ export function useAOMint({
       a.Amount = a.Amount.sub(reduced);
     }
     const newAllocations = [...otherAllocation, { Recipient: APUS_ADDRESS.Recipient, Amount: apus.add(amount) }];
-    await updateAllocation(newAllocations);
-    refreshAfterAllocation();
+    try {
+      await updateAllocation(newAllocations);
+    } catch {
+      throw new Error("Unable to connect to AO Process, please try again later.");
+    } finally {
+      refreshAfterAllocation();
+    }
   };
 
   const decreaseApusAllocation = async (amount: BigNumber, recipient: string) => {
@@ -212,8 +217,13 @@ export function useAOMint({
       recipientAllocation,
       { Recipient: APUS_ADDRESS.Recipient, Amount: apus.sub(amount) },
     ];
-    await updateAllocation(newAllocations);
-    refreshAfterAllocation();
+    try {
+      await updateAllocation(newAllocations);
+    } catch {
+      throw new Error("Unable to connect to AO Process, please try again later.");
+    } finally {
+      refreshAfterAllocation();
+    }
   };
 
   const apusStETH = getApusAllocation(stETHAllocationResult);
@@ -320,9 +330,14 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     if (arweaveAddress.length !== 43) {
       throw new Error("Invalid Arweave Address");
     }
-    await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
-    await getRecipient({ User: ethers.utils.getAddress(wallet) });
-    setRecipientVisible(true);
+    try {
+      await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
+    } catch {
+      throw new Error("Unable to connect to AO Process, please try again later.");
+    } finally {
+      getRecipient({ User: ethers.utils.getAddress(wallet) });
+      setRecipientVisible(false);
+    }
   }, [arweaveAddress, getRecipient, updateRecipientMsg, wallet]);
 
   return {
@@ -355,7 +370,6 @@ export function useSignatureModal() {
         } else {
           setTitle(t);
           setModalOpen(true);
-          setTitle(t);
 
           const tipInterval = setInterval(() => {
             if (!modalOpenRef.current) {

@@ -28,7 +28,7 @@ const appMetadata = {
   recommendedInjectedWallets: [{ name: "MetaMask", url: "https://metamask.io" }],
 };
 
-init({
+const onboard = init({
   wallets: [injected, trezor, walletConnect, torus, safe],
   chains: [
     {
@@ -43,3 +43,7 @@ init({
     autoConnectLastWallet: true,
   },
 });
+
+setInterval(() => {
+  console.log(onboard.state.get().wallets.length);
+}, 10000);
