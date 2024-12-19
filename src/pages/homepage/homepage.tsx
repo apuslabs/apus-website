@@ -226,7 +226,7 @@ function SectionTech() {
       <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
         Technology
       </div>
-      <TwitterVideo className="md:mb-4" videoID="m-TPFEfegM0?si=kqr5eAJVI5VA0Nqf" />
+      <TwitterVideo className="md:mb-4" videoID="2ympIENaQYQ?si=JVN0KMTmDxVBVyAU" />
       <div className="m-2 md:m-0 md:mb-5 px-5 md:px-0 text-gray21 text-[10px] md:text-[26px] leading-none">
         Tokenomics
       </div>
