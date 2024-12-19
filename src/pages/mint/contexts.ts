@@ -279,6 +279,7 @@ export function useAOMint({
     loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
+    refreshAfterAllocation,
     apusStETH,
     apusDAI,
     apusToken: tokenType === "stETH" ? apusStETH : apusDAI,

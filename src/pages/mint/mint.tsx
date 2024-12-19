@@ -285,6 +285,7 @@ export default function Mint() {
     loadingUpdateAllocation,
     increaseApusAllocation,
     decreaseApusAllocation,
+    refreshAfterAllocation,
   } = useAOMint({
     wallet: walletAddress,
     MintProcess,
@@ -340,6 +341,8 @@ export default function Mint() {
             duration: 0,
             placement: "bottom",
           });
+          refreshAfterAllocation();
+          setAmount("0");
         } else {
           notification.error({ message: e.message, duration: 0, placement: "bottom" });
         }
