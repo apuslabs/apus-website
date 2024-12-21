@@ -310,12 +310,19 @@ export default function Mint() {
     showSigTip,
     closeAndNotAskAgain,
   } = useSignatureModal();
-  const [tab, setTab] = useState<"increase" | "decrease">("increase");
+  const [tab, setTab] = useState<"allocate" | "remove">("allocate");
   const [amount, setAmount] = useState<string>("");
   const bigAmount = ethers.utils.parseUnits(amount || "0", 18);
   const estimatedApus = bigAmount.mul(biTokenEstimatedApus).div(BigNumber.from(10).pow(18));
 
-  const canApprove = amount !== "" && amount !== "0" && dayjs().isAfter(PRE_TGE_TIME);
+  const isAmountValid = amount !== "" && amount !== "0";
+  const isBeforePRETGE = dayjs().isBefore(PRE_TGE_TIME);
+  const canApprove = isAmountValid && !isBeforePRETGE;
+  const cannotApproveTip = isBeforePRETGE
+    ? `Pre TGE starts in ${dayjs().to(PRE_TGE_TIME)}`
+    : !isAmountValid
+      ? "Please Select Amount"
+      : "";
 
   const approve = async () => {
     if (!canApprove) {
@@ -326,7 +333,7 @@ export default function Mint() {
       return;
     }
     try {
-      if (tab === "increase") {
+      if (tab === "allocate") {
         await showSigTip("Notice");
         await increaseApusAllocation(bigAmount);
       } else {
@@ -335,7 +342,7 @@ export default function Mint() {
         await decreaseApusAllocation(bigAmount, removeRecipient);
       }
       setAmount("");
-      toast.success(`${tab === "increase" ? "Allocate" : "Remove"} Successful`);
+      toast.success(`${tab === "allocate" ? "Allocate" : "Remove"} Successful`);
     } catch (e: unknown) {
       console.log(e);
       if (e instanceof Error) {
@@ -343,13 +350,13 @@ export default function Mint() {
         refreshAfterAllocation();
         setAmount("");
       } else {
-        toast.error(`${tab === "increase" ? "Allocate" : "Remove"} Failed, Please Try Again.`, { autoClose: false });
+        toast.error(`${tab === "allocate" ? "Allocate" : "Remove"} Failed, Please Try Again.`, { autoClose: false });
       }
     }
   };
 
   const switchTab = (key: string) => {
-    setTab(key as "increase" | "decrease");
+    setTab(key as "allocate" | "remove");
     setAmount("");
   };
 
@@ -366,6 +373,16 @@ export default function Mint() {
     setAddress: setRemoveRecipientAddress,
     getRemoveRecipient,
   } = useRemoveRecipientModal({ recipient });
+
+  const AllocateButton = (btnName: string) => (
+    <Tooltip title={cannotApproveTip} color="#f85931" placement="bottom">
+      <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
+        <div className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`} onClick={approve}>
+          {!recipient ? "Submit Recipient Address" : btnName}
+        </div>
+      </Spin>
+    </Tooltip>
+  );
 
   return (
     <>
@@ -493,7 +510,7 @@ export default function Mint() {
             onChange={switchTab}
             items={[
               {
-                key: "increase",
+                key: "allocate",
                 label: "Allocate",
                 children: (
                   <div
@@ -547,20 +564,13 @@ export default function Mint() {
                         APUS
                       </div>
                     )}
-                    <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
-                      <div
-                        className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
-                        onClick={approve}
-                      >
-                        {!recipient ? "Submit Recipient Address" : "Add Allocation"}
-                      </div>
-                    </Spin>
+                    {AllocateButton("Allocate")}
                     <SigTips />
                   </div>
                 ),
               },
               {
-                key: "decrease",
+                key: "remove",
                 label: "Remove",
                 children: (
                   <div
@@ -583,14 +593,7 @@ export default function Mint() {
                       tokenType={tokenType}
                       setTokenType={switchToken}
                     />
-                    <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
-                      <div
-                        className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`}
-                        onClick={approve}
-                      >
-                        {!recipient ? "Submit Recipient Address" : "Remove Allocation"}
-                      </div>
-                    </Spin>
+                    {AllocateButton("Remove Allocation")}
                     <SigTips />
                   </div>
                 ),

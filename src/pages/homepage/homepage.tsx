@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { SocialMediaList } from "../../components/SocialMediaList";
 import { useBreakpoint, useCountDate } from "../../utils/react-use";
 import { TGE_TIME } from "../../utils/config";
+import dayjs from "dayjs";
 
 function TwitterVideo({ className, videoID }: { className: string; videoID: string }) {
   return (
@@ -42,38 +43,44 @@ function Email() {
 
 function SectionHero() {
   const { day, hour, minute, second } = useCountDate(TGE_TIME);
+  const isBeforeTGE = dayjs().isBefore(TGE_TIME);
   return (
     <div className="section section-hero">
       <div className="launchbox-container">
-        <div className="launchbox-title">Launch in ...</div>
-        <div className="launchbox-countdown-container">
-          {[
-            {
-              value: day,
-              label: "DAYS",
-            },
-            {
-              value: hour,
-              label: "HOURS",
-            },
-            {
-              value: minute,
-              label: "MINUTES",
-            },
-            {
-              value: second,
-              label: "SECONDS",
-            },
-          ].map(({ value, label }, idx) => (
-            <React.Fragment key={label}>
-              {idx !== 0 && <div className="launchbox-countdown-divider">:</div>}
-              <div className="launchbox-countdown-item">
-                <div className="launchbox-countdown-item-value">{value}</div>
-                <div className="launchbox-countdown-item-label">{label}</div>
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
+        <div className="launchbox-title">{isBeforeTGE ? "Launch in ..." : "APUS Minting Live."}</div>
+        {isBeforeTGE ? (
+          <div className="launchbox-countdown-container">
+            {[
+              {
+                value: day,
+                label: "DAYS",
+              },
+              {
+                value: hour,
+                label: "HOURS",
+              },
+              {
+                value: minute,
+                label: "MINUTES",
+              },
+              {
+                value: second,
+                label: "SECONDS",
+              },
+            ].map(({ value, label }, idx) => (
+              <React.Fragment key={label}>
+                {idx !== 0 && <div className="launchbox-countdown-divider">:</div>}
+                <div className="launchbox-countdown-item">
+                  <div className="launchbox-countdown-item-value">{value}</div>
+                  <div className="launchbox-countdown-item-label">{label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+        ) : null}
+        <Link to="/mint">
+          <div className="btn-primary btn-outline">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
+        </Link>
       </div>
       <div className="hero-container">
         <img src={ApusLogo} className="hero-logo" />
@@ -120,7 +127,7 @@ function SectionFeatures() {
       </div>
       <ul className="section-features-list">
         {features.map(({ icon, title, description, link }) => (
-          <li className="section-features-item">
+          <li className="section-features-item" key={title}>
             <img src={icon} className="section-features-item-icon" />
             <div className="section-features-item-title">{title}</div>
             <div className="section-features-item-description">{description}</div>
@@ -286,7 +293,7 @@ function SectionPartners() {
       <div className="section-title mb-10">Partners</div>
       <div className="section-partner-list">
         {partners.map(({ Logo, height }) => (
-          <img src={Logo} style={{ height: height * (isTablet ? 0.73 : 1) }} />
+          <img key={Logo} src={Logo} style={{ height: height * (isTablet ? 0.73 : 1) }} />
         ))}
       </div>
       <div className="section-divider"></div>
