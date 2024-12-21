@@ -107,12 +107,12 @@ export function useAOMint({
   //   execute: getUserEstimatedApus,
   // } = useAO<string>(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
   const {
-    data: stETHEstimatedApus,
+    data: stETHEstimatedApusLittle,
     loading: loadingStETHEstimatedApus,
     execute: getStETHEstimatedApus,
   } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
   const {
-    data: daiEstimatedApus,
+    data: daiEstimatedApusLittle,
     loading: loadingDaiEstimatedApus,
     execute: getDaiEstimatedApus,
   } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
@@ -147,18 +147,18 @@ export function useAOMint({
   // get estimated apus && refresh every 5 minutes if number is zero
   useEffect(() => {
     if (wallet) {
-      getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
-      getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
+      getStETHEstimatedApus({ Amount: (1e15).toString(), Token: "stETH" }, dayjs().unix());
+      getDaiEstimatedApus({ Amount: (1e15).toString(), Token: "DAI" }, dayjs().unix());
     }
     // refresh estimated apus every 5 minutes if number is zero
     const interval = setInterval(
       () => {
         if (wallet) {
-          if (stETHEstimatedApus === "0") {
+          if (stETHEstimatedApusLittle === "0") {
             console.log("getStETHEstimatedApus");
             getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
           }
-          if (daiEstimatedApus === "0") {
+          if (daiEstimatedApusLittle === "0") {
             console.log("getDaiEstimatedApus");
             getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
           }
@@ -167,7 +167,7 @@ export function useAOMint({
       5 * 60 * 1000,
     );
     return () => clearInterval(interval);
-  }, [getStETHEstimatedApus, getDaiEstimatedApus, wallet, stETHEstimatedApus, daiEstimatedApus]);
+  }, [getStETHEstimatedApus, getDaiEstimatedApus, wallet, stETHEstimatedApusLittle, daiEstimatedApusLittle]);
 
   const initingAllocation = useRef(true);
   useEffect(() => {
@@ -281,12 +281,12 @@ export function useAOMint({
   } = useMemo(
     () =>
       getEstimatedApus(
-        BigNumber.from(stETHEstimatedApus || 0),
-        BigNumber.from(daiEstimatedApus || 0),
+        BigNumber.from(stETHEstimatedApusLittle || 0).mul(1e3),
+        BigNumber.from(daiEstimatedApusLittle || 0).mul(1e3),
         apusStETH,
         apusDAI,
       ),
-    [stETHEstimatedApus, daiEstimatedApus, apusStETH, apusDAI],
+    [stETHEstimatedApusLittle, daiEstimatedApusLittle, apusStETH, apusDAI],
   );
   const loadingUserEstimatedApus =
     loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
@@ -319,8 +319,14 @@ export function useAOMint({
     return () => clearInterval(interval);
   }, [apus, userEstimatedApus, loadingApus, loadingUserEstimatedApus]);
 
-  const biStETHEstimatedApus = useMemo(() => BigNumber.from(stETHEstimatedApus || 0), [stETHEstimatedApus]);
-  const biDaiEstimatedApus = useMemo(() => BigNumber.from(daiEstimatedApus || 0), [daiEstimatedApus]);
+  const biStETHEstimatedApus = useMemo(
+    () => BigNumber.from(stETHEstimatedApusLittle || 0).mul(1e3),
+    [stETHEstimatedApusLittle],
+  );
+  const biDaiEstimatedApus = useMemo(
+    () => BigNumber.from(daiEstimatedApusLittle || 0).mul(1e3),
+    [daiEstimatedApusLittle],
+  );
   const biTokenEstimatedApus = useMemo(
     () => (tokenType === "stETH" ? biStETHEstimatedApus : biDaiEstimatedApus),
     [tokenType, biStETHEstimatedApus, biDaiEstimatedApus],
