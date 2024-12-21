@@ -5,6 +5,8 @@ import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { getDataFromMessage, useAO, useEthMessage } from "../../utils/ao";
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { useLocalStorage } from "react-use";
+import { toast } from "react-toastify";
+import { formatBigNumber } from "./utils";
 
 interface AllocationItem {
   Recipient: string;
@@ -75,6 +77,18 @@ function getEstimatedApus(
   };
 }
 
+function useToastAllocationUpdate(isIniting: boolean, tokenType: TokenType, allocation: BigNumber) {
+  const lastAllocation = useRef(allocation);
+  useEffect(() => {
+    if (!allocation.isZero() && !lastAllocation.current.eq(allocation)) {
+      lastAllocation.current = allocation;
+      if (!isIniting) {
+        toast.info(tokenType + " allocated to APUS has been updated to " + formatBigNumber(allocation, 18, 4));
+      }
+    }
+  }, [allocation, tokenType, isIniting]);
+}
+
 export function useAOMint({
   wallet,
   MintProcess,
@@ -113,6 +127,7 @@ export function useAOMint({
     execute: getDaiAllocation,
   } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
 
+  // get apus && refresh apus every 5 minutes
   useEffect(() => {
     if (wallet) {
       getApus({ Recipient: ethers.utils.getAddress(wallet) });
@@ -129,14 +144,44 @@ export function useAOMint({
     return () => clearInterval(interval);
   }, [wallet, getApus]);
 
+  // get estimated apus && refresh every 5 minutes if number is zero
   useEffect(() => {
     if (wallet) {
-      getStETHAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "stETH" });
-      getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
       getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
       getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
     }
-  }, [getApus, getDaiAllocation, getDaiEstimatedApus, getStETHAllocation, getStETHEstimatedApus, wallet]);
+    // refresh estimated apus every 5 minutes if number is zero
+    const interval = setInterval(
+      () => {
+        if (wallet) {
+          if (stETHEstimatedApus === "0") {
+            console.log("getStETHEstimatedApus");
+            getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
+          }
+          if (daiEstimatedApus === "0") {
+            console.log("getDaiEstimatedApus");
+            getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
+          }
+        }
+      },
+      5 * 60 * 1000,
+    );
+    return () => clearInterval(interval);
+  }, [getStETHEstimatedApus, getDaiEstimatedApus, wallet, stETHEstimatedApus, daiEstimatedApus]);
+
+  const initingAllocation = useRef(true);
+  useEffect(() => {
+    if (wallet) {
+      const fetchStETHAllocationPromise = getStETHAllocation({
+        Owner: ethers.utils.getAddress(wallet),
+        Token: "stETH",
+      });
+      const fetchDaiAllocationPromise = getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      Promise.all([fetchStETHAllocationPromise, fetchDaiAllocationPromise]).then(() => {
+        initingAllocation.current = false;
+      });
+    }
+  }, [getDaiAllocation, getStETHAllocation, wallet]);
 
   const { loading: loadingUpdateAllocation, execute: updateAllocationMsg } = useEthMessage(
     AO_MINT_PROCESS,
@@ -245,6 +290,10 @@ export function useAOMint({
   );
   const loadingUserEstimatedApus =
     loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
+
+  // listen on token for apus change
+  useToastAllocationUpdate(initingAllocation.current, "stETH", apusStETH);
+  useToastAllocationUpdate(initingAllocation.current, "DAI", apusDAI);
 
   // animate apus balance change
   useEffect(() => {

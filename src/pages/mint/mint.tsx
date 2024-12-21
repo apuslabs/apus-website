@@ -397,10 +397,7 @@ export default function Mint() {
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
-            <div className="text-gray90">
-              Your APUS
-              <InfoCircleOutlined className="pl-1" />
-            </div>
+            <div className="text-gray90">Your APUS</div>
             <div className="font-medium text-gray21 text-[30px] leading-none">
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
                 <div className="flex items-end justify-center">
@@ -493,9 +490,14 @@ export default function Mint() {
                 </li>
               </ol>
             </div>
-            <div className="w-full text-right underline underline-offset-2 text-gray21 font-medium cursor-pointer">
-              Learn More
-            </div>
+            <Link
+              to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72/CzMaS-eHBqfinh5HzrNle12-5UvO54Glj3NlEnX1mmY"
+              target="_blank"
+            >
+              <div className="w-full text-right underline underline-offset-2 text-gray21 font-medium cursor-pointer">
+                Learn More
+              </div>
+            </Link>
           </div>
         </div>
         <div className="card flex-col items-center p-12">
@@ -578,7 +580,7 @@ export default function Mint() {
               text-gray21"
                   >
                     <div className="w-full text-right flex">
-                      <span className="font-bold text-[#091dff]">
+                      <span className="font-bold text-[#091dff] mr-1">
                         <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
                           {`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         </LoadingNumber>
