@@ -46,6 +46,7 @@ import LogoWeb3amsterdam from "./homepage/logo_web3amsterdam.svg";
 import LogoCredible from "./homepage/logo_credible.svg";
 import LogoGlobalstake from "./homepage/logo_globalstake.svg";
 import LogoPrimus from "./homepage/logo_primus.svg";
+import IconMiner from "./homepage/icon_miner.svg";
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -73,6 +74,7 @@ export const ImgHomepage = {
   LogoCredible,
   LogoGlobalstake,
   LogoPrimus,
+  IconMiner,
 };
 
 import LogoHorizonalSimple from "./competition/logo_horizonal_simple.png";

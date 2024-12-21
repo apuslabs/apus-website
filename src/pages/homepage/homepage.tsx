@@ -47,7 +47,10 @@ function SectionHero() {
   return (
     <div className="section section-hero">
       <div className="launchbox-container">
-        <div className="launchbox-title">{isBeforeTGE ? "Launch in ..." : "APUS Minting Live."}</div>
+        {isBeforeTGE ? null : <img src={ImgHomepage.IconMiner} className="w-[46px] h-[46px] md:w-[62px] md:h-[62px]" />}
+        <div className={`launchbox-title ${isBeforeTGE ? "text-[22px]" : "md:text-[35px]"}`}>
+          {isBeforeTGE ? "Launch in ..." : "APUS Minting Live."}
+        </div>
         {isBeforeTGE ? (
           <div className="launchbox-countdown-container">
             {[
@@ -79,7 +82,7 @@ function SectionHero() {
           </div>
         ) : null}
         <Link to="/mint">
-          <div className="btn-primary mt-5">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
+          <div className="btn-primary md:mt-5">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
         </Link>
       </div>
       <div className="hero-container">

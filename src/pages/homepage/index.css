@@ -15,7 +15,7 @@
 }
 
 .launchbox-title {
-  @apply font-semibold text-[22px] md:text-2xl;
+  @apply font-semibold md:text-2xl;
 }
 
 .launchbox-countdown-container {
