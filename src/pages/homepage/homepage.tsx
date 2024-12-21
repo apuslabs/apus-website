@@ -79,7 +79,7 @@ function SectionHero() {
           </div>
         ) : null}
         <Link to="/mint">
-          <div className="btn-primary btn-outline">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
+          <div className="btn-primary mt-5">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
         </Link>
       </div>
       <div className="hero-container">
