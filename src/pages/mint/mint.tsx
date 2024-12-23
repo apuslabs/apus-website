@@ -17,7 +17,7 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 import { useConnectWallet } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
-import { APUS_ADDRESS, PRE_TGE_TIME } from "../../utils/config";
+import { APUS_ADDRESS, PRE_TGE_TIME, TGE_TIME } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import Recipient from "./recipient";
 
@@ -339,6 +339,7 @@ export default function Mint() {
 
   const isAmountValid = amount !== "" && amount !== "0";
   const isBeforePRETGE = dayjs().isBefore(PRE_TGE_TIME);
+  const isBeforeTGE = dayjs().isBefore(TGE_TIME);
   const canApprove = isAmountValid && !isBeforePRETGE;
   const cannotApproveTip = isBeforePRETGE
     ? `Pre TGE starts in ${dayjs().to(PRE_TGE_TIME)}`
@@ -543,7 +544,7 @@ export default function Mint() {
                         value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         label="Allocated"
                         loading={loadingTokenAllocation}
-                        prefix={<MintIcon isBlack={apusToken.isZero()} />}
+                        prefix={<MintIcon isBlack={apusToken.isZero() || isBeforeTGE} />}
                       />
                       <MintInfo
                         className="items-end"
