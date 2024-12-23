@@ -625,7 +625,7 @@ export default function Mint() {
                         value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         label="Allocated"
                         loading={loadingTokenAllocation}
-                        prefix={<MintIcon isBlack={apusToken.isZero()} />}
+                        prefix={<MintIcon isBlack={apusToken.isZero() || isBeforeTGE} />}
                       />
                     </div>
                     <TokenSlider
