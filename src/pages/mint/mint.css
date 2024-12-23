@@ -3,6 +3,11 @@
         border border-solid border-grayd8 rounded-2xl;
 }
 
+.card-recipient {
+  @apply max-w-[30rem] mx-auto mt-12 flex
+        border border-solid border-grayd8 rounded-2xl;
+}
+
 .card-caption {
   @apply font-semibold text-gray90;
 }
@@ -71,6 +76,7 @@
 
 #mint .ant-slider .ant-slider-track {
   background-color: #091dff;
+  border-radius: 5px;
 }
 
 #mint .ant-slider .ant-slider-rail {
@@ -78,8 +84,9 @@
 }
 
 #mint .ant-slider-horizontal .ant-slider-rail {
-  height: 1px;
-  top: 16px;
+  height: 10px;
+  top: 11px;
+  border-radius: 5px;
 }
 
 #mint .ant-slider-horizontal {

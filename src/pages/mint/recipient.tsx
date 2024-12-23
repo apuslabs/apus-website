@@ -20,21 +20,21 @@ export default function Recipient({
 } & ReturnType<typeof useRecipientModal>) {
   return (
     <div
-      className="fixed top-[100px] left-0 right-0 bottom-0 z-50 bg-white"
+      className="fixed top-[100px] left-0 right-0 bottom-0 z-50 bg-white overflow-y-auto"
       style={{
-        display: recipientVisible ? "flex" : "none",
+        display: recipientVisible ? "block" : "none",
         minHeight: "calc(100vh - 100px)",
       }}
     >
-      <div className="card my-5 py-[30px] px-[46px] flex-col items-center">
+      <div className="card-recipient my-5 py-[30px] px-[46px] flex-col items-center">
         <div className="w-full -mt-[20px] flex gap-5 mb-5">
           <div className="btn-primary btn-outline" onClick={() => setRecipientVisible(false)}>
             <ArrowLeftOutlined className="mr-2" />
             Back to Mint
           </div>
         </div>
-        <div className="mb-10 text-gray21 text-3xl text-center">RECEIVE APUS ADDRESS</div>
-        <img src={ImgMint.IconRecipient} className="w-[200px]" />
+        <div className="mb-5 text-gray21 text-3xl text-center">RECEIVE APUS ADDRESS</div>
+        <img src={ImgMint.IconRecipient} className="w-[160px]" />
         <div className="w-full text-gray21 mb-2">Selected Arweave Address:</div>
         <div className="w-full text-[#091dff] font-semibold mb-5">{recipient || ""}</div>
         <Input

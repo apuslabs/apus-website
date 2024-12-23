@@ -2,7 +2,7 @@ import { Divider, Input, Modal, Select, Slider, Spin, Tabs, Tooltip } from "antd
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "./mint.css";
 import { ImgMint } from "../../assets";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { useAOMint, useRecipientModal, useSignatureModal } from "./contexts";
 import { BigNumber, ethers } from "ethers";
 import { InfoCircleOutlined, LoadingOutlined } from "@ant-design/icons";
@@ -23,14 +23,12 @@ import Recipient from "./recipient";
 
 function TokenSlider({
   totalAmount,
-  tab,
   amount,
   setAmount,
   tokenType,
   setTokenType,
 }: {
   totalAmount: BigNumber;
-  tab: "increase" | "decrease";
   amount: string;
   setAmount: (v: string) => void;
   tokenType?: "stETH" | "DAI";
@@ -48,7 +46,7 @@ function TokenSlider({
       <div className="w-full flex gap-5">
         <Select
           size="large"
-          className="w-[9rem] font-medium text-sm"
+          className="w-[128px] flex-shrink-0 font-medium text-sm"
           value={tokenType}
           placeholder={"Select Token"}
           onChange={(v) => {
@@ -94,55 +92,40 @@ function TokenSlider({
           }}
         />
       </div>
-      {tab === "increase" ? (
-        <div className="w-full text-right">
-          <Link to="https://ao.arweave.dev/#/mint" className="mr-2 text-blue underline">
-            Bridge To AO
-          </Link>
-          <Tooltip
-            title="Since APUS is built on the AO network, you must first bridge assets to AO before allocating to APUS. The stETH available for allocation includes all your bridged assets, including and any allocations to other projects."
-            arrow={false}
-            overlayInnerStyle={{
-              backgroundColor: "white",
-              color: "#0b0b0b",
-              padding: "1rem",
-              width: "30rem",
-            }}
-          >
-            <InfoCircleOutlined className="pl-1" />
-          </Tooltip>
-        </div>
-      ) : null}
-      <Slider
-        className="w-full max-w-[31rem]"
-        disabled={tokenType === undefined || totalAmount.isZero()}
-        marks={{ 0: "0%", 100: "100%" }}
-        min={0}
-        max={100}
-        step={1}
-        value={percent}
-        onChange={(v) => {
-          setPercent(v);
-          setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
-        }}
-      />
-      <div className="w-full max-w-[31rem] text-right -mt-5 -mr-8">
-        <span className="font-bold text-[#091dff]">
-          {amount || "0"} {tokenType} ({percent}%)
-        </span>{" "}
-        Will Be Allocated
-        {tab == "increase" ? <br /> : " "}
-        To Mint {tab === "increase" ? "APUS" : "AO"}
+      <div className="w-full pl-[148px] pr-2 -my-3">
+        <Slider
+          className="w-full"
+          disabled={tokenType === undefined || totalAmount.isZero()}
+          marks={{ 0: "0%", 100: "100%" }}
+          min={0}
+          max={100}
+          step={1}
+          value={percent}
+          onChange={(v) => {
+            setPercent(v);
+            setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
+          }}
+        />
       </div>
     </>
   );
 }
 
-function LoadingNumber({ hide, loading, children }: { hide?: boolean; loading: boolean; children?: React.ReactNode }) {
+function LoadingNumber({
+  className,
+  loading,
+  children,
+}: {
+  className?: string;
+  loading: boolean;
+  children?: React.ReactNode;
+}) {
   return (
-    <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loading}>
-      {hide || loading ? `--` : children}
-    </Spin>
+    <div className={`${className ? className : ""} flex items-center`}>
+      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loading}>
+        {loading ? `--` : children}
+      </Spin>
+    </div>
   );
 }
 
@@ -265,6 +248,45 @@ function RemoveRecipientModal({
         </div>
       </div>
     </Modal>
+  );
+}
+
+const MintIcon = ({ isBlack }: { isBlack: boolean }) => (
+  <img
+    className={`w-[35px] h-[35px] ${isBlack ? "" : "animate-spin"}`}
+    style={{
+      animationDuration: "5s",
+    }}
+    src={isBlack ? ImgMint.IconMint : ImgMint.IconMinting}
+  />
+);
+
+function MintInfo({
+  value,
+  label,
+  loading,
+  prefix,
+  suffix,
+  className,
+}: {
+  value: string;
+  label: string;
+  loading: boolean;
+  prefix?: ReactNode;
+  suffix?: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className="flex gap-1 items-center">
+      {prefix}
+      <div className={`flex flex-col justify-end leading-none ${className}`}>
+        <LoadingNumber loading={loading} className="h-[28px]">
+          <span className="font-bold text-xl text-[#091dff]">{value}</span>
+        </LoadingNumber>
+        <span>{label}</span>
+      </div>
+      {suffix}
+    </div>
   );
 }
 
@@ -418,10 +440,10 @@ export default function Mint() {
             </div>
             <Divider orientation="center" className="m-0" />
             <div className="text-gray90">30 Day Projection</div>
-            <div className="flex items-center font-medium text-gray21 text-[30px] leading-none">
-              <span className="text-[#03C407] font-normal mr-2 text-[40px]">+</span>
+            <div className="flex gap-2 items-center leading-none">
+              <span className="text-[#03C407] text-[40px] -mt-[6px]">+</span>
               <LoadingNumber loading={loadingUserEstimatedApus}>
-                {formatBigNumber(userEstimatedApus, 12, 4)}
+                <span className="font-medium text-gray21 text-[30px]">{formatBigNumber(userEstimatedApus, 12, 4)}</span>
               </LoadingNumber>
             </div>
             <table className="table-assets">
@@ -515,43 +537,61 @@ export default function Mint() {
                 key: "allocate",
                 label: "Allocate",
                 children: (
-                  <div
-                    className="w-full mx-auto p-5 flex flex-col gap-5 items-center
-                  text-gray21"
-                  >
-                    <div className="w-full flex justify-between">
-                      <div className="flex">
-                        <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
-                            {`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
-                          </LoadingNumber>
-                        </span>
-                        Allocated
-                      </div>
-                      <div className="text-right flex">
-                        <span className="font-bold text-[#091dff] mr-1">
-                          <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
-                            {`${formatBigNumber(otherToken, 18, 4)} ${tokenType}`}
-                          </LoadingNumber>
-                        </span>{" "}
-                        Available To Mint APUS
-                      </div>
+                  <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
+                    <div className="w-full pl-[148px] flex justify-between items-end">
+                      <MintInfo
+                        value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
+                        label="Allocated"
+                        loading={loadingTokenAllocation}
+                        prefix={<MintIcon isBlack={apusToken.isZero()} />}
+                      />
+                      <MintInfo
+                        className="items-end"
+                        value={`${formatBigNumber(otherToken, 18, 4)} ${tokenType}`}
+                        label="Available To Mint APUS"
+                        loading={loadingTokenAllocation}
+                        suffix={
+                          <Tooltip
+                            title={
+                              <div>
+                                Since APUS is built on the AO network, you must first
+                                <Link to="https://ao.arweave.dev/#/mint" className="mx-1 text-blue underline">
+                                  Bridge To AO
+                                </Link>
+                                before allocating to APUS. The {tokenType} available for allocation includes all your
+                                bridged assets, including and any allocations to other projects.
+                              </div>
+                            }
+                            placement="topRight"
+                            arrow={false}
+                            overlayInnerStyle={{
+                              backgroundColor: "white",
+                              color: "#0b0b0b",
+                              padding: "1rem",
+                              width: "26rem",
+                            }}
+                          >
+                            <InfoCircleOutlined className="pl-1" />
+                          </Tooltip>
+                        }
+                      />
                     </div>
                     <TokenSlider
                       totalAmount={otherToken}
-                      tab="increase"
                       amount={amount}
                       setAmount={setAmount}
                       tokenType={tokenType}
                       setTokenType={switchToken}
                     />
-                    <Divider className="min-w-0 w-[21rem] my-5 border-grayd8" />
                     <div>Next 30 Days Receivable APUS Projection</div>
                     <div className="flex items-center gap-5">
                       <img src={ImgMint.ChevronRight} />
                       <LoadingNumber loading={loadingTokenEstimatedApus}>
-                        <div className="text-[40px] font-medium text-gray21 leading-none">
-                          <span className="text-[#03c407]">+</span> {formatBigNumber(estimatedApus, 12, 4)}
+                        <div className="flex items-center gap-2 leading-none">
+                          <span className="text-[#03c407] text-[50px] -mt-[8px]">+</span>
+                          <span className="text-[40px] font-medium text-gray21">
+                            {formatBigNumber(estimatedApus, 12, 4)}
+                          </span>
                         </div>
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
@@ -560,7 +600,7 @@ export default function Mint() {
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
-                        <LoadingNumber hide={tokenType === undefined} loading={loadingTokenEstimatedApus}>
+                        <LoadingNumber loading={loadingTokenEstimatedApus}>
                           <span className="font-bold mx-1">{formatBigNumber(biTokenEstimatedApus, 12, 4)}</span>
                         </LoadingNumber>
                         APUS
@@ -579,17 +619,16 @@ export default function Mint() {
                     className="w-full mx-auto p-5 flex flex-col gap-5 items-center
               text-gray21"
                   >
-                    <div className="w-full text-right flex">
-                      <span className="font-bold text-[#091dff] mr-1">
-                        <LoadingNumber hide={tokenType === undefined} loading={loadingTokenAllocation}>
-                          {`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
-                        </LoadingNumber>
-                      </span>{" "}
-                      Allocated
+                    <div className="w-full pl-[148px]">
+                      <MintInfo
+                        value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
+                        label="Allocated"
+                        loading={loadingTokenAllocation}
+                        prefix={<MintIcon isBlack={apusToken.isZero()} />}
+                      />
                     </div>
                     <TokenSlider
                       totalAmount={apusToken}
-                      tab="decrease"
                       amount={amount}
                       setAmount={setAmount}
                       tokenType={tokenType}
