@@ -20,7 +20,7 @@ import { formatBigNumber, splitBigNumber } from "./utils";
 import { APUS_ADDRESS, PRE_TGE_TIME, TGE_TIME } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import Recipient from "./recipient";
-import axios from "axios";
+const Config = () => import("./config");
 
 function TokenSlider({
   totalAmount,
@@ -293,23 +293,20 @@ function MintInfo({
 
 export default function Mint() {
   useEffect(() => {
-    axios
-      .get("/config.json")
-      .then((res) => res.data)
-      .then((res) => {
-        if (res?.showAONetworkIssuePop) {
-          toast.error(
-            "The AO network is experiencing severe congestion, and asset allocation is temporarily unavailable.",
-            {
-              autoClose: false,
-              position: "top-center",
-              style: {
-                width: "28rem",
-              },
+    Config().then((res) => {
+      if (res.default.showAONetworkIssuePop) {
+        toast.error(
+          "The AO network is experiencing severe congestion, and asset allocation is temporarily unavailable.",
+          {
+            autoClose: false,
+            position: "top-center",
+            style: {
+              width: "28rem",
             },
-          );
-        }
-      });
+          },
+        );
+      }
+    });
   }, []);
   const [{ wallet }] = useConnectWallet();
   const walletAddress = wallet?.accounts?.[0]?.address;
