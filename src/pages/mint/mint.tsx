@@ -296,7 +296,7 @@ export default function Mint() {
     Config().then((res) => {
       if (res.default.showAONetworkIssuePop) {
         toast.error(
-          "The AO network is experiencing severe congestion, and asset allocation is temporarily unavailable.",
+          "The AO network is experiencing severe congestion, and asset allocation is temporarily unavailable. Assets display abnormally. Please try again later!",
           {
             autoClose: false,
             position: "top-center",
