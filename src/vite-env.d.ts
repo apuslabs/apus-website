@@ -14,4 +14,6 @@ declare interface Window {
   setApusContract: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setMirrorContract: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  gtag: any;
 }

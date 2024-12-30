@@ -4,6 +4,15 @@ import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { DryRunResult, MessageInput } from "@permaweb/aoconnect/dist/lib/dryrun";
 import { sendEthMessage } from "./ethHelpers";
 import { useConnectWallet } from "@web3-onboard/react";
+import dayjs from "dayjs";
+
+function sendEventToGA(category: string, action: string, label: string, value: string) {
+  window.gtag("event", action, {
+    event_category: category,
+    event_label: label,
+    value: value,
+  });
+}
 
 const isEnvDev = import.meta.env.DEV;
 
@@ -87,6 +96,7 @@ async function executeResult(
   data?: unknown,
   checkStatus?: boolean,
 ) {
+  const startTime = dayjs();
   try {
     let msgResult;
     const options: MessageInput = {
@@ -110,6 +120,12 @@ async function executeResult(
       });
     }
     handleResult(msgType, msgResult, tags, data, checkStatus ?? true);
+    sendEventToGA(
+      process,
+      "AO " + msgType + " Success",
+      tags.Action ?? "",
+      dayjs().diff(startTime, "second").toFixed(0),
+    );
     return msgResult;
   } catch (e) {
     if (isEnvDev) {
@@ -117,6 +133,7 @@ async function executeResult(
     } else {
       console.error(e);
     }
+    sendEventToGA(process, "AO " + msgType + " Fail", tags.Action ?? "", JSON.stringify(e));
     throw e;
   }
 }
@@ -146,15 +163,16 @@ export function useAO<T>(
   process: string,
   action: string,
   msgType: "message" | "dryrun",
-  options: {
+  {
+    autoLoad = false,
+    checkStatus = true,
+    loadingWhenFail = false,
+  }: {
     autoLoad?: boolean;
     checkStatus?: boolean;
-  } = {
-    autoLoad: false,
-    checkStatus: true,
+    loadingWhenFail?: boolean;
   },
 ) {
-  const { autoLoad, checkStatus } = options;
   const [result, setResult] = useState<MessageResult>();
   const [loading, setLoading] = useState(autoLoad || false);
   const [error, setError] = useState<string>();
@@ -172,28 +190,42 @@ export function useAO<T>(
           setError(toString(result.Error));
         }
         setResult(result);
+        if (loadingWhenFail) {
+          setLoading(false);
+        }
         return result;
       } catch (e) {
         setResult(undefined);
         setError(toString(e));
         throw e;
       } finally {
-        setLoading(false);
+        if (!loadingWhenFail) {
+          setLoading(false);
+        }
       }
     },
-    [process, action, checkStatus, msgType],
+    [process, action, checkStatus, msgType, loadingWhenFail],
   );
   return {
     result,
     data: getDataFromMessage<T>(result),
     tags: getTagsFromMessage(result),
     loading,
+    setLoading,
     error,
     execute,
   };
 }
 
-export function useEthMessage<T = unknown>(process: string, action: string) {
+export function useEthMessage<T = unknown>(
+  process: string,
+  action: string,
+  {
+    loadingWhenFail = false,
+  }: {
+    loadingWhenFail?: boolean;
+  },
+) {
   const [{ wallet }] = useConnectWallet();
   const [result, setResult] = useState<MessageResult>();
   const [data, setData] = useState<T>();
@@ -218,20 +250,26 @@ export function useEthMessage<T = unknown>(process: string, action: string) {
           throw new Error(result.Error);
         }
         setData(getDataFromMessage(result));
+        if (loadingWhenFail) {
+          setLoading(false);
+        }
         return result;
       } catch (e) {
         setResult(undefined);
         setError(toString(e));
         throw e;
       } finally {
-        setLoading(false);
+        if (!loadingWhenFail) {
+          setLoading(false);
+        }
       }
     },
-    [action, process, wallet],
+    [action, process, wallet, loadingWhenFail],
   );
   return {
     result,
     data,
+    setLoading,
     loading,
     error,
     execute,

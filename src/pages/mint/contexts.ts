@@ -99,7 +99,11 @@ export function useAOMint({
   MirrorProcess: string;
 }) {
   const [tokenType, setTokenType] = useState<TokenType>("stETH");
-  const { data: apus, loading: loadingApus, execute: getApus } = useAO<string>(MintProcess, "User.Balance", "dryrun");
+  const {
+    data: apus,
+    loading: loadingApus,
+    execute: getApus,
+  } = useAO<string>(MintProcess, "User.Balance", "dryrun", { loadingWhenFail: true });
   const [apusDynamic, setApusDynamic] = useState<BigNumber>(BigNumber.from(0));
   // const {
   //   data: userEstimatedApus,
@@ -110,22 +114,22 @@ export function useAOMint({
     data: stETHEstimatedApusLittle,
     loading: loadingStETHEstimatedApus,
     execute: getStETHEstimatedApus,
-  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
+  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun", { loadingWhenFail: true });
   const {
     data: daiEstimatedApusLittle,
     loading: loadingDaiEstimatedApus,
     execute: getDaiEstimatedApus,
-  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun");
+  } = useAO<string>(MirrorProcess, "User.Get-Estimated-Apus-Token", "dryrun", { loadingWhenFail: true });
   const {
     result: stETHAllocationResult,
     loading: loadingStETHAllocation,
     execute: getStETHAllocation,
-  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
+  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun", { loadingWhenFail: true });
   const {
     result: daiAllocationResult,
     loading: loadingDaiAllocation,
     execute: getDaiAllocation,
-  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun");
+  } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun", { loadingWhenFail: true });
 
   // get apus && refresh apus every 5 minutes
   useEffect(() => {
@@ -150,16 +154,17 @@ export function useAOMint({
       getStETHEstimatedApus({ Amount: (1e15).toString(), Token: "stETH" }, dayjs().unix());
       getDaiEstimatedApus({ Amount: (1e15).toString(), Token: "DAI" }, dayjs().unix());
     }
+  }, [getStETHEstimatedApus, getDaiEstimatedApus, wallet]);
+
+  useEffect(() => {
     // refresh estimated apus every 5 minutes if number is zero
     const interval = setInterval(
       () => {
         if (wallet) {
           if (stETHEstimatedApusLittle === "0") {
-            console.log("getStETHEstimatedApus");
             getStETHEstimatedApus({ Amount: (1e18).toString(), Token: "stETH" }, dayjs().unix());
           }
           if (daiEstimatedApusLittle === "0") {
-            console.log("getDaiEstimatedApus");
             getDaiEstimatedApus({ Amount: (1e18).toString(), Token: "DAI" }, dayjs().unix());
           }
         }
@@ -186,6 +191,7 @@ export function useAOMint({
   const { loading: loadingUpdateAllocation, execute: updateAllocationMsg } = useEthMessage(
     AO_MINT_PROCESS,
     "User.Update-Allocation",
+    {},
   );
   const updateAllocation = useCallback(
     async (newAllocations: Allocation) => {
@@ -376,10 +382,11 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     data: recipient,
     loading: loadingRecipient,
     execute: getRecipient,
-  } = useAO<string>(MintProcess, "User.Get-Recipient", "dryrun");
+  } = useAO<string>(MintProcess, "User.Get-Recipient", "dryrun", { loadingWhenFail: true });
   const { loading: loadingUpdateRecipient, execute: updateRecipientMsg } = useEthMessage(
     MintProcess,
     "User.Update-Recipient",
+    {},
   );
 
   useEffect(() => {
