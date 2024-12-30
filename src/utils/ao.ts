@@ -163,16 +163,17 @@ export function useAO<T>(
   process: string,
   action: string,
   msgType: "message" | "dryrun",
-  {
-    autoLoad = false,
-    checkStatus = true,
-    loadingWhenFail = false,
-  }: {
+  options: {
     autoLoad?: boolean;
     checkStatus?: boolean;
     loadingWhenFail?: boolean;
+  } = {
+    autoLoad: false,
+    checkStatus: true,
+    loadingWhenFail: false,
   },
 ) {
+  const { autoLoad, checkStatus, loadingWhenFail } = options;
   const [result, setResult] = useState<MessageResult>();
   const [loading, setLoading] = useState(autoLoad || false);
   const [error, setError] = useState<string>();
@@ -220,12 +221,13 @@ export function useAO<T>(
 export function useEthMessage<T = unknown>(
   process: string,
   action: string,
-  {
-    loadingWhenFail = false,
-  }: {
+  options: {
     loadingWhenFail?: boolean;
+  } = {
+    loadingWhenFail: false,
   },
 ) {
+  const { loadingWhenFail } = options;
   const [{ wallet }] = useConnectWallet();
   const [result, setResult] = useState<MessageResult>();
   const [data, setData] = useState<T>();
