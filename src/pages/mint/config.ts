@@ -1,3 +1,3 @@
 export default {
-  showAONetworkIssuePop: true,
+  showAONetworkIssuePop: false,
 };
