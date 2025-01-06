@@ -15,11 +15,12 @@ import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
-import { useConnectWallet } from "@web3-onboard/react";
+import { useConnectWallet, useWallets } from "@web3-onboard/react";
 import { formatBigNumber, splitBigNumber } from "./utils";
 import { APUS_ADDRESS, PRE_TGE_TIME, TGE_TIME } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import Recipient from "./recipient";
+import { WalletState } from "@web3-onboard/core";
 const Config = () => import("./config");
 
 function TokenSlider({
@@ -360,13 +361,18 @@ export default function Mint() {
   const isBeforePRETGE = dayjs().isBefore(PRE_TGE_TIME);
   const isBeforeTGE = dayjs().isBefore(TGE_TIME);
   const canApprove = isAmountValid && !isBeforePRETGE;
-  const cannotApproveTip = isBeforePRETGE
-    ? `Pre TGE starts in ${dayjs().to(PRE_TGE_TIME)}`
-    : !isAmountValid
-      ? "Please Select Amount"
-      : "";
+  const cannotApproveTip = !walletAddress
+    ? "Please connect wallet"
+    : isBeforePRETGE
+      ? `Pre TGE starts in ${dayjs().to(PRE_TGE_TIME)}`
+      : !isAmountValid
+        ? "Please Select Amount"
+        : "";
 
   const approve = async () => {
+    if (!walletAddress) {
+      return;
+    }
     if (!canApprove) {
       return;
     }
@@ -386,7 +392,6 @@ export default function Mint() {
       setAmount("");
       toast.success(`${tab === "allocate" ? "Allocate" : "Remove"} Successful`);
     } catch (e: unknown) {
-      console.log(e);
       if (e instanceof Error) {
         toast.error(e.message, { autoClose: false });
         refreshAfterAllocation();
@@ -419,7 +424,7 @@ export default function Mint() {
   const AllocateButton = (btnName: string) => (
     <Tooltip title={cannotApproveTip} color="#f85931" placement="bottom">
       <Spin spinning={!recipient ? loadingRecipient : loadingUpdateAllocation}>
-        <div className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove ? "" : "disabled"}`} onClick={approve}>
+        <div className={`btn-primary ${!recipient ? "warning" : ""} ${canApprove && walletAddress ? "" : "disabled"}`} onClick={approve}>
           {!recipient ? "Submit Recipient Address" : btnName}
         </div>
       </Spin>

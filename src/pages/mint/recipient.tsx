@@ -4,6 +4,7 @@ import { useRecipientModal } from "./contexts";
 import { GrayDivider } from "./mint";
 import { ImgMint } from "../../assets";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { useConnectWallet } from "@web3-onboard/react";
 
 export default function Recipient({
   recipientVisible,
@@ -18,6 +19,8 @@ export default function Recipient({
 }: {
   showSigTip: (title: string) => Promise<void>;
 } & ReturnType<typeof useRecipientModal>) {
+  const [{ wallet }] = useConnectWallet();
+  const walletAddress = wallet?.accounts?.[0]?.address;
   return (
     <div
       className="fixed top-[100px] left-0 right-0 bottom-0 z-50 bg-white overflow-y-auto"
@@ -56,6 +59,10 @@ export default function Recipient({
             className="w-32 btn-primary mx-auto"
             onClick={async () => {
               try {
+                if (!walletAddress) {
+                  toast.error("No connected wallets detected, please unlock/login first", { autoClose: false })
+                  return;
+                }
                 await showSigTip("Notice");
                 await submitRecipient();
                 setRecipientVisible(false);
