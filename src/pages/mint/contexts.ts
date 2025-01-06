@@ -37,23 +37,6 @@ function getAllocationFromMessage(message?: MessageResult): Allocation {
   }
 }
 
-export function useParams() {
-  // const location = useLocation();
-  // const MintProcess = useMemo(
-  //   () => new URLSearchParams(location.search).get("apus_process") || APUS_ADDRESS.Mint,
-  //   [location],
-  // );
-  // const MirrorProcess = useMemo(
-  //   () => new URLSearchParams(location.search).get("mirror_process") || APUS_ADDRESS.Mirror,
-  //   [location],
-  // );
-  // const TGETime = useMemo(
-  //   () => new URLSearchParams(location.search).get("tge_time") || "2024-12-12T09:00:00Z",
-  //   [location],
-  // );
-  return { MintProcess: APUS_ADDRESS.Mint, MirrorProcess: APUS_ADDRESS.Mirror };
-}
-
 function getApusAllocation(msg?: MessageResult) {
   return getBalanceOfAllocation(getAllocationFromMessage(msg), APUS_ADDRESS.Recipient);
 }
@@ -77,17 +60,13 @@ function getEstimatedApus(
   };
 }
 
-function useToastAllocationUpdate(isIniting: boolean, tokenType: TokenType, allocation: BigNumber) {
-  const lastAllocation = useRef(allocation);
-  useEffect(() => {
-    if (!allocation.isZero() && !lastAllocation.current.eq(allocation)) {
-      lastAllocation.current = allocation;
-      if (!isIniting) {
-        toast.info(tokenType + " allocated to APUS has been updated to " + formatBigNumber(allocation, 18, 4));
-      }
-    }
-  }, [allocation, tokenType, isIniting]);
+function notifyAllocationUpdate(tokenType: TokenType, allocation: BigNumber | undefined) {
+  if (allocation) {
+    toast.info(tokenType + " allocated to APUS has been updated to " + formatBigNumber(allocation, 18, 4));
+  }
 }
+const notifyStethAllocationUpdate = (allocation: BigNumber | undefined) => notifyAllocationUpdate("stETH", allocation);
+const notifyDaiAllocationUpdate = (allocation: BigNumber | undefined) => notifyAllocationUpdate("DAI", allocation);
 
 export function useAOMint({
   wallet,
@@ -130,6 +109,19 @@ export function useAOMint({
     loading: loadingDaiAllocation,
     execute: getDaiAllocation,
   } = useAO<string>(AO_MINT_PROCESS, "User.Get-Allocation", "dryrun", { loadingWhenFail: true });
+
+  const getStETHAllocationAndNotify = useCallback((tags: Record<string, string>, data?: unknown) => {
+    return getStETHAllocation(tags, data).then((result) => {
+      notifyStethAllocationUpdate(getApusAllocation(result));
+      return result;
+    });
+  }, [getStETHAllocation, wallet]);
+  const getDaiAllocationAndNotify = useCallback((tags: Record<string, string>, data?: unknown) => {
+    return getDaiAllocation(tags, data).then((result) => {
+      notifyDaiAllocationUpdate(getApusAllocation(result));
+      return result;
+    });
+  }, [getDaiAllocation, wallet]);
 
   // get apus && refresh apus every 5 minutes
   useEffect(() => {
@@ -207,9 +199,9 @@ export function useAOMint({
 
   const refreshAfterAllocation = async () => {
     if (tokenType === "stETH") {
-      await getStETHAllocation({ Owner: ethers.utils.getAddress(wallet!), Token: "stETH" });
+      await getStETHAllocationAndNotify({ Owner: ethers.utils.getAddress(wallet!), Token: "stETH" });
     } else {
-      await getDaiAllocation({ Owner: ethers.utils.getAddress(wallet!), Token: "DAI" });
+      await getDaiAllocationAndNotify({ Owner: ethers.utils.getAddress(wallet!), Token: "DAI" });
     }
   };
   const getCurrentAllocation = async () => {
@@ -296,10 +288,6 @@ export function useAOMint({
   );
   const loadingUserEstimatedApus =
     loadingStETHEstimatedApus || loadingDaiEstimatedApus || loadingStETHAllocation || loadingDaiAllocation;
-
-  // listen on token for apus change
-  useToastAllocationUpdate(initingAllocation.current, "stETH", apusStETH);
-  useToastAllocationUpdate(initingAllocation.current, "DAI", apusDAI);
 
   // animate apus balance change
   useEffect(() => {
