@@ -17,7 +17,10 @@ export function splitBigNumber(num: BigNumber, decimals: number = 18) {
   };
 }
 
-export function formatBigNumber(num: BigNumber, decimals: number = 18, fixed?: number) {
+export function formatBigNumber(num?: BigNumber, decimals: number = 18, fixed?: number) {
+  if (!num) {
+    return "--";
+  }
   if (num.isZero()) {
     return "0";
   }

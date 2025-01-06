@@ -17,15 +17,21 @@ type Allocation = AllocationItem[];
 
 type TokenType = "stETH" | "DAI";
 
-function getBalanceOfAllocation(allocations: Allocation, recipient?: string) {
+function getBalanceOfAllocation(allocations?: Allocation, recipient?: string) {
+  if (!allocations) {
+    return undefined;
+  }
   if (!recipient) {
     return allocations.reduce((acc, a) => acc.add(a.Amount), BigNumber.from(0));
   }
   return allocations.find((a) => a.Recipient === recipient)?.Amount || BigNumber.from(0);
 }
 
-function getAllocationFromMessage(message?: MessageResult): Allocation {
+function getAllocationFromMessage(message?: MessageResult): Allocation | undefined {
   try {
+    if (!message || !getDataFromMessage(message)) {
+      return undefined;
+    }
     const data: { Recipient: string; Amount: string }[] = JSON.parse(getDataFromMessage(message) || "[]");
     return data.map((a) => ({
       Recipient: a.Recipient,
@@ -42,19 +48,25 @@ function getApusAllocation(msg?: MessageResult) {
 }
 
 function getOtherAllocation(msg?: MessageResult) {
-  return getBalanceOfAllocation(getAllocationFromMessage(msg)).sub(getApusAllocation(msg));
+  const total = getBalanceOfAllocation(getAllocationFromMessage(msg))
+  const apus = getApusAllocation(msg)
+  if (!total || !apus) {
+    return undefined;
+  }
+  return total.sub(apus);
 }
 
 function getEstimatedApus(
   stETHEstimatedApus: BigNumber,
   daiEstimatedApus: BigNumber,
-  apusStETHAllocation: BigNumber,
-  apusDAIAllocation: BigNumber,
+  apusStETHAllocation?: BigNumber,
+  apusDAIAllocation?: BigNumber,
 ) {
-  const stETHApus = apusStETHAllocation.mul(stETHEstimatedApus).div(BigNumber.from(10).pow(18));
-  const daiApus = apusDAIAllocation.mul(daiEstimatedApus).div(BigNumber.from(10).pow(18));
+  const stETHApus = apusStETHAllocation?.mul(stETHEstimatedApus).div(BigNumber.from(10).pow(18));
+  const daiApus = apusDAIAllocation?.mul(daiEstimatedApus).div(BigNumber.from(10).pow(18));
+  const user = stETHApus ? daiApus ? stETHApus.add(daiApus) : stETHApus : daiApus;
   return {
-    user: stETHApus.add(daiApus),
+    user,
     stETH: stETHApus,
     dai: daiApus,
   };
@@ -67,6 +79,10 @@ function notifyAllocationUpdate(tokenType: TokenType, allocation: BigNumber | un
 }
 const notifyStethAllocationUpdate = (allocation: BigNumber | undefined) => notifyAllocationUpdate("stETH", allocation);
 const notifyDaiAllocationUpdate = (allocation: BigNumber | undefined) => notifyAllocationUpdate("DAI", allocation);
+
+function toBigNumber(value: string | undefined) {
+  return value ? BigNumber.from(value) : undefined;
+}
 
 export function useAOMint({
   wallet,
@@ -83,7 +99,7 @@ export function useAOMint({
     loading: loadingApus,
     execute: getApus,
   } = useAO<string>(MintProcess, "User.Balance", "dryrun", { loadingWhenFail: true });
-  const [apusDynamic, setApusDynamic] = useState<BigNumber>(BigNumber.from(0));
+  const [apusDynamic, setApusDynamic] = useState<BigNumber>();
   // const {
   //   data: userEstimatedApus,
   //   loading: loadingUserEstimateApus,
@@ -166,17 +182,13 @@ export function useAOMint({
     return () => clearInterval(interval);
   }, [getStETHEstimatedApus, getDaiEstimatedApus, wallet, stETHEstimatedApusLittle, daiEstimatedApusLittle]);
 
-  const initingAllocation = useRef(true);
   useEffect(() => {
     if (wallet) {
-      const fetchStETHAllocationPromise = getStETHAllocation({
+      getStETHAllocation({
         Owner: ethers.utils.getAddress(wallet),
         Token: "stETH",
       });
-      const fetchDaiAllocationPromise = getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
-      Promise.all([fetchStETHAllocationPromise, fetchDaiAllocationPromise]).then(() => {
-        initingAllocation.current = false;
-      });
+      getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
     }
   }, [getDaiAllocation, getStETHAllocation, wallet]);
 
@@ -214,7 +226,7 @@ export function useAOMint({
   };
   const increaseApusAllocation = async (amount: BigNumber) => {
     const { allocation, apus, other } = await getCurrentAllocation();
-    if (amount.gt(other) || amount.lte(0)) {
+    if (!allocation || !apus || !other || amount.gt(other) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
     const otherAllocation = allocation.filter((a) => a.Recipient !== APUS_ADDRESS.Recipient);
@@ -244,7 +256,7 @@ export function useAOMint({
       throw new Error("Recipient not set");
     }
     const { allocation, apus } = await getCurrentAllocation();
-    if (amount.gt(apus) || amount.lte(0)) {
+    if (!allocation || !apus || amount.gt(apus) || amount.lte(0)) {
       throw new Error("Insufficient balance");
     }
     const otherAllocation = allocation.filter((a) => ![APUS_ADDRESS.Recipient, recipient].includes(a.Recipient));
@@ -302,34 +314,38 @@ export function useAOMint({
       userEstimatedApus.isZero() ||
       userEstimatedApus.lte(apus)
     ) {
-      setApusDynamic(BigNumber.from(apus || 0));
+      setApusDynamic(toBigNumber(apus));
       return;
     }
     const diff = userEstimatedApus.sub(BigNumber.from(apus));
     const step = diff.div(30 * 24 * 3600);
     const interval = setInterval(() => {
-      setApusDynamic((v) => v.add(step));
+      setApusDynamic((v) => {
+        if (v) {
+          return v.add(step)
+        }
+      });
     }, 1000);
     return () => clearInterval(interval);
   }, [apus, userEstimatedApus, loadingApus, loadingUserEstimatedApus]);
 
   const biStETHEstimatedApus = useMemo(
-    () => BigNumber.from(stETHEstimatedApusLittle || 0).mul(1e3),
-    [stETHEstimatedApusLittle],
+    () => stETHEstimatedApusLittle ? BigNumber.from(stETHEstimatedApusLittle).mul(1e3) : undefined,
+    [stETHEstimatedApusLittle]
   );
   const biDaiEstimatedApus = useMemo(
-    () => BigNumber.from(daiEstimatedApusLittle || 0).mul(1e3),
-    [daiEstimatedApusLittle],
+    () => daiEstimatedApusLittle ? BigNumber.from(daiEstimatedApusLittle).mul(1e3) : undefined,
+    [daiEstimatedApusLittle]
   );
   const biTokenEstimatedApus = useMemo(
     () => (tokenType === "stETH" ? biStETHEstimatedApus : biDaiEstimatedApus),
-    [tokenType, biStETHEstimatedApus, biDaiEstimatedApus],
+    [tokenType, biStETHEstimatedApus, biDaiEstimatedApus]
   );
 
   return {
     tokenType,
     setTokenType,
-    apus: BigNumber.from(apus || 0),
+    apus: toBigNumber(apus),
     apusDynamic,
     // userEstimatedApus,
     biStETHEstimatedApus,

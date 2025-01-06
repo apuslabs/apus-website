@@ -29,7 +29,7 @@ function TokenSlider({
   tokenType,
   setTokenType,
 }: {
-  totalAmount: BigNumber;
+  totalAmount?: BigNumber;
   amount: string;
   setAmount: (v: string) => void;
   tokenType?: "stETH" | "DAI";
@@ -71,10 +71,10 @@ function TokenSlider({
         <Input
           size="large"
           className="text-right"
-          disabled={tokenType === undefined || totalAmount.isZero()}
+          disabled={tokenType === undefined || !totalAmount || totalAmount.isZero()}
           value={amount}
           onChange={(v) => {
-            if (v !== null) {
+            if (v !== null && totalAmount) {
               const numericValue = v.target.value.replace(/[^0-9.]/g, "");
               if (numericValue === "") {
                 setAmount("");
@@ -96,7 +96,7 @@ function TokenSlider({
       <div className="w-full pl-[148px] pr-2 -my-3">
         <Slider
           className="w-full"
-          disabled={tokenType === undefined || totalAmount.isZero()}
+          disabled={tokenType === undefined || !totalAmount || totalAmount.isZero()}
           marks={{ 0: "0%", 100: "100%" }}
           min={0}
           max={100}
@@ -104,7 +104,9 @@ function TokenSlider({
           value={percent}
           onChange={(v) => {
             setPercent(v);
-            setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
+            if (totalAmount) {
+              setAmount(ethers.utils.formatUnits(totalAmount.mul(v).div(100), 18));
+            }
           }}
         />
       </div>
@@ -340,7 +342,7 @@ export default function Mint() {
     MintProcess: APUS_ADDRESS.Mint,
   });
   const { recipientVisible, setRecipientVisible, recipient, loadingRecipient } = recipientModal;
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
 
   const {
     modalOpen: tipModalOpen,
@@ -352,7 +354,7 @@ export default function Mint() {
   const [tab, setTab] = useState<"allocate" | "remove">("allocate");
   const [amount, setAmount] = useState<string>("");
   const bigAmount = ethers.utils.parseUnits(amount || "0", 18);
-  const estimatedApus = bigAmount.mul(biTokenEstimatedApus).div(BigNumber.from(10).pow(18));
+  const estimatedApus = biTokenEstimatedApus ? bigAmount.mul(biTokenEstimatedApus).div(BigNumber.from(10).pow(18)) : undefined;
 
   const isAmountValid = amount !== "" && amount !== "0";
   const isBeforePRETGE = dayjs().isBefore(PRE_TGE_TIME);
@@ -561,7 +563,7 @@ export default function Mint() {
                         value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         label="Allocated"
                         loading={loadingTokenAllocation}
-                        prefix={<MintIcon isBlack={apusToken.isZero() || isBeforeTGE} />}
+                        prefix={<MintIcon isBlack={!apusToken || apusToken.isZero() || isBeforeTGE} />}
                       />
                       <MintInfo
                         className="items-end"
@@ -614,7 +616,7 @@ export default function Mint() {
                       </LoadingNumber>
                       <img src={ImgMint.ChevronRight} className="rotate-180" />
                     </div>
-                    {tokenType && !biTokenEstimatedApus.isZero() && (
+                    {tokenType && biTokenEstimatedApus && !biTokenEstimatedApus.isZero() && (
                       <div className="flex">
                         <span className="font-bold mr-1">1</span>
                         {tokenType + "="}
@@ -642,7 +644,7 @@ export default function Mint() {
                         value={`${formatBigNumber(apusToken, 18, 4)} ${tokenType}`}
                         label="Allocated"
                         loading={loadingTokenAllocation}
-                        prefix={<MintIcon isBlack={apusToken.isZero() || isBeforeTGE} />}
+                        prefix={<MintIcon isBlack={!apusToken || apusToken.isZero() || isBeforeTGE} />}
                       />
                     </div>
                     <TokenSlider
