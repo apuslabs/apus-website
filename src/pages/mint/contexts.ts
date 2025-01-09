@@ -184,11 +184,19 @@ export function useAOMint({
 
   useEffect(() => {
     if (wallet) {
-      getStETHAllocation({
+      const stETHAllocationPromise = getStETHAllocation({
         Owner: ethers.utils.getAddress(wallet),
         Token: "stETH",
       });
-      getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      const daiAllocationPromise = getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      // if stETH is zero, and dai is not zero, set token type to DAI
+      Promise.all([stETHAllocationPromise, daiAllocationPromise]).then(([stETHAllocation, daiAllocation]) => {
+        const stETH = getBalanceOfAllocation(getAllocationFromMessage(stETHAllocation));
+        const dai = getBalanceOfAllocation(getAllocationFromMessage(daiAllocation));
+        if ((!stETH || stETH.isZero()) && dai && !dai.isZero()) {
+          setTokenType("DAI");
+        }
+      });
     }
   }, [getDaiAllocation, getStETHAllocation, wallet]);
 
