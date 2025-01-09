@@ -244,8 +244,9 @@ export function useAOMint({
     const newAllocations = [...otherAllocation, { Recipient: APUS_ADDRESS.Recipient, Amount: apus.add(amount) }];
     try {
       await updateAllocation(newAllocations);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       refreshAfterAllocation();
     }
@@ -273,8 +274,9 @@ export function useAOMint({
     ];
     try {
       await updateAllocation(newAllocations);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       refreshAfterAllocation();
     }
@@ -409,8 +411,9 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     try {
       await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
       setRecipientVisible(false);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       getRecipient({ User: ethers.utils.getAddress(wallet) });
     }

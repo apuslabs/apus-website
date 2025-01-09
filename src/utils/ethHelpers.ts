@@ -29,9 +29,17 @@ export async function sendEthMessage(wallet: WalletState, args: Omit<SendMessage
       };
     },
   });
-  const ret = await result({ process: args.process, message: messageId });
-  if (ret.Error) {
-    throw new Error(ret.Error);
+  // usually fetch result fails due to congestion
+  // so we show specific error message
+  try {
+    const ret = await result({ process: args.process, message: messageId });
+    if (ret.Error) {
+      throw new Error(ret.Error);
+    }
+    return ret
+  } catch (e) {
+    console.error(e);
+    // TODO: check if the error is due to congestion
+    throw new Error("AO Experiencing Congestion. Please Try Again.");
   }
-  return ret;
 }
