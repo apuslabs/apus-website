@@ -184,11 +184,19 @@ export function useAOMint({
 
   useEffect(() => {
     if (wallet) {
-      getStETHAllocation({
+      const stETHAllocationPromise = getStETHAllocation({
         Owner: ethers.utils.getAddress(wallet),
         Token: "stETH",
       });
-      getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      const daiAllocationPromise = getDaiAllocation({ Owner: ethers.utils.getAddress(wallet), Token: "DAI" });
+      // if stETH is zero, and dai is not zero, set token type to DAI
+      Promise.all([stETHAllocationPromise, daiAllocationPromise]).then(([stETHAllocation, daiAllocation]) => {
+        const stETH = getBalanceOfAllocation(getAllocationFromMessage(stETHAllocation));
+        const dai = getBalanceOfAllocation(getAllocationFromMessage(daiAllocation));
+        if ((!stETH || stETH.isZero()) && dai && !dai.isZero()) {
+          setTokenType("DAI");
+        }
+      });
     }
   }, [getDaiAllocation, getStETHAllocation, wallet]);
 
@@ -244,8 +252,9 @@ export function useAOMint({
     const newAllocations = [...otherAllocation, { Recipient: APUS_ADDRESS.Recipient, Amount: apus.add(amount) }];
     try {
       await updateAllocation(newAllocations);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       refreshAfterAllocation();
     }
@@ -273,8 +282,9 @@ export function useAOMint({
     ];
     try {
       await updateAllocation(newAllocations);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       refreshAfterAllocation();
     }
@@ -409,8 +419,9 @@ export function useRecipientModal({ wallet, MintProcess }: { wallet?: string; Mi
     try {
       await updateRecipientMsg({ Recipient: arweaveAddress }, dayjs().unix());
       setRecipientVisible(false);
-    } catch {
-      throw new Error("AO Experiencing Congestion. Please Try Again.");
+    } catch (e) {
+      // throw new Error("AO Experiencing Congestion. Please Try Again.");
+      throw e;
     } finally {
       getRecipient({ User: ethers.utils.getAddress(wallet) });
     }

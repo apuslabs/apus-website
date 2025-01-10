@@ -394,7 +394,7 @@ export default function Mint() {
     } catch (e: unknown) {
       if (e instanceof Error) {
         toast.error(e.message, { autoClose: false });
-        refreshAfterAllocation();
+        // refreshAfterAllocation();
         setAmount("");
       } else {
         toast.error(`${tab === "allocate" ? "Allocate" : "Remove"} Failed, Please Try Again.`, { autoClose: false });
