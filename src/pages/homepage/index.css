@@ -3,9 +3,9 @@
 }
 
 .section-hero {
-  @apply pt-[90px] md:pt-[140px] md:pb-[188px];
-  background-image: url("../../assets/homepage/bg.jpg");
-  background-size: cover;
+  @apply pt-[90px] md:pt-[100px] md:pb-[188px];
+  /* background-image: url("../../assets/homepage/bg.jpg");
+  background-size: cover; */
 }
 
 .launchbox-container {
@@ -156,8 +156,8 @@ img.invert {
   @apply mt-[30px] md:mt-[40px] mb-[40px] md:mb-[60px] flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
 }
 
-@media screen and (max-width: 768px) {
+/* @media screen and (max-width: 768px) {
   .section-hero {
     background-image: url("../../assets/homepage/bg-mobile.jpg");
   }
-}
+} */
