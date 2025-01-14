@@ -317,12 +317,9 @@ export function useAOMint({
       return;
     }
     if (
-      loadingApus ||
       loadingUserEstimatedApus ||
-      !apus ||
       !userEstimatedApus ||
-      userEstimatedApus.isZero() ||
-      userEstimatedApus.lte(apus)
+      userEstimatedApus.isZero()
     ) {
       setApusDynamic(toBigNumber(apus));
       return;

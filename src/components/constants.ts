@@ -14,8 +14,8 @@ export const HomeHeaderMenuList: NavigationMenuType[] = [
     path: "/?anchor=roadmap",
   },
   {
-    name: "DOCS",
-    path: DocLink,
+    name: "BLOG",
+    path: "https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72",
   },
   {
     name: "LITEPAPER",

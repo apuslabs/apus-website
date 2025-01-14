@@ -26,6 +26,7 @@ import LogoHorizonal from "./homepage/logo_horizonal.png";
 import Feature1 from "./homepage/feature1.svg";
 import Feature2 from "./homepage/feature2.svg";
 import Feature3 from "./homepage/feature3.svg";
+import Bg from "./homepage/bg.jpg";
 import Tech from "./homepage/tech.svg";
 import Roadmap from "./homepage/roadmap.svg";
 import LogoAO from "./homepage/logo_ao.svg";
@@ -51,6 +52,7 @@ import IconMiner from "./homepage/icon_miner.svg";
 export const ImgHomepage = {
   LogoHorizonal,
   IconMenu,
+  Bg,
   Roadmap,
   Feature1,
   Feature2,

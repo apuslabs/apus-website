@@ -8,6 +8,7 @@ import { SocialMediaList } from "../../components/SocialMediaList";
 import { useBreakpoint, useCountDate } from "../../utils/react-use";
 import { TGE_TIME } from "../../utils/config";
 import dayjs from "dayjs";
+import BgVideo from '../../assets/homepage/bg-hero.mp4'
 
 function TwitterVideo({ className, videoID }: { className: string; videoID: string }) {
   return (
@@ -46,7 +47,10 @@ function SectionHero() {
   const isBeforeTGE = dayjs().isBefore(TGE_TIME);
   return (
     <div className="section section-hero">
-      <div className="launchbox-container">
+      <video autoPlay disablePictureInPicture disableRemotePlayback muted loop className="absolute w-full h-full object-cover -z-10">
+        <source src={BgVideo}></source>
+      </video>
+      <div className="launchbox-container mt-[40px]">
         {isBeforeTGE ? null : <img src={ImgHomepage.IconMiner} className="w-[46px] h-[46px] md:w-[62px] md:h-[62px]" />}
         <div className={`launchbox-title ${isBeforeTGE ? "text-[22px]" : "md:text-[35px]"}`}>
           {isBeforeTGE ? "Launch in ..." : "APUS Minting Live."}
