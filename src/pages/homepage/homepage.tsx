@@ -43,51 +43,17 @@ function Email() {
 }
 
 function SectionHero() {
-  const { day, hour, minute, second } = useCountDate(TGE_TIME);
-  const isBeforeTGE = dayjs().isBefore(TGE_TIME);
   return (
     <div className="section section-hero">
       <video autoPlay disablePictureInPicture disableRemotePlayback muted loop className="absolute w-full h-full object-cover -z-10">
         <source src={BgVideo}></source>
       </video>
-      <div className="launchbox-container mt-[40px]">
-        {isBeforeTGE ? null : <img src={ImgHomepage.IconMiner} className="w-[46px] h-[46px] md:w-[62px] md:h-[62px]" />}
-        <div className={`launchbox-title ${isBeforeTGE ? "text-[22px]" : "md:text-[35px]"}`}>
-          {isBeforeTGE ? "Launch in ..." : "APUS Minting Live."}
+      <div className="launchbox-container text-white">
+        <div className="flex items-center gap-5">
+          <img src={ImgHomepage.IconGear} className="w-[30px] h-[30px] md:w-[35px] md:h-[35px]" />
+          <div className="text-xl md:text-3xl font-semibold">APUS Minting Live!</div>
         </div>
-        {isBeforeTGE ? (
-          <div className="launchbox-countdown-container">
-            {[
-              {
-                value: day,
-                label: "DAYS",
-              },
-              {
-                value: hour,
-                label: "HOURS",
-              },
-              {
-                value: minute,
-                label: "MINUTES",
-              },
-              {
-                value: second,
-                label: "SECONDS",
-              },
-            ].map(({ value, label }, idx) => (
-              <React.Fragment key={label}>
-                {idx !== 0 && <div className="launchbox-countdown-divider">:</div>}
-                <div className="launchbox-countdown-item">
-                  <div className="launchbox-countdown-item-value">{value}</div>
-                  <div className="launchbox-countdown-item-label">{label}</div>
-                </div>
-              </React.Fragment>
-            ))}
-          </div>
-        ) : null}
-        <Link to="/mint">
-          <div className="btn-primary md:mt-5">{isBeforeTGE ? "Allocate Assets" : "Mint APUS"}</div>
-        </Link>
+        <div className="w-28 h-10 md:w-32 md:h-12 text-[#091dff] bg-white font-medium rounded-xl cursor-pointer hover:bg-slate-50 flex items-center justify-center">Mint APUS</div>
       </div>
       <div className="hero-container">
         <img src={ApusLogo} className="hero-logo" />
