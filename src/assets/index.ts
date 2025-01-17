@@ -48,6 +48,7 @@ import LogoCredible from "./homepage/logo_credible.svg";
 import LogoGlobalstake from "./homepage/logo_globalstake.svg";
 import LogoPrimus from "./homepage/logo_primus.svg";
 import IconMiner from "./homepage/icon_miner.svg";
+import IconGear from "./homepage/icon_gear.svg";
 
 export const ImgHomepage = {
   LogoHorizonal,
@@ -77,6 +78,7 @@ export const ImgHomepage = {
   LogoGlobalstake,
   LogoPrimus,
   IconMiner,
+  IconGear,
 };
 
 import LogoHorizonalSimple from "./competition/logo_horizonal_simple.png";

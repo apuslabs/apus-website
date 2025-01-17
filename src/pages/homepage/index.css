@@ -3,39 +3,14 @@
 }
 
 .section-hero {
-  @apply pt-[90px] md:pt-[100px] md:pb-[188px];
+  @apply pt-[90px] md:pt-[100px] md:pb-[188px] relative overflow-hidden;
   /* background-image: url("../../assets/homepage/bg.jpg");
   background-size: cover; */
 }
 
 .launchbox-container {
-  @apply mb-10 md:mb-[200px] mx-5 md:mx-0 p-4 md:py-5 md:px-10 flex flex-col items-center gap-5;
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: 14px;
-}
-
-.launchbox-title {
-  @apply font-semibold md:text-2xl;
-}
-
-.launchbox-countdown-container {
-  @apply flex items-center gap-3 md:gap-5;
-}
-
-.launchbox-countdown-item {
-  @apply w-[56px] md:w-[100px] py-2 md:py-[15px] flex flex-col items-center bg-mainblue rounded-xl md:rounded-[20px] text-white;
-}
-
-.launchbox-countdown-item-value {
-  @apply font-light text-[28px] md:text-[50px] leading-none;
-}
-
-.launchbox-countdown-item-label {
-  @apply font-semibold text-[7px] md:text-xs;
-}
-
-.launchbox-countdown-divider {
-  @apply text-[22px] md:text-[40px] font-bold text-mainblue;
+  @apply w-full h-[100px] md:h-20 mt-20 md:mt-[30vh] flex flex-col md:flex-row justify-center items-center gap-1 md:gap-5;
+  background-color: rgba(9, 29, 255, 0.6);
 }
 
 .hero-container {
