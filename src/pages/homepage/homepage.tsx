@@ -53,7 +53,9 @@ function SectionHero() {
           <img src={ImgHomepage.IconGear} className="w-[30px] h-[30px] md:w-[35px] md:h-[35px]" />
           <div className="text-xl md:text-3xl font-semibold">APUS Minting Live!</div>
         </div>
-        <div className="w-28 h-10 md:w-32 md:h-12 text-[#091dff] bg-white font-medium rounded-xl cursor-pointer hover:bg-slate-50 flex items-center justify-center">Mint APUS</div>
+        <Link to="/mint">
+          <div className="w-28 h-10 md:w-32 md:h-12 text-[#091dff] bg-white font-medium rounded-xl cursor-pointer hover:bg-slate-50 flex items-center justify-center">Mint APUS</div>
+        </Link>
       </div>
       <div className="hero-container">
         <img src={ApusLogo} className="hero-logo" />
