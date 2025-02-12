@@ -1,5 +1,3 @@
-const DocLink = "https://apus-network.gitbook.io/apus-console-docs/";
-
 export const HomeHeaderMenuList: NavigationMenuType[] = [
   {
     name: "TEAM",
@@ -36,4 +34,8 @@ export const ConsoleHeaderMenuList: NavigationMenuType[] = [
     name: "Playground",
     path: "/console/playground/1004",
   },
+  {
+    name: "Perma Brawl",
+    path: "/console/perma-brawl"
+  }
 ];

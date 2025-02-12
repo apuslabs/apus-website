@@ -37,73 +37,78 @@ export const Playground = () => {
 
   const scrollRef = useAutoScroll();
   return (
-    <div id="playground" className="max-w-[1080px] mx-auto pb-32 pt-6">
-      <div className="text-sm text-black50 mb-4 mt-8">Chat</div>
-      <div className="rounded-2xl overflow-hidden bg-[#EBEFFF]">
-        <div className="h-[534px] p-6 overflow-y-auto scroll-smooth" ref={scrollRef}>
-          {chatHistory.map(({ role, message }, index) => {
-            const isUser = role === "user";
-            return (
-              <div key={index} className={`flex gap-2 ${isUser ? "flex-row-reverse justify-start" : ""}`}>
-                <div className="flex-0 w-12 h-12">
-                  <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
+    <div id="playground" className="max-w-[1080px] mx-auto pb-24 pt-6">
+      <div className="p-6">
+      <div className="w-full rounded-2xl overflow-hidden shadow-xl cursor-pointer">
+        <img src={ImgPlayground.BrawlBanner} className="w-full" />
+      </div>
+        <div className="text-2xl text-[#333333] font-bold mb-4 mt-8">Chat</div>
+        <div className="rounded-2xl overflow-hidden bg-white">
+          <div className="h-[534px] p-6 overflow-y-auto scroll-smooth" ref={scrollRef}>
+            {chatHistory.map(({ role, message }, index) => {
+              const isUser = role === "user";
+              return (
+                <div key={index} className={`flex gap-2 ${isUser ? "flex-row-reverse justify-start" : ""}`}>
+                  <div className="flex-0 w-12 h-12">
+                    <img src={isUser ? ImgPlayground.UserAvatar : ImgPlayground.ApusAvatar} className="" />
+                  </div>
+                  <div
+                    className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 shadow-sm ${
+                      isUser ? " bg-[#d9d9d9]" : "bg-[#f3f3f3]"
+                    }`}
+                  >
+                    {role !== "user" ? truncateString(message) : message}
+                  </div>
                 </div>
-                <div
-                  className={`max-w-[60%] rounded-lg py-3 px-4 font-medium text-base leading-normal mb-4 ${
-                    isUser ? " bg-white50" : "bg-white"
-                  }`}
-                >
-                  {role !== "user" ? truncateString(message) : message}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div
-          className="relative bg-[#F5F7FF] p-4"
-          style={{
-            boxShadow: "0 -4px 16px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <TextArea
-            value={question}
-            onChange={(e) => {
-              setQuestion(e.target.value);
-            }}
-            disabled={isWaitingForAnswer}
-            placeholder="Enter prompt here"
-            style={{
-              paddingRight: "20%",
-            }}
-          />
-          <div className={`absolute right-8 bottom-6`}>
-            <Spin spinning={isBtnDisabled}>
-              <div
-                className={`btn-blueToPink135 w-32`}
-                onClick={() => {
-                  if (isBtnDisabled) return;
-                  if (!activeAddress) {
-                    connectWallet();
-                    return;
-                  }
-                  if (isWaitingForAnswer) {
-                    fetchResult();
-                  } else {
-                    if (!question?.trim().length) {
-                      message.warning("Please enter a prompt");
-                    } else {
-                      chatQuestion(question.trim()).then(() => {
-                        setQuestion("");
-                      });
-                    }
-                  }
-                }}
-              >
-                {activeAddress ? (isWaitingForAnswer ? "Refresh" : "Send") : "Connect"}
-              </div>
-            </Spin>
+              );
+            })}
           </div>
-        </div>
+          <div
+            className="relative bg-[#F5F7FF] p-4"
+            style={{
+              boxShadow: "0 -4px 16px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <TextArea
+              value={question}
+              onChange={(e) => {
+                setQuestion(e.target.value);
+              }}
+              disabled={isWaitingForAnswer}
+              placeholder="Enter prompt here"
+              style={{
+                paddingRight: "20%",
+              }}
+            />
+            <div className={`absolute right-8 bottom-6`}>
+              <Spin spinning={isBtnDisabled}>
+                <div
+                  className={`btn-blueToPink135 w-32`}
+                  onClick={() => {
+                    if (isBtnDisabled) return;
+                    if (!activeAddress) {
+                      connectWallet();
+                      return;
+                    }
+                    if (isWaitingForAnswer) {
+                      fetchResult();
+                    } else {
+                      if (!question?.trim().length) {
+                        message.warning("Please enter a prompt");
+                      } else {
+                        chatQuestion(question.trim()).then(() => {
+                          setQuestion("");
+                        });
+                      }
+                    }
+                  }}
+                >
+                  {activeAddress ? (isWaitingForAnswer ? "Refresh" : "Send") : "Connect"}
+                </div>
+              </Spin>
+            </div>
+          </div>
+      </div>
       </div>
     </div>
   );

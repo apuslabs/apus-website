@@ -128,6 +128,7 @@ import UserAvatar from "./playground/user-avatar.png";
 import SignalGreen from "./playground/signal-green.png";
 import SignalYellow from "./playground/signal-yellow.png";
 import SignalRed from "./playground/signal-red.png";
+import BrawlBanner from "./playground/brawl.png";
 
 export const ImgPlayground = {
   ApusAvatar,
@@ -135,6 +136,7 @@ export const ImgPlayground = {
   SignalGreen,
   SignalYellow,
   SignalRed,
+  BrawlBanner,
 };
 
 import TokenomicsPie from "./mint/tokenomics-pie.svg";

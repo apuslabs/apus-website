@@ -54,7 +54,9 @@ const router = createHashRouter([
     path: "console",
     element: (
       <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-        <div className="bg-[#D7DDF4] min-h-screen pt-20">
+        <div className="min-h-screen pt-20" style={{
+          background: "linear-gradient(to bottom, #F3F3F3, #C2C2C2)"
+        }}>
           <ConsoleHeader />
           <Outlet />
         </div>
@@ -86,7 +88,7 @@ const router = createHashRouter([
         ),
       },
       {
-        path: "chatbot",
+        path: "perma-brawl",
         element: (
           <Suspense>
             <Chatbot />
