@@ -11,6 +11,7 @@ const Team = lazy(() => import("./pages/team/team"));
 const Mint = lazy(() => import("./pages/mint/mint"));
 const Competition = lazy(() => import("./pages/console/competition"));
 const Playground = lazy(() => import("./pages/console/playground"));
+const Chatbot = lazy(() => import("./pages/console/chatbot"));
 const Page404 = lazy(() => import("./pages/404"));
 const Pools = lazy(() => import("./pages/console/pools"));
 
@@ -84,6 +85,14 @@ const router = createHashRouter([
           </Suspense>
         ),
       },
+      {
+        path: "chatbot",
+        element: (
+          <Suspense>
+            <Chatbot />
+          </Suspense>
+        )
+      }
     ],
   },
   {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CHAT_PROCESS, POOL_PROCESS } from "../utils/config";
+import { CHATBOT_PROCESS } from "../utils/config";
 import { getDataFromMessage, getTagsFromMessage, useAO } from "../utils/ao";
 import { useInterval, useLocalStorage } from "react-use";
 import dayjs from "dayjs";
@@ -14,11 +14,6 @@ const USER_WAIT_TIPS = (isOverTime: boolean, timeLeft: string) =>
 const USER_TIMEOUT_TIPS =
   "Sorry for the inconvenience. The Chat maynot be able to provide the result in time. Please try again later.";
 
-interface DatasetItem {
-  dataset_hash: string;
-  dataset_name: string;
-}
-
 interface ChatItem {
   role: string;
   message: string;
@@ -32,26 +27,17 @@ type UserHistory = Record<string, ChatItem[]>;
 const calculateInferenceTime = (question: string) => {
   const avgTokens = question.length / 3;
   const avgTime = avgTokens * 0.5; // seconds
-  const baseTime = 300;
+  const baseTime = 600;
   return avgTime + baseTime;
 };
 
-export function usePlayground(poolid?: string, dataset_hash?: string) {
+export function useChatbot(dataset_hash?: string) {
   const [userHistory, setUserHistory] = useLocalStorage<UserHistory>("session-history", {});
 
-  const {
-    execute: getDatasets,
-    result: datasetsResult,
-    loading: datasetsLoading,
-  } = useAO(POOL_PROCESS, "Get-Datasets", "dryrun", { autoLoad: true });
-  const { execute: chatQuestionMsg, loading: sendChatQuestioning } = useAO(CHAT_PROCESS, "Chat-Question", "message");
-  const { execute: getChatAnswer, loading: getChatAnswering } = useAO(CHAT_PROCESS, "Get-Chat-Answer", "dryrun", {
+  const { execute: chatQuestionMsg, loading: sendChatQuestioning } = useAO(CHATBOT_PROCESS, "Chat-Question", "message");
+  const { execute: getChatAnswer, loading: getChatAnswering } = useAO(CHATBOT_PROCESS, "Get-Chat-Answer", "dryrun", {
     checkStatus: false,
   });
-
-  useEffect(() => {
-    getDatasets({}, poolid);
-  }, [getDatasets, poolid]);
 
   const chatHistory = useMemo(
     () => (dataset_hash ? userHistory?.[dataset_hash] || [] : []),
@@ -158,19 +144,12 @@ export function usePlayground(poolid?: string, dataset_hash?: string) {
     }
   }, [dataset_hash, fetchResult, needRefresh, setUserHistory, userHistory]);
 
-  const datasetsMsg = datasetsResult?.Messages?.[0]?.Data || JSON.stringify([]);
-
-  const datasets: DatasetItem[] = JSON.parse(datasetsMsg);
-
   return {
-    datasets,
-    datasetsLoading,
     chatQuestion,
     fetchResult,
     isWaitingForAnswer,
     chatHistory,
     getChatAnswering,
     sendChatQuestioning,
-    setNeedRefresh,
   };
 }
