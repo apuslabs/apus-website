@@ -39,7 +39,7 @@ export const Playground = () => {
   return (
     <div id="playground" className="max-w-[1080px] mx-auto pb-24 pt-6">
       <div className="p-6">
-      <div className="w-full rounded-2xl overflow-hidden shadow-xl cursor-pointer">
+      <div className="w-full rounded-2xl overflow-hidden shadow-xl cursor-pointer" onClick={() => window.location.href = "https://permabrawl.arweave.net/#/home"}>
         <img src={ImgPlayground.BrawlBanner} className="w-full" />
       </div>
         <div className="text-2xl text-[#333333] font-bold mb-4 mt-8">Chat</div>
