@@ -1,5 +1,5 @@
 #competition .ant-table {
-  @apply p-6 bg-light rounded-[1rem];
+  @apply p-6 bg-white rounded-[1rem];
 }
 
 .ant-table-wrapper .ant-table-container table > thead > tr:first-child > *:first-child,

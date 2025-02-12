@@ -27,7 +27,7 @@ type UserHistory = Record<string, ChatItem[]>;
 const calculateInferenceTime = (question: string) => {
   const avgTokens = question.length / 3;
   const avgTime = avgTokens * 0.5; // seconds
-  const baseTime = 600;
+  const baseTime = 300;
   return avgTime + baseTime;
 };
 

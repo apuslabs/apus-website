@@ -72,7 +72,7 @@ const Competition = () => {
           onJoinCompetition={() => quickBtnOnClick(setJoinCompetitionModalVisible)}
         />
       </div>
-      <div className="relative p-6 bg-light rounded-2xl">
+      <div className="relative p-6 bg-white rounded-2xl">
         <div className="w-3/5">
           <h1 className="mb-6 font-bold text-3xl leading-tight">{poolInfo.title || ""}</h1>
           <p className=" text-neutral-900 leading-none">{timeTips}</p>
@@ -108,7 +108,7 @@ const Competition = () => {
       <div className="flex gap-4">
         {Statisitcs(dashboard).map(({ label, value }) => {
           return (
-            <div className="flex-1 bg-light p-6 border border-black5 border-solid rounded-2xl" key={label}>
+            <div className="flex-1 bg-white p-6 border border-black5 border-solid rounded-2xl" key={label}>
               <label className="text-black50 text-xs mb-4">{label}</label>
               <div className="font-medium text-xl">{value}</div>
             </div>
