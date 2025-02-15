@@ -146,6 +146,8 @@ import DaiLogo from "./mint/dai-logo.svg";
 import IconRecipient from "./mint/icon-recipient.svg";
 import IconMint from "./mint/icon-mint.svg";
 import IconMinting from "./mint/icon-minting.svg";
+import LogoAOTransparent from "./mint/logo-ao.svg"
+import LogoApusTransparent from "./mint/logo-apus.svg"
 
 export const ImgMint = {
   TokenomicsPie,
@@ -155,4 +157,6 @@ export const ImgMint = {
   IconRecipient,
   IconMint,
   IconMinting,
+  LogoAOTransparent,
+  LogoApusTransparent
 };

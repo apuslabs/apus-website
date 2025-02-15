@@ -16,6 +16,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@ant-design/charts": "^2.2.6",
     "@ant-design/icons": "^5.5.1",
     "@dha-team/arbundles": "^1.0.1",
     "@permaweb/aoconnect": "^0.0.61",

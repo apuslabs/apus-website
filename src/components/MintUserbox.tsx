@@ -1,6 +1,7 @@
 import { Dropdown, Spin } from "antd";
-import { useConnectWallet } from "@web3-onboard/react";
+// import { useConnectWallet } from "@web3-onboard/react";
 import "../contexts/ethwallet";
+import { useArweaveContext } from "../contexts/arconnect";
 
 function shortenAddress(address?: string): string {
   if (!address) {
@@ -9,34 +10,33 @@ function shortenAddress(address?: string): string {
   return address.substring(0, 6) + "..." + address.substring(address.length - 4);
 }
 
-export default function EthUserbox({ setRecipientVisible }: { setRecipientVisible: (visible: boolean) => void }) {
-  const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
+export default function EthUserbox() {
+  const { activeAddress, connectWallet, disconnect, connecting } = useArweaveContext();
+  // const [{ wallet, connecting }, connect, disconnect] = useConnectWallet();
 
-  return wallet?.accounts.length ? (
+  return activeAddress ? (
     <Dropdown
       placement="bottomRight"
       menu={{
         items: [
-          { key: "update-recipient", label: "Recipient Address" },
+          // { key: "update-recipient", label: "Recipient Address" },
           { key: "logout", label: "Disconnect Wallet" },
         ],
         onClick: ({ key }) => {
           if (key === "logout") {
-            disconnect(wallet);
-          } else if (key === "update-recipient") {
-            setRecipientVisible(true);
+            disconnect();
           }
         },
       }}
     >
-      <div className="btn-default">{shortenAddress(wallet.accounts[0].address)}</div>
+      <div className="btn-default">{shortenAddress(activeAddress)}</div>
     </Dropdown>
   ) : (
     <Spin spinning={connecting}>
       <div
         className="btn-blueToPink135"
         onClick={() => {
-          connect();
+          connectWallet();
         }}
       >
         Connect Wallet

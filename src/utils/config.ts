@@ -5,9 +5,10 @@ export const EMBEDDING_PROCESS = "q7QJTZbOI_avjaltnF-kP21kpL3qCs8sJSP6Wdl9wzM";
 export const CHAT_PROCESS = "4_zjOJp75rooSI6-f3lUwPJxwgcG1MXITCVqrPd_o5k";
 export const CHATBOT_PROCESS = "URaM7OLcB-TZj3C76qg7mjjX6nC2HvU9unUIxSDotJg";
 export const TOKEN_PROCESS = "al1xXXnWnfJD8qyZJvttVGq60z1VPGn4M5y6uCcMBUM";
-// export const AO_MINT_PROCESS = "sKd_ggG2RcLNygrnjXzpfmXWzLer77iPR8Q2dhdAw14";
 // export const AO_MINT_PROCESS = "LPK-D_3gZkXtia6ywwU1wRwgFOZ-eLFRMP9pfAFRfuw";
-export const AO_MINT_PROCESS = "1OEAToQGhSKV76oa1MFIGZ9bYxCJoxpXqtksApDdcu8";
+// export const AO_MINT_PROCESS = "1OEAToQGhSKV76oa1MFIGZ9bYxCJoxpXqtksApDdcu8";
+// export const AO_MINT_PROCESS = "T9Xi_fuvvcOGUz3c7o_qP9o4A_iRpQAngT4K15Vomrs";
+export const AO_MINT_PROCESS = "cuxSKjGJ-WDB9PzSkVkVVrIBSh3DrYHYz44usQOj5yE";
 export const APUS_ADDRESS = {
   Mint: "MZdvmO8d2IdOuXxAaXw9xjOsFH6Mk2r4IeqA6cT8tyc",
   Mirror: "3l3Qqm8YM0bDAeYv1OW3vLMat3GqEp2ieq4xYFyDtcU",

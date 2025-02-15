@@ -110,6 +110,7 @@
   background-color: #091dff;
   border-radius: 8px;
   box-sizing: border-box;
+  z-index: 11;
   &:before,
   &:after {
     display: none;

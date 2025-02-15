@@ -5,6 +5,7 @@ function useArweave() {
   const [permissions, setPermissions] = useState(initialPermissions);
   const [walletLoaded, setWalletLoaded] = useState(false);
   const [activeAddress, setActiveAddress] = useState<string>();
+  const [connecting, setConnecting] = useState<boolean>(false)
   const [onInit, setOnInit] = useState<((address?: string) => void) | undefined>();
   const init = useCallback(async () => {
     const address = await window.arweaveWallet.getActiveAddress();
@@ -29,8 +30,14 @@ function useArweave() {
     if (!window.arweaveWallet) {
       window.open("https://www.arconnect.io/download", "_blank");
     }
-    await window.arweaveWallet.connect(initialPermissions);
-    await init();
+    try {
+      setConnecting(true);
+      await window.arweaveWallet.connect(initialPermissions);
+      await init();
+    } finally {
+      setConnecting(false)
+    }
+
   };
 
   return {
@@ -38,6 +45,7 @@ function useArweave() {
     permissions,
     init,
     connectWallet,
+    connecting,
     activeAddress,
     setOnInit,
     disconnect: async () => {
