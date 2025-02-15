@@ -54,7 +54,7 @@ export function useAOMint({
     data: apus,
     loading: loadingApus,
     execute: getApus,
-  } = useAO<string>(MintProcess, "User.Balance", "dryrun");
+  } = useAO<string>(MintProcess, "Balance", "dryrun");
   const {
     data: userEstimatedApus,
     loading: loadingUserEstimatedApus,
