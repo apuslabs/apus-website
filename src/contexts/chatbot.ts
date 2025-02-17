@@ -128,7 +128,7 @@ export function useChatbot(dataset_hash?: string) {
           {
             role: "assistant",
             message:
-              "Hi, welcome to the Playground! Please type your question into the text box below. You can select your chosen dataset from the drop-down options above. Enjoy!",
+              "Welcome to the Perma Brawl event! Put your creativity to the test and engage in a conversation with Sam Digit Twin. Let’s bring more people into this event and work together to build the AO ecosystem.",
             reference: "",
             timestamp: dayjs().valueOf(),
             expectedTime: dayjs().valueOf(),
