@@ -128,7 +128,7 @@ export function useChatbot(dataset_hash?: string) {
           {
             role: "assistant",
             message:
-              "Welcome to the Perma Brawl event! Put your creativity to the test and engage in a conversation with Sam Digit Twin. Let’s bring more people into this event and work together to build the AO ecosystem.",
+              "Welcome to the Perma Brawl event! Put your creativity to the test and engage in a conversation with Sam William's Digital Twin. Let’s bring more people into this event and work together to build the AO ecosystem!",
             reference: "",
             timestamp: dayjs().valueOf(),
             expectedTime: dayjs().valueOf(),
