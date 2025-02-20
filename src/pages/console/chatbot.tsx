@@ -5,7 +5,7 @@ import TextArea from "antd/es/input/TextArea";
 import { useChatbot } from "../../contexts/chatbot";
 import { useState } from "react";
 import { useAutoScroll } from "../../utils/react-use";
-import { useArweaveContext } from "../../contexts/arconnect";
+import { useActiveAddress, useConnection } from "arweave-wallet-kit";
 
 function truncateString(str: string, delimiters: string[] = ["<|"]) {
   let minIndex = str.length;
@@ -21,7 +21,8 @@ function truncateString(str: string, delimiters: string[] = ["<|"]) {
 }
 
 export const Playground = () => {
-  const { activeAddress, connectWallet } = useArweaveContext();
+  const activeAddress = useActiveAddress()
+  const {connect} = useConnection()
   const {
     chatQuestion,
     fetchResult,
@@ -87,7 +88,7 @@ export const Playground = () => {
                   onClick={() => {
                     if (isBtnDisabled) return;
                     if (!activeAddress) {
-                      connectWallet();
+                      connect();
                       return;
                     }
                     if (isWaitingForAnswer) {

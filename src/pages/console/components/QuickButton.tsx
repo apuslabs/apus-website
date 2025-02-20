@@ -1,7 +1,7 @@
 import { FC } from "react";
-import { useArweaveContext } from "../../../contexts/arconnect";
 import { useCompetitionPool } from "../../../contexts/competition";
 import { Spin, message } from "antd";
+import { useActiveAddress, useConnection } from "arweave-wallet-kit";
 
 export const QuickButton: FC<{
   disabled: boolean;
@@ -10,14 +10,15 @@ export const QuickButton: FC<{
   checkPermission: ReturnType<typeof useCompetitionPool>["checkPermission"];
   onJoinCompetition: () => void;
 }> = ({ text, disabled, checkPermission, loading, onJoinCompetition }) => {
-  const { activeAddress, connectWallet } = useArweaveContext();
+  const activeAddress = useActiveAddress();
+  const {connect} = useConnection()
   return (
     <Spin spinning={loading}>
       <div
         className={`btn-blueToPink135 ${disabled ? "disabled" : " cursor-pointer"}`}
         onClick={async () => {
           if (!activeAddress) {
-            connectWallet();
+            connect();
           } else if (!disabled) {
             const result = await checkPermission({
               FromAddress: activeAddress,

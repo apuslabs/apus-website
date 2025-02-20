@@ -18,34 +18,22 @@
   "dependencies": {
     "@ant-design/charts": "^2.2.6",
     "@ant-design/icons": "^5.5.1",
-    "@dha-team/arbundles": "^1.0.1",
     "@permaweb/aoconnect": "^0.0.61",
-    "@safe-global/safe-apps-provider": "^0.18.4",
-    "@safe-global/safe-apps-sdk": "^8.1.0",
-    "@web3-onboard/core": "^2.23.0",
-    "@web3-onboard/gnosis": "^2.3.2",
-    "@web3-onboard/injected-wallets": "^2.11.2",
-    "@web3-onboard/react": "^2.10.0",
-    "@web3-onboard/torus": "^2.3.1",
-    "@web3-onboard/trezor": "^2.4.6",
-    "@web3-onboard/walletconnect": "^2.6.1",
     "antd": "^5.21.6",
-    "arconnect": "^1.0.4",
+    "arweave-wallet-kit": "^1.1.0",
     "axios": "^1.7.7",
     "dayjs": "^1.11.13",
-    "decimal.js": "^10.4.3",
     "ethers": "^5.7.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-flip-numbers": "^3.0.9",
     "react-router-dom": "^6.27.0",
-    "react-scan": "^0.0.51",
     "react-toastify": "^11.0.1",
     "react-use": "^17.5.1",
-    "usehooks-ts": "^3.1.0",
     "web-vitals": "^4.2.4"
   },
   "devDependencies": {
+    "react-scan": "^0.0.51",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@types/secp256k1": "^4.0.6",
@@ -79,5 +67,6 @@
       "tailwindcss": {},
       "autoprefixer": {}
     }
-  }
+  },
+  "packageManager": "yarn@1.22.21+sha1.1959a18351b811cdeedbd484a8f86c3cc3bbaf72"
 }

@@ -8,9 +8,9 @@ import { CompetitionDetails } from "./components/CompetitionDetails";
 import { Statisitcs } from "./components/Statistics";
 import { RenderEmpty, TableColumns } from "./constants";
 import { JoinCompetitionModal } from "./components/JoinCompetitionModal";
-import { useArweaveContext } from "../../contexts/arconnect";
 import SubmitSuccessfulModal from "./components/SubmitSuccessfulModal";
 import { useParams } from "react-router-dom";
+import { useActiveAddress } from "arweave-wallet-kit";
 
 const TwitterVideo = ({ videoLink }: { videoLink?: string }) => {
   return videoLink ? (
@@ -30,7 +30,7 @@ const TwitterVideo = ({ videoLink }: { videoLink?: string }) => {
 };
 
 const Competition = () => {
-  const { activeAddress } = useArweaveContext();
+  const activeAddress = useActiveAddress();
   const { poolid } = useParams();
   const [showMore, setShowMore] = useState(false);
   const [joinCompetitionModalVisible, setJoinCompetitionModalVisible] = useState(false);

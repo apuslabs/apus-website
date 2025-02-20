@@ -1,10 +1,11 @@
 import { useCallback, useEffect } from "react";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime"; // ES 2015
-import { useArweaveContext } from "./arconnect";
 import { useAO } from "../utils/ao";
 import { POOL_PROCESS, EMBEDDING_PROCESS } from "../utils/config";
 import { message } from "antd";
+import { useActiveAddress } from "arweave-wallet-kit";
+import { AppConfigContext } from "antd/es/app/context";
 dayjs.extend(relativeTime);
 
 interface PoolInfoMetadata {
@@ -70,7 +71,7 @@ function resortLeaderboard(leaderboard: Leaderboard[], activeAddress?: string) {
 }
 
 export function useCompetitionPool(poolID: string | undefined, onJoinPool: () => void) {
-  const { activeAddress, setOnInit } = useArweaveContext();
+  const activeAddress = useActiveAddress()
   const {
     result: poolInfoResult,
     loading: poolInfoLoading,
@@ -103,8 +104,10 @@ export function useCompetitionPool(poolID: string | undefined, onJoinPool: () =>
     [poolID, getDashboard, getLeaderboard, getPool],
   );
   useEffect(() => {
-    setOnInit(loadData);
-  }, [loadData, setOnInit]);
+    if (AppConfigContext) {
+      loadData(activeAddress);
+    }
+  }, [loadData, activeAddress]);
 
   const poolInfoMsg = poolInfoResult?.Messages?.[0]?.Data || JSON.stringify(DefaultPoolInfo);
   const dashboardMsg = dashboardResult?.Messages?.[0]?.Data || JSON.stringify(DefaultDashboard);

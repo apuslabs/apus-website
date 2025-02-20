@@ -10,7 +10,7 @@ import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
-import MintUserbox from "../../components/MintUserbox";
+
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -19,15 +19,16 @@ dayjs.extend(relativeTime);
 import { splitBigNumber } from "./utils";
 import { APUS_ADDRESS } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
-import { useArweaveContext } from "../../contexts/arconnect";
 import { useLocalStorage } from "react-use";
+import { ConnectButton, useActiveAddress, useConnection } from "arweave-wallet-kit";
 
 export const GrayDivider = ({ className }: { className?: string }) => (
   <Divider className={`min-w-0 w-[21rem] my-5 ${className} border-grayd8`} />
 );
 
 export default function Mint() {
-  const { activeAddress: walletAddress, connectWallet } = useArweaveContext();
+  const {connect} = useConnection()
+  const activeAddress = useActiveAddress()
   const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");
   const {
     apusDynamic,
@@ -38,7 +39,7 @@ export default function Mint() {
     updateDelegation,
   } = useAOMint({
     apusWallet,
-    wallet: walletAddress,
+    wallet: activeAddress,
     MintProcess: APUS_ADDRESS.Mint,
     MirrorProcess: APUS_ADDRESS.Mirror,
   });
@@ -52,11 +53,11 @@ export default function Mint() {
   }, [apusFactor]);
 
   const isPercentUpdated = percent !== apusFactor;
-  const cannotApproveTip = !walletAddress ? "Please connect wallet" : !isPercentUpdated ? "Please Set Percent" : "";
+  const cannotApproveTip = !activeAddress ? "Please connect wallet" : !isPercentUpdated ? "Please Set Percent" : "";
 
   const approve = async () => {
-    if (!walletAddress) {
-      connectWallet();
+    if (!activeAddress) {
+      connect();
       return;
     }
     if (!isPercentUpdated) {
@@ -94,7 +95,7 @@ export default function Mint() {
 
   return (
     <>
-      <HomeHeader Userbox={<MintUserbox />} />
+      <HomeHeader Userbox={<ConnectButton profileModal={false} showBalance={false} />} />
       <div id="mint" className="pt-20 z-10">
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
@@ -245,8 +246,8 @@ export default function Mint() {
             </div>
             <Tooltip title={cannotApproveTip} color="#f85931" placement="bottom">
               <Spin spinning={loadingUpdateDelegation}>
-                <div className={`btn-primary ${isPercentUpdated && walletAddress ? "" : "disabled"}`} onClick={approve}>
-                  {walletAddress ? "Save Changes" : "Connect Wallet"}
+                <div className={`btn-primary ${isPercentUpdated && activeAddress ? "" : "disabled"}`} onClick={approve}>
+                  {activeAddress ? "Save Changes" : "Connect Wallet"}
                 </div>
               </Spin>
             </Tooltip>
