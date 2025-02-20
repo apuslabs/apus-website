@@ -1,6 +1,4 @@
 import { Dropdown, Spin } from "antd";
-// import { useConnectWallet } from "@web3-onboard/react";
-import "../contexts/ethwallet";
 import { useArweaveContext } from "../contexts/arconnect";
 
 function shortenAddress(address?: string): string {

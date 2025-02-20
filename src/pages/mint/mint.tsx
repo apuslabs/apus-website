@@ -1,6 +1,6 @@
-import { Divider, Form, Input, Modal, Popover, Slider, Spin, theme, Tooltip } from "antd";
+import { Divider, Form, Input, Modal, Slider, Spin, Tooltip } from "antd";
 import { ToastContainer, toast, Bounce } from "react-toastify";
-import { Pie } from '@ant-design/plots';
+import { Pie } from "@ant-design/plots";
 import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
@@ -28,11 +28,11 @@ export const GrayDivider = ({ className }: { className?: string }) => (
 
 export default function Mint() {
   const { activeAddress: walletAddress, connectWallet } = useArweaveContext();
-  const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet")
+  const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");
   const {
     apusDynamic,
     loadingApus,
-    delegations: { aoFactor, apusFactor, otherFactor },
+    delegations: { apusFactor, otherFactor },
     loadingDelegations,
     loadingUpdateDelegation,
     updateDelegation,
@@ -42,21 +42,17 @@ export default function Mint() {
     MintProcess: APUS_ADDRESS.Mint,
     MirrorProcess: APUS_ADDRESS.Mirror,
   });
-  const maxFactorToApus = 100 - otherFactor
+  const maxFactorToApus = 100 - otherFactor;
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
 
   const [percent, setPercent] = useState<number>(0);
 
   useEffect(() => {
-    setPercent(apusFactor)
-  }, [apusFactor])
+    setPercent(apusFactor);
+  }, [apusFactor]);
 
-  const isPercentUpdated = percent !== apusFactor
-  const cannotApproveTip = !walletAddress
-    ? "Please connect wallet"
-    : !isPercentUpdated
-      ? "Please Set Percent"
-      : "";
+  const isPercentUpdated = percent !== apusFactor;
+  const cannotApproveTip = !walletAddress ? "Please connect wallet" : !isPercentUpdated ? "Please Set Percent" : "";
 
   const approve = async () => {
     if (!walletAddress) {
@@ -68,8 +64,11 @@ export default function Mint() {
     }
     Modal.confirm({
       title: "Delegation Update Confirm",
-      content: percent === 0 ? `Remove ALL your delegation to $APUS` : `${percent > apusFactor ? "Increase" : "Decrease"} your delegation to $APUS from ${apusFactor}% to ${percent}%`,
-      onOk: async() => {
+      content:
+        percent === 0
+          ? `Remove ALL your delegation to $APUS`
+          : `${percent > apusFactor ? "Increase" : "Decrease"} your delegation to $APUS from ${apusFactor}% to ${percent}%`,
+      onOk: async () => {
         try {
           await updateDelegation(percent);
           toast.success(`Save Successful`);
@@ -82,41 +81,54 @@ export default function Mint() {
           }
         }
       },
-    })
-    
+    });
   };
 
-  const [recipientModal, setRecipientModal] = useState(false)
-  const [recipient, setRecipient] = useState("")
+  const [recipientModal, setRecipientModal] = useState(false);
+  const [recipient, setRecipient] = useState("");
   useEffect(() => {
     if (apusWallet) {
-      setRecipient(apusWallet)
+      setRecipient(apusWallet);
     }
-  }, [apusWallet])
+  }, [apusWallet]);
 
   return (
     <>
       <HomeHeader Userbox={<MintUserbox />} />
-      <div
-        id="mint"
-        className="pt-20 z-10"
-      >
+      <div id="mint" className="pt-20 z-10">
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
-            <div className="text-gray90"><span className="mr-2">Your APUS</span>
-              <Tooltip title={
-                <div>
-                  <div>Why $APUS is 0 while already delegated?</div>
-                  <ul className="pl-4 list-disc">
-                    <li>APUS mint every 5 mins, please wait 5 mins after first delegate</li>
-                    <li>APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally 6 hours).</li>
-                    <li>APUS has migarated to delegation from allocation, if you had set recipient before, please <div className="underline text-sky-200 cursor-pointer" onClick={() => {
-                      setRecipientModal(true)
-                    }}>reconnect here</div></li>
-                  </ul>
-                </div>
-              } overlayClassName="w-96 max-w-96"><QuestionCircleOutlined /></Tooltip>
+            <div className="text-gray90">
+              <span className="mr-2">Your APUS</span>
+              <Tooltip
+                title={
+                  <div>
+                    <div>Why $APUS is 0 while already delegated?</div>
+                    <ul className="pl-4 list-disc">
+                      <li>APUS mint every 5 mins, please wait 5 mins after first delegate</li>
+                      <li>
+                        APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally
+                        6 hours).
+                      </li>
+                      <li>
+                        APUS has migarated to delegation from allocation, if you had set recipient before, please{" "}
+                        <div
+                          className="underline text-sky-200 cursor-pointer"
+                          onClick={() => {
+                            setRecipientModal(true);
+                          }}
+                        >
+                          reconnect here
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                }
+                overlayClassName="w-96 max-w-96"
+              >
+                <QuestionCircleOutlined />
+              </Tooltip>
             </div>
             <div className="font-medium text-gray21 text-[30px] leading-none">
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
@@ -188,19 +200,25 @@ export default function Mint() {
         </div>
         <div className="card flex-col items-center p-12">
           <div className="card-caption">ALLOCATE</div>
-          <div className="text-gray21">Below represents how you are allocating your AO Yield</div>
-          <DemoPie aoFactor={100-otherFactor-percent} apusFactor={percent} otherFactor={otherFactor} />
+          <div className="text-gray21 mb-8">Below represents how you are allocating your AO Yield</div>
+          <DemoPie aoFactor={Number((100 - otherFactor - percent).toFixed(2))} apusFactor={percent} otherFactor={otherFactor} />
           <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
             <div className="relative w-full px-[5px]">
               {/* <div className="absolute left-0 top-0 text-xs font-semibold underline text-mainblue cursor-pointer z-10" onClick={() => {
                 setPercent(0)
               }}>Remove All</div> */}
-              <div className="absolute left-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10" style={{
-                width: `${5}%`
-              }}></div>
-              <div className="absolute right-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10" style={{
-                width: `${otherFactor}%`
-              }}></div>
+              <div
+                className="absolute left-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10"
+                style={{
+                  width: `${5}%`,
+                }}
+              ></div>
+              <div
+                className="absolute right-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10"
+                style={{
+                  width: `${otherFactor}%`,
+                }}
+              ></div>
               <Slider
                 className="w-full"
                 marks={{ 0: "0%", 5: "5%", [maxFactorToApus]: `${maxFactorToApus}%` }}
@@ -208,16 +226,17 @@ export default function Mint() {
                 max={100}
                 step={0.01}
                 tooltip={{
-                  open: true
+                  open: true,
+                  formatter: v => loadingDelegations ? <LoadingOutlined color="#f3f3f3" /> : `${v}%`,
                 }}
                 value={percent}
                 onChange={(v) => {
                   if (v === 0) {
-                    setPercent(0)
+                    setPercent(0);
                   } else if (v < 5) {
-                    setPercent(5)
+                    setPercent(5);
                   } else if (v >= maxFactorToApus) {
-                    setPercent(maxFactorToApus)
+                    setPercent(maxFactorToApus);
                   } else {
                     setPercent(v);
                   }
@@ -248,17 +267,23 @@ export default function Mint() {
         theme="colored"
         transition={Bounce}
       />
-      <Modal title="Connect Recipient Modal" open={recipientModal} onCancel={() => {
-        setRecipientModal(false)
-      }} onClose={() => {
-        setRecipientModal(false)
-      }} onOk={() => {
-        setApusWallet(recipient)
-        setRecipientModal(false)
-      }}>
+      <Modal
+        title="Connect Recipient Modal"
+        open={recipientModal}
+        onCancel={() => {
+          setRecipientModal(false);
+        }}
+        onClose={() => {
+          setRecipientModal(false);
+        }}
+        onOk={() => {
+          setApusWallet(recipient);
+          setRecipientModal(false);
+        }}
+      >
         <Form>
           <Form.Item label="Recipient Address">
-            <Input value={recipient} onChange={v => setRecipient(v.target.value)} />
+            <Input value={recipient} onChange={(v) => setRecipient(v.target.value)} />
           </Form.Item>
         </Form>
       </Modal>
@@ -266,43 +291,36 @@ export default function Mint() {
   );
 }
 
-function DemoPie ({ apusFactor, otherFactor, aoFactor }: {
-  apusFactor: number
-  otherFactor: number
-  aoFactor: number
-}) {
-  const config = {
-    data: [
-      { type: 'Apus', value: apusFactor, color: "#091DFF" },
-      { type: 'AO', value: aoFactor, color: "#F87D5E" },
-      { type: 'Other', value: otherFactor, color: "#212121" },
-    ],
-    width: 300,
-    height: 300,
-    angleField: 'value',
-    colorField: 'color',
-    scale: { color: { palette: ["#091DFF", "#F87D5E", "#212121"] } },
-    animate: { update: { type: false }, enter: { type: false }, exit: { type: false } },
-    label: {
-      position: "inside",
-      transform: [
-        {
-          type: 'overlapDodgeY',
+function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; otherFactor: number; aoFactor: number }) {
+  return (
+    <Pie
+      data={[
+        { type: "Apus", value: apusFactor },
+        { type: "AO", value: aoFactor },
+        { type: "Other", value: otherFactor },
+      ]}
+      width={400}
+      height={340}
+      paddingX={50}
+      angleField="value"
+      colorField="type"
+      scale={{ color: { palette: ["#091DFF", "#F87D5E", "#212121"] } }}
+      animate={{ update: { type: false }, enter: { type: false }, exit: { type: false } }}
+      label={{
+        text: "value",
+        position: "outside",
+      }}
+      legend={{
+        color: {
+          layout: {
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          },
+          position: "bottom",
+          rowPadding: 5,
         },
-      ],
-      render: (_: string, { type, value }: { type: string, value: number }) => {
-        if (value === 0) {
-          return `<div></div>`
-        }
-        if (type === "Apus") {
-          return `<img src=${ImgMint.LogoApusTransparent} />`
-        } else if (type === "AO") {
-          return `<img src=${ImgMint.LogoAOTransparent} />`
-        }
-        return `<div class="text-white">${type}</div>`
-      }
-    },
-    legend: false,
-  };
-  return <Pie {...config} />;
-};
+      }}
+    />
+  );
+}
