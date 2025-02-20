@@ -107,9 +107,10 @@ export function useAOMint({
           factor: Math.floor(factor * 100)
         }
         await updateDelegationMsg({}, params);
+        getDelegations({ Wallet: wallet })
       }
     },
-    [updateDelegationMsg, wallet],
+    [updateDelegationMsg, getDelegations, wallet],
   );
 
   // animate apus balance change
