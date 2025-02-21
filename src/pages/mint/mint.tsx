@@ -16,7 +16,7 @@ import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
-import { splitBigNumber } from "./utils";
+import { formatBigNumber, splitBigNumber } from "./utils";
 import { APUS_ADDRESS } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import { useLocalStorage } from "react-use";
@@ -34,6 +34,8 @@ export default function Mint() {
     apusDynamic,
     loadingApus,
     delegations: { apusFactor, otherFactor },
+    userEstimatedApus,
+    loadingUserEstimatedApus,
     loadingDelegations,
     loadingUpdateDelegation,
     updateDelegation,
@@ -150,13 +152,13 @@ export default function Mint() {
               </Spin>
             </div>
             <Divider orientation="center" className="m-0" />
-            {/* <div className="text-gray90">30 Day Projection</div>
+            <div className="text-gray90">30 Day Projection</div>
             <div className="flex gap-2 items-center leading-none">
               <span className="text-[#03C407] text-[40px] -mt-[6px]">+</span>
               <LoadingNumber loading={loadingUserEstimatedApus}>
                 <span className="font-medium text-gray21 text-[30px]">{formatBigNumber(userEstimatedApus, 12, 4)}</span>
               </LoadingNumber>
-            </div> */}
+            </div>
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-5 p-7">
@@ -205,9 +207,6 @@ export default function Mint() {
           <DemoPie aoFactor={Number((100 - otherFactor - percent).toFixed(2))} apusFactor={percent} otherFactor={otherFactor} />
           <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
             <div className="relative w-full px-[5px]">
-              {/* <div className="absolute left-0 top-0 text-xs font-semibold underline text-mainblue cursor-pointer z-10" onClick={() => {
-                setPercent(0)
-              }}>Remove All</div> */}
               <div
                 className="absolute left-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10"
                 style={{
@@ -323,5 +322,24 @@ function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; ot
         },
       }}
     />
+  );
+}
+
+
+function LoadingNumber({
+  className,
+  loading,
+  children,
+}: {
+  className?: string;
+  loading: boolean;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className={`${className ? className : ""} flex items-center`}>
+      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loading}>
+        {loading ? `--` : children}
+      </Spin>
+    </div>
   );
 }

@@ -22,13 +22,6 @@ interface GetDelegationResponse {
   lastUpdate: number
 }
 
-const DefaultDelegations: GetDelegationResponse = {
-  wallet: "",
-  delegationPrefs: [],
-  totalFactor: 0,
-  lastUpdate: 0,
-}
-
 const DefaultSplitDelegations = {
   apusFactor: 0,
   otherFactor: 0,
@@ -59,7 +52,7 @@ export function useAOMint({
     data: userEstimatedApus,
     loading: loadingUserEstimatedApus,
     execute: getUserEstimatedApus,
-  } = useAO<string>(MirrorProcess, "User.Get-", "dryrun");
+  } = useAO<string>(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
   const [apusDynamic, setApusDynamic] = useState<BigNumber>();
   const {
     data: delegationsData,
@@ -87,8 +80,9 @@ export function useAOMint({
   useEffect(() => {
     if(wallet) {
       getDelegations({ Wallet: wallet })
+      getUserEstimatedApus({ User: wallet })
     }
-  }, [wallet, getDelegations])
+  }, [wallet, getDelegations, getUserEstimatedApus])
 
   const { loading: loadingUpdateDelegation, execute: updateDelegationMsg } = useAO(
     AO_MINT_PROCESS,
@@ -152,6 +146,8 @@ export function useAOMint({
   return {
     apusDynamic,
     loadingApus,
+    userEstimatedApus: toBigNumber(userEstimatedApus),
+    loadingUserEstimatedApus,
     delegations,
     loadingDelegations,
     loadingUpdateDelegation,
