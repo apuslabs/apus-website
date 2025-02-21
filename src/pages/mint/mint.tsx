@@ -1,4 +1,4 @@
-import { Divider, Form, Input, Modal, Slider, Spin, Tooltip } from "antd";
+import { Divider, Dropdown, Form, Input, InputNumber, Modal, Slider, Spin, Tooltip } from "antd";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import { Pie } from "@ant-design/plots";
 import "./mint.css";
@@ -6,7 +6,7 @@ import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
 import { useAOMint } from "./contexts";
 import { BigNumber } from "ethers";
-import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
@@ -27,8 +27,8 @@ export const GrayDivider = ({ className }: { className?: string }) => (
 );
 
 export default function Mint() {
-  const {connect} = useConnection()
-  const activeAddress = useActiveAddress()
+  const { connect, disconnect } = useConnection();
+  const activeAddress = useActiveAddress();
   const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");
   const {
     apusDynamic,
@@ -95,35 +95,69 @@ export default function Mint() {
     }
   }, [apusWallet]);
 
+  const onPercentChange = (v: number) => {
+    if (v === 0) {
+      setPercent(0);
+    } else if (v < 5) {
+      setPercent(5);
+    } else if (v >= maxFactorToApus) {
+      setPercent(maxFactorToApus);
+    } else {
+      setPercent(v);
+    }
+  };
+
   return (
     <>
-      <HomeHeader Userbox={<ConnectButton profileModal={false} showBalance={false} />} />
+      <HomeHeader
+        Userbox={
+          <Dropdown
+            menu={{
+              items: [
+                {
+                  key: "disconnect",
+                  label: (
+                    <div
+                      onClick={() => {
+                        disconnect();
+                      }}
+                    >
+                      Disconnect Wallet
+                    </div>
+                  ),
+                },
+              ],
+            }}
+          >
+            <ConnectButton profileModal={false} showBalance={false} />
+          </Dropdown>
+        }
+      />
       <div id="mint" className="pt-20 z-10">
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
-            <div className="text-gray90">
+            <div className="text-gray90 mt-5">
               <span className="mr-2">Your APUS</span>
               <Tooltip
                 title={
                   <div>
                     <div>Why $APUS is 0 while already delegated?</div>
                     <ul className="pl-4 list-disc">
-                      <li>APUS mint every 5 mins, please wait 5 mins after first delegate</li>
                       <li>
                         APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally
-                        6 hours).
+                        24 hours).
                       </li>
                       <li>
-                        APUS has migarated to delegation from allocation, if you had set recipient before, please{" "}
-                        <div
+                        APUS has migarated to delegation from allocation, if you had set recipient before, please&nbsp;
+                        <span
                           className="underline text-sky-200 cursor-pointer"
                           onClick={() => {
                             setRecipientModal(true);
                           }}
                         >
                           reconnect here
-                        </div>
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -137,8 +171,8 @@ export default function Mint() {
               <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loadingApus}>
                 <div className="flex items-end justify-center">
                   <FlipNumbers
-                    height={30}
-                    width={20}
+                    height={40}
+                    width={30}
                     color="#212121"
                     numberStyle={{
                       zoom: "101%",
@@ -147,16 +181,16 @@ export default function Mint() {
                     numbers={apusInteger}
                   />
                   <span>.</span>
-                  <FlipNumbers height={20} width={14} color="#212121" play numbers={apusDecimal} />
+                  <FlipNumbers height={30} width={20} color="#212121" play numbers={apusDecimal} />
                 </div>
               </Spin>
             </div>
-            <Divider orientation="center" className="m-0" />
+            <Divider orientation="center" className="my-8" />
             <div className="text-gray90">30 Day Projection</div>
             <div className="flex gap-2 items-center leading-none">
               <span className="text-[#03C407] text-[40px] -mt-[6px]">+</span>
               <LoadingNumber loading={loadingUserEstimatedApus}>
-                <span className="font-medium text-gray21 text-[30px]">{formatBigNumber(userEstimatedApus, 12, 4)}</span>
+                <span className="font-medium text-gray21 text-[40px]">{formatBigNumber(userEstimatedApus, 12, 4)}</span>
               </LoadingNumber>
             </div>
           </div>
@@ -203,8 +237,36 @@ export default function Mint() {
         </div>
         <div className="card flex-col items-center p-12">
           <div className="card-caption">ALLOCATE</div>
-          <div className="text-gray21 mb-8">Below represents how you are allocating your AO Yield</div>
-          <DemoPie aoFactor={Number((100 - otherFactor - percent).toFixed(2))} apusFactor={percent} otherFactor={otherFactor} />
+          <div className="text-gray21 mb-8">
+            Below represents how you are allocating your AO Yield
+            <Tooltip
+              title={
+                <div>
+                  Since APUS is built on the AO network, you must first
+                  <Link to="https://ao.arweave.dev/#/mint" className="mx-1 text-blue underline">
+                    Bridge To AO
+                  </Link>
+                  before allocating to APUS. The AO available for allocation includes all your bridged assets,
+                  including and any allocations to other projects.
+                </div>
+              }
+              placement="topRight"
+              arrow={false}
+              overlayInnerStyle={{
+                backgroundColor: "white",
+                color: "#0b0b0b",
+                padding: "1rem",
+                width: "26rem",
+              }}
+            >
+              <InfoCircleOutlined className="pl-1" />
+            </Tooltip>
+          </div>
+          <DemoPie
+            aoFactor={Number((100 - otherFactor - percent).toFixed(2))}
+            apusFactor={percent}
+            otherFactor={otherFactor}
+          />
           <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
             <div className="relative w-full px-[5px]">
               <div
@@ -224,21 +286,39 @@ export default function Mint() {
                 marks={{ 0: "0%", 5: "5%", [maxFactorToApus]: `${maxFactorToApus}%` }}
                 min={0}
                 max={100}
-                step={0.01}
+                step={1}
                 tooltip={{
                   open: true,
-                  formatter: v => loadingDelegations ? <LoadingOutlined color="#f3f3f3" /> : `${v}%`,
+                  formatter: (v) => (loadingDelegations ? <LoadingOutlined color="#f3f3f3" /> : `${v}%`),
                 }}
                 value={percent}
-                onChange={(v) => {
-                  if (v === 0) {
-                    setPercent(0);
-                  } else if (v < 5) {
-                    setPercent(5);
-                  } else if (v >= maxFactorToApus) {
-                    setPercent(maxFactorToApus);
-                  } else {
-                    setPercent(v);
+                onChange={onPercentChange}
+              />
+            </div>
+            <div className="w-full flex flex-col items-end -mt-10">
+              <div className="mb-2">
+                <span className="text-mainblue font-semibold">{percent}%</span> allocated to Mint APUS
+              </div>
+              <InputNumber
+                className="w-60"
+                size="large"
+                value={percent}
+                max={maxFactorToApus}
+                min={0}
+                precision={2}
+                step={1}
+                onStep={onPercentChange}
+                onPressEnter={(v) => {
+                  const n = parseFloat((v.target as HTMLInputElement).value);
+                  console.log(n);
+                  if (!isNaN(n)) {
+                    onPercentChange(n);
+                  }
+                }}
+                onBlur={(v) => {
+                  const n = parseFloat(v.target.value);
+                  if (!isNaN(n)) {
+                    onPercentChange(n);
                   }
                 }}
               />
@@ -324,7 +404,6 @@ function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; ot
     />
   );
 }
-
 
 function LoadingNumber({
   className,
