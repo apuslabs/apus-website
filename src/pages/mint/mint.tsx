@@ -382,6 +382,7 @@ function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; ot
       width={400}
       height={340}
       paddingX={50}
+      insetBottom={16}
       angleField="value"
       colorField="type"
       scale={{ color: { palette: ["#091DFF", "#F87D5E", "#212121"] } }}
