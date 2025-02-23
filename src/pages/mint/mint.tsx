@@ -111,26 +111,30 @@ export default function Mint() {
     <>
       <HomeHeader
         Userbox={
-          <Dropdown
-            menu={{
-              items: [
-                {
-                  key: "disconnect",
-                  label: (
-                    <div
-                      onClick={() => {
-                        disconnect();
-                      }}
-                    >
-                      Disconnect Wallet
-                    </div>
-                  ),
-                },
-              ],
-            }}
-          >
+          activeAddress ? (
+            <Dropdown
+              menu={{
+                items: [
+                  {
+                    key: "disconnect",
+                    label: (
+                      <div
+                        onClick={() => {
+                          disconnect();
+                        }}
+                      >
+                        Disconnect Wallet
+                      </div>
+                    ),
+                  },
+                ],
+              }}
+            >
+              <ConnectButton profileModal={false} showBalance={false} />
+            </Dropdown>
+          ) : (
             <ConnectButton profileModal={false} showBalance={false} />
-          </Dropdown>
+          )
         }
       />
       <div id="mint" className="pt-20 z-10">
@@ -246,8 +250,8 @@ export default function Mint() {
                   <Link to="https://ao.arweave.dev/#/mint" className="mx-1 text-blue underline">
                     Bridge To AO
                   </Link>
-                  before allocating to APUS. The AO available for allocation includes all your bridged assets,
-                  including and any allocations to other projects.
+                  before allocating to APUS. The AO available for allocation includes all your bridged assets, including
+                  and any allocations to other projects.
                 </div>
               }
               placement="topRight"
