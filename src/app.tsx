@@ -1,5 +1,4 @@
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
-import { ArweaveContext, useArweave } from "./contexts/arconnect";
 import { ConfigProvider, theme } from "antd";
 import { lazy, Suspense } from "react";
 import HomeHeader from "./components/HomeHeader";
@@ -112,13 +111,9 @@ const router = createHashRouter([
 ]);
 
 export default function App() {
-  const ar = useArweave();
-
   return (
     <ConfigProvider>
-      <ArweaveContext.Provider value={ar}>
-        <RouterProvider router={router} />
-      </ArweaveContext.Provider>
+      <RouterProvider router={router} />
     </ConfigProvider>
   );
 }

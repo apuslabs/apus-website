@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useAutoScroll } from "../../utils/react-use";
 import { useLocalStorage } from "react-use";
-import { useArweaveContext } from "../../contexts/arconnect";
+import { useActiveAddress, useConnection } from "arweave-wallet-kit";
 
 function truncateString(str: string, delimiters: string[] = ["<|"]) {
   let minIndex = str.length;
@@ -23,7 +23,8 @@ function truncateString(str: string, delimiters: string[] = ["<|"]) {
 }
 
 export const Playground = () => {
-  const { activeAddress, connectWallet } = useArweaveContext();
+  const activeAddress = useActiveAddress();
+  const {connect} = useConnection();
   const [selectedDataset, setSelectedDataset] = useLocalStorage<string>("selected-dataset");
   const { poolid } = useParams();
   const {
@@ -127,7 +128,7 @@ export const Playground = () => {
                 onClick={() => {
                   if (isBtnDisabled) return;
                   if (!activeAddress) {
-                    connectWallet();
+                    connect();
                     return;
                   }
                   if (isWaitingForAnswer) {

@@ -1,34 +1,8 @@
-import { FC } from "react";
 import { ImgHomepage } from "../assets";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ConsoleHeaderMenuList } from "./constants";
-import { ShortAddress } from "../utils/ao";
-import { useArweaveContext } from "../contexts/arconnect";
-import { Dropdown } from "antd";
 import "./headerfooter.css";
-
-export const UserInfo: FC = function () {
-  const { activeAddress, connectWallet, disconnect } = useArweaveContext();
-  return activeAddress ? (
-    <Dropdown
-      placement="bottomRight"
-      menu={{
-        items: [{ key: "logout", label: "Disconnect Wallet" }],
-        onClick: ({ key }) => {
-          if (key === "logout") {
-            disconnect();
-          }
-        },
-      }}
-    >
-      <div className="btn-default">{ShortAddress(activeAddress)}</div>
-    </Dropdown>
-  ) : (
-    <div className="btn-main btn-colorful" onClick={connectWallet}>
-      Connect Wallet
-    </div>
-  );
-};
+import { ConnectButton } from "arweave-wallet-kit";
 
 export default function ConsoleHeader() {
   const location = useLocation();
@@ -55,7 +29,7 @@ export default function ConsoleHeader() {
           ))}
         </ul>
       </nav>
-      <UserInfo />
+      <ConnectButton profileModal={false} showBalance={false} />
     </header>
   );
 }
