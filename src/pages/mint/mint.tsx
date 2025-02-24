@@ -130,7 +130,10 @@ export default function Mint() {
                 ],
               }}
             >
-              <ConnectButton profileModal={false} showBalance={false} />
+              <ConnectButton profileModal={false} showBalance={false} onClickCapture={e => {
+                e.stopPropagation()
+                e.preventDefault()
+              }}/>
             </Dropdown>
           ) : (
             <ConnectButton profileModal={false} showBalance={false} />
