@@ -124,11 +124,12 @@ export function useAOMint({
       setApusDynamic(toBigNumber(apus));
       return;
     }
-    const diff = bigUserEstimatedApus?.sub(bigApus);
-    const step = diff.div(30 * 24 * 3600);
+    const step = bigUserEstimatedApus.div(30 * 24 * 3600);
     const interval = setInterval(() => {
       setApusDynamic((v) => {
-        if (v) {
+        if (!v || v?.isZero()) {
+          return toBigNumber(apus)
+        } else if (v) {
           return v.add(step)
         }
       });
