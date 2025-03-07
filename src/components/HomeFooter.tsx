@@ -2,6 +2,7 @@ import { ImgHomepage } from "../assets";
 import { Link } from "react-router-dom";
 import { SocialMediaList } from "./SocialMediaList";
 import { useBreakpoint } from "../utils/react-use";
+import { FeedbackFish } from "@feedback-fish/react";
 
 const HomeFooterMenuList: NavigationMenuType[] = [
   {
@@ -25,6 +26,9 @@ function HomeFooterMobile() {
             {name}
           </Link>
         ))}
+        <FeedbackFish projectId="bbf0e91842cb41">
+          <div className="text-white">Feedback</div>
+        </FeedbackFish>
       </div>
       <SocialMediaList className="invert small" />
       <div
@@ -58,6 +62,9 @@ function HomeFooter() {
                 {name}
               </Link>
             ))}
+            <FeedbackFish projectId="bbf0e91842cb41">
+              <div className="text-white cursor-pointer">Feedback</div>
+            </FeedbackFish>
           </div>
         </div>
       </div>
