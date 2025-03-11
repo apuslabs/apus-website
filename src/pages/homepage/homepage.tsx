@@ -2,12 +2,9 @@ import { ApusLogo, ImgHomepage } from "../../assets";
 import { useSubscribe } from "./contexts";
 import "./index.css";
 import { Input } from "antd";
-import React from "react";
 import { Link } from "react-router-dom";
 import { SocialMediaList } from "../../components/SocialMediaList";
-import { useBreakpoint, useCountDate } from "../../utils/react-use";
-import { TGE_TIME } from "../../utils/config";
-import dayjs from "dayjs";
+import { useBreakpoint } from "../../utils/react-use";
 import BgVideo from '../../assets/homepage/bg-hero.mp4'
 
 function TwitterVideo({ className, videoID }: { className: string; videoID: string }) {
