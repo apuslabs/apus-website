@@ -150,7 +150,7 @@ const Competition = () => {
   );
 };
 
-export default function CompetitionWrapper() {
+export function Component() {
   return (
     <ConfigProvider
       theme={{

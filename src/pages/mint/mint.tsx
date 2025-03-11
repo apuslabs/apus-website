@@ -26,7 +26,7 @@ export const GrayDivider = ({ className }: { className?: string }) => (
   <Divider className={`min-w-0 w-[21rem] my-5 ${className} border-grayd8`} />
 );
 
-export default function Mint() {
+export function Component() {
   const { connect, disconnect } = useConnection();
   const activeAddress = useActiveAddress();
   const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");

@@ -1,51 +1,34 @@
 import { createHashRouter, Outlet, RouterProvider } from "react-router-dom";
 import { ConfigProvider, theme } from "antd";
-import { lazy, Suspense } from "react";
 import HomeHeader from "./components/HomeHeader";
 import HomeFooter from "./components/HomeFooter";
 import ConsoleHeader from "./components/ConsoleHeader";
 import Homepage from "./pages/homepage/homepage";
-// const Homepage = lazy(() => import("./pages/homepage/homepage"));
-const Team = lazy(() => import("./pages/team/team"));
-const Mint = lazy(() => import("./pages/mint/mint"));
-const Competition = lazy(() => import("./pages/console/competition"));
-const Playground = lazy(() => import("./pages/console/playground"));
-const Chatbot = lazy(() => import("./pages/console/chatbot"));
-const Page404 = lazy(() => import("./pages/404"));
-const Pools = lazy(() => import("./pages/console/pools"));
+import Page404 from "./pages/404";
+import { Suspense } from "react";
 
 const router = createHashRouter([
   {
     path: "/",
-    element: <Outlet />,
+    element: <>
+      <HomeHeader />
+      <Suspense>
+        <Outlet />
+      </Suspense>
+      <HomeFooter />
+    </>,
     children: [
       {
-        path: "/",
-        element: (
-          <Suspense>
-            <HomeHeader />
-            <Homepage />
-            <HomeFooter />
-          </Suspense>
-        ),
+        index: true,
+        element: <Homepage />,
       },
       {
         path: "team",
-        element: (
-          <Suspense>
-            <HomeHeader />
-            <Team />
-            <HomeFooter />
-          </Suspense>
-        ),
+        lazy: () => import("./pages/team/team"),
       },
       {
         path: "mint",
-        element: (
-          <Suspense>
-            <Mint />
-          </Suspense>
-        ),
+        lazy: () => import("./pages/mint/mint"),
       },
     ],
   },
@@ -53,67 +36,47 @@ const router = createHashRouter([
     path: "console",
     element: (
       <ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>
-        <div className="min-h-screen pt-20" style={{
-          background: "linear-gradient(to bottom, #F3F3F3, #C2C2C2)"
-        }}>
+        <div
+          className="min-h-screen pt-20"
+          style={{
+            background: "linear-gradient(to bottom, #F3F3F3, #C2C2C2)",
+          }}
+        >
           <ConsoleHeader />
-          <Outlet />
+          <Suspense>
+            <Outlet />
+          </Suspense>
         </div>
       </ConfigProvider>
     ),
     children: [
       {
+        index: true,
         path: "competitions",
-        element: (
-          <Suspense>
-            <Pools />
-          </Suspense>
-        ),
+        lazy: () => import("./pages/console/pools"),
       },
       {
         path: "competition/:poolid",
-        element: (
-          <Suspense>
-            <Competition />
-          </Suspense>
-        ),
+        lazy: () => import("./pages/console/competition"),
       },
       {
         path: "playground/:poolid",
-        element: (
-          <Suspense>
-            <Playground />
-          </Suspense>
-        ),
+        lazy: () => import("./pages/console/playground"),
       },
       {
         path: "perma-brawl",
-        element: (
-          <Suspense>
-            <Chatbot />
-          </Suspense>
-        )
-      }
+        lazy: () => import("./pages/console/chatbot"),
+      },
     ],
   },
   {
     path: "*",
-    element: (
-      <Suspense>
-        <div className="min-h-screen flex flex-col">
-          <HomeHeader />
-          <Page404 />
-          <HomeFooter />
-        </div>
-      </Suspense>
-    ),
+    element: <Page404 />,
   },
 ]);
 
 export default function App() {
   return (
-    <ConfigProvider>
-      <RouterProvider router={router} />
-    </ConfigProvider>
+    <RouterProvider router={router} />
   );
 }

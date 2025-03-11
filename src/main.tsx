@@ -6,25 +6,26 @@ import "./index.css";
 
 import { ArweaveWalletKit } from "arweave-wallet-kit";
 import { ApusLogo } from "./assets";
+import { ConfigProvider } from "antd";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ArweaveWalletKit
       config={{
-        permissions: [
-          "ACCESS_ADDRESS",
-          "SIGN_TRANSACTION",
-          "DISPATCH"
-        ],
+        permissions: ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
         ensurePermissions: true,
         appInfo: {
           name: "APUS",
-          logo: ApusLogo
-        }
+          logo: ApusLogo,
+        },
       }}
       theme={{
-        accent: {r: 9, g: 29, b: 255}
+        accent: { r: 9, g: 29, b: 255 },
       }}
-    ><App /></ArweaveWalletKit>
+    >
+      <ConfigProvider>
+        <App />
+      </ConfigProvider>
+    </ArweaveWalletKit>
   </StrictMode>,
 );

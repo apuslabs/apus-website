@@ -115,7 +115,7 @@ export const Playground = () => {
   );
 };
 
-export default function PlaygroundWrapper() {
+export function Component() {
   return (
     <ConfigProvider
       theme={{

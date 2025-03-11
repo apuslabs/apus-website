@@ -3,7 +3,7 @@ import { TeamMemebers } from "./constants";
 import { ImgTeam } from "../../assets";
 const { IconLinkedIn } = ImgTeam;
 
-export default function Team() {
+export function Component() {
   return (
     <div className="flex flex-col items-center">
       <div className="text-gray33 text-6xl font-bold mt-40 mb-16">Team</div>

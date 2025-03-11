@@ -51,7 +51,7 @@ function CompetitionCard({ pool_id, title, reward_pool, start_time, end_time }: 
   );
 }
 
-export default function Pools() {
+export function Component() {
   const { result: competitionsResult, execute: getCompetitions } = useAO(POOL_PROCESS, "Get-Competitions", "dryrun");
   useLayoutEffect(() => {
     getCompetitions();
