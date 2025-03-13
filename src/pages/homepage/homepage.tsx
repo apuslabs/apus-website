@@ -95,7 +95,7 @@ function SectionFeatures() {
               Apus Network introduces Fast Provable Inference Faults(FPIF) to combine deterministic computations,
               cryptographic attestations, and economic incentives for fast, secure, and inexpensive verification.
             </div>
-            <Link to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg">
+            <Link to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg" target="__blank">
               <div className="btn-lightblue">Learn More</div>
             </Link>
           </div>
@@ -107,7 +107,7 @@ function SectionFeatures() {
               $APUS, with a fixed 1 billion supply and deflationary mechanisms, ensures long-term value through fair,
               decentralized distribution with no pre-allocation for the team or early investors.
             </div>
-            <Link to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s">
+            <Link to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s" target="__blank">
               <div className="btn-lightblue">Learn More</div>
             </Link>
           </div>
@@ -125,7 +125,7 @@ function SectionFeatures() {
               Apus Network's economic model competitively incentivizes the development and execution of the top-tier AI
               models, aligning computational integrity with community-driven rewards.
             </div>
-            <Link to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg">
+            <Link to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg" target="__blank">
               <div className="btn-lightblue">Learn More</div>
             </Link>
           </div>

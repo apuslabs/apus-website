@@ -9,7 +9,7 @@ const MenuList = {
   MAIN: [
     { name: "Team", path: "/team" },
     { name: "Mint", path: "/mint" },
-    { name: "Roadmap", path: "/#roadmap" },
+    { name: "Roadmap", path: "/?anchor=roadmap" },
   ],
   RESOURCES: [
     { name: "Blog", path: "https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" },
@@ -102,7 +102,7 @@ function HomeFooter() {
               <div className="mb-10 font-semibold">RESOURCES</div>
               <ul className="flex flex-col gap-6 md:list-disc md:pl-6">
                 {MenuList.RESOURCES.map(({ name, path }) => (
-                  <Link to={path} key={name}>
+                  <Link to={path} key={name} target="__blank">
                     <li className="font-space-mono">{name}</li>
                   </Link>
                 ))}
@@ -115,7 +115,7 @@ function HomeFooter() {
                   <li className="cursor-pointer font-space-mono">Feedback</li>
                 </FeedbackFish>
                 {MenuList.COMPANY.map(({ name, path }) => (
-                  <Link to={path} key={name}>
+                  <Link to={path} key={name} target="__blank">
                     <li className="font-space-mono">{name}</li>
                   </Link>
                 ))}

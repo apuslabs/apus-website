@@ -1,6 +1,6 @@
-import { FC, useLayoutEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ImgCommon, ImgHomepage } from "../assets";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./headerfooter.css";
 import { useBreakpoint } from "../utils/react-use";
 
@@ -12,15 +12,17 @@ const scrollToAnchor = (anchor: string) => {
 };
 
 function useAnchor() {
-   useLayoutEffect(() => {
-     const realpath = window.location.hash.replace("#", "").split("?")[1];
-     const params = new URLSearchParams(realpath);
+  const location = useLocation()
+   useEffect(() => {
+     const params = new URLSearchParams(location.search.slice(1));
      const anchor = params.get("anchor");
      console.log(anchor)
      if (anchor) {
        scrollToAnchor(anchor);
+     } else {
+        window.scrollTo(0, 0);
      }
-   }, []);
+   }, [location]);
   }
 
 export const LIGHTPAPER_LINK = "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"

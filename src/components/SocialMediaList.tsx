@@ -32,7 +32,7 @@ export function SocialMediaList({ className }: { className?: string }) {
   return (
     <div className={`social-media-container ${className}`}>
       {FooterSocialMediaList.map(({ name, path, icon }) => (
-        <a href={path} key={name}>
+        <a href={path} key={name} target="__blank">
           <img src={icon} className="hero-social-media-icon" />
         </a>
       ))}
