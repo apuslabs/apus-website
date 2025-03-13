@@ -1,90 +1,50 @@
-import { FC, useState } from "react";
-import { ImgCommon, ImgHomepage } from "../assets";
-import { useNavigate, Link } from "react-router-dom";
-import { useAnchor, useBreakpoint } from "../utils/react-use";
-import { HomeHeaderMenuList } from "./constants";
+import { FC } from "react";
+import { ImgHomepage } from "../assets";
+import { Link } from "react-router-dom";
 import "./headerfooter.css";
 
-function HomeHeaderMobile() {
-  const [menuShow, setMenuShow] = useState<boolean>(false);
-  return (
-    <>
-      <div className="header-container bg-white">
-        <img src={ImgCommon.IconMenu} onClick={() => setMenuShow(!menuShow)} />
-        <Link to="/">
-          <img src={ImgCommon.IconLogo} />
-        </Link>
-        <img src={ImgCommon.IconWallet} />
-      </div>
-      <div
-        className={`fixed top-[60px] left-0 right-0 flex-1 h-screen`}
-        style={{
-          display: menuShow ? "block" : "none",
-          background: "rgba(255,255,255,0.95)",
-        }}
-        onClick={() => {
-          setMenuShow(false);
-        }}
-      >
-        <ul className="flex-col justify-center items-center gap-12 font-medium z-20 bg-white border-t-1 border-solid border-grayd8">
-          {HomeHeaderMenuList.map((item) => (
-            <Link key={item.name} to={item.path} target={item.path.indexOf("http") !== -1 ? "_blank" : ""}>
-              <li className="h-[60px] px-5 leading-[60px] border-b-1 border-solid border-grayd8" key={item.name}>
-                {item.name}
-              </li>
-            </Link>
-          ))}
-        </ul>
-      </div>
-    </>
-  );
-}
-
 const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
-  useAnchor();
-  const breakpoint = useBreakpoint();
-  const isTablet = breakpoint === "mobile";
-  const navigate = useNavigate();
-
-  if (isTablet) {
-    return <HomeHeaderMobile />;
-  }
-
   return (
-    <div
-      className="header-container"
-      style={{
-        background: "rgba(255,255,255,0.9)",
-      }}
-    >
-      <div className="h-full flex items-center cursor-pointer" onClick={() => navigate("/")}>
-        <img src={ImgHomepage.LogoHorizonal} alt="Apus Logo" className="md:w-40" />
-      </div>
-      <div className={`fixed md:h-full md:top-0 md:relative md:text-gray21 text-white`}>
-        <ul
-          className="flex-col justify-center items-center gap-12
-          font-medium text-base
-          md:h-full md:flex md:flex-row bg-[#4c4c4c] md:bg-transparent
-          z-20"
-        >
-          {HomeHeaderMenuList.map((item) => (
-            <Link key={item.name} to={item.path}>
-              <li key={item.name}>{item.name}</li>
-            </Link>
-          ))}
+    <div className="fixed top-0 left-0 right-0 w-full h-[120px] bg-white border-b-1 border-b-[#d9d9d9] font-space-mono z-20">
+      <div className="content-area flex justify-between items-center gap-4">
+        <Link to="/">
+          <img src={ImgHomepage.LogoHorizonal} className="w-[146px] cursor-pointer" alt="Apus Logo" />
+        </Link>
+        <ul className="flex gap-12 text-lg nav">
+          <Link to="/team">
+            <li>Team</li>
+          </Link>
+          <Link to="/mint">
+            <li>Mint</li>
+          </Link>
+          <Link to="/#roadmap">
+            <li>Roadmap</li>
+          </Link>
+          <Link to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" target="_blank">
+            <li>Blog</li>
+          </Link>
+          <Link
+            to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"
+            target="_blank"
+          >
+            <li>Litepaper</li>
+          </Link>
+          <Link
+            to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s"
+            target="_blank"
+          >
+            <li>Tokenomics</li>
+          </Link>
         </ul>
-      </div>
 
-      {Userbox || (
-        <div
-          className="btn-main btn-colorful"
-          onClick={() => {
-            navigate("/console/competitions");
-          }}
-        >
-          {"Competition Pools"}
-        </div>
-      )}
+        {Userbox || (
+          <Link to="/console/competitions">
+            <div className="flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
+              {"Competition Pools"}
+            </div>
+          </Link>
+        )}
+      </div>
     </div>
   );
 };

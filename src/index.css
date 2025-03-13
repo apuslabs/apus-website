@@ -8,6 +8,14 @@
   --black20: rgba(0, 0, 0, 0.2);
 }
 
+.font-space-mono {
+  font-family: "Space Mono", monospace;
+}
+
+.content-area {
+  @apply h-full max-w-[1600px] px-8 mx-auto;
+}
+
 .text-gradient {
   @apply bg-clip-text text-transparent;
 }
