@@ -1,138 +1,41 @@
 .section {
-  @apply flex flex-col items-center;
+  @apply relative;
 }
 
 .section-hero {
-  @apply pt-[90px] md:pt-[100px] md:pb-[188px] relative overflow-hidden;
-  /* background-image: url("../../assets/homepage/bg.jpg");
-  background-size: cover; */
+  @apply pt-[80px] md:pt-[120px] relative;
 }
 
-.launchbox-container {
-  @apply w-full h-[100px] md:h-20 mt-20 md:mt-[30vh] flex flex-col md:flex-row justify-center items-center gap-1 md:gap-5;
-  background-color: rgba(9, 29, 255, 0.6);
+.features-item {
+  @apply md:h-[700px] flex flex-col md:flex-row items-center;
 }
 
-.hero-container {
-  @apply w-full py-5 md:py-10 flex flex-col items-center gap-10;
-  background-color: rgba(255, 255, 255, 0.8);
+.features-item-content {
+  @apply md:w-1/2 pt-[30px] pb-[50px] px-[25px] md:p-20 z-20;
 }
 
-.hero-logo {
-  @apply w-[186px] md:w-[280px];
+.features-item-title {
+  @apply text-[30px] md:text-[60px] mb-[30px] md:mb-[60px] font-semibold md:font-normal leading-tight md:leading-none;
 }
 
-.hero-title {
-  @apply px-5 md:max-w-[960px] font-medium text-[25px] md:text-[40px] text-gray21 text-center leading-tight;
+.features-item-desc {
+  @apply text-base md:text-[22px] mb-[30px] leading-tight;
 }
 
-.hero-more-container {
-  @apply flex flex-col md:flex-row items-center gap-10;
-}
-
-.email-input {
-  @apply w-60 md:w-[316px] h-12 leading-[48px] text-gray21;
-}
-
-img.invert {
-  filter: invert(1);
-}
-
-/* section features */
-
-.section-features {
-  @apply px-5 py-12 md:px-40 md:py-[100px];
-}
-
-@media screen and (min-width: 768px) {
-  .section-features {
-    background-image: url("../../assets/homepage/bg-feature.png");
+.polygon-box {
+  position: relative;
+  border-color: rgba(27, 27, 27, 0.6);
+  border-width: 1px;
+  border-style: solid;
+  &::before {
+    content: "";
+    @apply absolute bottom-0 right-0 w-5 h-5 md:w-[32px] md:h-[32px] border-l-1 border-solid rotate-45 translate-x-[10px] translate-y-[10px] md:translate-x-[16px] md:translate-y-[16px] bg-white;
+    border-color: rgba(27, 27, 27, 0.6);
+  }
+  &.blue {
+    @apply text-white bg-[#3242F5] border-0;
+    &::before {
+      @apply border-0;
+    }
   }
 }
-
-.section-title {
-  @apply mb-5 text-gray21 text-[35px] md:text-[50px] leading-none;
-}
-
-.section-description {
-  @apply text-gray21 text-sm md:text-[18px] text-center leading-normal;
-}
-
-.section-features-list {
-  @apply flex flex-wrap justify-between;
-}
-
-.section-features-item {
-  @apply h-[400px] mt-10 md:w-[600px] md:h-[560px] md:mt-[100px] mx-auto p-5 md:p-10 flex flex-col items-center gap-5 md:gap-10 rounded-[14px] border-1 border-solid border-grayd8;
-  background-color: rgba(255, 255, 255, 0.85);
-}
-
-/* .section-features-item:nth-child(3) {
-  @apply mt-[100px] mx-auto;
-} */
-
-.section-features-item-icon {
-  @apply h-[120px] md:h-[160px];
-}
-
-.section-features-item-title {
-  @apply h-[45px] md:h-[110px] text-gray21 text-[25px] md:text-[40px] text-center leading-none;
-}
-
-.section-features-item-description {
-  @apply flex-1 flex items-center text-gray21 md:text-[18px] text-center leading-[1.1];
-}
-
-.section-features-item-link {
-  @apply h-[48px] md:h-[110px] flex justify-center items-center;
-}
-
-/* section tech */
-
-.section-tech {
-  @apply md:px-[200px] md:py-[100px];
-}
-
-@media screen and (min-width: 768px) {
-  /* .section-tech {
-    background-image: url("../../assets/homepage/bg-tech.png");
-  } */
-}
-
-.section-divider {
-  @apply mb-10 md:mb-[100px] w-[220px] md:w-[800px] h-[1px] bg-[#535353];
-}
-
-/* section roadmap */
-.section-roadmap {
-  @apply px-5 md:px-[100px];
-}
-
-@media screen and (min-width: 768px) {
-  .section-roadmap {
-    background-image: url("../../assets/homepage/bg-roadmap.jpg");
-  }
-}
-
-/* section partners */
-.section-partners {
-  @apply px-5 md:px-[100px] md:py-[100px];
-}
-
-.section-powered-list {
-  @apply flex flex-wrap justify-center items-center gap-4 md:gap-6;
-}
-
-.section-powered-item {
-  @apply w-[156px] h-[76px] md:w-[250px] md:h-[120px] bg-black flex justify-center items-center rounded-2xl;
-}
-
-.section-partner-list {
-  @apply mt-[30px] md:mt-[40px] mb-[40px] md:mb-[60px] flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
-}
-
-/* @media screen and (max-width: 768px) {
-  .section-hero {
-    background-image: url("../../assets/homepage/bg-mobile.jpg");
-  }
-} */

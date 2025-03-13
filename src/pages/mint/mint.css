@@ -17,7 +17,7 @@
 }
 
 .pie-legend-list {
-  @apply leading-tight text-gray21;
+  @apply leading-7 text-gray21;
   .pie-legend-square {
     @apply inline-block w-[10px] h-[10px] mr-[5px];
   }

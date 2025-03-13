@@ -214,9 +214,6 @@ export function Component() {
               <li>
                 <span>100%</span> Community Launch
               </li>
-              <li>
-                <span>AO yield</span> from <span>stETH in AO</span> for APUS
-              </li>
             </ol>
             <div className="flex items-center gap-5">
               <img src={ImgMint.TokenomicsPie} className="w-[8.5rem] h-[8.5rem]" />

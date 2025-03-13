@@ -1,82 +1,138 @@
 import { ImgHomepage } from "../assets";
 import { Link } from "react-router-dom";
 import { SocialMediaList } from "./SocialMediaList";
-import { useBreakpoint } from "../utils/react-use";
 import { FeedbackFish } from "@feedback-fish/react";
+import { useState } from "react";
+import { Input, message } from "antd";
 
-const HomeFooterMenuList: NavigationMenuType[] = [
-  {
-    name: "Docs",
-    path: "https://apus-network.gitbook.io/apus-console-docs/",
-  },
-  {
-    name: "Brand Kits",
-    path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4",
-  },
-];
+const MenuList = {
+  MAIN: [
+    { name: "Team", path: "/team" },
+    { name: "Mint", path: "/mint" },
+    { name: "Roadmap", path: "/#roadmap" },
+  ],
+  RESOURCES: [
+    { name: "Blog", path: "https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" },
+    {
+      name: "Litepaper",
+      path: "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg",
+    },
+    {
+      name: "Tokenomics",
+      path: "https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s",
+    },
+  ],
+  COMPANY: [
+    {
+      name: "Branding",
+      path: "https://apusnetwork.notion.site/c8a7f84bf0814822b917cd3178fe048c?v=e95ed9ee42cd4bf6983490181969fc79&pvs=4",
+    },
+  ],
+};
 
-function HomeFooterMobile() {
+function useSubscribe() {
+  const [email, setEmail] = useState("");
+  const subscribe = () => {
+    // check email value if null and email
+    if (!email || !email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)) {
+      message.error("Invalid Email!");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("entry.634050656", email);
+
+    fetch("https://docs.google.com/forms/d/e/1FAIpQLScil1B1VTKLFBrmroSfxhp0PtoQIa1SOHl7jH6kTCoAWS_L2A/formResponse", {
+      method: "POST",
+      body: formData,
+      mode: "no-cors",
+    })
+      .then(() => {
+        message.success("Subscribe Successfully!");
+        setEmail("");
+      })
+      .catch((error) => {
+        message.error("Subscribe Failed!");
+        console.error("Subscribe Failed", error);
+      });
+  };
+  return {
+    email,
+    setEmail,
+    subscribe,
+  };
+}
+
+function Email() {
+  const { email, setEmail, subscribe } = useSubscribe();
   return (
-    <div className="flex flex-col items-center py-10 gap-10 bg-[#191919] text-white">
-      <img src={ImgHomepage.LogoHorizonal} className="invert h-[25px]" />
-      <div className="flex flex-col gap-4">
-        <div style={{ color: "rgba(255,255,255,0.5)" }}>Navigation</div>
-        {HomeFooterMenuList.map(({ name, path }) => (
-          <Link to={path} className="text-white" key={name}>
-            {name}
-          </Link>
-        ))}
-        <FeedbackFish projectId="bbf0e91842cb41">
-          <div className="text-white">Feedback</div>
-        </FeedbackFish>
-      </div>
-      <SocialMediaList className="invert small" />
-      <div
+    <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
+      <Input
+        size="large"
         style={{
-          color: "rgba(255,255,255,0.5)",
+          height: "48px",
         }}
-      >
-        Copyright © Apus.Network 2024. All rights reserved
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+      />
+      <div className="px-5 h-[42px] md:h-[48px] leading-[42px] md:leading-[48px] bg-[#3242f5] text-white text-lg font-space-mono cursor-pointer rounded-lg hover:bg-[#1e30c9]" onClick={subscribe}>
+        Subscribe
       </div>
     </div>
   );
 }
 
 function HomeFooter() {
-  const breakpoint = useBreakpoint();
-  const isTablet = breakpoint === "mobile";
-  if (isTablet) {
-    return <HomeFooterMobile />;
-  }
   return (
-    <div className="px-[268px] pt-[64px] pb-[44px] bg-[#191919] text-white">
-      <div className="flex mb-[120px]">
-        <img src={ImgHomepage.LogoHorizonal} className="invert h-[30px] mr-[100px]" />
-        <div>
-          <div className="mb-4" style={{ color: "rgba(255,255,255,0.5)" }}>
-            Navigation
+    <div className="bg-white text-[#1b1b1b] text-sm md:text-[22px]">
+      <div className="content-area pt-[50px] md:py-[128px]">
+        <div className="flex flex-col md:flex-row md:justify-between gap-[50px]">
+          <div className="flex flex-wrap py-[30px] px-[50px] md:p-0 md:mb-[120px] gap-[60px] md:gap-[100px] footer-nav order-2 md:order-1 border-[#d9d9d9] border-t-1 md:border-t-0 border-b-1 md:border-b-0">
+            <div>
+              <div className="mb-10 font-semibold">MAIN</div>
+              <ul className="flex flex-col gap-6 md:list-disc md:pl-6">
+                {MenuList.MAIN.map(({ name, path }) => (
+                  <Link to={path} key={name}>
+                    <li className="font-space-mono">{name}</li>
+                  </Link>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div className="mb-10 font-semibold">RESOURCES</div>
+              <ul className="flex flex-col gap-6 md:list-disc md:pl-6">
+                {MenuList.RESOURCES.map(({ name, path }) => (
+                  <Link to={path} key={name}>
+                    <li className="font-space-mono">{name}</li>
+                  </Link>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <div className="mb-10 font-semibold">COMPANY</div>
+              <ul className="flex flex-col gap-6 md:list-disc md:pl-6">
+                <FeedbackFish projectId="bbf0e91842cb41">
+                  <li className="cursor-pointer font-space-mono">Feedback</li>
+                </FeedbackFish>
+                {MenuList.COMPANY.map(({ name, path }) => (
+                  <Link to={path} key={name}>
+                    <li className="font-space-mono">{name}</li>
+                  </Link>
+                ))}
+              </ul>
+            </div>
           </div>
-          <div className="flex flex-col gap-4">
-            {HomeFooterMenuList.map(({ name, path }) => (
-              <Link to={path} className="text-white" key={name}>
-                {name}
-              </Link>
-            ))}
-            <FeedbackFish projectId="bbf0e91842cb41">
-              <div className="text-white cursor-pointer">Feedback</div>
-            </FeedbackFish>
+          <div className="flex flex-col items-center gap-[50px] md:gap-[76px] order-1 md:order-2">
+            <Email />
+            <SocialMediaList />
           </div>
         </div>
-      </div>
-      <div className="flex justify-between">
-        <div
-          style={{
-            color: "rgba(255,255,255,0.5)",
-          }}
-        >
-          Copyright © Apus.Network 2024. All rights reserved
+        <div className="flex flex-col items-center md:items-start pt-[50px] pb-[100px] md:py-0">
+          <img src={ImgHomepage.LogoHorizonal} className="h-[25px] md:h-[34px] w-[105px] md:w-[150px] mb-5" />
+          <div className="text-[#979797] text-sm">
+            Copyright © Apus.Network 2024. All rights reserved
+          </div>
         </div>
-        <SocialMediaList className="invert" />
       </div>
     </div>
   );

@@ -13,7 +13,13 @@
 }
 
 .content-area {
-  @apply h-full max-w-[1600px] px-8 mx-auto;
+  @apply h-full;
+}
+
+@media (min-width: 768px) {
+  .content-area {
+    @apply max-w-[1366px] px-8 mx-auto;
+  }
 }
 
 .text-gradient {
@@ -30,6 +36,10 @@
   &.disabled {
     @apply opacity-50 cursor-not-allowed;
   }
+}
+
+.btn-lightblue {
+  @apply inline-block p-[15px] md:px-5 md:py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg font-space-mono hover:bg-[#1e30c9];
 }
 
 .btn-default {
@@ -105,28 +115,5 @@
   }
   &.disabled {
     @apply opacity-50 cursor-not-allowed;
-  }
-}
-
-.social-media-container {
-  @apply flex items-center gap-5;
-  a,
-  img {
-    height: 28px;
-  }
-}
-
-.social-media-container.small {
-  a,
-  img {
-    flex-shrink: 0;
-    height: 18px;
-  }
-}
-
-.social-media-container.invert {
-  a,
-  img {
-    filter: invert(1);
   }
 }

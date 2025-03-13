@@ -1,30 +1,57 @@
-import { FC } from "react";
-import { ImgHomepage } from "../assets";
+import { FC, useLayoutEffect, useState } from "react";
+import { ImgCommon, ImgHomepage } from "../assets";
 import { Link } from "react-router-dom";
 import "./headerfooter.css";
+import { useBreakpoint } from "../utils/react-use";
+
+const scrollToAnchor = (anchor: string) => {
+  const el = document.getElementById(anchor);
+  if (el) {
+    el.scrollIntoView({ behavior: "smooth", block:"nearest" });
+  }
+};
+
+function useAnchor() {
+   useLayoutEffect(() => {
+     const realpath = window.location.hash.replace("#", "").split("?")[1];
+     const params = new URLSearchParams(realpath);
+     const anchor = params.get("anchor");
+     console.log(anchor)
+     if (anchor) {
+       scrollToAnchor(anchor);
+     }
+   }, []);
+  }
+
+export const LIGHTPAPER_LINK = "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"
 
 const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
+  useAnchor();
+  const breakpoint = useBreakpoint()
+  const [navHide, setNavHide] = useState(true);
   return (
-    <div className="fixed top-0 left-0 right-0 w-full h-[120px] bg-white border-b-1 border-b-[#d9d9d9] font-space-mono z-20">
-      <div className="content-area flex justify-between items-center gap-4">
+    <div className="fixed top-0 left-0 right-0 w-full h-[80px] md:h-[120px] bg-white border-b-1 border-b-[#d9d9d9] font-space-mono z-30">
+      <div className="content-area px-4 flex justify-between items-center gap-4">
         <Link to="/">
-          <img src={ImgHomepage.LogoHorizonal} className="w-[146px] cursor-pointer" alt="Apus Logo" />
+          <img src={breakpoint === "mobile" ? ImgCommon.IconLogo : ImgHomepage.LogoHorizonal} className="w-auto md:w-[146px] h-10 md:h-auto cursor-pointer" alt="Apus Logo" />
         </Link>
-        <ul className="flex gap-12 text-lg nav">
+        <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col justify-center md:flex-row md:gap-12 text-lg header-nav" style={{
+          display: breakpoint === "mobile" && navHide ? "none" : "flex",
+        }}>
           <Link to="/team">
             <li>Team</li>
           </Link>
           <Link to="/mint">
             <li>Mint</li>
           </Link>
-          <Link to="/#roadmap">
+          <Link to="/?anchor=roadmap" onClick={() => scrollToAnchor("roadmap")}>
             <li>Roadmap</li>
           </Link>
           <Link to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" target="_blank">
             <li>Blog</li>
           </Link>
           <Link
-            to="https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"
+            to={LIGHTPAPER_LINK}
             target="_blank"
           >
             <li>Litepaper</li>
@@ -38,11 +65,16 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         </ul>
 
         {Userbox || (
+          <>
           <Link to="/console/competitions">
-            <div className="flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
+            <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
               {"Competition Pools"}
             </div>
           </Link>
+          <img src={ImgCommon.IconMenu} className="block md:hidden w-6" onClick={() => {
+            setNavHide(!navHide);
+          }} />
+          </>
         )}
       </div>
     </div>
