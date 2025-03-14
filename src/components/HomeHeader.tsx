@@ -49,7 +49,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
             <li>Mint</li>
           </Link>
           <Link to="/?anchor=roadmap" onClick={() => {
-            scrollToAnchor("roadmap")
+            scrollToAnchor("roadmap", breakpoint === "mobile")
             setNavHide(true)
           }}>
             <li>Roadmap</li>
