@@ -39,3 +39,7 @@
     }
   }
 }
+
+.section-partner-list {
+  @apply flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
+}

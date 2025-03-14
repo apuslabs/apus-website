@@ -4,25 +4,30 @@ import { Link, useLocation } from "react-router-dom";
 import "./headerfooter.css";
 import { useBreakpoint } from "../utils/react-use";
 
-const scrollToAnchor = (anchor: string) => {
+const scrollToAnchor = (anchor: string, isMobile: boolean) => {
   const el = document.getElementById(anchor);
   if (el) {
     el.scrollIntoView({ behavior: "smooth", block:"nearest" });
+    window.scrollTo({
+      top: el.offsetTop - (isMobile ? 80: 120),
+      behavior: "smooth",
+    });
   }
 };
 
 function useAnchor() {
+  const breakpoint = useBreakpoint()
   const location = useLocation()
    useEffect(() => {
      const params = new URLSearchParams(location.search.slice(1));
      const anchor = params.get("anchor");
      console.log(anchor)
      if (anchor) {
-       scrollToAnchor(anchor);
+       scrollToAnchor(anchor, breakpoint === "mobile");
      } else {
         window.scrollTo(0, 0);
      }
-   }, [location]);
+   }, [location, breakpoint]);
   }
 
 export const LIGHTPAPER_LINK = "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"
@@ -37,38 +42,43 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         <Link to="/">
           <img src={breakpoint === "mobile" ? ImgCommon.IconLogo : ImgHomepage.LogoHorizonal} className="w-auto md:w-[146px] h-10 md:h-auto cursor-pointer" alt="Apus Logo" />
         </Link>
-        <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col justify-center md:flex-row md:gap-12 text-lg header-nav" style={{
+        <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col md:npjustify-center md:flex-row md:gap-12 text-lg header-nav" style={{
           display: breakpoint === "mobile" && navHide ? "none" : "flex",
         }}>
-          <Link to="/mint">
+          <Link to="/mint" onClick={() => setNavHide(true)}>
             <li>Mint</li>
           </Link>
-          <Link to="/?anchor=roadmap" onClick={() => scrollToAnchor("roadmap")}>
+          <Link to="/?anchor=roadmap" onClick={() => {
+            scrollToAnchor("roadmap")
+            setNavHide(true)
+          }}>
             <li>Roadmap</li>
           </Link>
-          <Link to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" target="_blank">
+          <Link to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72" target="_blank" onClick={() => setNavHide(true)}>
             <li>Blog</li>
           </Link>
           <Link
             to={LIGHTPAPER_LINK}
             target="_blank"
+            onClick={() => setNavHide(true)}
           >
             <li>Litepaper</li>
           </Link>
           <Link
             to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s"
             target="_blank"
+            onClick={() => setNavHide(true)}
           >
             <li>Tokenomics</li>
           </Link>
-          <Link to="/team">
+          <Link to="/team" onClick={() => setNavHide(true)}>
             <li>Team</li>
           </Link>
         </ul>
 
         {Userbox || (
           <>
-          <Link to="/console/competitions">
+          <Link to="/console/competitions" onClick={() => setNavHide(true)}>
             <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
               {"Competition Pools"}
             </div>

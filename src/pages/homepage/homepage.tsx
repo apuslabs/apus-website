@@ -22,6 +22,7 @@ import LogoArweave from './images/arweave.svg';
 import LogoArio from './images/ario.svg';
 import LogoEnlarge from './images/logo-enlarge.svg';
 import { LIGHTPAPER_LINK } from "../../components/HomeHeader";
+import { ImgHomepage } from "../../assets";
 
 function TwitterVideo({ className, videoID }: { className?: string; videoID: string }) {
   return (
@@ -284,6 +285,76 @@ const PoweredBy = [
   },
 ];
 
+const {
+  LogoBulbaswap,
+  LogoVeritas,
+  LogoDephy,
+  Logo0rbit,
+  LogoDecentramind,
+  LogoAstra,
+  LogoBuildify,
+  LogoAogames,
+  LogoFd,
+  LogoWeb3amsterdam,
+  LogoCredible,
+  LogoGlobalstake,
+  LogoPrimus,
+} = ImgHomepage;
+const partners = [
+  {
+    Logo: LogoBulbaswap,
+    height: 50,
+  },
+  {
+    Logo: LogoVeritas,
+    height: 30,
+  },
+  {
+    Logo: LogoDephy,
+    height: 43,
+  },
+  {
+    Logo: Logo0rbit,
+    height: 48,
+  },
+  {
+    Logo: LogoDecentramind,
+    height: 44,
+  },
+  {
+    Logo: LogoAstra,
+    height: 34,
+  },
+  {
+    Logo: LogoBuildify,
+    height: 52,
+  },
+  {
+    Logo: LogoAogames,
+    height: 57,
+  },
+  {
+    Logo: LogoFd,
+    height: 61,
+  },
+  {
+    Logo: LogoWeb3amsterdam,
+    height: 44,
+  },
+  {
+    Logo: LogoCredible,
+    height: 24,
+  },
+  {
+    Logo: LogoGlobalstake,
+    height: 26,
+  },
+  {
+    Logo: LogoPrimus,
+    height: 34,
+  },
+];
+
 function SectionPartners() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
@@ -296,6 +367,12 @@ function SectionPartners() {
             <div className="section-powered-item" key={icon}>
               <img src={icon} style={{ height: height * (isMobile ? 0.6667 : 1) }} />
             </div>
+          ))}
+        </div>
+        <div className="text-[30px] md:text-[60px] font-semibold md:font-normal leading-none my-10 md:my-20">Partners</div>
+        <div className="section-partner-list">
+          {partners.map(({ Logo, height }) => (
+            <img key={Logo} src={Logo} style={{ height: height * (isMobile ? 0.73 : 1) }} />
           ))}
         </div>
       </div>
