@@ -2,8 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "TT Interphases Pro Trl Variable";
+  src: url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.eot");
+  src: url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.eot?#iefix")format("embedded-opentype"),
+  url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.woff2")format("woff2"),
+  url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.woff")format("woff"),
+  url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.ttf")format("truetype"),
+  url("https://db.onlinewebfonts.com/t/6d9402c12f3148dbede04bf00dfcfb4b.svg#TT Interphases Pro Trl Variable")format("svg");
+}
+
 :root {
-  font-family: "Inter", sans-serif;
+  font-family: "TT Interphases Pro Trl Variable", "Inter", sans-serif;
   --black50: rgba(0, 0, 0, 0.5);
   --black20: rgba(0, 0, 0, 0.2);
 }

@@ -40,9 +40,6 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col justify-center md:flex-row md:gap-12 text-lg header-nav" style={{
           display: breakpoint === "mobile" && navHide ? "none" : "flex",
         }}>
-          <Link to="/team">
-            <li>Team</li>
-          </Link>
           <Link to="/mint">
             <li>Mint</li>
           </Link>
@@ -63,6 +60,9 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
             target="_blank"
           >
             <li>Tokenomics</li>
+          </Link>
+          <Link to="/team">
+            <li>Team</li>
           </Link>
         </ul>
 

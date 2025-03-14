@@ -144,7 +144,7 @@ export function Component() {
         <div className="card">
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-3 p-7 items-center">
             <div className="card-caption w-full">DASHBOARD</div>
-            <div className="text-gray90 mt-5">
+            <div className="text-gray90 mt-10">
               <span className="mr-2">Your APUS</span>
               <Tooltip
                 title={
@@ -192,14 +192,14 @@ export function Component() {
                 </div>
               </Spin>
             </div>
-            <Divider orientation="center" className="my-8" />
+            {/* <Divider orientation="center" className="my-8" />
             <div className="text-gray90">30 Day Projection</div>
             <div className="flex gap-2 items-center leading-none">
               <span className="text-[#03C407] text-[40px] -mt-[6px]">+</span>
               <LoadingNumber loading={loadingUserEstimatedApus}>
                 <span className="font-medium text-gray21 text-[40px]">{formatBigNumber(userEstimatedApus, 12, 4)}</span>
               </LoadingNumber>
-            </div>
+            </div> */}
           </div>
           <Divider type="vertical" className="h-64 my-auto" />
           <div className="flex-grow-1 flex-shrink-0 w-1/2 flex flex-col gap-5 p-7">
