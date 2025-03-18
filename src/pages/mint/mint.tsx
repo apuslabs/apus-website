@@ -27,6 +27,14 @@ export const GrayDivider = ({ className }: { className?: string }) => (
 );
 
 export function Component() {
+  useEffect(() => {
+    toast.info(<div>APUS Mint Page <span className="font-semibold text-orange-300">Under Temporary Maintenance</span> - Please Be Patient!<br/>Feel Free Allocate Now Direct on: <a className=" text-cyan-200" href="https://ao.arweave.net/#/mint/yield/">AO Mint Page</a></div>, {
+      autoClose: false,
+      style: {
+        width: 500,
+      }
+    })
+  }, [])
   const { connect, disconnect } = useConnection();
   const activeAddress = useActiveAddress();
   const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");
