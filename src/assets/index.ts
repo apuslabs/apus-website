@@ -109,8 +109,8 @@ import BenAvatar from "./team/ben.png";
 import ConorAvatar from "./team/conor.png";
 import JasonAvatar from "./team/jason.png";
 import JaxAvatar from "./team/jax.png";
-import MateoAvatar from "./team/mateo.png";
-import PhobeAvatar from "./team/phoebe.png";
+import AlexAvatar from "./team/alex.png";
+import CatalinAvatar from "./team/catalin.png";
 import IconLinkedIn from "./team/icon-linkedin.png";
 
 export const ImgTeam = {
@@ -118,8 +118,8 @@ export const ImgTeam = {
   ConorAvatar,
   JasonAvatar,
   JaxAvatar,
-  MateoAvatar,
-  PhobeAvatar,
+  AlexAvatar,
+  CatalinAvatar,
   IconLinkedIn,
 };
 

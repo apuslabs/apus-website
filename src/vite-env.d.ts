@@ -6,6 +6,12 @@ interface NavigationMenuType {
   icon?: string;
 }
 
+// .riv extension
+declare module '*.riv' {
+  const content: string;
+  export default content;
+}
+
 // window.ethereum
 declare interface Window {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
