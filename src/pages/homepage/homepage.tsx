@@ -13,8 +13,8 @@ import FeatBg3 from "./images/feat3.png";
 import Arch from "./images/arch.svg";
 import ArchMobile from "./images/arch-mobile.svg";
 import LogoStroke from "./images/logo-stroke.svg";
-import BgRoadmap from "./images/roadmap-bg.svg";
-import BgRoadmapMobile from "./images/plexus-mobile.svg";
+import BgRoadmap from "./images/roadmap-bg.png";
+import BgRoadmapMobile from "./images/plexus-mobile.png";
 import RoadmapLine from './images/roadmap-line.svg';
 import RoadmapLineMobile from './images/roadmap-line-mobile.svg';
 import LogoAO from './images/ao.svg';
@@ -190,7 +190,7 @@ function SectionRoadmap() {
               AO Protocol and Arweave ecosystem, Apus Network has outlined a comprehensive roadmap.
               <br />
               <br />
-              This roadmap details the phased development and implementation milestones from Q4 2024 through Q3 2025.
+              This roadmap details the phased development and implementation milestones from Q1 2025 onwards.
             </div>
           </div>
         </div>
@@ -198,50 +198,30 @@ function SectionRoadmap() {
         <div className="px-[25px] pb-[50px] md:pb-0 md:px-0 text-[#1b1b1b] text-base md:text-[22px] leading-tight flex flex-col gap-[50px] md:gap-20">
           {[
             {
-              season: "2024 Q4",
-              title: "Inferface Definition",
-              todos: [
-                "Complete interface specification for eterministic GPU as AO extension",
-                "Develop Proof of Concept (POC) for eterministic GPU computation",
-                "2025 Q1: Basic Integration",
-              ],
-            },
-            {
               season: "2025 Q1",
-              title: "Basic Integration",
+              title: "HyperBEAM Device Integration",
               todos: [
-                "Establish initial integration work with AOS",
-                "Implement some core deterministic GPU operators based on Nvidia determinism-framework",
-                "Complete WebGPU standard interface adaptation",
+                "Establish initial GPU Device integration with HyperBEAM",
+                "Implement d11c llama.cpp with NVIDIA GPU",
+                "List on PermaSwap DEX",
               ],
             },
             {
               season: "2025 Q2",
-              title: "Alpha & Beta Testing",
+              title: "Launch AI Pool and Substaking",
               todos: [
-                "Achieve first deterministic GPU model deployment",
-                "Release Alpha & Beta version for community testing",
-                "Establish baseline performance metrics",
+                "Launch AI Pool product with $APUS substaking",
+                "Build AO mainnet GPU nodes and conduct limited public testing",
+                "Expand DEX listings to enhance liquidation",
               ],
             },
             {
-              season: "2025 Q3",
-              title: "Production Release",
+              season: "2025 H2",
+              title: "Expand Ecosystem Influence",
               todos: [
-                "Complete full integration with AO verification mechanism",
-                "Launch production-ready version",
-                "Enable enterprise-grade application deployment",
-              ],
-            },
-            {
-              season: ">>>",
-              title: "Future Considerations",
-              todos: [
-                "Implement cross-hardware deterministic guarantees",
-                "Establish performance benchmarks across different hardware configurations",
-                "Achieve seamless integration with mainstream AI frameworks",
-                "Build comprehensive developer ecosystem",
-                "Test on potential TEE implementation for privacy protection",
+                "Position $APUS as a utility token",
+                "Boost platform appeal and market engagement",
+                "Foster cross-ecosystem collaboration and drive project execution",
               ],
             },
           ].map(({ season, title, todos }, index) => {
