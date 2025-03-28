@@ -8,12 +8,8 @@ import Feat1 from './animations/apus_hero_verifiable_v3.riv';
 import Feat2 from './animations/apus_hero_community_v1.riv';
 import Feat3 from './animations/apus_incentives_v1.riv';
 import IconMintBox from "./images/mint-box-icon.png";
-import BgTunnelMobile from "./images/tunnel-mobile.svg";
 import BgDesc from "./images/bg-desc.png";
 import BgDescMobile from "./images/bg-desc.svg";
-import FeatBg1 from "./images/feat1.png";
-import FeatBg2 from "./images/feat2.png";
-import FeatBg3 from "./images/feat3.png";
 import Arch from "./images/arch.svg";
 import ArchMobile from "./images/arch-mobile.svg";
 import LogoStroke from "./images/logo-stroke.svg";
@@ -96,7 +92,7 @@ function SectionFeatures() {
       <div className="content-area text-[#1b1b1b] ">
         <div className="features-item">
           <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2">
-            {isMobile ? <Rive src={Feat1} className="relative left-5 h-[286px]" /> : null}
+            {isMobile ? <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Verifiable Decentralized AI Inference</div>
@@ -129,12 +125,12 @@ function SectionFeatures() {
           <div
             className={`bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden ${isMobile ? "order-1" : "order-2"}`}
           >
-            {isMobile ? <Rive src={Feat2} className="h-[448px] mx-auto" /> : null}
+            {isMobile ? <Rive src={Feat2} stateMachines={"State Machine 1"} className="h-[448px] mx-auto" /> : null}
           </div>
         </div>
         <div className="features-item">
           <div className="bg-[#3242f5] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
-            {isMobile ? <Rive src={Feat3} className="h-[460px] relative -left-10" /> : null}
+            {isMobile ? <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Competitive Incentive for AI Models</div>
@@ -153,9 +149,9 @@ function SectionFeatures() {
       </div>
       {isMobile ? null : (
         <>
-          <Rive src={Feat1} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10" />
-          <Rive src={Feat2} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10" />
-          <Rive src={Feat3} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10" />
+          <Rive src={Feat1} stateMachines={"State Machine 1"} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10" />
+          <Rive src={Feat2} stateMachines={"State Machine 1"} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10" />
+          <Rive src={Feat3} stateMachines={"State Machine 1"} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10" />
         </>
       )}
     </div>
