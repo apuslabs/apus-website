@@ -30,7 +30,7 @@ export const TeamMemebers = [
   },
   {
     avatar: CatalinAvatar,
-    name: "Phoebe",
+    name: "Cross",
     role: "Graphic Designer",
   },
 ];

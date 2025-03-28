@@ -3,6 +3,7 @@ import { ImgCommon, ImgHomepage } from "../assets";
 import { Link, useLocation } from "react-router-dom";
 import "./headerfooter.css";
 import { useBreakpoint } from "../utils/react-use";
+import { TokenomicsDocLink } from "./constants";
 
 const scrollToAnchor = (anchor: string, isMobile: boolean) => {
   const el = document.getElementById(anchor);
@@ -65,7 +66,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
             <li>Litepaper</li>
           </Link>
           <Link
-            to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s"
+            to={TokenomicsDocLink}
             target="_blank"
             onClick={() => setNavHide(true)}
           >

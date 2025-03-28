@@ -23,6 +23,7 @@ import LogoArio from "./images/ario.svg";
 import LogoEnlarge from "./images/logo-enlarge.svg";
 import { LIGHTPAPER_LINK } from "../../components/HomeHeader";
 import { ImgHomepage } from "../../assets";
+import { TokenomicsDocLink } from "../../components/constants";
 
 function TwitterVideo({ className, videoID }: { className?: string; videoID: string }) {
   return (
@@ -116,7 +117,7 @@ function SectionFeatures() {
               decentralized distribution with no pre-allocation for the team or early investors.
             </div>
             <Link
-              to="https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s"
+              to={TokenomicsDocLink}
               target="__blank"
             >
               <div className="btn-lightblue">Learn More</div>
