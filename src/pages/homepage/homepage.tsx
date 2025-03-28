@@ -4,9 +4,9 @@ import { useBreakpoint } from "../../utils/react-use";
 
 import Rive from "@rive-app/react-canvas";
 import HeroRiv from "./animations/hero.riv";
-import Feat1 from './animations/feat-verifyai.riv';
-import Feat2 from './animations/feat-launch.riv';
-import Feat3 from './animations/feat-3.riv';
+import Feat1 from './animations/apus_hero_verifiable_v3.riv';
+import Feat2 from './animations/apus_hero_community_v1.riv';
+import Feat3 from './animations/apus_incentives_v1.riv';
 import IconMintBox from "./images/mint-box-icon.png";
 import BgTunnelMobile from "./images/tunnel-mobile.svg";
 import BgDesc from "./images/bg-desc.png";
@@ -47,7 +47,8 @@ function SectionHero() {
   return (
     <div className="section section-hero">
       <div className="content-area relative z-20 flex flex-col items-center md:block">
-        <div className="text-[35px] md:text-[80px] text-[#262626] pt-[230px] md:pt-[140px] md:pb-[430px] font-medium md:font-normal leading-none">
+        <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-medium md:font-normal leading-none bg-white md:bg-transparent">
+        <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
           Enabling Verifiable
           <br /> Decentralized AI
           <br />
@@ -55,7 +56,7 @@ function SectionHero() {
           <br /> Deterministic GPU
           <br /> Computing
         </div>
-        <div className="md:absolute right-0 bottom-0 mt-[80px] md:mt-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-[#3242F5] flex flex-col gap-2 md:gap-0 md:flex-row items-center">
+        <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-[#3242F5] flex flex-col gap-2 md:gap-0 md:flex-row items-center">
           <img src={IconMintBox} className="w-[90px] h-[90px] md:w-[175px] md:h-[175px] md:mr-[42px]" />
           <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
             <div className="text-2xl md:text-[40px] text-white">APUS Minting Live!</div>
@@ -95,7 +96,7 @@ function SectionFeatures() {
       <div className="content-area text-[#1b1b1b] ">
         <div className="features-item">
           <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2">
-            {isMobile ? <img src={FeatBg1} className="relative left-5 h-[286px]" /> : null}
+            {isMobile ? <Rive src={Feat1} className="relative left-5 h-[286px]" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Verifiable Decentralized AI Inference</div>
@@ -128,12 +129,12 @@ function SectionFeatures() {
           <div
             className={`bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden ${isMobile ? "order-1" : "order-2"}`}
           >
-            {isMobile ? <img src={FeatBg2} className="h-[448px] mx-auto" /> : null}
+            {isMobile ? <Rive src={Feat2} className="h-[448px] mx-auto" /> : null}
           </div>
         </div>
         <div className="features-item">
           <div className="bg-[#3242f5] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
-            {isMobile ? <img src={FeatBg3} className="h-[460px]" /> : null}
+            {isMobile ? <Rive src={Feat3} className="h-[460px] relative -left-10" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Competitive Incentive for AI Models</div>
@@ -152,12 +153,9 @@ function SectionFeatures() {
       </div>
       {isMobile ? null : (
         <>
-          <Rive src={Feat1} className="absolute right-[50%] top-0 w-[45%] h-[700px] z-10" />
-          <Rive src={Feat2} className="absolute right-0 top-[700px] w-[45%] h-[700px] z-10" />
-          <Rive src={Feat3} className="absolute right-[50% ] top-[1400px] w-[45%] h-[700px] z-10" />
-          {/* <img src={FeatBg1} className="absolute left-[132px] top-0 h-[480px] z-10" />
-          <img src={FeatBg2} className="absolute right-0 top-[655px] h-[845px] z-10" />
-          <img src={FeatBg3} className="absolute left-[70px] top-[1400px] h-[774px] z-10" /> */}
+          <Rive src={Feat1} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10" />
+          <Rive src={Feat2} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10" />
+          <Rive src={Feat3} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10" />
         </>
       )}
     </div>
@@ -207,7 +205,7 @@ function SectionRoadmap() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
   return (
-    <div id="roadmap" className="section md:mt-10 md:mb-40">
+    <div id="roadmap" className="section md:pt-10 md:pb-40 overflow-hidden">
       <div className="content-area relative flex flex-col md:flex-row md:gap-10">
         <div className="flex-shrink-0 md:w-[470px] text-white z-20">
           <div className="bg-[#1b1b1b] md:pt-[72px] md:px-[36px] md:pb-[48px] py-[50px] px-[25px]">
@@ -407,9 +405,9 @@ export default function HomeIndex() {
     <div id="homepage" className="relative w-screen overflow-x-hidden">
       <SectionHero />
       {breakpoint === "mobile" ? (
-        <img
-          src={BgTunnelMobile}
-          className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10"
+        <Rive
+          src={HeroRiv}
+          className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10"
         />
       ) : (
         <Rive
