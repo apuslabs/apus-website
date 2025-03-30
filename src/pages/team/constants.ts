@@ -1,6 +1,6 @@
 import { ImgTeam } from "../../assets";
 
-const { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, MateoAvatar, PhobeAvatar } = ImgTeam;
+const { BenAvatar, ConorAvatar, JasonAvatar, JaxAvatar, AlexAvatar, CatalinAvatar } = ImgTeam;
 
 export const TeamMemebers = [
   {
@@ -14,16 +14,9 @@ export const TeamMemebers = [
     role: "Core Architect",
   },
   {
-    avatar: MateoAvatar,
-    name: "Mateo Bastidas",
-    role: "Head of Dev-rel",
-    linkedin: "https://www.linkedin.com/in/mateo-bastidas/",
-  },
-  {
     avatar: ConorAvatar,
     name: "Conor Thacker",
     role: "Head of Community",
-    linkedin: "https://www.linkedin.com/in/conorthacker/",
   },
   {
     avatar: JaxAvatar,
@@ -31,8 +24,13 @@ export const TeamMemebers = [
     role: "Core Developer",
   },
   {
-    avatar: PhobeAvatar,
-    name: "Phoebe",
-    role: "Core BD",
+    avatar: AlexAvatar,
+    name: "Alex",
+    role: "Core Developer",
+  },
+  {
+    avatar: CatalinAvatar,
+    name: "Cross",
+    role: "Graphic Designer",
   },
 ];

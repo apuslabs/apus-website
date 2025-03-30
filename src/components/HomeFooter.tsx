@@ -4,6 +4,7 @@ import { SocialMediaList } from "./SocialMediaList";
 import { FeedbackFish } from "@feedback-fish/react";
 import { useState } from "react";
 import { Input, message } from "antd";
+import { TokenomicsDocLink } from "./constants";
 
 const MenuList = {
   MAIN: [
@@ -19,7 +20,7 @@ const MenuList = {
     },
     {
       name: "Tokenomics",
-      path: "https://yoiqojo25iwvlwjsftpnv5jvzvtqvaguciaeewl4cfe5b7inqpnq.arweave.net/w5EHJdrqLVXZMize2vU1zWcKgNQSAEJZfBFJ0P0Ng9s",
+      path: TokenomicsDocLink,
     },
   ],
   COMPANY: [

@@ -13,6 +13,7 @@ export default defineConfig({
       stream: "stream-browserify",
     },
   },
+  assetsInclude: ["**/*.riv"],
   plugins: [
     react(),
     ViteImageOptimizer({
