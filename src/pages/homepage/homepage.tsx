@@ -261,7 +261,7 @@ function SectionRoadmap() {
                   {index === 0 && (
                     <img
                       src={isMobile ? RoadmapLineMobile : RoadmapLine}
-                      className="absolute bottom-0 right-0 md:-bottom-[192px] md:right-[2px] md:h-[200px]"
+                      className="absolute bottom-0 right-0 md:-bottom-[112px] md:right-[2px] md:h-[120px]"
                     />
                   )}
                 </div>
