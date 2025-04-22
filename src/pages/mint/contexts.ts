@@ -140,7 +140,7 @@ export function useAOMint({
             const otherDelegations = delegationPrefs.filter(v => v.walletTo !== APUS_ADDRESS.Recipient)
             tobeDecreaseDelegations.push(...otherDelegations.map(v => {
               const share = (v.factor / (totalFactor - apusFactor))
-              const targetFactor = Math.floor(share * factorTobeDecrease)
+              const targetFactor = Math.ceil(share * factorTobeDecrease)
               const factor = v.factor - targetFactor
               return {
                 walletFrom: wallet,
