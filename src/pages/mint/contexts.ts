@@ -24,7 +24,6 @@ interface GetDelegationResponse {
 
 const DefaultSplitDelegations = {
   apusFactor: 0,
-  otherFactor: 0,
   aoFactor: 100,
 }
 
@@ -95,16 +94,88 @@ export function useAOMint({
   const updateDelegation = useCallback(
     async (factor: number) => {
       if (wallet) {
-        const params: SetDelegation = {
-          walletFrom: wallet,
-          walletTo: APUS_ADDRESS.Recipient,
-          factor: Math.floor(factor * 100)
+        const { delegationPrefs, totalFactor, otherFactor, apusFactor, aoFactor } = splitDelegationFactor(wallet, JSON.parse(delegationsData || ""))
+        console.log(totalFactor, otherFactor, apusFactor, aoFactor)
+        // Convert factor to the correct scale (0-10000)
+        const newApusFactor = Math.floor(factor * 100);
+        if (newApusFactor > 10000) {
+          throw new Error("Delegation factor cannot exceed 10000");
         }
-        await updateDelegationMsg({}, params);
+
+        // Calculate difference (positive means increase, negative means decrease)
+        const factorDiff = newApusFactor - apusFactor;
+
+        if (factorDiff === 0) return; // No change needed
+
+        const tobeDecreaseDelegations: SetDelegation[] = [];
+        const tobeIncreaseDelegations: SetDelegation[] = [];
+
+        if (factorDiff === 0) {
+          return;
+        } else if (factorDiff < 0) {
+          tobeDecreaseDelegations.push({
+            walletFrom: wallet,
+            walletTo: APUS_ADDRESS.Recipient,
+            factor: newApusFactor,
+          })
+          tobeIncreaseDelegations.push({
+            walletFrom: wallet,
+            walletTo: wallet,
+            factor: aoFactor - factorDiff,
+          })
+        } else {
+          tobeIncreaseDelegations.push({
+            walletFrom: wallet,
+            walletTo: APUS_ADDRESS.Recipient,
+            factor: newApusFactor,
+          })
+          if (500 <= aoFactor - factorDiff) {
+            tobeDecreaseDelegations.push({
+              walletFrom: wallet,
+              walletTo: wallet,
+              factor: aoFactor - factorDiff,
+            })
+          } else {
+            let factorTobeDecrease = factorDiff
+            const otherDelegations = delegationPrefs.filter(v => v.walletTo !== APUS_ADDRESS.Recipient)
+            tobeDecreaseDelegations.push(...otherDelegations.map(v => {
+              const share = (v.factor / (totalFactor - apusFactor))
+              const targetFactor = Math.ceil(share * factorTobeDecrease)
+              const factor = v.factor - targetFactor
+              return {
+                walletFrom: wallet,
+                walletTo: v.walletTo,
+                factor: factor >= 500 ? factor : 0,
+              }
+            }))
+            factorTobeDecrease -= otherDelegations.reduce((acc, v) => acc + v.factor, 0)
+            const userDelegation = tobeDecreaseDelegations.find(v => v.walletTo === wallet)
+            if (userDelegation !== undefined && factorTobeDecrease > 0) {
+              userDelegation.factor = userDelegation.factor + factorTobeDecrease
+            } else if (userDelegation === undefined && factorTobeDecrease >= 500) {
+              tobeDecreaseDelegations.push({
+                walletFrom: wallet,
+                walletTo: wallet,
+                factor: factorTobeDecrease,
+              })
+            }
+            if (factorTobeDecrease >= 0) {
+              console.warn("factorLeft", factorTobeDecrease)
+            }
+          }
+        }
+        console.info("tobeDecreaseDelegations", tobeDecreaseDelegations)
+        console.info("tobeIncreaseDelegations", tobeIncreaseDelegations)
+        if (tobeDecreaseDelegations.length > 0) {
+          await Promise.all(tobeDecreaseDelegations.map(v => updateDelegationMsg({}, v)));
+        }
+        if (tobeIncreaseDelegations.length > 0) {
+          await Promise.all(tobeIncreaseDelegations.map(v => updateDelegationMsg({}, v)));
+        }
         getDelegations({ Wallet: wallet })
       }
     },
-    [updateDelegationMsg, getDelegations, wallet],
+    [updateDelegationMsg, getDelegations, wallet, delegationsData],
   );
 
   // animate apus balance change
@@ -139,30 +210,32 @@ export function useAOMint({
 
   const delegations = useMemo(() => {
     if (delegationsData) {
-      return splitDelegationFactor(JSON.parse(delegationsData))
+      return splitDelegationFactor(wallet, JSON.parse(delegationsData))
     }
     return DefaultSplitDelegations
-  }, [delegationsData])
+  }, [delegationsData, wallet])
 
   return {
     apusDynamic,
     loadingApus,
     userEstimatedApus: toBigNumber(userEstimatedApus),
     loadingUserEstimatedApus,
-    delegations,
+    apusFactor: delegations.apusFactor / 100,
     loadingDelegations,
     loadingUpdateDelegation,
     updateDelegation,
   };
 }
 
-function splitDelegationFactor({ delegationPrefs, totalFactor }: GetDelegationResponse) {
+function splitDelegationFactor(wallet: string | undefined, { delegationPrefs, totalFactor }: GetDelegationResponse) {
   const apusFactor = delegationPrefs.find(v => v.walletTo === APUS_ADDRESS.Recipient)?.factor || 0
-  const otherFactor = totalFactor - apusFactor
-  const aoFactor = 10000 - totalFactor
+  const userFactor = delegationPrefs.find(v => v.walletTo === wallet)?.factor || 0
+  const aoFactor = 10000 - totalFactor + userFactor // unspecified factor + user factor
   return {
-    apusFactor: apusFactor / 100,
-    otherFactor: otherFactor / 100,
-    aoFactor: aoFactor / 100
+    apusFactor: apusFactor,
+    aoFactor: aoFactor,
+    otherFactor: totalFactor - apusFactor - userFactor,
+    delegationPrefs,
+    totalFactor: totalFactor,
   }
 }

@@ -16,7 +16,7 @@ import duration from "dayjs/plugin/duration";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
-import { formatBigNumber, splitBigNumber } from "./utils";
+import { splitBigNumber } from "./utils";
 import { APUS_ADDRESS } from "../../utils/config";
 import FlipNumbers from "react-flip-numbers";
 import { useLocalStorage } from "react-use";
@@ -41,9 +41,7 @@ export function Component() {
   const {
     apusDynamic,
     loadingApus,
-    delegations: { apusFactor, otherFactor },
-    userEstimatedApus,
-    loadingUserEstimatedApus,
+    apusFactor,
     loadingDelegations,
     loadingUpdateDelegation,
     updateDelegation,
@@ -53,7 +51,6 @@ export function Component() {
     MintProcess: APUS_ADDRESS.Mint,
     MirrorProcess: APUS_ADDRESS.Mirror,
   });
-  const maxFactorToApus = 100 - otherFactor;
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
 
   const [percent, setPercent] = useState<number>(0);
@@ -103,15 +100,17 @@ export function Component() {
     }
   }, [apusWallet]);
 
-  const onPercentChange = (v: number) => {
+  const onPercentChange = (v: number, precision: boolean) => {
     if (v === 0) {
       setPercent(0);
     } else if (v < 5) {
       setPercent(5);
-    } else if (v >= maxFactorToApus) {
-      setPercent(maxFactorToApus);
     } else {
-      setPercent(v);
+      if (precision) {
+        setPercent(v);
+      } else {
+        setPercent(Math.round(v / 5) * 5);
+     }
     }
   };
 
@@ -160,19 +159,7 @@ export function Component() {
                     <div>Why $APUS is 0 while already delegated?</div>
                     <ul className="pl-4 list-disc">
                       <li>
-                        APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally
-                        24 hours).
-                      </li>
-                      <li>
-                        APUS has migarated to delegation from allocation, if you had set recipient before, please&nbsp;
-                        <span
-                          className="underline text-sky-200 cursor-pointer"
-                          onClick={() => {
-                            setRecipientModal(true);
-                          }}
-                        >
-                          reconnect here
-                        </span>
+                        APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally 24 hours)
                       </li>
                     </ul>
                   </div>
@@ -248,9 +235,9 @@ export function Component() {
           </div>
         </div>
         <div className="card flex-col items-center p-12">
-          <div className="card-caption">ALLOCATE</div>
+          <div className="card-caption">DELEGATE</div>
           <div className="text-gray21 mb-8">
-            Below represents how you are allocating your AO Yield
+            Below represents how you are delegating your AO Yield
             <Tooltip
               title={
                 <div>
@@ -258,8 +245,8 @@ export function Component() {
                   <Link to="https://ao.arweave.dev/#/mint" className="mx-1 text-blue underline">
                     Bridge To AO
                   </Link>
-                  before allocating to APUS. The AO available for allocation includes all your bridged assets, including
-                  and any allocations to other projects.
+                  before delegating to APUS. The AO available for delegation includes all your bridged assets, including
+                  and any delegations to other projects.
                 </div>
               }
               placement="topRight"
@@ -275,9 +262,8 @@ export function Component() {
             </Tooltip>
           </div>
           <DemoPie
-            aoFactor={Number((100 - otherFactor - percent).toFixed(2))}
+            aoFactor={Number((100 - percent).toFixed(2))}
             apusFactor={percent}
-            otherFactor={otherFactor}
           />
           <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
             <div className="relative w-full px-[5px]">
@@ -287,50 +273,44 @@ export function Component() {
                   width: `${5}%`,
                 }}
               ></div>
-              <div
-                className="absolute right-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10"
-                style={{
-                  width: `${otherFactor}%`,
-                }}
-              ></div>
               <Slider
                 className="w-full"
-                marks={{ 0: "0%", 5: "5%", [maxFactorToApus]: `${maxFactorToApus}%` }}
+                marks={{ 0: "0%", 5: "5%", 100: <div className="inline underline text-mainblue">MAX</div> }}
                 min={0}
                 max={100}
-                step={1}
+                step={0.01}
                 tooltip={{
                   open: true,
                   formatter: (v) => (loadingDelegations ? <LoadingOutlined color="#f3f3f3" /> : `${v}%`),
                 }}
                 value={percent}
-                onChange={onPercentChange}
+                onChange={v => onPercentChange(v, false)}
               />
             </div>
             <div className="w-full flex flex-col items-end -mt-10">
               <div className="mb-2">
-                <span className="text-mainblue font-semibold">{percent}%</span> allocated to Mint APUS
+                <span className="text-mainblue font-semibold">{percent}%</span> delegated to Mint APUS
               </div>
               <InputNumber
                 className="w-60"
                 size="large"
                 value={percent}
-                max={maxFactorToApus}
+                max={100}
                 min={0}
                 precision={2}
-                step={1}
-                onStep={onPercentChange}
+                step={5}
+                onStep={v => onPercentChange(v, false)}
                 onPressEnter={(v) => {
                   const n = parseFloat((v.target as HTMLInputElement).value);
                   console.log(n);
                   if (!isNaN(n)) {
-                    onPercentChange(n);
+                    onPercentChange(n, true);
                   }
                 }}
                 onBlur={(v) => {
                   const n = parseFloat(v.target.value);
                   if (!isNaN(n)) {
-                    onPercentChange(n);
+                    onPercentChange(n, true);
                   }
                 }}
               />
@@ -383,13 +363,12 @@ export function Component() {
   );
 }
 
-function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; otherFactor: number; aoFactor: number }) {
+function DemoPie({ apusFactor, aoFactor }: { apusFactor: number; aoFactor: number }) {
   return (
     <Pie
       data={[
         { type: "Apus", value: apusFactor },
         { type: "AO", value: aoFactor },
-        { type: "Other", value: otherFactor },
       ]}
       width={400}
       height={340}
@@ -415,23 +394,5 @@ function DemoPie({ apusFactor, otherFactor, aoFactor }: { apusFactor: number; ot
         },
       }}
     />
-  );
-}
-
-function LoadingNumber({
-  className,
-  loading,
-  children,
-}: {
-  className?: string;
-  loading: boolean;
-  children?: React.ReactNode;
-}) {
-  return (
-    <div className={`${className ? className : ""} flex items-center`}>
-      <Spin indicator={<LoadingOutlined spin />} size="small" spinning={loading}>
-        {loading ? `--` : children}
-      </Spin>
-    </div>
   );
 }
