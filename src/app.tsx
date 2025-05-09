@@ -30,6 +30,13 @@ const router = createHashRouter([
         path: "mint",
         lazy: () => import("./pages/mint/mint"),
       },
+      {
+        path: "stake",
+        lazy: async () => {
+          const module = await import("./pages/stake/stake");
+          return { Component: module.default };
+        },
+      },
     ],
   },
   {
