@@ -29,14 +29,7 @@ const router = createHashRouter([
       {
         path: "mint",
         lazy: () => import("./pages/mint/mint"),
-      },
-      {
-        path: "stake",
-        lazy: async () => {
-          const module = await import("./pages/stake/stake");
-          return { Component: module.default };
-        },
-      },
+      }
     ],
   },
   {
@@ -73,6 +66,35 @@ const router = createHashRouter([
       {
         path: "perma-brawl",
         lazy: () => import("./pages/console/chatbot"),
+      },
+    ],
+  },
+  {
+    path: "anpm",
+    element: <>
+      <HomeHeader hideMenu={true} />
+      <Suspense>
+        <Outlet />
+      </Suspense>
+      <HomeFooter />
+    </>,
+    children: [
+      {
+        index: true,
+        path: "console",
+        lazy: () => import("./pages/anpm/console"),
+      },
+      {
+        path: "buy-credit",
+        lazy: () => import("./pages/anpm/buy-credit"),
+      },
+      {
+        path: "stake-apus",
+        lazy: () => import("./pages/anpm/stake-apus"),
+      },
+      {
+        path: "transfer-credit",
+        lazy: () => import("./pages/anpm/transfer-credit"),
       },
     ],
   },

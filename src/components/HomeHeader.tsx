@@ -33,7 +33,7 @@ function useAnchor() {
 
 export const LIGHTPAPER_LINK = "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg"
 
-const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
+const HomeHeader: FC<{ Userbox?: React.ReactNode, hideMenu?: boolean }> = ({ Userbox, hideMenu }) => {
   useAnchor();
   const breakpoint = useBreakpoint()
   const [navHide, setNavHide] = useState(true);
@@ -43,7 +43,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         <Link to="/">
           <img src={breakpoint === "mobile" ? ImgCommon.IconLogo : ImgHomepage.LogoHorizonal} className="w-auto md:w-[146px] h-10 md:h-auto cursor-pointer" alt="Apus Logo" />
         </Link>
-        <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col md:npjustify-center md:flex-row md:gap-12 text-lg header-nav" style={{
+        {!hideMenu ? <ul className="fixed md:relative top-[80px] md:top-0 left-0 md:h-auto w-screen md:w-auto flex flex-col md:npjustify-center md:flex-row md:gap-12 text-lg header-nav" style={{
           display: breakpoint === "mobile" && navHide ? "none" : "flex",
         }}>
           <Link to="/mint" onClick={() => setNavHide(true)}>
@@ -75,7 +75,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
           <Link to="/team" onClick={() => setNavHide(true)}>
             <li>Team</li>
           </Link>
-        </ul>
+        </ul> : undefined}
 
         {Userbox || (
           <>
