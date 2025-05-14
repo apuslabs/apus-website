@@ -22,7 +22,6 @@ function useAnchor() {
    useEffect(() => {
      const params = new URLSearchParams(location.search.slice(1));
      const anchor = params.get("anchor");
-     console.log(anchor)
      if (anchor) {
        scrollToAnchor(anchor, breakpoint === "mobile");
      } else {

@@ -1,31 +1,48 @@
-import BalanceSection from '../components/BalanceSection';
-import ModelCard from './ModelCard';
+import { ethers } from "ethers";
+import { useAO } from "../../../utils/ao";
+import { ANPM_DEFAULT_POOL, ANPM_POOL_MGR } from "../../../utils/config";
+import BalanceSection from "../components/BalanceSection";
+import ModelCard from "./ModelCard";
+import { useEffect } from "react";
+import { useWallet } from "../contexts/anpm";
 
-const models = [
-  {
-    modelName: 'Model 1',
-    description: 'Description of model 1',
-    poolCredit: 2356,
-    totalStaked: 1957503396.88,
-    apr: 7
-  },
-  {
-    modelName: 'Model 2', 
-    description: 'Description of model 2',
-    poolCredit: 1234,
-    totalStaked: 987654321.00,
-    apr: 5
-  },
-  {
-    modelName: 'Model 3',
-    description: 'Description of model 3',
-    poolCredit: 5678,
-    totalStaked: 1234567890.00,
-    apr: 8
-  }
-];
+interface PoolStakingResponse {
+  pool_id: string;
+  total_stake: string;
+  capacity: string;
+}
+
+interface CreditBalanceResponse {
+  user: string;
+  balance: string;
+}
 
 export function Component() {
+  const { activeAddress } = useWallet();
+  const { execute: getPoolStaking, data: poolStakingRes } = useAO<PoolStakingResponse>(
+    ANPM_POOL_MGR,
+    "Get-Pool-Staking",
+    "dryrun",
+  );
+  const { execute: getCreditBalance, data: creditBalance } = useAO<CreditBalanceResponse>(
+    ANPM_DEFAULT_POOL.ProcessID,
+    "Credit-Balance",
+    "dryrun",
+  );
+  useEffect(() => {
+    if (!activeAddress) return;
+    getPoolStaking({ PoolId: ANPM_DEFAULT_POOL.ID });
+    getCreditBalance();
+  }, [getPoolStaking, getCreditBalance, activeAddress]);
+  const models = [
+    {
+      modelName: ANPM_DEFAULT_POOL.Name,
+      description: ANPM_DEFAULT_POOL.Description,
+      poolCredit: creditBalance?.balance || "0",
+      totalStaked: ethers.utils.formatUnits(poolStakingRes?.total_stake || "0", 12),
+      apr: ANPM_DEFAULT_POOL.APR,
+    },
+  ];
   return (
     <main className="pt-[210px] pb-[90px] bg-[#F9FAFB]">
       <div className="max-w-[1200px] mx-auto p-5 flex gap-10">

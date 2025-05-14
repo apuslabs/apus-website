@@ -4,8 +4,8 @@ import { infoIcon, poolExample1, useModelIcon } from '../assets';
 interface ModelCardProps {
   modelName: string;
   description: string;
-  poolCredit: number;
-  totalStaked: number;
+  poolCredit: string;
+  totalStaked: string;
   apr: number;
 }
 

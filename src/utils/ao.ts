@@ -34,7 +34,7 @@ function toString(value: unknown): string {
   try {
     return JSON.stringify(value);
   } catch {
-    return String(value);
+    return value ? String(value) : "";
   }
 }
 
@@ -154,7 +154,14 @@ export function getDataFromMessage<T = unknown>(
   message: MessageResult | DryRunResult | undefined,
   index: number = 0,
 ): T | undefined {
-  return message?.Messages?.[index]?.Data;
+  const data = message?.Messages?.[index]?.Data;
+  try {
+    if (typeof data === "string") {
+      return JSON.parse(data) as T;
+    }
+  } catch {
+    return data as T;
+  }
 }
 
 export function useAO<T>(

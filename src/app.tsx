@@ -6,6 +6,7 @@ import ConsoleHeader from "./components/ConsoleHeader";
 import Homepage from "./pages/homepage/homepage";
 import Page404 from "./pages/404";
 import { Suspense } from "react";
+import ANPMOutlet from './pages/anpm'
 
 const router = createHashRouter([
   {
@@ -71,13 +72,7 @@ const router = createHashRouter([
   },
   {
     path: "anpm",
-    element: <>
-      <HomeHeader hideMenu={true} />
-      <Suspense>
-        <Outlet />
-      </Suspense>
-      <HomeFooter />
-    </>,
+    element: <ANPMOutlet />,
     children: [
       {
         index: true,

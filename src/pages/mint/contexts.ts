@@ -94,8 +94,7 @@ export function useAOMint({
   const updateDelegation = useCallback(
     async (factor: number) => {
       if (wallet) {
-        const { delegationPrefs, totalFactor, otherFactor, apusFactor, aoFactor } = splitDelegationFactor(wallet, JSON.parse(delegationsData || ""))
-        console.log(totalFactor, otherFactor, apusFactor, aoFactor)
+        const { delegationPrefs, totalFactor, apusFactor, aoFactor } = splitDelegationFactor(wallet, JSON.parse(delegationsData || ""))
         // Convert factor to the correct scale (0-10000)
         const newApusFactor = Math.floor(factor * 100);
         if (newApusFactor > 10000) {

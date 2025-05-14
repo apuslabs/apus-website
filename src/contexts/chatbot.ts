@@ -48,7 +48,6 @@ export function useChatbot(dataset_hash?: string) {
     if (dataset_hash && question) {
       const cqResult = await chatQuestionMsg({}, { dataset_hash, question, token: DEFAULT_OUTPUT_TOKENS });
       const cqReference = cqResult?.Messages?.[1]?.Data || "";
-      console.log(cqReference);
       if (cqReference) {
         chatHistory.push({
           role: "user",
@@ -70,7 +69,6 @@ export function useChatbot(dataset_hash?: string) {
     if (dataset_hash) {
       if (chatHistory.length) {
         const lastChat = chatHistory[chatHistory.length - 1];
-        console.log(lastChat.reference);
         const chatAnswerResult = await getChatAnswer({}, lastChat.reference);
         const chatTags = getTagsFromMessage(chatAnswerResult);
         const chatAnswer = getDataFromMessage(chatAnswerResult);

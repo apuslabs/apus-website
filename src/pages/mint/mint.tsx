@@ -294,7 +294,6 @@ export function Component() {
                 onStep={v => onPercentChange(v, false)}
                 onPressEnter={(v) => {
                   const n = parseFloat((v.target as HTMLInputElement).value);
-                  console.log(n);
                   if (!isNaN(n)) {
                     onPercentChange(n, true);
                   }
