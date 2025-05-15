@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./app";
 import "./utils/web-vitals";
@@ -9,7 +9,7 @@ import { ApusLogo } from "./assets";
 import { ConfigProvider } from "antd";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <ArweaveWalletKit
       config={{
         permissions: ["ACCESS_ADDRESS", "SIGN_TRANSACTION", "DISPATCH"],
@@ -27,5 +27,5 @@ createRoot(document.getElementById("root")!).render(
         <App />
       </ConfigProvider>
     </ArweaveWalletKit>
-  </StrictMode>,
+  // </StrictMode>,
 );

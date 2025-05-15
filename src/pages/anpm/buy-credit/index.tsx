@@ -1,9 +1,9 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import BalanceSection from "../components/BalanceSection";
-import { Breadcrumb, Slider } from "antd";
-import { useWallet } from "../contexts/anpm";
+import { Breadcrumb, Slider, Spin } from "antd";
+import { sleep, useWallet } from "../contexts/anpm";
 import { useAO } from "../../../utils/ao";
-import { ANPM_POOL_MGR } from "../../../utils/config";
+import { ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
 import { BalanceContext } from "../contexts/balance";
 import { formatApus } from "../../../utils/utils";
 
@@ -16,18 +16,36 @@ interface InfoResponse {
 
 export function Component() {
   const { activeAddress } = useWallet();
-  const { balance } = useContext(BalanceContext);
+  const { balance, refetchBalance, refetchCredits } = useContext(BalanceContext);
   const { execute: getPoolMgrInfo, data: infoRes } = useAO<InfoResponse>(ANPM_POOL_MGR, "Info", "dryrun")
   useEffect(() => {
     if (!activeAddress) return;
     getPoolMgrInfo();
   }, [getPoolMgrInfo, activeAddress]);
+  const { execute: transferApus, loading: transfering } = useAO(APUS_ADDRESS.Mint, "Transfer", "message");
+  const buyCredit = useCallback(async (quantity: string) => {
+    if (!activeAddress) return;
+    await transferApus({
+      Recipient: ANPM_POOL_MGR,
+      Quantity: quantity,
+      ["X-AN-Reason"]: "Buy-Credit",
+    });
+  }, [activeAddress, transferApus]);
   const [percent, setPercent] = useState<number>(0);
   const onPercentChange = (value: number) => {
     setPercent(value);
   };
   const creditExchangeRate = infoRes?.credit_exchange_rate || '0';
   const toBuyCredit = formatApus((BigInt(balance) * BigInt(percent) * BigInt(creditExchangeRate) / BigInt(1e2)).toString());
+  const onBuyCredit = async () => {
+    if (percent > 0) {
+      await buyCredit((BigInt(balance) * BigInt(percent) / BigInt(100)).toString());
+      await sleep(1000);
+      setPercent(0);
+      refetchBalance();
+      refetchCredits();
+    }
+  };
   return (
     <main className="pt-[148px] pb-[90px] bg-[#F9FAFB]">
       <div className="content-area mb-[40px]">
@@ -66,7 +84,7 @@ export function Component() {
             value={percent}
             onChange={(v) => onPercentChange(v)}
           />
-          <div className="btn-mainblue font-semibold px-4 h-12">Buy {toBuyCredit.toString()} CREDIT</div>
+          <Spin spinning={transfering}><div className="btn-mainblue font-semibold px-4 h-12" onClick={onBuyCredit}>Buy {toBuyCredit.toString()} CREDIT</div></Spin>
         </div>
       </div>
     </main>

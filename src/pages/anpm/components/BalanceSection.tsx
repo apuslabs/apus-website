@@ -3,7 +3,7 @@ import { balanceIcon } from '../assets';
 import { getCreditIcon, stakeApusIcon, transferIcon } from '../assets';
 import { BalanceButton } from './BalanceButton';
 import { BalanceContext } from '../contexts/balance';
-import { formatApus } from '../../../utils/utils';
+import { formatApus, formatCredits } from '../../../utils/utils';
 
 const BalanceSection = () => {
   const {balance, credits} = useContext(BalanceContext);
@@ -17,7 +17,7 @@ const BalanceSection = () => {
       
       <div className="space-y-1">
         <p className="text-[#262626] text-sm"><span className='font-bold'>APUS:</span> {formatApus(balance)}</p>
-        <p className="text-[#262626] text-sm"><span className='font-bold'>Credits:</span> {credits}</p>
+        <p className="text-[#262626] text-sm"><span className='font-bold'>Credits:</span> {formatCredits(credits)}</p>
       </div>
 
       <div className="flex flex-col gap-[10px]">

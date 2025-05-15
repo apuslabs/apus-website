@@ -1,12 +1,12 @@
 import BalanceSection from "../components/BalanceSection";
-import { Breadcrumb, InputNumber, Select } from "antd";
+import { Breadcrumb, Input, Select, Spin } from "antd";
 import { arrowLeftIcon, transferBigIcon } from "../assets";
 import { useContext, useEffect, useState } from "react";
 import { BalanceContext } from "../contexts/balance";
 import { useAO } from "../../../utils/ao";
 import { ANPM_DEFAULT_POOL, ANPM_POOL_MGR } from "../../../utils/config";
 import { useWallet } from "../contexts/anpm";
-
+import { formatApus, formatCredits } from "../../../utils/utils";
 
 interface CreditBalanceResponse {
   user: string;
@@ -15,46 +15,66 @@ interface CreditBalanceResponse {
 
 export function Component() {
   const { activeAddress } = useWallet();
-  const { credits, refetchCredits } = useContext(BalanceContext);
+  const { credits, refetchCredits, pools } = useContext(BalanceContext);
+  const [poolID, setPoolID] = useState<string>("");
   const { execute: getCreditBalance, data: creditBalanceRes } = useAO<CreditBalanceResponse>(
-    ANPM_DEFAULT_POOL.ProcessID,
+    ANPM_DEFAULT_POOL,
     "Credit-Balance",
     "dryrun",
   );
-  const { execute: charge } = useAO<string>(
-    ANPM_POOL_MGR,
-    "Add-Credit",
-    "message",
-  );
-  const { execute: withdraw } = useAO<string>(
-    ANPM_DEFAULT_POOL.ProcessID,
-    "Transfer-Credits",
-    "message",
-  );
+  const { execute: charge, loading: charging } = useAO<string>(ANPM_POOL_MGR, "Add-Credit", "message");
+  const { execute: withdraw, loading: withdrawing } = useAO<string>(ANPM_DEFAULT_POOL, "Transfer-Credits", "message");
   useEffect(() => {
     if (!activeAddress) return;
     getCreditBalance({ Recipient: activeAddress });
   }, [getCreditBalance, activeAddress]);
 
-  const [toCharge, setToCharge] = useState<number>(0);
-  const [toWithdraw, setToWithdraw] = useState<number>(0);
+  useEffect(() => {
+    if (pools.length > 0) {
+      setPoolID(pools[0].pool_id);
+    }
+  }, [pools]);
+
+  const [toCharge, setToCharge] = useState<string>("");
+  const [toWithdraw, setToWithdraw] = useState<string>("");
+
+  const creditBalance = creditBalanceRes?.balance || "0";
+
+  const refetchAll = () => {
+    setToCharge("");
+    setToWithdraw("");
+    refetchCredits();
+    getCreditBalance({ Recipient: activeAddress! });
+  };
 
   const onCharge = async () => {
-    if (toCharge > 0) {
-      await charge({ Quantity: toCharge.toString() });
-      setToCharge(0);
-      refetchCredits();
+    if (toCharge != "" && toCharge != "0") {
+      await charge({ Quantity: (Number(toCharge) * 1e12).toString(), PoolId: poolID });
+      refetchAll();
     }
-  }
-  
+  };
+
   const onWithdraw = async () => {
-    if (toWithdraw > 0) {
-      await withdraw({ Quantity: toWithdraw.toString() });
-      setToWithdraw(0);
-      getCreditBalance({ Recipient: activeAddress! });
+    if (toWithdraw != "" && toWithdraw != "0") {
+      await withdraw({ Quantity: (Number(toWithdraw) * 1e12).toString() });
+      refetchAll();
     }
-  }
-  
+  };
+
+  const handleInputNumber = (value: string, max: string, setNumber: (v: string) => void) => {
+    if (value === "") {
+      setNumber("");
+    } else if (/^\d*\.?\d*$/.test(value)) {
+      if (BigInt(Number(value) * 1e12) > BigInt(max)) {
+        setNumber(formatApus(max));
+      } else {
+        setNumber(value);
+      }
+    } else {
+      setNumber(value.slice(0, -1));
+    }
+  };
+
   return (
     <main className="pt-[148px] pb-[90px] bg-[#F9FAFB]">
       <div className="content-area mb-[40px]">
@@ -75,28 +95,57 @@ export function Component() {
           <BalanceSection />
         </div>
         <div className="box w-[640px] h-full">
-          <div className="mb-[50px] text-center text-wrap text-sm leading-snug">Transfer CREDIT between Balance and Pools. CREDIT can be<br/> withdrawn from Pool at any time.</div>
+          <div className="mb-[50px] text-center text-wrap text-sm leading-snug">
+            Transfer CREDIT between Balance and Pools. CREDIT can be
+            <br /> withdrawn from Pool at any time.
+          </div>
           <div className="flex gap-[10px] items-center">
             <div className="flex-1 box flex flex-col items-center">
-                <div className="text-base leading-tight mb-[6px] mt-[6px]">CREDIT Balance</div>
-                <div className="mb-[10px] text-[30px]">{credits}</div>
-                <div className="mb-[5px] text-sm">Amount to transfer:</div>
-                <InputNumber className="mb-[10px] w-full" min={0} max={Number(credits)} step={1} value={toCharge} defaultValue={0} onChange={v => v && setToCharge(v)} />
+              <div className="text-base leading-tight mb-[21px] mt-[6px]">CREDIT Balance</div>
+              <div className="mb-[10px] text-[30px]">{formatApus(credits)}</div>
+              <div className="mb-[5px] text-sm">Amount to transfer:</div>
+              <Input
+                className="mb-[10px] w-full"
+                min={0}
+                max={Number(credits) / 1e12}
+                value={toCharge}
+                defaultValue={0}
+                onChange={(v) => {
+                  handleInputNumber(v.target.value, credits, setToCharge);
+                }}
+              />
+              <Spin spinning={charging}>
                 <div className="btn-mainblue w-[100px] h-12" onClick={onCharge}>
-                    <img className="w-[35px] h-[35px] rotate-180" src={arrowLeftIcon} />
+                  <img className="w-[35px] h-[35px] rotate-180" src={arrowLeftIcon} />
                 </div>
+              </Spin>
             </div>
             <img src={transferBigIcon} className="w-[50px] h-[50px] text-[#262626]" />
             <div className="flex-1 box flex flex-col items-center">
-                <Select placeholder="Select a pool" className="w-full mb-[5px]" defaultValue={"1"}>
-                    <Select.Option value="1">AI Inference</Select.Option>
-                </Select>
-                <div className="mb-[10px] text-[30px]">{creditBalanceRes?.balance}</div>
-                <div className="mb-[5px] text-sm">Amount to transfer:</div>
-                <InputNumber className="mb-[10px] w-full" min={0} max={Number(creditBalanceRes?.balance) || 0} step={1} value={toWithdraw} defaultValue={0} onChange={v => v && setToWithdraw(v)} />
+              <Select
+                placeholder="Select a pool"
+                className="w-full mb-[15px] h-[32px]"
+                value={poolID}
+                onChange={(value) => setPoolID(value)}
+              >
+                {pools.map((pool) => (
+                  <Select.Option key={pool.pool_id} value={pool.pool_id}>
+                    {pool.name}
+                  </Select.Option>
+                ))}
+              </Select>
+              <div className="mb-[10px] text-[30px]">{formatCredits(creditBalance)}</div>
+              <div className="mb-[5px] text-sm">Amount to transfer:</div>
+              <Input
+                className="mb-[10px] w-full"
+                value={toWithdraw}
+                onChange={(v) => handleInputNumber(v.target.value, creditBalance, setToWithdraw)}
+              />
+              <Spin spinning={withdrawing}>
                 <div className="btn-mainblue w-[100px] h-12" onClick={onWithdraw}>
-                    <img className="w-[35px] h-[35px]" src={arrowLeftIcon} />
+                  <img className="w-[35px] h-[35px]" src={arrowLeftIcon} />
                 </div>
+              </Spin>
             </div>
           </div>
         </div>

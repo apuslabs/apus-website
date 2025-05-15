@@ -22,6 +22,8 @@ export function formatApus(value: string): string {
   return ethers.utils.formatUnits(value, 12);
 }
 
+export const formatCredits = formatApus;
+
 export const formatNumber = new Intl.NumberFormat("en-US").format;
 
 export function timeFormat(value: number): string {

@@ -38,7 +38,7 @@ function toString(value: unknown): string {
   }
 }
 
-function formatResult(result: MessageResult) {
+function formatResult(result: MessageResult | DryRunResult) {
   if (result?.Messages?.length > 1) {
     return {
       resMsgs: result?.Messages,
@@ -60,7 +60,7 @@ function formatResult(result: MessageResult) {
 
 function handleResult(
   msgType: string,
-  result: MessageResult,
+  result: MessageResult | DryRunResult,
   tags: Record<string, unknown>,
   data: unknown,
   checkStatus: boolean,
@@ -78,7 +78,7 @@ function handleResult(
   }
 }
 
-function logDebugInfo(tags: Record<string, unknown>, msgType: string, data: unknown, result: MessageResult) {
+function logDebugInfo(tags: Record<string, unknown>, msgType: string, data: unknown, result: MessageResult | DryRunResult) {
   console.log(`${tags.Action ?? ""} ${msgType}`, {
     reqTags: tags,
     reqData: data,
@@ -87,53 +87,100 @@ function logDebugInfo(tags: Record<string, unknown>, msgType: string, data: unkn
   });
 }
 
+// NEW: Queueing mechanism state
+const requestQueues: Record<string, Array<() => Promise<void>>> = {};
+const isProcessing: Record<string, boolean> = {};
+
+// NEW: Queue processor
+async function processQueueInternal(processId: string) {
+  if (isProcessing[processId] || !requestQueues[processId] || requestQueues[processId].length === 0) {
+    return;
+  }
+
+  isProcessing[processId] = true;
+  const taskToExecute = requestQueues[processId].shift();
+
+  if (taskToExecute) {
+    try {
+      await new Promise<void>((resolve) => setTimeout(resolve, 50)); // Simulate a delay
+      await taskToExecute(); // This executes the core logic and resolves/rejects the Promise of the original executeResult call
+    } catch (e) {
+      // Errors are expected to be handled by the task itself by rejecting its promise.
+      // This catch is a fallback for unexpected issues in queue management itself.
+      console.error(`Error during queued task execution for process ${processId} (should be handled by task):`, e);
+    } finally {
+      isProcessing[processId] = false;
+      processQueueInternal(processId); // Attempt to process the next item in the queue
+    }
+  } else {
+    // This case should ideally not be reached if the length > 0 check was performed correctly.
+    isProcessing[processId] = false;
+  }
+}
+
 async function executeResult(
   process: string,
   msgType: "message" | "dryrun",
   tags: Record<string, string>,
   data?: unknown,
   checkStatus?: boolean,
-) {
-  const startTime = dayjs();
-  try {
-    let msgResult;
-    const options: MessageInput = {
-      process,
-      tags: obj2tags(tags),
-      data: toString(data),
+): Promise<MessageResult | DryRunResult> {
+  return new Promise<MessageResult | DryRunResult>((resolve, reject) => {
+    const task = async () => {
+      const startTime = dayjs();
+      try {
+        let msgResult: MessageResult | DryRunResult;
+        const options: MessageInput = {
+          process,
+          tags: obj2tags(tags),
+          data: toString(data),
+        };
+        if (tags.Owner) {
+          options.Owner = tags.Owner;
+        }
+
+        if (msgType === "dryrun") {
+          msgResult = await dryrun(options);
+        } else {
+          const messageId = await message({
+            ...options,
+            signer: createDataItemSigner(window.arweaveWallet),
+          });
+          msgResult = await fetchResult({
+            message: messageId,
+            process,
+          });
+        }
+        
+        // handleResult expects MessageResult. DryRunResult is cast here,
+        // assuming structural compatibility for the fields accessed within handleResult 
+        // (e.g., .Error, .Messages, .Output).
+        handleResult(msgType, msgResult, tags, data, checkStatus ?? true); 
+        
+        sendEventToGA(
+          process,
+          "AO " + msgType + " Success",
+          tags.Action ?? "",
+          dayjs().diff(startTime, "second").toFixed(0),
+        );
+        resolve(msgResult);
+      } catch (e) {
+        if (isEnvDev) {
+          logError(tags, msgType);
+        } else {
+          console.error(e);
+        }
+        sendEventToGA(process, "AO " + msgType + " Fail", tags.Action ?? "", JSON.stringify(e));
+        reject(e);
+      }
     };
-    if (tags.Owner) {
-      options.Owner = tags.Owner;
+
+    if (!requestQueues[process]) {
+      requestQueues[process] = [];
     }
-    if (msgType === "dryrun") {
-      msgResult = await dryrun(options);
-    } else {
-      const messageId = await message({
-        ...options,
-        signer: createDataItemSigner(window.arweaveWallet),
-      });
-      msgResult = await fetchResult({
-        message: messageId,
-        process,
-      });
-    }
-    handleResult(msgType, msgResult, tags, data, checkStatus ?? true);
-    sendEventToGA(
-      process,
-      "AO " + msgType + " Success",
-      tags.Action ?? "",
-      dayjs().diff(startTime, "second").toFixed(0),
-    );
-    return msgResult;
-  } catch (e) {
-    if (isEnvDev) {
-      logError(tags, msgType);
-    } else {
-      console.error(e);
-    }
-    sendEventToGA(process, "AO " + msgType + " Fail", tags.Action ?? "", JSON.stringify(e));
-    throw e;
-  }
+    requestQueues[process].push(task);
+    processQueueInternal(process); // Trigger processing if not already active
+  });
 }
 
 function logError(tags: Record<string, string>, msgType: string) {
