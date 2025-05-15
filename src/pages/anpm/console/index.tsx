@@ -43,12 +43,12 @@ export function Component() {
 1. Make sure you have credits ${formatApus(creditBalance?.balance || "0")} in this pool.
 2. Send Add Task to this pool. Each task cost 0.000000000001 credit.
     \`\`\`lua
-    Send({ \n\t\tTarget = "${pools[0].pool_id}", \n\t\tAction = "Add-Task", \n\t\tData  = '{"prompt":"Hello","config":"{\\"n_gpu_layers\\":32}"}' \n\t}).onReply(function (retMsg) \n\t\tprint(retMsg.Data) \n\tend)
+    Send({ \n\t\tTarget = "${pools?.[0]?.pool_id || 'Pool'}", \n\t\tAction = "Add-Task", \n\t\tData  = '{"prompt":"Hello","config":"{\\"n_gpu_layers\\":32}"}' \n\t}).onReply(function (retMsg) \n\t\tprint(retMsg.Data) \n\tend)
     \`\`\`
 3. Wait for the task to be completed. A Task-Response will be sent to the pool.
 4. Or you can use the \`Get-Task-Response\` API to get the result.
     \`\`\`lua
-    Send({ \n\t\tTarget = "${pools[0].pool_id}", \n\t\tAction = "Get-Task-Response", \n\t\tData  = '<task_ref>' \n\t})
+    Send({ \n\t\tTarget = "${pools?.[0]?.pool_id || 'Pool'}", \n\t\tAction = "Get-Task-Response", \n\t\tData  = '<task_ref>' \n\t})
     \`\`\`
 `
   return (
