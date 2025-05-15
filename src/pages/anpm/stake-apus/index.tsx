@@ -7,8 +7,8 @@ import { BalanceContext } from "../contexts/balance";
 import { formatApus } from "../../../utils/utils";
 
 export function Component() {
-  const {balance, defaultPool, pools, refetchPoolList} = useContext(BalanceContext);
-  const { staked, transfering, poolID, setPoolID, stake, percent, onPercentChange, unstake, unstaking } = useStake(refetchPoolList);
+  const {balance, defaultPool, pools, refetchPoolList, refetchBalance} = useContext(BalanceContext);
+  const { staked, transfering, poolID, setPoolID, stake, percent, onPercentChange, unstake, unstaking } = useStake(refetchPoolList, refetchBalance);
   const currentPool = pools.find(pool => pool.pool_id === poolID);
 
   useEffect(() => {

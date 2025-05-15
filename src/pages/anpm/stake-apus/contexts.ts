@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useWallet } from "../contexts/anpm";
 import { useAO } from "../../../utils/ao";
-import { ANPM_DEFAULT_POOL, ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
+import { ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
 
 interface StakeResponse {
     pool_id: string;
@@ -14,9 +14,9 @@ interface PoolStakeResponse {
     capacity: string;
 }
 
-export function useStake(refetchPoolList: () => void) {
+export function useStake(refetchPoolList: () => void, refetchBalance: () => void) {
     const { activeAddress } = useWallet();
-    const [poolID, setPoolID] = useState<string>(ANPM_DEFAULT_POOL.ID);
+    const [poolID, setPoolID] = useState<string>('');
     const { execute: getStake, data: stakeRes } = useAO<StakeResponse>(ANPM_POOL_MGR, "Get-Staking", "dryrun");
     const {execute: getPoolStake, data: poolStakeRes } = useAO<PoolStakeResponse>(ANPM_POOL_MGR, "Get-Pool-Staking", "dryrun");
     const { execute: transferApus, loading: transfering } = useAO<string>(APUS_ADDRESS.Mint, "Transfer", "message");
@@ -37,8 +37,9 @@ export function useStake(refetchPoolList: () => void) {
         setPercent(0);
         getPoolStake({ Recipient: activeAddress, ["X-PoolId"]: poolID });
         getStake({ Recipient: activeAddress, PoolId: poolID });
+        refetchBalance();
         refetchPoolList();
-    }, [activeAddress, transferApus, poolID, getPoolStake, getStake, refetchPoolList]);
+    }, [activeAddress, transferApus, poolID, getPoolStake, getStake, refetchPoolList, refetchBalance]);
 
     const unstake = useCallback(async (quantity: string) => {
         if (!activeAddress) return;
@@ -48,8 +49,9 @@ export function useStake(refetchPoolList: () => void) {
         });
         getPoolStake({ Recipient: activeAddress, ["X-PoolId"]: poolID });
         getStake({ Recipient: activeAddress, PoolId: poolID });
+        refetchBalance();
         refetchPoolList();
-    }, [activeAddress, unstakeApus, poolID, getPoolStake, getStake, refetchPoolList]);
+    }, [activeAddress, unstakeApus, poolID, getPoolStake, getStake, refetchPoolList, refetchBalance]);
 
     useEffect(() => {
         if (!activeAddress) return;
