@@ -30,7 +30,7 @@ export interface Pool {
 export function useBalance() {
     const { activeAddress } = useWallet();
     const { execute: getPoolList, data: poolList } = useAO<{pools: Record<string, Pool>}>(ANPM_POOL_MGR, "Get-Pool-List", "dryrun", {});
-    const { execute: getBalance, data: balance } = useAO<string>(APUS_ADDRESS.Mint, "Balance", "dryrun", {});
+    const { execute: getBalance, data: Balance } = useAO<string>(APUS_ADDRESS.Mint, "Balance", "dryrun", {});
     const { execute: getUndistributedCredits, data: credits } = useAO<{
         user: string;
         balance: string;
@@ -61,7 +61,7 @@ export function useBalance() {
     }, [activeAddress, getPoolList]);
 
     return {
-        balance: balance || '0',
+        balance: Balance || '0',
         credits: credits?.balance || '0',
         refetchBalance,
         refetchCredits,
