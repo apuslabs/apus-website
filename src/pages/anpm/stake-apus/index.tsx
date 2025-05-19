@@ -8,7 +8,7 @@ import { formatApus } from "../../../utils/utils";
 
 export function Component() {
   const {balance, defaultPool, pools, refetchPoolList, refetchBalance} = useContext(BalanceContext);
-  const { staked, transfering, poolID, setPoolID, stake, percent, onPercentChange, unstake, unstaking } = useStake(refetchPoolList, refetchBalance);
+  const { staked, interest, transfering, poolID, setPoolID, stake, percent, onPercentChange, unstake, unstaking } = useStake(refetchPoolList, refetchBalance);
   const currentPool = pools.find(pool => pool.pool_id === poolID);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ export function Component() {
       <div className="max-w-[1200px] mx-auto p-5 flex gap-10">
         <div className="flex flex-col gap-10 w-[250px]">
           <BalanceSection />
-          <StakeSection staked={staked} {...currentPool} withdraw={unstake} withdrawing={unstaking} />
+          <StakeSection staked={staked} interest={interest} {...currentPool} withdraw={unstake} withdrawing={unstaking} />
         </div>
         <div className="w-[640px] flex flex-col items-center gap-[10px]">
           <div className="box w-full">

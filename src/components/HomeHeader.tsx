@@ -78,9 +78,9 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode, hideMenu?: boolean }> = ({ Use
 
         {Userbox || (
           <>
-          <Link to="/console/competitions" onClick={() => setNavHide(true)}>
+          <Link to="/anpm/console" onClick={() => setNavHide(true)}>
             <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
-              {"Competition Pools"}
+              {"Pools"}
             </div>
           </Link>
           <img src={ImgCommon.IconMenu} className="block md:hidden w-6" onClick={() => {

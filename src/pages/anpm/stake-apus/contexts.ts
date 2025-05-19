@@ -6,6 +6,7 @@ import { ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
 interface StakeResponse {
     pool_id: string;
     current_stake: string;
+    total_interest: string;
 }
 
 interface PoolStakeResponse {
@@ -62,6 +63,7 @@ export function useStake(refetchPoolList: () => void, refetchBalance: () => void
 
     return {
         staked: stakeRes?.current_stake || '0',
+        interest: stakeRes?.total_interest || '0',
         poolTotalStaked: poolStakeRes?.total_stake || '0',
         poolCapacity: poolStakeRes?.capacity || '0',
         setPoolID,

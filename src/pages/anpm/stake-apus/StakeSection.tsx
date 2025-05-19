@@ -1,5 +1,5 @@
 import { Input, Modal } from 'antd';
-import { formatApus } from '../../../utils/utils';
+import { formatApus, formatCredits } from '../../../utils/utils';
 import { stakeApusIcon } from '../assets';
 import { BalanceButton } from '../components/BalanceButton';
 import { useState } from 'react';
@@ -7,12 +7,14 @@ import type { Pool } from '../contexts/balance';
 
 const BalanceSection = ({
   staked,
+  interest,
   name,
   apr,
   withdraw,
   withdrawing,
 }: Partial<Pool> & {
   staked: string;
+  interest: string;
   withdraw: (quantity: string) => Promise<void>;
   withdrawing: boolean;
 }) => {
@@ -37,7 +39,7 @@ const BalanceSection = ({
         <p className="text-[#262626] text-sm"><span className='font-bold'>Staked: </span>{formatApus(staked)}</p>
         <p className="text-[#262626] text-sm"><span className='font-bold'>Pool: </span>{name}</p>
         <p className="text-[#262626] text-sm"><span className='font-bold'>APR: </span>{apr}%</p>
-        <p className="text-[#262626] text-sm"><span className='font-bold'>Earned: </span>0</p>
+        <p className="text-[#262626] text-sm"><span className='font-bold'>Earned: </span>{formatCredits(interest)}</p>
       </div>
 
       <div className="flex flex-col gap-[10px]">
