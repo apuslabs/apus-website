@@ -165,7 +165,10 @@ async function executeResult(
         );
         resolve(msgResult);
       } catch (e) {
-        debugger;
+        // retry if error is 429-like
+        if (e instanceof Error && e.message === "Failed to fetch") {
+          return executeResult(process, msgType, tags, data, checkStatus).then(resolve).catch(reject);
+        }
         if (isEnvDev) {
           logError(tags, msgType);
         } else {
