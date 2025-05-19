@@ -19,7 +19,7 @@ export function formatNumberWithSuffix(value: number): string {
 }
 
 export function formatApus(value: string): string {
-  return ethers.utils.formatUnits(value, 12);
+  return ethers.utils.formatUnits(String(value), 12);
 }
 
 export const formatCredits = formatApus;

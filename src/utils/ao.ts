@@ -102,7 +102,7 @@ async function processQueueInternal(processId: string) {
 
   if (taskToExecute) {
     try {
-      await new Promise<void>((resolve) => setTimeout(resolve, 50)); // Simulate a delay
+      await new Promise<void>((resolve) => setTimeout(resolve, 100)); // Simulate a delay
       await taskToExecute(); // This executes the core logic and resolves/rejects the Promise of the original executeResult call
     } catch (e) {
       // Errors are expected to be handled by the task itself by rejecting its promise.
@@ -165,6 +165,7 @@ async function executeResult(
         );
         resolve(msgResult);
       } catch (e) {
+        debugger;
         if (isEnvDev) {
           logError(tags, msgType);
         } else {
