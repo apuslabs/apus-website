@@ -7,6 +7,7 @@ import Homepage from "./pages/homepage/homepage";
 import Page404 from "./pages/404";
 import { Suspense } from "react";
 import ANPMOutlet from './pages/anpm'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createHashRouter([
   {
@@ -84,13 +85,17 @@ const router = createHashRouter([
         lazy: () => import("./pages/anpm/buy-credit"),
       },
       {
-        path: "stake-apus",
+        path: "stake",
         lazy: () => import("./pages/anpm/stake-apus"),
       },
       {
         path: "transfer-credit",
         lazy: () => import("./pages/anpm/transfer-credit"),
       },
+      {
+        path: "process",
+        lazy: () => import("./pages/anpm/process")
+      }
     ],
   },
   {
@@ -99,8 +104,12 @@ const router = createHashRouter([
   },
 ]);
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }

@@ -24,11 +24,6 @@ import LogoEnlarge from "./images/logo-enlarge.svg";
 import { LIGHTPAPER_LINK } from "../../components/HomeHeader";
 import { ImgHomepage } from "../../assets";
 import { TokenomicsDocLink } from "../../components/constants";
-import { useEffect } from "react";
-
-import { connect, createDataItemSigner, createSigner } from "@permaweb/aoconnect"
-import { uniqBy, prop, keys } from 'ramda'
-import { of, fromPromise, Resolved, Rejected } from 'hyper-async'
 
 function TwitterVideo({ className, videoID }: { className?: string; videoID: string }) {
   return (
@@ -401,85 +396,7 @@ function SectionPartners() {
   );
 }
 
-
-const pid = `YRvflGN8zcaw7oF8anevOm71DUMcFgw5ig15xNnRZac`
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const assoc = (k: string,v: string,o: { [x: string]: any; }) => {
-  o[k] = v
-  return o
-}
-
-const setupMainnet = () => {
-  return connect({
-    MODE: 'mainnet',
-    device: 'process@1.0',
-    signer: createSigner(window.arweaveWallet),
-    URL : 'http://localhost:10000'
-  })
-}
-
-function sendMessageMainnet({ processId, tags, data }: {
-  processId: string,
-  tags: { name: string, value: string }[],
-  data: string
-}) {
-  const { request } = setupMainnet() 
-  const submitRequest = fromPromise(request)
-  const params = { 
-    type: 'Message',
-    path: `/${processId}~process@1.0/push/serialize~json@1.0`,
-    method: 'POST',
-    ...tags.filter(t => t.name !== 'device').reduce((a, t) => assoc(t.name, t.value, a), {}),
-    data: data,
-    'data-protocol': 'ao',
-    variant: 'ao.N.1',
-    target: processId
-  }
-
-  const parseWasmBody = (body: string) => {
-    try { 
-      return JSON.parse(body) 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) { 
-      return ({ Error: 'Could not parse result!' })
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleResults = (resBody: any) =>
-    resBody.info === 'hyper-aos' 
-    ? ({ Output: resBody.output, Error: resBody.error })
-    : parseWasmBody(resBody.json?.body)
-
-  return of(params)
-    .chain(submitRequest)    
-    .map(prop('body'))
-    .map(JSON.parse)
-    .map(handleResults)
-
-}
-
-
 export default function HomeIndex() {
-  useEffect(() => {
-    console.log('sendMessageMainnet')
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sendMessageMainnet({ processId: pid, tags: [{ name: 'Action', value: 'Eval' }], data: 'print("Hello World")' }).map((result: any) => {
-      console.log(result)
-      return result
-    })
-    .fork(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (error: any) => {
-        console.error('Error:', error)
-      },
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      () => {
-        console.log('Request completed successfully')
-      }
-    )
-  }, [])
   const breakpoint = useBreakpoint();
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">

@@ -1,7 +1,9 @@
 import { createContext, useCallback, useEffect } from "react";
 import { useWallet } from "./anpm";
 import { useAO } from "../../../utils/ao";
-import { ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
+import { APUS_ADDRESS } from "../../../utils/config";
+import { useQuery } from "@tanstack/react-query";
+import { getPoolList, getUserCredit, Pool } from "./request";
 
 export const BalanceContext = createContext<{
     balance: string;
@@ -13,60 +15,38 @@ export const BalanceContext = createContext<{
     refetchPoolList: () => void;
 }>(null as never);
 
-export interface Pool {
-    name: string;
-    staking_capacity: string;
-    created_at: string;
-    creator: string;
-    started_at: string;
-    pool_id: string;
-    image_url: string;
-    description: string;
-    rewards_amount: string;
-    apr: number;
-    cur_staking: string;
-}
-
 export function useBalance() {
     const { activeAddress } = useWallet();
-    const { execute: getPoolList, data: poolList } = useAO<{pools: Record<string, Pool>}>(ANPM_POOL_MGR, "Get-Pool-List", "dryrun", {});
+    const poolListQuery = useQuery({ 
+        queryKey: ['poolList'], 
+        queryFn: () => getPoolList()
+    });
+    const creditQuery = useQuery({ 
+        queryKey: ['credit', activeAddress || ""], 
+        queryFn: () => getUserCredit(activeAddress || ""), 
+        enabled: activeAddress !== undefined
+    });
     const { execute: getBalance, data: Balance } = useAO<string>(APUS_ADDRESS.Mint, "Balance", "dryrun", {});
-    const { execute: getUndistributedCredits, data: credits } = useAO<{
-        user: string;
-        balance: string;
-    }>(ANPM_POOL_MGR, "Get-Undistributed-Credits", "dryrun", {});
   
     useEffect(() => {
       if (!activeAddress) return;
       getBalance({ Recipient: activeAddress });
-      getUndistributedCredits({ Recipient: activeAddress });
-      getPoolList({ Recipient: activeAddress });
-    }, [activeAddress, getBalance, getPoolList, getUndistributedCredits]);
-
-    const pools = Object.values(poolList?.pools || {})
+    }, [activeAddress, getBalance]);
 
     const refetchBalance = useCallback(() => {
         if (!activeAddress) return;
         getBalance({ Recipient: activeAddress });
     }, [activeAddress, getBalance]);
 
-    const refetchCredits = useCallback(() => {
-        if (!activeAddress) return;
-        getUndistributedCredits({ Recipient: activeAddress });
-    }, [activeAddress, getUndistributedCredits]);
-
-    const refetchPoolList = useCallback(() => {
-        if (!activeAddress) return;
-        getPoolList({ Recipient: activeAddress });
-    }, [activeAddress, getPoolList]);
+    const pools = poolListQuery.data || []
 
     return {
         balance: Balance || '0',
-        credits: credits?.balance || '0',
+        credits: creditQuery.data || '0',
         refetchBalance,
-        refetchCredits,
-        pools: pools,
-        refetchPoolList,
-        defaultPool: pools.length > 0 ? pools[0] : null,
+        refetchCredits: creditQuery.refetch,
+        pools,
+        refetchPoolList: poolListQuery.refetch,
+        defaultPool: pools?.[0] || null,
     }
 }

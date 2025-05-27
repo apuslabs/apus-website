@@ -6,7 +6,10 @@ import { ConnectButton, useActiveAddress, useConnection } from "arweave-wallet-k
 import { Dropdown } from "antd";
 import { BalanceContext, useBalance } from "./contexts/balance";
 
+
+
 export default function ANPM() {
+  
   const { disconnect } = useConnection();
   const activeAddress = useActiveAddress();
   const balanceCtx = useBalance();

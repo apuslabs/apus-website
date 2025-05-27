@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
-export const ANPM_POOL_MGR = "1hJ4UFbfAW8XXNPEDeuaqHlOLFbU3i5rYntne2zmWzg";
-export const ANPM_DEFAULT_POOL = "16YUaa019q9gKL6vYFLICP-c-Kpv0p2WeUfeYJHPBzw";
+export const ANPM_POOL_MGR = "Z_p15KbcQoMin66be44HUX6fPtgsTrp88-l2N19WRL4";
+export const ANPM_DEFAULT_POOL = "JqmS3Sz-dbQPpSOY5ttN1fofFRs96YYZfEf4dxtZZzo";
 
 export const POOL_PROCESS = "HJV6BxQGakxlQe6rfGxOMiifKSFYRz5WEwZOKPLPWEg";
 export const EMBEDDING_PROCESS = "q7QJTZbOI_avjaltnF-kP21kpL3qCs8sJSP6Wdl9wzM";
@@ -12,7 +12,7 @@ export const AO_MINT_PROCESS = "cuxSKjGJ-WDB9PzSkVkVVrIBSh3DrYHYz44usQOj5yE";
 
 export const APUS_ADDRESS = {
   // Mint: "mqBYxpDsolZmJyBdTK8TJp_ftOuIUXVYcSQ8MYZdJg0",
-  Mint: "JbAdejvguev7ySVWNyTRXjHa0LdLACGHu9uI2y_YaZw",
+  Mint: "5HTh33IQm5Ju3h9x3jKL5GdyPdmVWOGR4HA9x5NZX8U",
   Mirror: "GfrjhZqNduWmvQwpnXQtvanT-aLzFjaHY-lxR4dOPYU",
   Recipient: "jHZBsy0SalZ6I5BmYKRUt0AtLsn-FCFhqf_n6AgwGlc",
 };

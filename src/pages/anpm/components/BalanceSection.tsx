@@ -1,11 +1,12 @@
 import { useContext } from 'react';
-import { balanceIcon } from '../assets';
-import { getCreditIcon, stakeApusIcon, transferIcon } from '../assets';
+import { balanceIcon, chatIcon, overviewIcon, processIcon, getCreditIcon, stakeApusIcon } from '../assets';
 import { BalanceButton } from './BalanceButton';
 import { BalanceContext } from '../contexts/balance';
 import { formatApus, formatCredits } from '../../../utils/utils';
+import { useLocation } from 'react-router-dom';
 
 const BalanceSection = () => {
+  const location = useLocation()
   const {balance, credits} = useContext(BalanceContext);
 
   return (
@@ -20,10 +21,24 @@ const BalanceSection = () => {
         <p className="text-[#262626] text-sm"><span className='font-bold'>Credits:</span> {formatCredits(credits)}</p>
       </div>
 
-      <div className="flex flex-col gap-[10px]">
-        <BalanceButton name="Get CREDIT" icon={getCreditIcon} to="/anpm/buy-credit" />
-        <BalanceButton name="Stake APUS" icon={stakeApusIcon} to="/anpm/stake-apus" />
-        <BalanceButton name="Transfer CREDIT" icon={transferIcon} to="/anpm/transfer-credit" />
+      <div className="flex flex-col gap-[20px]">
+        {[
+          { name: "Overview", icon: overviewIcon, to: "/anpm/console" },
+          { name: "Get CREDIT", icon: getCreditIcon, to: "/anpm/buy-credit" },
+          { name: "Stake/Withdraw", icon: stakeApusIcon, to: "/anpm/stake" },
+          { name: "Chat Playground", icon: chatIcon, to: "/anpm/chat" },
+          { name: "Process ID", icon: processIcon, to: "/anpm/process" }
+        ].map((button, index) =>
+          <BalanceButton
+            key={index}
+            name={button.name}
+            icon={button.icon}
+            to={button.to}
+            className='w-full'
+            active={location.pathname === button.to}
+          />
+        )
+        }
       </div>
     </div>
   );
