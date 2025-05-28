@@ -1,46 +1,15 @@
-import { useAO } from "../../../utils/ao";
-import { ANPM_DEFAULT_POOL } from "../../../utils/config";
 import BalanceSection from "../components/BalanceSection";
 import ModelCard from "./ModelCard";
-import { useContext, useEffect, useState } from "react";
-import { useWallet } from "../contexts/anpm";
+import { useContext, useState } from "react";
 import { Modal, Typography } from "antd";
 import { BalanceContext } from "../contexts/balance";
 import Markdown from "react-markdown";
-import { formatApus } from "../../../utils/utils";
-
-// interface PoolStakingResponse {
-//   pool_id: string;
-//   total_stake: string;
-//   capacity: string;
-// }
-
-interface CreditBalanceResponse {
-  user: string;
-  balance: string;
-}
 
 export function Component() {
-  const { activeAddress } = useWallet();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const { execute: getPoolStaking, data: poolStakingRes } = useAO<PoolStakingResponse>(
-  //   ANPM_POOL_MGR,
-  //   "Get-Pool-Staking",
-  //   "dryrun",
-  // );
-  const { execute: getCreditBalance, data: creditBalance } = useAO<CreditBalanceResponse>(
-    ANPM_DEFAULT_POOL,
-    "Credit-Balance",
-    "dryrun",
-  );
   const { pools } = useContext(BalanceContext);
-  useEffect(() => {
-    if (!activeAddress) return;
-    // getPoolStaking({ PoolId: ANPM_DEFAULT_POOL.ID });
-    getCreditBalance({ Recipient: activeAddress });
-  }, [getCreditBalance, activeAddress]);
   const tutorial = `
-1. Make sure you have credits ${formatApus(creditBalance?.balance || "0")} in this pool.
+1. Make sure you have enough credits in this pool.
 2. Send Add Task to this pool. Each task cost 0.000000000001 credit.
     \`\`\`lua
     Send({ \n\t\tTarget = "${pools?.[0]?.pool_id || 'Pool'}", \n\t\tAction = "Add-Task", \n\t\tData  = '{"prompt":"Hello","config":"{\\"n_gpu_layers\\":32}"}' \n\t}).onReply(function (retMsg) \n\t\tprint(retMsg.Data) \n\tend)
@@ -62,10 +31,6 @@ export function Component() {
             <ModelCard
               key={index}
               {...model}
-              credits={creditBalance?.balance || "0"}
-              onUseModel={() => {
-                setIsModalOpen(true);
-              }}
             />
           ))}
         </div>

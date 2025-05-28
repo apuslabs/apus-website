@@ -39,9 +39,30 @@ export function stake(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<Me
 export function unstake(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<unknown> {
     return requestHB<MessageResult>(ANPM_POOL_MGR, {
         Action: "UnStake",
-        PoolId: pool_id,
+        Poolid: pool_id,
         Quantity: quantity,
     }).then(handleApusMessage);
+}
+
+export function addProcess(name: string, process_id: string): Promise<MessageResult> {
+    return requestHB<MessageResult>(ANPM_DEFAULT_POOL, {
+        Action: "Add-Processid",
+    }, {
+        process_id,
+        name,
+    });
+}
+
+export function removeProcess(process_id: string): Promise<MessageResult> {
+    return requestHB<MessageResult>(ANPM_DEFAULT_POOL, {
+        Action: "Remove-Processid",
+    }, {
+        process_id,
+    });
+}
+
+export function getBalance(user: string): Promise<string> {
+    return getHBCache<Record<string, string>>(APUS_ADDRESS.Mint, "balances").then(balanceMap => balanceMap[user] || "0");
 }
 
 export function getUserCredit(user: string): Promise<string> {
@@ -63,17 +84,35 @@ export function getPoolMgrInfo(): Promise<{
     });
 }
 
+export function getInterest(user: string): Promise<string> {
+    return getHBCache<Record<string, string>>(ANPM_POOL_MGR, "distributed_interest").then(interestMap => interestMap[user] || "0");
+}
+
+interface Process {
+    name: string;
+    created_at: string;
+    last_used: string;
+    created_by: string;
+}
+export function getProcesses(user: string): Promise<(Process & { process_id: string })[]> {
+    return getHBCache<Record<string, Process>>(ANPM_DEFAULT_POOL, "process_ids").then(processes => {
+        return Object.entries(processes).filter(([, value]) => value.created_by === user).map(([key, value]) => (Object.assign(value, { process_id: key })));
+    });
+}
+
 export interface Pool {
+    name: string;
+    description: string;
     pool_id: string;
     creator: string;
-    staking_capacity: string;
     rewards_amount: string;
     created_at: string;
-    started_at: string;
+    staking_start: string;
+    staking_end: string;
+    staking_capacity: string;
     cur_staking: string;
-    name: string;
     apr: number;
-    description: string;
+    min_apr: string;
     image_url: string;
 }
 

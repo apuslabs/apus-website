@@ -13,3 +13,4 @@ export { default as arrowLeftIcon } from './arrow-left.svg';
 export { default as chatIcon} from './chat-icon.svg';
 export { default as overviewIcon } from './overview-icon.svg';
 export { default as processIcon } from './process-icon.svg';
+export { default as deleteIcon } from './delete-icon.svg';

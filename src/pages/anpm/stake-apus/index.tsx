@@ -5,7 +5,7 @@ import StakeSection from "./StakeSection";
 import { BalanceContext } from "../contexts/balance";
 import { formatApus } from "../../../utils/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getUserStake, stake, unstake } from "../contexts/request";
+import { getInterest, getUserStake, stake, unstake } from "../contexts/request";
 import { useWallet } from "../contexts/anpm";
 import { BalanceSldier } from "../buy-credit/BalanceSlider";
 import { BalanceButton } from "../components/BalanceButton";
@@ -20,6 +20,11 @@ export function Component() {
     queryFn: () => getUserStake(activeAddress || "", poolID),
     enabled: !!(activeAddress && poolID),
   });
+  const userInterestQuery = useQuery({
+    queryKey: ["userInterest", activeAddress],
+    queryFn: () => getInterest(activeAddress || ""),
+    enabled: !!(activeAddress),
+  });
   const staked = userStakeQuery.data || "0";
   const [inputApus, setInputApus] = useState(0);
   const [tab, setTab] = useState<"Stake" | "Withdraw">("Stake");
@@ -29,6 +34,7 @@ export function Component() {
       refetchBalance();
       refetchPoolList();
       userStakeQuery.refetch();
+      setInputApus(0);
     },
   });
   const unstakeMutation = useMutation({
@@ -37,6 +43,7 @@ export function Component() {
       refetchBalance();
       refetchPoolList();
       userStakeQuery.refetch();
+      setInputApus(0);
     },
   });
   const currentPool = pools.find((pool) => pool.pool_id === poolID);
@@ -66,7 +73,7 @@ export function Component() {
           <BalanceSection />
         </div>
         <div className="w-[640px] flex flex-col items-center gap-[10px]">
-          <StakeSection staked={staked} interest={"0"} {...currentPool} />
+          <StakeSection staked={staked} interest={userInterestQuery.data || "0"} {...currentPool} />
           <div className="box w-full flex flex-col items-center gap-[10px]">
             <div className="flex justify-center gap-4">
             <BalanceButton
@@ -103,7 +110,7 @@ export function Component() {
               </div>
             </div>
             <BalanceSldier max={tab ==="Stake" ? Number((BigInt(balance) - BigInt(staked)).toString()) / 1e12 : Number(staked) / 1e12} value={inputApus} onChange={setInputApus} />
-            <Spin spinning={stakeMutation.isPending}>
+            <Spin spinning={stakeMutation.isPending || unstakeMutation.isPending}>
               <div
                 className="btn-mainblue font-semibold px-4 h-12"
                 onClick={() => {

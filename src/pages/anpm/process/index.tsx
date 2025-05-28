@@ -1,11 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import BalanceSection from "../components/BalanceSection";
-import { Breadcrumb, Input, Modal, Select, Table } from "antd";
+import { Breadcrumb, Input, Modal, Popconfirm, Select, Table } from "antd";
 import dayjs from "dayjs";
 import { ShortAddress } from "../../../utils/ao";
 import { BalanceButton } from "../components/BalanceButton";
 import { BalanceContext } from "../contexts/balance";
-
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useWallet } from "../contexts/anpm";
+import { addProcess, getProcesses, removeProcess } from "../contexts/request";
+import { deleteIcon } from "../assets";
+import { ANPM_DEFAULT_POOL } from "../../../utils/config";
 
 function useModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,15 +18,6 @@ function useModal() {
   const [poolID, setPoolID] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [processID, setProcessID] = useState<string>("");
-  const onSubmit = () => {
-    // Handle the submission logic here
-    if (!poolID || !name || !processID) {
-      console.error("Please fill in all fields.");
-      return;
-    }
-    console.log("Submitting:", { poolID, name, processID });
-    setIsModalOpen(false);
-  };
   const canSubmit = !!(poolID && name && processID);
   return {
     isModalOpen,
@@ -34,27 +29,9 @@ function useModal() {
     setName,
     processID,
     setProcessID,
-    onSubmit,
     canSubmit,
   };
 }
-
-const processes = [
-  {
-    pool_id: "pool1",
-    name: "Pool 1",
-    process_id: "weiv3UgCyhc387fkgQ13bi43m8sqbl3Td1nOgJ2Frsc",
-    created_at: 1748362744,
-    last_used: 1748362744,
-  },
-  {
-    pool_id: "pool2",
-    name: "Pool 2",
-    process_id: "weiv3UgCyhc387fkgQ13bi43m8sqbl3Td1nOgJ2Frsc",
-    cur_staking: 1748362744,
-    staking_capacity: 1748362744,
-  },
-];
 
 export function Component() {
   const { pools } = useContext(BalanceContext);
@@ -68,14 +45,34 @@ export function Component() {
     setName,
     processID,
     setProcessID,
-    onSubmit,
     canSubmit,
   } = useModal();
   useEffect(() => {
     if (pools.length) {
       setPoolID(pools[0].pool_id);
     }
-  }, [pools, setPoolID])
+  }, [pools, setPoolID]);
+
+  const { activeAddress } = useWallet();
+  const processesQuery = useQuery({
+    queryKey: ["processes", activeAddress],
+    queryFn: () => getProcesses(activeAddress || ""),
+    enabled: !!activeAddress,
+  });
+  const addProcessMutation = useMutation({
+    mutationFn: () => addProcess(name, processID),
+    onSuccess: () => {
+      processesQuery.refetch();
+      closeModal();
+    },
+  });
+  const removeProcessMutation = useMutation({
+    mutationFn: (processId: string) => removeProcess(processId),
+    onSuccess: () => {
+      processesQuery.refetch();
+      closeModal();
+    },
+  });
   return (
     <main className="pt-[148px] pb-[90px] bg-[#F9FAFB]">
       <div className="content-area mb-[40px]">
@@ -100,13 +97,13 @@ export function Component() {
             <BalanceButton name="+ Add New Process" onClick={() => openModal()} />
           </div>
           <Table
-            dataSource={processes}
+            dataSource={processesQuery.data}
             rowKey="pool_id"
             size="small"
             className="w-full"
             pagination={false}
             columns={[
-              { title: "Pool ID", dataIndex: "pool_id", key: "pool_id" },
+              { title: "Pool ID", key: "pool_id", render: () => ShortAddress(ANPM_DEFAULT_POOL) },
               { title: "Name", dataIndex: "name", key: "name" },
               { title: "Process ID", dataIndex: "process_id", key: "process_id", render: (text) => ShortAddress(text) },
               {
@@ -117,9 +114,23 @@ export function Component() {
               },
               {
                 title: "Last Used",
-                dataIndex: "last_used",
-                key: "last_used",
-                render: (text) => dayjs(text * 1000).format("YYYY/MM/DD"),
+                dataIndex: "last_updated",
+                key: "last_updated",
+                render: (text) => text ? dayjs(text * 1000).format("YYYY/MM/DD") : '-',
+              },
+              {
+                title: "",
+                key: "action",
+                align: "right",
+                render: (_, record) => (
+                  <Popconfirm
+                    title="Delete Process ID"
+                    description="Are you sure you want to delete this process ID?"
+                    onConfirm={() => removeProcessMutation.mutate(record.process_id)}
+                  >
+                    <img src={deleteIcon} className="w-6 h-6 cursor-pointer" />
+                  </Popconfirm>
+                ),
               },
             ]}
           />
@@ -157,7 +168,16 @@ export function Component() {
             >
               Cancel
             </button>
-            <BalanceButton name="Add Process ID" active={canSubmit} onClick={onSubmit} />
+            <BalanceButton
+              name="Add Process ID"
+              active={!canSubmit}
+              loading={addProcessMutation.isPending}
+              onClick={() => {
+                if (canSubmit) {
+                  addProcessMutation.mutate();
+                }
+              }}
+            />
           </div>
         </div>
       </Modal>

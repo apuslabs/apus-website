@@ -5,21 +5,20 @@ import { Pool } from '../contexts/request';
 import dayjs from 'dayjs';
 import { Tooltip } from 'antd';
 
-export type ModelCardProps = Pool & {
-  onUseModel: () => void;
-  credits: string;
-}
-
-const ModelCard: React.FC<ModelCardProps> = ({
+const ModelCard: React.FC<Pool> = ({
   name,
   description,
-  // credits,
   cur_staking,
-  started_at,
+  staking_start,
+  staking_end,
   image_url,
   apr,
-  onUseModel,
+  min_apr,
+  staking_capacity,
 }) => {
+  const staking_start_dayjs = dayjs(Number(staking_start));
+  const staking_end_dayjs = dayjs(Number(staking_end));
+  const staking_status = dayjs().isBefore(staking_start_dayjs) ? 'Upcoming' : dayjs().isAfter(staking_end_dayjs) ? 'Ended' : 'Ongoing';
   return (
     <div className="flex gap-4 items-center bg-white rounded-lg border border-[#EBEBEB] p-[30px] overflow-hidden">
       <img 
@@ -40,7 +39,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         <h3 className="text-sm leading-4">{description}</h3>
         <div>
         {[
-          { label: 'Staking Start Date', value: dayjs.unix(Number(started_at)).format("YYYY/MM/DD") },
+          { label: 'Staking Start Date', value: staking_start_dayjs.format("YYYY/MM/DD") },
           { label: 'Total Staked APUS', value: formatApus(cur_staking) },
           { label: 'APR', value: `${apr || '-'}%` },
         ].map((item, index) => (
@@ -53,13 +52,12 @@ const ModelCard: React.FC<ModelCardProps> = ({
         <Tooltip color="black" title={<div className='w-[340px] p-5'>
           {
             [
-              { label: 'Staking Status', value: 'Active' },
-              { label: 'Staking Duration', value: '100 Days' },
-              { label: 'Staking APR', value: '22%' },
-              { label: 'Min APR', value: `22%` },
-              { label: 'APUS Capacity', value: '200000' },
-              { label: 'Current Capacity', value: '100000' },
-              { label: 'Capacity', value: '2%' }
+              { label: 'Staking Status', value: staking_status },
+              { label: 'Staking Duration', value: staking_end_dayjs.diff(staking_start_dayjs, 'day') + ' days' },
+              { label: 'Staking APR', value: apr ? `${apr}%` : '-' },
+              { label: 'Min APR', value: min_apr ? `${Number(min_apr) *100}%` : '-' },
+              { label: 'APUS Capacity', value: staking_capacity ? formatApus(staking_capacity) : '-' },
+              { label: 'Staked', value: Number(BigInt(cur_staking) * BigInt(100000) / BigInt(staking_capacity)) / 100000 + '%' }
             ].map((item, index) => (
               <div key={index} className='text-sm leading-none'>
                 <span className='inline-block w-[110px] text-[#dadada]'>{item.label}:</span>
@@ -71,7 +69,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
           <img src={infoIcon} className='w-[30px] h-[30px]' />
         </Tooltip>
       </div>
-      <div className="rounded-lg w-32 h-16 bg-[#3242F5] hover:bg-[#2a3ad1] cursor-pointer flex flex-col items-center justify-center gap-[5px]" onClick={onUseModel}><img src={useModelIcon} className="w-5 h-5" /> <span className='font-bold text-white leading-none'>Use Model</span></div>
+      <div className="rounded-lg w-32 h-16 bg-[#3242F5] hover:bg-[#2a3ad1] cursor-pointer flex flex-col items-center justify-center gap-[5px]"><img src={useModelIcon} className="w-5 h-5" /> <span className='font-bold text-white leading-none'>Use Model</span></div>
     </div>
   );
 };

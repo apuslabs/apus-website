@@ -1,9 +1,7 @@
-import { createContext, useCallback, useEffect } from "react";
+import { createContext } from "react";
 import { useWallet } from "./anpm";
-import { useAO } from "../../../utils/ao";
-import { APUS_ADDRESS } from "../../../utils/config";
 import { useQuery } from "@tanstack/react-query";
-import { getPoolList, getUserCredit, Pool } from "./request";
+import { getBalance, getPoolList, getUserCredit, Pool } from "./request";
 
 export const BalanceContext = createContext<{
     balance: string;
@@ -26,24 +24,18 @@ export function useBalance() {
         queryFn: () => getUserCredit(activeAddress || ""), 
         enabled: activeAddress !== undefined
     });
-    const { execute: getBalance, data: Balance } = useAO<string>(APUS_ADDRESS.Mint, "Balance", "dryrun", {});
-  
-    useEffect(() => {
-      if (!activeAddress) return;
-      getBalance({ Recipient: activeAddress });
-    }, [activeAddress, getBalance]);
-
-    const refetchBalance = useCallback(() => {
-        if (!activeAddress) return;
-        getBalance({ Recipient: activeAddress });
-    }, [activeAddress, getBalance]);
+    const balanceQuery = useQuery({
+        queryKey: ["balances", activeAddress],
+        queryFn: () => getBalance(activeAddress || ""),
+        enabled: !!(activeAddress),
+    });
 
     const pools = poolListQuery.data || []
 
     return {
-        balance: Balance || '0',
+        balance: balanceQuery.data || '0',
         credits: creditQuery.data || '0',
-        refetchBalance,
+        refetchBalance: balanceQuery.refetch,
         refetchCredits: creditQuery.refetch,
         pools,
         refetchPoolList: poolListQuery.refetch,
