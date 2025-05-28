@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
-export const ANPM_POOL_MGR = "VX1LfEdeL1e3alZ_S9YjkbW3eMELs_G8_L8onFVKZ10";
-export const ANPM_DEFAULT_POOL = "Zvk33TZcp2maje5ewY4tm4TN1479ncUaTmmqHihXwUA";
+export const ANPM_POOL_MGR = "0k2SjcBpX8K8ikYnYl5M1-rc5HLlocNuaXmyN8CBZpA";
+export const ANPM_DEFAULT_POOL = "bi5doyUt3eA4j-t_sk2huq_5fo0NK1uHm1XdbimFvmc";
 
 export const POOL_PROCESS = "HJV6BxQGakxlQe6rfGxOMiifKSFYRz5WEwZOKPLPWEg";
 export const EMBEDDING_PROCESS = "q7QJTZbOI_avjaltnF-kP21kpL3qCs8sJSP6Wdl9wzM";

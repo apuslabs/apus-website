@@ -31,7 +31,7 @@ export function stake(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<Me
         Action: "Transfer",
         Recipient: ANPM_POOL_MGR,
         Quantity: quantity,
-        ["X-AN-Reason"]: "Stake",
+        ["X-An-Reason"]: "Stake",
         ["X-PoolId"]: pool_id,
     })
 }
