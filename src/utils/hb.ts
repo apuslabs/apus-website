@@ -5,12 +5,13 @@ import axios from "axios";
 // const HB_NODE = "http://localhost:10000";
 const HB_NODE = "https://8c9916e3fb62763c-10000.us-ca-3.gpu-instance.novita.ai";
 
-const ao = () => connect({
-  MODE: "mainnet",
-  device: "process@1.0",
-  signer: createSigner(window.arweaveWallet),
-  URL: HB_NODE,
-});
+const ao = () =>
+  connect({
+    MODE: "mainnet",
+    device: "process@1.0",
+    signer: createSigner(window.arweaveWallet),
+    URL: HB_NODE,
+  });
 
 const aoi = ao();
 
@@ -19,7 +20,7 @@ export function requestHB<U>(
   tags: Record<string, string>,
   data?: string | Record<string, unknown>,
 ): Promise<U> {
-    const params = {
+  const params = {
     type: "Message",
     path: `/${processId}~process@1.0/push/serialize~json@1.0`,
     method: "POST",
@@ -29,11 +30,16 @@ export function requestHB<U>(
     variant: "ao.N.1",
     target: processId,
   };
-  const params2 = Object.entries(params).filter(v => !!v[1]).reduce((acc, [key, value]) => {
-    acc[key] = typeof value === "object" ? JSON.stringify(value) : String(value);
-    return acc;
-  }, {} as Record<string, string>);
-  console.log(params2);
+  const params2 = Object.entries(params)
+    .filter((v) => !!v[1])
+    .reduce(
+      (acc, [key, value]) => {
+        acc[key] = typeof value === "object" ? JSON.stringify(value) : String(value);
+        return acc;
+      },
+      {} as Record<string, string>,
+    );
+  console.log("Request: ", processId, tags, data);
 
   return aoi
     .request(params2)

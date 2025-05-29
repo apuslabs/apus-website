@@ -8,7 +8,6 @@ import { NumberBox } from "./NumberBox";
 const BalanceSection = () => {
   const location = useLocation();
   const { balance, credits, balanceQuery, creditQuery } = useContext(BalanceContext);
-  console.log(credits)
 
   return (
     <div className="box flex flex-col gap-5">
