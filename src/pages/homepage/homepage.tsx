@@ -49,7 +49,7 @@ function SectionHero() {
     queryKey: ['poolList'], 
     queryFn: () => getPoolList()
   });
-  const pool_start_time = dayjs((Number(poolListQuery.data?.[0]?.staking_start || "0")) + 3 * 24 * 60 * 60 * 1000);
+  const pool_start_time = dayjs((Number(poolListQuery.data?.[0]?.staking_start || "0")) * 24 * 60 * 60 * 1000);
   const { day, hour, minute, second } = useCountDate(pool_start_time);
   return (
     <div className="section section-hero z-10">
