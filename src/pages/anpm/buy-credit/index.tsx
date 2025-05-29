@@ -51,17 +51,17 @@ export function Component() {
               1 CREDIT = <span className="font-bold">$0.0001</span> (Fxied)
             </div>
             <div className="text-sm text-center">
-              Current Exchange Rate:
-              <br />1 APUS =
-              <span className="font-bold">
-                <NumberBox
-                  value={creditExchangeRate}
-                  precision={0}
-                  loading={poolMgrInfoQuery.isFetching}
-                  skeleton={{ width: 20 }}
-                />
-                Credits
-              </span>
+              <span>Current Exchange Rate:</span>
+              <br />
+              <span>1 APUS = </span>
+              <NumberBox
+                value={creditExchangeRate}
+                precision={0}
+                className="font-bold text-black"
+                loading={poolMgrInfoQuery.isFetching}
+                skeleton={{ width: 20 }}
+              />
+              <span> Credits</span>
               (Dynamic)
             </div>
           </div>

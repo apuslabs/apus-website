@@ -111,13 +111,13 @@ export function Component() {
                 title: "Created At",
                 dataIndex: "created_at",
                 key: "created_at",
-                render: (text) => dayjs(text * 1000).format("YYYY/MM/DD"),
+                render: (text) => dayjs(text).format("YYYY/MM/DD"),
               },
               {
                 title: "Last Used",
-                dataIndex: "last_updated",
-                key: "last_updated",
-                render: (text) => text ? dayjs(text * 1000).format("YYYY/MM/DD") : '-',
+                dataIndex: "last_used",
+                key: "last_used",
+                render: (text) => text ? dayjs(text).format("YYYY/MM/DD") : '-',
               },
               {
                 title: "",
