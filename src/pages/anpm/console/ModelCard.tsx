@@ -33,13 +33,13 @@ const ModelCard: React.FC<Pool> = ({
         <div>
           {[
             { label: "Staking Start Date", value: staking_start_dayjs.format("YYYY/MM/DD") },
-            { label: "Total Staked APUS", value: <NumberBox value={cur_staking} /> },
+            { label: "Total Staked APUS", value: <NumberBox className="text-black font-bold" value={cur_staking} /> },
             {
               label: "APR",
               value: formatNumber(apr, {precision: -2, placeholder: "-", suffix:"%"}),
             },
           ].map(({ label, value }, index) => (
-            <div key={index} className="text-sm text-[#909090] leading-tight">
+            <div key={index} className="text-sm text-[#909090] leading-tight flex gap-1">
               <span>{label}:</span>
               {typeof value === "string" ? <span className="text-black font-bold">{value}</span> : value}
             </div>
@@ -54,12 +54,12 @@ const ModelCard: React.FC<Pool> = ({
                 { label: "Staking Duration", value: staking_end_dayjs.diff(staking_start_dayjs, "day") + " days" },
                 { label: "Staking APR", value: formatNumber(apr, {precision: -2, placeholder: "-", suffix: "%"}) },
                 { label: "Min APR", value: formatNumber(min_apr, {precision: -2, placeholder: "-", suffix: "%"}) },
-                { label: "APUS Capacity", value: formatNumber(apr, {fixed: 0, placeholder: "-"}) },
+                { label: "APUS Capacity", value: formatNumber(staking_capacity, {fixed: 0, placeholder: "-"}) },
                 {
                   label: "Staked",
                   value: formatNumber(
-                    Number((BigInt(cur_staking) * BigInt(100000)) / BigInt(staking_capacity)) / 100000,
-                    {  precision: -2,placeholder: "-", suffix: "%" },
+                    Number(BigInt(cur_staking) * BigInt(1e12) / BigInt(staking_capacity)) / 1e12,
+                    {  precision: -2, fixed: -1, placeholder: "-", suffix: "%" },
                   ),
                 },
               ].map(({ label, value }, index) => (

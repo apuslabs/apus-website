@@ -51,6 +51,11 @@ export function formatNumber(value: number | string | undefined, {
   } else {
     numDecimal = numDecimal.div(Math.pow(10, precision));
   }
-  const num = numDecimal.toNumber().toFixed(fixed);
+  let num: string | number = numDecimal.toNumber()
+  if(fixed === -1) {
+    num = numDecimal.toString();
+  } else {
+    num = numDecimal.toFixed(fixed);
+  }
   return value === undefined ? placeholder : Intl.NumberFormat("en-US").format(Number(num)) + suffix;
 }

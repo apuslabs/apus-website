@@ -7,22 +7,22 @@ export function buyCredit(quantity: string): Promise<MessageResult> {
         Action: "Transfer",
         Recipient: ANPM_POOL_MGR,
         Quantity: quantity,
-        ["X-AN-Reason"]: "Buy-Credit",
+        ["X-an-reason"]: "Buy-Credit",
     })
 }
 
 export function chargeCredit(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<unknown> {
     return requestHB<MessageResult>(ANPM_POOL_MGR, {
         Action: "Add-Credit",
-        PoolId: pool_id,
-        Quantity: quantity,
+        poolid: pool_id,
+        quantity: quantity,
     }).then(handleApusMessage)
 }
 
 export function withdrawCredit(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<unknown> {
     return requestHB<MessageResult>(pool_id, {
         Action: "Transfer-Credits",
-        Quantity: quantity,
+        quantity: quantity,
     }).then(handleApusMessage)
 }
 
@@ -31,16 +31,16 @@ export function stake(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<Me
         Action: "Transfer",
         Recipient: ANPM_POOL_MGR,
         Quantity: quantity,
-        ["X-An-Reason"]: "Stake",
-        ["X-PoolId"]: pool_id,
+        ["X-an-reason"]: "Stake",
+        ["X-poolid"]: pool_id,
     })
 }
 
 export function unstake(quantity: string, pool_id = ANPM_DEFAULT_POOL): Promise<unknown> {
     return requestHB<MessageResult>(ANPM_POOL_MGR, {
         Action: "UnStake",
-        Poolid: pool_id,
-        Quantity: quantity,
+        poolid: pool_id,
+        quantity: quantity,
     }).then(handleApusMessage);
 }
 

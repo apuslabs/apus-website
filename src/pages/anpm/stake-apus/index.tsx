@@ -12,10 +12,13 @@ import { BalanceButton } from "../components/BalanceButton";
 import { stakeApusIcon, withdrawIcon } from "../assets";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { NumberBox } from "../components/NumberBox";
+import dayjs from "dayjs";
 
 export function Component() {
   const { balance, defaultPool, pools, poolListQuery, balanceQuery, refetchPoolList, refetchBalance } =
     useContext(BalanceContext);
+  const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.staking_start || "0"));
+  const pool_end_time = dayjs(Number(poolListQuery.data?.[0]?.staking_end || "0"));
   const { activeAddress } = useWallet();
   const [poolID, setPoolID] = useState<string>("");
   const userStakeQuery = useQuery({
@@ -56,6 +59,37 @@ export function Component() {
       setPoolID(defaultPool.pool_id);
     }
   }, [defaultPool, setPoolID]);
+
+  const canStake = inputApus > 0 && pool_start_time.isBefore(dayjs()) && pool_end_time.isAfter(dayjs());
+  const buttonTip = () => {
+    if (!pool_start_time.isBefore(dayjs())) {
+      return `Staking starts in ${dayjs().to(pool_start_time)}`;
+    }
+    if (!pool_end_time.isAfter(dayjs())) {
+      return `Staking has ended in ${pool_end_time.from(dayjs())}`;
+    }
+    if (inputApus <= 0) {
+      return "Please select apus to " + tab.toLowerCase();
+    }
+    return "";
+  };
+  const StakeButton = (
+    <Spin spinning={stakeMutation.isPending || unstakeMutation.isPending}>
+      <div
+        className={`btn-mainblue font-semibold px-4 h-12 ${canStake ? "" : "disabled"}`}
+        onClick={() => {
+          if (!canStake) return
+          if (tab === "Withdraw") {
+            unstakeMutation.mutate();
+          } else {
+            stakeMutation.mutate();
+          }
+        }}
+      >
+        {tab} {inputApus.toFixed(2)} APUS
+      </div>
+    </Spin>
+  );
   return (
     <main className="pt-[148px] pb-[90px] bg-[#F9FAFB]">
       <div className="content-area mb-[40px]">
@@ -132,26 +166,20 @@ export function Component() {
             </div>
             <BalanceSldier
               max={
-                tab === "Stake" ? Number((BigInt(balance) - BigInt(staked)).toString()) / 1e12 : Number(staked) / 1e12
+                tab === "Stake" ? Number(balance) / 1e12 : Number(staked) / 1e12
               }
+              disabled={userStakeQuery.isFetching || balanceQuery.isFetching}
               value={inputApus}
               onChange={setInputApus}
             />
             <div className="w-full flex justify-center items-center gap-4">
-              <Spin spinning={stakeMutation.isPending || unstakeMutation.isPending}>
-                <div
-                  className="btn-mainblue font-semibold px-4 h-12"
-                  onClick={() => {
-                    if (tab === "Withdraw") {
-                      unstakeMutation.mutate();
-                    } else {
-                      stakeMutation.mutate();
-                    }
-                  }}
-                >
-                  {tab} {inputApus.toFixed(2)} APUS
-                </div>
-              </Spin>
+              {canStake ? (
+                StakeButton
+              ) : (
+                <Tooltip color="#f85931" title={buttonTip()}>
+                  {StakeButton}
+                </Tooltip>
+              )}
               <Tooltip
                 title={
                   <div>

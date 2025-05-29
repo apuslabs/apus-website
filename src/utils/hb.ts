@@ -5,12 +5,14 @@ import axios from "axios";
 // const HB_NODE = "http://localhost:10000";
 const HB_NODE = "https://8c9916e3fb62763c-10000.us-ca-3.gpu-instance.novita.ai";
 
-const ao = connect({
+const ao = () => connect({
   MODE: "mainnet",
   device: "process@1.0",
   signer: createSigner(window.arweaveWallet),
   URL: HB_NODE,
 });
+
+const aoi = ao();
 
 export function requestHB<U>(
   processId: string,
@@ -33,7 +35,7 @@ export function requestHB<U>(
   }, {} as Record<string, string>);
   console.log(params2);
 
-  return ao
+  return aoi
     .request(params2)
     .then((res) => {
       if (!res.body) {
