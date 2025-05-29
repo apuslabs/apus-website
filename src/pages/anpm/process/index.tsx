@@ -102,6 +102,7 @@ export function Component() {
             size="small"
             className="w-full"
             pagination={false}
+            loading={processesQuery.isFetching}
             columns={[
               { title: "Pool ID", key: "pool_id", render: () => ShortAddress(ANPM_DEFAULT_POOL) },
               { title: "Name", dataIndex: "name", key: "name" },
@@ -127,6 +128,9 @@ export function Component() {
                     title="Delete Process ID"
                     description="Are you sure you want to delete this process ID?"
                     onConfirm={() => removeProcessMutation.mutate(record.process_id)}
+                    okButtonProps={{
+                      loading: removeProcessMutation.isPending,
+                    }}
                   >
                     <img src={deleteIcon} className="w-6 h-6 cursor-pointer" />
                   </Popconfirm>

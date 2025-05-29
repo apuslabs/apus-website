@@ -43,3 +43,32 @@
 .section-partner-list {
   @apply flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
 }
+
+.launchbox-container {
+  @apply mb-0 md:mb-[110px] mx-5 md:mx-0 p-4 md:py-5 md:px-10 flex flex-col items-center gap-5;
+  border-radius: 14px;
+}
+
+.launchbox-title {
+  @apply font-semibold md:text-2xl;
+}
+
+.launchbox-countdown-container {
+  @apply flex items-center gap-3 md:gap-5;
+}
+
+.launchbox-countdown-item {
+  @apply w-[56px] md:w-[100px] py-2 md:py-[15px] flex flex-col items-center bg-mainblue rounded-xl md:rounded-[20px] text-white;
+}
+
+.launchbox-countdown-item-value {
+  @apply font-light text-[28px] md:text-[50px] leading-none;
+}
+
+.launchbox-countdown-item-label {
+  @apply font-semibold text-[7px] md:text-xs;
+}
+
+.launchbox-countdown-divider {
+  @apply text-[22px] md:text-[40px] font-bold text-mainblue;
+}

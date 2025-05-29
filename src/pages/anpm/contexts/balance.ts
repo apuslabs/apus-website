@@ -1,9 +1,12 @@
 import { createContext } from "react";
 import { useWallet } from "./anpm";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { getBalance, getPoolList, getUserCredit, Pool } from "./request";
 
 export const BalanceContext = createContext<{
+    poolListQuery: UseQueryResult<Pool[], Error>;
+    balanceQuery: UseQueryResult<string, Error>;
+    creditQuery: UseQueryResult<string, Error>;
     balance: string;
     credits: string;
     pools: Pool[];
@@ -33,6 +36,9 @@ export function useBalance() {
     const pools = poolListQuery.data || []
 
     return {
+        poolListQuery,
+        balanceQuery,
+        creditQuery,
         balance: balanceQuery.data || '0',
         credits: creditQuery.data || '0',
         refetchBalance: balanceQuery.refetch,

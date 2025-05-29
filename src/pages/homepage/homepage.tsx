@@ -1,6 +1,6 @@
 import "./index.css";
 import { Link } from "react-router-dom";
-import { useBreakpoint } from "../../utils/react-use";
+import { useBreakpoint, useCountDate } from "../../utils/react-use";
 
 import Rive from "@rive-app/react-canvas";
 import HeroRiv from "./animations/hero.riv";
@@ -24,6 +24,10 @@ import LogoEnlarge from "./images/logo-enlarge.svg";
 import { LIGHTPAPER_LINK } from "../../components/HomeHeader";
 import { ImgHomepage } from "../../assets";
 import { TokenomicsDocLink } from "../../components/constants";
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import { getPoolList } from "../anpm/contexts/request";
+import dayjs from "dayjs";
 
 function TwitterVideo({ className, videoID }: { className?: string; videoID: string }) {
   return (
@@ -41,8 +45,47 @@ function TwitterVideo({ className, videoID }: { className?: string; videoID: str
 }
 
 function SectionHero() {
+  const poolListQuery = useQuery({ 
+    queryKey: ['poolList'], 
+    queryFn: () => getPoolList()
+  });
+  const pool_start_time = dayjs((Number(poolListQuery.data?.[0]?.staking_start || "0")) + 3 * 24 * 60 * 60 * 1000);
+  const { day, hour, minute, second } = useCountDate(pool_start_time);
   return (
-    <div className="section section-hero">
+    <div className="section section-hero z-10">
+     {pool_start_time.isAfter(dayjs()) && !poolListQuery.isFetching ? <div className="launchbox-container mt-[40px]">
+        <div className={`launchbox-title text-[35px]`}>
+          Launch in ...
+        </div>
+        <div className="launchbox-countdown-container">
+            {[
+              {
+                value: day,
+                label: "DAYS",
+              },
+              {
+                value: hour,
+                label: "HOURS",
+              },
+              {
+                value: minute,
+                label: "MINUTES",
+              },
+              {
+                value: second,
+                label: "SECONDS",
+              },
+            ].map(({ value, label }, idx) => (
+              <React.Fragment key={label}>
+                {idx !== 0 && <div className="launchbox-countdown-divider">:</div>}
+                <div className="launchbox-countdown-item">
+                  <div className="launchbox-countdown-item-value">{value}</div>
+                  <div className="launchbox-countdown-item-label">{label}</div>
+                </div>
+              </React.Fragment>
+            ))}
+          </div>
+      </div> : null}
       <div className="content-area relative z-20 flex flex-col items-center md:block">
         <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-medium md:font-normal leading-none bg-white md:bg-transparent">
         <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
@@ -400,7 +443,6 @@ export default function HomeIndex() {
   const breakpoint = useBreakpoint();
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">
-      <SectionHero />
       {breakpoint === "mobile" ? (
         <Rive
           src={HeroRiv}
@@ -412,6 +454,7 @@ export default function HomeIndex() {
           className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10"
         />
       )}
+      <SectionHero />
       <SectionDesc />
       <SectionFeatures />
       <SectionTech />

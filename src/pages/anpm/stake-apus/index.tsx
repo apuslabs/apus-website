@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import BalanceSection from "../components/BalanceSection";
-import { Breadcrumb, Select, Spin, Table } from "antd";
+import { Breadcrumb, Select, Spin, Table, Tooltip } from "antd";
 import StakeSection from "./StakeSection";
 import { BalanceContext } from "../contexts/balance";
 import { formatApus } from "../../../utils/utils";
@@ -10,9 +10,12 @@ import { useWallet } from "../contexts/anpm";
 import { BalanceSldier } from "../buy-credit/BalanceSlider";
 import { BalanceButton } from "../components/BalanceButton";
 import { stakeApusIcon, withdrawIcon } from "../assets";
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { NumberBox } from "../components/NumberBox";
 
 export function Component() {
-  const { balance, defaultPool, pools, refetchPoolList, refetchBalance } = useContext(BalanceContext);
+  const { balance, defaultPool, pools, poolListQuery, balanceQuery, refetchPoolList, refetchBalance } =
+    useContext(BalanceContext);
   const { activeAddress } = useWallet();
   const [poolID, setPoolID] = useState<string>("");
   const userStakeQuery = useQuery({
@@ -23,7 +26,7 @@ export function Component() {
   const userInterestQuery = useQuery({
     queryKey: ["userInterest", activeAddress],
     queryFn: () => getInterest(activeAddress || ""),
-    enabled: !!(activeAddress),
+    enabled: !!activeAddress,
   });
   const staked = userStakeQuery.data || "0";
   const [inputApus, setInputApus] = useState(0);
@@ -73,21 +76,32 @@ export function Component() {
           <BalanceSection />
         </div>
         <div className="w-[640px] flex flex-col items-center gap-[10px]">
-          <StakeSection staked={staked} interest={userInterestQuery.data || "0"} {...currentPool} />
+          <StakeSection
+            loading={userStakeQuery.isFetching || poolListQuery.isFetching || userInterestQuery.isFetching}
+            staked={staked}
+            interest={userInterestQuery.data || "0"}
+            {...currentPool}
+          />
           <div className="box w-full flex flex-col items-center gap-[10px]">
             <div className="flex justify-center gap-4">
-            <BalanceButton
-              name="Stake"
-              icon={stakeApusIcon}
-              onClick={() => {setTab("Stake"); setInputApus(0);}}
-              active={tab === "Stake"}
-            />
-            <BalanceButton
-              name="Withdraw"
-              icon={withdrawIcon}
-              onClick={() => {setTab("Withdraw"); setInputApus(0);}}
-              active={tab === "Withdraw"}
-            />
+              <BalanceButton
+                name="Stake"
+                icon={stakeApusIcon}
+                onClick={() => {
+                  setTab("Stake");
+                  setInputApus(0);
+                }}
+                active={tab === "Stake"}
+              />
+              <BalanceButton
+                name="Withdraw"
+                icon={withdrawIcon}
+                onClick={() => {
+                  setTab("Withdraw");
+                  setInputApus(0);
+                }}
+                active={tab === "Withdraw"}
+              />
             </div>
             <Select
               placeholder="Select a pool"
@@ -103,27 +117,56 @@ export function Component() {
             </Select>
             <div className="box w-[280px] text-center text-[#262626] text-base gap-[15px]">
               <div>
-                Staked APUS = <span className="font-bold">{formatApus(staked)}</span>
+                Staked APUS ={" "}
+                <span className="font-bold">
+                  <NumberBox value={staked} loading={userStakeQuery.isFetching} fontSize={16} lineHeight={24} />
+                </span>
               </div>
               <div>
-                Available APUS = <span className="font-bold">{formatApus(balance)}</span>
+                Available APUS ={" "}
+                <span className="font-bold">
+                  <NumberBox value={balance} loading={balanceQuery.isFetching} fontSize={16} lineHeight={24} />
+                </span>
               </div>
+              <div className="text-sm"></div>
             </div>
-            <BalanceSldier max={tab ==="Stake" ? Number((BigInt(balance) - BigInt(staked)).toString()) / 1e12 : Number(staked) / 1e12} value={inputApus} onChange={setInputApus} />
-            <Spin spinning={stakeMutation.isPending || unstakeMutation.isPending}>
-              <div
-                className="btn-mainblue font-semibold px-4 h-12"
-                onClick={() => {
-                  if (tab === "Withdraw") {
-                    unstakeMutation.mutate();
-                  } else {
-                    stakeMutation.mutate();
-                  }
-                }}
+            <BalanceSldier
+              max={
+                tab === "Stake" ? Number((BigInt(balance) - BigInt(staked)).toString()) / 1e12 : Number(staked) / 1e12
+              }
+              value={inputApus}
+              onChange={setInputApus}
+            />
+            <div className="w-full flex justify-center items-center gap-4">
+              <Spin spinning={stakeMutation.isPending || unstakeMutation.isPending}>
+                <div
+                  className="btn-mainblue font-semibold px-4 h-12"
+                  onClick={() => {
+                    if (tab === "Withdraw") {
+                      unstakeMutation.mutate();
+                    } else {
+                      stakeMutation.mutate();
+                    }
+                  }}
+                >
+                  {tab} {inputApus.toFixed(2)} APUS
+                </div>
+              </Spin>
+              <Tooltip
+                title={
+                  <div>
+                    To earn interest, you must stake for at least 24 hours, starting from the moment you stake. Interest
+                    is distributed every 24 hours.
+                    <br />
+                    To receive interest in the first round, stake early. You can withdraw anytime, but it resets the
+                    timer.
+                  </div>
+                }
+                overlayInnerStyle={{ width: "320px" }}
               >
-                {tab} {inputApus.toFixed(2)} APUS
-              </div>
-            </Spin>
+                <InfoCircleOutlined />
+              </Tooltip>
+            </div>
           </div>
           <div className="box w-full">
             <Table
