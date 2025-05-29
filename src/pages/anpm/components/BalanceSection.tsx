@@ -8,6 +8,7 @@ import { NumberBox } from "./NumberBox";
 const BalanceSection = () => {
   const location = useLocation();
   const { balance, credits, balanceQuery, creditQuery } = useContext(BalanceContext);
+  console.log(credits)
 
   return (
     <div className="box flex flex-col gap-5">
@@ -23,7 +24,7 @@ const BalanceSection = () => {
         </p>
         <p className="text-[#262626] text-sm">
           <span className="font-bold">Credits:</span>{" "}
-          <NumberBox value={credits} loading={creditQuery.isFetching} />
+          <NumberBox value={credits} fixed={12} loading={creditQuery.isFetching} />
         </p>
       </div>
 

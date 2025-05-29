@@ -57,5 +57,5 @@ export function formatNumber(value: number | string | undefined, {
   } else {
     num = numDecimal.toFixed(fixed);
   }
-  return value === undefined ? placeholder : Intl.NumberFormat("en-US").format(Number(num)) + suffix;
+  return value === undefined ? placeholder : (precision === fixed ? num : Intl.NumberFormat("en-US", {}).format(Number(num))) + suffix;
 }
