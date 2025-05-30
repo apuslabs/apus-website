@@ -23,7 +23,7 @@ const BalanceSection = () => {
         </p>
         <p className="text-[#262626] text-sm">
           <span className="font-bold">Credits:</span>{" "}
-          <NumberBox value={credits} fixed={12} loading={creditQuery.isFetching} />
+          <NumberBox value={credits} fixed={-1} loading={creditQuery.isFetching} />
         </p>
       </div>
 
