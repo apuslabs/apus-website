@@ -214,7 +214,7 @@ export function Component() {
                   title: "APR",
                   dataIndex: "apr",
                   key: "apr",
-                  render: (text) => <span className="font-bold">{text}%</span>,
+                  render: (text) => <span className="font-bold">{formatNumber(text, { precision: -2 })}%</span>,
                 },
                 {
                   title: "Staked",
