@@ -3,7 +3,6 @@ import BalanceSection from "../components/BalanceSection";
 import { Breadcrumb, Select, Spin, Table, Tooltip } from "antd";
 import StakeSection from "./StakeSection";
 import { BalanceContext } from "../contexts/balance";
-import { formatApus } from "../../../utils/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getInterest, getUserStake, stake, unstake } from "../contexts/request";
 import { useWallet } from "../contexts/anpm";
@@ -84,7 +83,7 @@ export function Component() {
             connect();
             return;
           }
-          if (!canStake) return
+          if (!canStake) return;
           if (tab === "Withdraw") {
             unstakeMutation.mutate();
           } else {
@@ -134,7 +133,7 @@ export function Component() {
                 active={tab === "Stake"}
               />
               <BalanceButton
-                name="Withdraw"
+                name="Unstake"
                 icon={withdrawIcon}
                 onClick={() => {
                   setTab("Withdraw");
@@ -159,21 +158,31 @@ export function Component() {
               <div>
                 Staked APUS ={" "}
                 <span className="font-bold">
-                  <NumberBox value={staked} fixed={6} loading={userStakeQuery.isFetching} fontSize={16} lineHeight={24} />
+                  <NumberBox
+                    value={staked}
+                    fixed={6}
+                    loading={userStakeQuery.isFetching}
+                    fontSize={16}
+                    lineHeight={24}
+                  />
                 </span>
               </div>
               <div>
                 Available APUS ={" "}
                 <span className="font-bold">
-                  <NumberBox value={balance} fixed={6} loading={balanceQuery.isFetching} fontSize={16} lineHeight={24} />
+                  <NumberBox
+                    value={balance}
+                    fixed={6}
+                    loading={balanceQuery.isFetching}
+                    fontSize={16}
+                    lineHeight={24}
+                  />
                 </span>
               </div>
               <div className="text-sm"></div>
             </div>
             <BalanceSldier
-              max={
-                tab === "Stake" ? Number(balance) / 1e12 : Number(staked) / 1e12
-              }
+              max={tab === "Stake" ? Number(balance) / 1e12 : Number(staked) / 1e12}
               disabled={userStakeQuery.isFetching || balanceQuery.isFetching}
               value={inputApus}
               onChange={setInputApus}

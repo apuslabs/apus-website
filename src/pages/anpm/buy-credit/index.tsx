@@ -50,7 +50,7 @@ export function Component() {
           <div className="text-black text-lg font-bold mb-[10px]">Buy CREDIT</div>
           <div className="box w-[280px] text-center text-[#262626] text-base">
             <div className="mb-[15px]">
-              1 CREDIT = <span className="font-bold">$0.0001</span> (Fxied)
+              1 CREDIT = <span className="font-bold">$0.0001</span> (Fixed)
             </div>
             <div className="text-sm text-center">
               <span>Current Exchange Rate:</span>
@@ -63,7 +63,7 @@ export function Component() {
                 loading={poolMgrInfoQuery.isFetching}
                 skeleton={{ width: 20 }}
               />
-              <span> Credits</span>
+              <span> CREDIT </span>
               (Dynamic)
             </div>
           </div>
@@ -91,7 +91,7 @@ export function Component() {
                   }
                 }}
               >
-                Buy {formatNumber(toBuyCredit, { precision: 0, fixed: 6, })} CREDIT
+                Buy {formatNumber(toBuyCredit, { precision: 0, fixed: 6 })} CREDIT
               </div>
             </Spin>
             <Tooltip

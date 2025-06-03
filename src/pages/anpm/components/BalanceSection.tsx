@@ -22,7 +22,7 @@ const BalanceSection = () => {
           <NumberBox value={balance} fixed={6} loading={balanceQuery.isFetching} />
         </p>
         <p className="text-[#262626] text-sm">
-          <span className="font-bold">Credits:</span>{" "}
+          <span className="font-bold">CREDIT:</span>{" "}
           <NumberBox value={credits} fixed={0} loading={creditQuery.isFetching} />
         </p>
       </div>
@@ -31,7 +31,7 @@ const BalanceSection = () => {
         {[
           { name: "Overview", icon: overviewIcon, to: "/anpm/console" },
           { name: "Get CREDIT", icon: getCreditIcon, to: "/anpm/buy-credit" },
-          { name: "Stake/Withdraw", icon: stakeApusIcon, to: "/anpm/stake" },
+          { name: "Stake/Unstake", icon: stakeApusIcon, to: "/anpm/stake" },
           { name: "Chat Playground", icon: chatIcon, to: "/anpm/chat" },
           { name: "Process ID", icon: processIcon, to: "/anpm/process" },
         ].map((button, index) => (

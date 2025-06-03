@@ -20,7 +20,7 @@ export default function ANPM() {
               className="cursor-pointer w-[180px] h-[51px] bg-[#222222] text-white rounded-2xl text-center leading-[51px] hover:bg-[#111111] hover:-translate-y-[2px] transition-all"
               to="https://apus-network-1.gitbook.io/apus-network"
             >
-              Deveoper Portal
+              Deveoper
             </Link>
             {activeAddress ? (
               <Dropdown
