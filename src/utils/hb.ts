@@ -3,7 +3,7 @@ import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import axios from "axios";
 
 // const HB_NODE = "http://localhost:10000";
-const HB_NODE = "https://8c9916e3fb62763c-10000.us-ca-3.gpu-instance.novita.ai";
+const HB_NODE = "https://8097f1658f3e6ad1-10000.us-ca-3.gpu-instance.novita.ai";
 
 const ao = () =>
   connect({
