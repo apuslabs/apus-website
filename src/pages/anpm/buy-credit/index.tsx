@@ -8,10 +8,12 @@ import { buyCredit, getPoolMgrInfo } from "../contexts/request";
 import { BalanceSldier } from "./BalanceSlider";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import { NumberBox } from "../components/NumberBox";
+import { formatNumber, NumberBox } from "../components/NumberBox";
+import { useConnection } from "arweave-wallet-kit";
 
 export function Component() {
   const { activeAddress } = useWallet();
+  const { connect } = useConnection();
   const { balance, refetchBalance, refetchCredits } = useContext(BalanceContext);
   const [toBuyCredit, setToBuyCredit] = useState<number>(0);
   const poolMgrInfoQuery = useQuery({ queryKey: ["poolMgrInfo"], queryFn: getPoolMgrInfo });
@@ -80,12 +82,16 @@ export function Component() {
               <div
                 className="btn-mainblue font-semibold px-4 h-12"
                 onClick={() => {
-                  if (activeAddress && toBuyCredit > 0) {
+                  if (!activeAddress) {
+                    connect();
+                    return;
+                  }
+                  if (toBuyCredit > 0) {
                     buyCreditMutation.mutate();
                   }
                 }}
               >
-                Buy {toBuyCredit.toFixed(2)} CREDIT
+                Buy {formatNumber(toBuyCredit, { precision: 0, fixed: 6, })} CREDIT
               </div>
             </Spin>
             <Tooltip

@@ -18,7 +18,7 @@ export default function ANPM() {
           <div className="flex items-center gap-4">
             <Link
               className="cursor-pointer w-[180px] h-[51px] bg-[#222222] text-white rounded-2xl text-center leading-[51px] hover:bg-[#111111] hover:-translate-y-[2px] transition-all"
-              to="https://www.notion.so/apusnetwork/Apus-Pool-Documentation-1fc0787b399c80c387bee8ad03ff169e"
+              to="https://apus-network-1.gitbook.io/apus-network"
             >
               Deveoper Portal
             </Link>

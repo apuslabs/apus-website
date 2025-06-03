@@ -1,6 +1,7 @@
 import { MessageResult } from "@permaweb/aoconnect/dist/lib/result";
 import { ANPM_DEFAULT_POOL, ANPM_POOL_MGR, APUS_ADDRESS } from "../../../utils/config";
 import { getHBCache, handleApusMessage, requestHB } from "../../../utils/hb";
+import dayjs from "dayjs";
 
 export function buyCredit(quantity: string): Promise<MessageResult> {
     return requestHB<MessageResult>(APUS_ADDRESS.Mint, {
@@ -118,4 +119,32 @@ export interface Pool {
 
 export function getPoolList(): Promise<Pool[]> {
     return getHBCache<Record<string, Pool>>(ANPM_POOL_MGR, "pools").then(res => Object.values(res))
+}
+
+
+export function addTask(prompt: string): Promise<string> {
+    const ref = dayjs().valueOf().toString()
+    return requestHB<MessageResult>(ANPM_DEFAULT_POOL, {
+        Action: "Add-Task",
+        ["X-Reference"]: ref,
+    }, { prompt }).then(handleApusMessage).then(() => ref);
+}
+
+export interface AITask {
+    ref: string;
+    submitter: string;
+    status: 'pending' | 'processing' | 'done';
+    prompt: string;
+    config?: string;
+    resolve_node?: string;
+    output?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export function getTask(ref: string): Promise<AITask | null> {
+    if (!ref) return Promise.resolve(null);
+    return getHBCache<AITask[]>(ANPM_DEFAULT_POOL, "tasks").then(tasks => {
+        return tasks.find(task => task.ref === ref) ?? null;
+    });
 }

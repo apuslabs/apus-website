@@ -95,6 +95,10 @@ const router = createHashRouter([
       {
         path: "process",
         lazy: () => import("./pages/anpm/process")
+      },
+      {
+        path: "chat",
+        lazy: () => import("./pages/anpm/chat"),
       }
     ],
   },

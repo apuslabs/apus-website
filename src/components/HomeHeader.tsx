@@ -78,11 +78,18 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode, hideMenu?: boolean }> = ({ Use
 
         {Userbox || (
           <>
-          <Link to="/anpm/console" onClick={() => setNavHide(true)}>
+          <div className="flex gap-4">
+          <Link to="/anpm/stake" onClick={() => setNavHide(true)}>
             <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
-              {"Pools"}
+              Staking
             </div>
           </Link>
+          <Link to="/anpm/console" onClick={() => setNavHide(true)}>
+            <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
+              Pools
+            </div>
+          </Link>
+          </div>
           <img src={ImgCommon.IconMenu} className="block md:hidden w-6" onClick={() => {
             setNavHide(!navHide);
           }} />

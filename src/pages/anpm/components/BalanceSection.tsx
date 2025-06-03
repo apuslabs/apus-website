@@ -19,11 +19,11 @@ const BalanceSection = () => {
       <div className="space-y-1">
         <p className="text-[#262626] text-sm">
           <span className="font-bold">APUS:</span>{" "}
-          <NumberBox value={balance} loading={balanceQuery.isFetching} />
+          <NumberBox value={balance} fixed={6} loading={balanceQuery.isFetching} />
         </p>
         <p className="text-[#262626] text-sm">
           <span className="font-bold">Credits:</span>{" "}
-          <NumberBox value={credits} fixed={-1} loading={creditQuery.isFetching} />
+          <NumberBox value={credits} fixed={0} loading={creditQuery.isFetching} />
         </p>
       </div>
 

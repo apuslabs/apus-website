@@ -11,15 +11,17 @@ import { BalanceSldier } from "../buy-credit/BalanceSlider";
 import { BalanceButton } from "../components/BalanceButton";
 import { stakeApusIcon, withdrawIcon } from "../assets";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { NumberBox } from "../components/NumberBox";
+import { formatNumber, NumberBox } from "../components/NumberBox";
 import dayjs from "dayjs";
+import { useConnection } from "arweave-wallet-kit";
 
 export function Component() {
+  const { activeAddress } = useWallet();
+  const { connect } = useConnection();
   const { balance, defaultPool, pools, poolListQuery, balanceQuery, refetchPoolList, refetchBalance } =
     useContext(BalanceContext);
   const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.staking_start || "0"));
   const pool_end_time = dayjs(Number(poolListQuery.data?.[0]?.staking_end || "0"));
-  const { activeAddress } = useWallet();
   const [poolID, setPoolID] = useState<string>("");
   const userStakeQuery = useQuery({
     queryKey: ["userStake", activeAddress, poolID],
@@ -78,6 +80,10 @@ export function Component() {
       <div
         className={`btn-mainblue font-semibold px-4 h-12 ${canStake ? "" : "disabled"}`}
         onClick={() => {
+          if (!activeAddress) {
+            connect();
+            return;
+          }
           if (!canStake) return
           if (tab === "Withdraw") {
             unstakeMutation.mutate();
@@ -153,13 +159,13 @@ export function Component() {
               <div>
                 Staked APUS ={" "}
                 <span className="font-bold">
-                  <NumberBox value={staked} loading={userStakeQuery.isFetching} fontSize={16} lineHeight={24} />
+                  <NumberBox value={staked} fixed={6} loading={userStakeQuery.isFetching} fontSize={16} lineHeight={24} />
                 </span>
               </div>
               <div>
                 Available APUS ={" "}
                 <span className="font-bold">
-                  <NumberBox value={balance} loading={balanceQuery.isFetching} fontSize={16} lineHeight={24} />
+                  <NumberBox value={balance} fixed={6} loading={balanceQuery.isFetching} fontSize={16} lineHeight={24} />
                 </span>
               </div>
               <div className="text-sm"></div>
@@ -214,13 +220,13 @@ export function Component() {
                   title: "Staked",
                   dataIndex: "cur_staking",
                   key: "cur_staking",
-                  render: (text) => <span className="font-bold">{formatApus(text)}</span>,
+                  render: (text) => <span className="font-bold">{formatNumber(text, { fixed: 6 })}</span>,
                 },
                 {
                   title: "Capacity",
                   dataIndex: "staking_capacity",
                   key: "staking_capacity",
-                  render: (text) => <span className="font-bold">{formatApus(text)}</span>,
+                  render: (text) => <span className="font-bold">{formatNumber(text, { fixed: 0 })}</span>,
                 },
               ]}
             />

@@ -74,7 +74,7 @@ const ModelCard: React.FC<Pool> = ({
           <img src={infoIcon} className="w-[30px] h-[30px]" />
         </Tooltip>
       </div>
-      <Link to="">
+      <Link to="https://apus-network-1.gitbook.io/apus-network">
         <div className="rounded-lg w-32 h-16 bg-[#3242F5] hover:bg-[#2a3ad1] cursor-pointer flex flex-col items-center justify-center gap-[5px]">
           <img src={useModelIcon} className="w-5 h-5" />{" "}
           <span className="font-bold text-white leading-none">Use Model</span>
