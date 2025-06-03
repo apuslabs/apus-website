@@ -1,5 +1,5 @@
 import BalanceSection from "../components/BalanceSection";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Input, Spin, message } from "antd";
 import { useActiveAddress, useConnection } from "arweave-wallet-kit";
 import { useLocalStorage } from "react-use";
@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { addTask, getTask } from "../contexts/request";
 import dayjs from "dayjs";
 import { sendIcon } from "../assets";
+import { BalanceContext } from "../contexts/balance";
 
 type ChatItem = {
     role: 'user' | 'assistant' | 'tip';
@@ -29,6 +30,7 @@ const Playground = () => {
     const activeAddress = useActiveAddress();
     const { connect } = useConnection();
 
+    const { refetchCredits } = useContext(BalanceContext);
     const [chatHistoryStor, setChatHistory] = useLocalStorage<ChatItem[]>("anpm-chat-session", DEFAULT_CHAT);
     const chatHistory = chatHistoryStor || DEFAULT_CHAT;
 
@@ -38,31 +40,32 @@ const Playground = () => {
 
     const refresh = async (ref: string) => {
         const task = await getTask(latestRef || "")
+        console.log('refresh', ref, task);
         if (task) {
             switch (task.status) {
                 case "pending":
-                    setChatHistory(chatHistory.concat({
+                    setChatHistory(chatHistory.concat([{
                         role: "tip",
                         message: "Your question is queued. Refresh in 5s...",
                         reference: ref,
                         timestamp: dayjs().valueOf(),
-                    }))
+                    }]))
                     break;
                 case "processing":
-                    setChatHistory(chatHistory.concat({
+                    setChatHistory(chatHistory.concat([{
                         role: "tip",
                         message: "Your question is being processed. Refresh in 5s...",
                         reference: ref,
                         timestamp: dayjs().valueOf(),
-                    }))
+                    }]))
                     break;
                 case "done":
-                    setChatHistory(chatHistory.concat({
+                    setChatHistory(chatHistory.concat([{
                         role: "assistant",
                         message: task.output || "",
                         reference: null,
                         timestamp: dayjs().valueOf(),
-                    }))
+                    }]))
             }
         }
         return task;
@@ -92,6 +95,7 @@ const Playground = () => {
                 }
             ]))
             getTaskQuery.refetch();
+            refetchCredits();
             setPrompt("");
         },
         onError: (e) => {
@@ -139,8 +143,8 @@ const Playground = () => {
                 />
                 <div className={`absolute right-8 bottom-6`}>
                     <Spin spinning={getTaskQuery.isFetching || addTaskMutation.isPending}>
-                        <img src={sendIcon} className="w-[30px] h-[30px]" onClick={() => {
-                            if (getTaskQuery.isFetching || addTaskMutation.isPending) return;
+                        <img src={sendIcon} className={`w-[30px] h-[30px] ${latestRef ? "opacity-50" : ""}`} onClick={() => {
+                            if (latestRef || getTaskQuery.isFetching || addTaskMutation.isPending) return;
                             if (!activeAddress) {
                                 connect();
                                 return;
