@@ -40,7 +40,6 @@ const Playground = () => {
 
     const refresh = async (ref: string) => {
         const task = await getTask(latestRef || "")
-        console.log('refresh', ref, task);
         if (task) {
             switch (task.status) {
                 case "pending":

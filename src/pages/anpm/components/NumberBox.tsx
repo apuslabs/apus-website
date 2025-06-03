@@ -51,11 +51,12 @@ export function formatNumber(value: number | string | undefined, {
   } else {
     numDecimal = numDecimal.div(Math.pow(10, precision));
   }
-  let num: string | number = numDecimal.toNumber()
+  let num: string | number
   if(fixed === -1) {
     num = numDecimal.toString();
   } else {
-    num = numDecimal.toFixed(fixed);
+    const factor = new Decimal(10).pow(fixed);
+    num = numDecimal.times(factor).floor().div(factor).toFixed(fixed);
   }
   return value === undefined ? placeholder : (precision === fixed ? num : Intl.NumberFormat("en-US", {
     maximumFractionDigits: 12,
