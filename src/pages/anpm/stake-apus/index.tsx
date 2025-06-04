@@ -34,7 +34,7 @@ export function Component() {
   });
   const staked = userStakeQuery.data || "0";
   const [inputApus, setInputApus] = useState(0);
-  const [tab, setTab] = useState<"Stake" | "Withdraw">("Stake");
+  const [tab, setTab] = useState<"Stake" | "Unstake">("Stake");
   const stakeMutation = useMutation({
     mutationFn: () => stake((inputApus * 1e12).toFixed(0)),
     onSuccess: async () => {
@@ -84,7 +84,7 @@ export function Component() {
             return;
           }
           if (!canStake) return;
-          if (tab === "Withdraw") {
+          if (tab === "Unstake") {
             unstakeMutation.mutate();
           } else {
             stakeMutation.mutate();
@@ -136,10 +136,10 @@ export function Component() {
                 name="Unstake"
                 icon={withdrawIcon}
                 onClick={() => {
-                  setTab("Withdraw");
+                  setTab("Unstake");
                   setInputApus(0);
                 }}
-                active={tab === "Withdraw"}
+                active={tab === "Unstake"}
               />
             </div>
             <Select
