@@ -35,18 +35,8 @@ function useModal() {
 
 export function Component() {
   const { pools } = useContext(BalanceContext);
-  const {
-    isModalOpen,
-    openModal,
-    closeModal,
-    poolID,
-    setPoolID,
-    name,
-    setName,
-    processID,
-    setProcessID,
-    canSubmit,
-  } = useModal();
+  const { isModalOpen, openModal, closeModal, poolID, setPoolID, name, setName, processID, setProcessID, canSubmit } =
+    useModal();
   useEffect(() => {
     if (pools.length) {
       setPoolID(pools[0].pool_id);
@@ -64,6 +54,8 @@ export function Component() {
     onSuccess: () => {
       processesQuery.refetch();
       closeModal();
+      setName("");
+      setProcessID("");
     },
   });
   const removeProcessMutation = useMutation({
@@ -117,7 +109,7 @@ export function Component() {
                 title: "Last Used",
                 dataIndex: "last_used",
                 key: "last_used",
-                render: (text) => text ? dayjs(text).format("YYYY/MM/DD") : '-',
+                render: (text) => (text ? dayjs(text).format("YYYY/MM/DD") : "-"),
               },
               {
                 title: "",

@@ -10,20 +10,21 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { formatNumber, NumberBox } from "../components/NumberBox";
 import { useConnection } from "arweave-wallet-kit";
+import Decimal from "decimal.js";
 
 export function Component() {
   const { activeAddress } = useWallet();
   const { connect } = useConnection();
   const { balance, refetchBalance, refetchCredits } = useContext(BalanceContext);
-  const [toBuyCredit, setToBuyCredit] = useState<number>(0);
+  const [payApus, setPayApus] = useState<number>(0);
   const poolMgrInfoQuery = useQuery({ queryKey: ["poolMgrInfo"], queryFn: getPoolMgrInfo });
   const buyCreditMutation = useMutation({
-    mutationFn: () => buyCredit((toBuyCredit * 1e12).toFixed(0)),
+    mutationFn: () => buyCredit((payApus * 1e12).toFixed(0)),
     onSuccess: async () => {
       await sleep(500); // wait for the transaction to be processed
       refetchBalance();
       refetchCredits();
-      setToBuyCredit(0);
+      setPayApus(0);
     },
   });
   const creditExchangeRate = poolMgrInfoQuery.data?.credit_exchange_rate || "0";
@@ -68,12 +69,12 @@ export function Component() {
             </div>
           </div>
           <BalanceSldier
-            label="Credit"
+            label="APUS"
             max={Number(balance) / 1e12}
-            value={toBuyCredit}
+            value={payApus}
             onChange={(v) => {
               if (v !== null) {
-                setToBuyCredit(v);
+                setPayApus(v);
               }
             }}
           />
@@ -86,12 +87,13 @@ export function Component() {
                     connect();
                     return;
                   }
-                  if (toBuyCredit > 0) {
+                  if (payApus > 0) {
                     buyCreditMutation.mutate();
                   }
                 }}
               >
-                Buy {formatNumber(toBuyCredit, { precision: 0, fixed: 6 })} CREDIT
+                Buy {formatNumber(new Decimal(payApus).mul(creditExchangeRate).toNumber(), { precision: 0, fixed: 6 })}{" "}
+                CREDIT
               </div>
             </Spin>
             <Tooltip
