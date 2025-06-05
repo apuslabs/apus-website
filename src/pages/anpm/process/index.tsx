@@ -75,7 +75,7 @@ export function Component() {
               path: "/anpm/console",
             },
             {
-              title: "Buy CREDIT",
+              title: "Manage Processes",
             },
           ]}
         />
