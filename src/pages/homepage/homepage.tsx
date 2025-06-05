@@ -4,9 +4,9 @@ import { useBreakpoint, useCountDate } from "../../utils/react-use";
 
 import Rive from "@rive-app/react-canvas";
 import HeroRiv from "./animations/hero.riv";
-import Feat1 from './animations/apus_hero_verifiable_v3.riv';
-import Feat2 from './animations/apus_hero_community_v1.riv';
-import Feat3 from './animations/apus_incentives_v1.riv';
+import Feat1 from "./animations/apus_hero_verifiable_v3.riv";
+import Feat2 from "./animations/apus_hero_community_v1.riv";
+import Feat3 from "./animations/apus_incentives_v1.riv";
 import IconMintBox from "./images/mint-box-icon.png";
 import BgDesc from "./images/bg-desc.png";
 import BgDescMobile from "./images/bg-desc.svg";
@@ -45,19 +45,18 @@ function TwitterVideo({ className, videoID }: { className?: string; videoID: str
 }
 
 function SectionHero() {
-  const poolListQuery = useQuery({ 
-    queryKey: ['poolList'], 
-    queryFn: () => getPoolList()
+  const poolListQuery = useQuery({
+    queryKey: ["poolList"],
+    queryFn: () => getPoolList(),
   });
-  const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.staking_start || "0"));
+  const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.pre_staking_time || "0"));
   const { day, hour, minute, second } = useCountDate(pool_start_time);
   return (
     <div className="section section-hero z-10">
-     {pool_start_time.isAfter(dayjs()) && !poolListQuery.isFetching ? <div className="launchbox-container mt-[40px]">
-        <div className={`launchbox-title text-[35px]`}>
-          Launch in ...
-        </div>
-        <div className="launchbox-countdown-container">
+      {pool_start_time.isAfter(dayjs()) && !poolListQuery.isFetching ? (
+        <div className="launchbox-container mt-[40px]">
+          <div className={`launchbox-title text-[35px]`}>Launch in ...</div>
+          <div className="launchbox-countdown-container">
             {[
               {
                 value: day,
@@ -85,10 +84,11 @@ function SectionHero() {
               </React.Fragment>
             ))}
           </div>
-      </div> : null}
+        </div>
+      ) : null}
       <div className="content-area relative z-20 flex flex-col items-center md:block">
         <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-medium md:font-normal leading-none bg-white md:bg-transparent">
-        <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
+          <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
           Enabling Verifiable
           <br /> Decentralized AI
           <br />
@@ -136,7 +136,9 @@ function SectionFeatures() {
       <div className="content-area text-[#1b1b1b] ">
         <div className="features-item">
           <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2">
-            {isMobile ? <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" /> : null}
+            {isMobile ? (
+              <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" />
+            ) : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Verifiable Decentralized AI Inference</div>
@@ -159,10 +161,7 @@ function SectionFeatures() {
               $APUS, with a fixed 1 billion supply and deflationary mechanisms, ensures long-term value through fair,
               decentralized distribution with no pre-allocation for the team or early investors.
             </div>
-            <Link
-              to={TokenomicsDocLink}
-              target="__blank"
-            >
+            <Link to={TokenomicsDocLink} target="__blank">
               <div className="btn-lightblue">Learn More</div>
             </Link>
           </div>
@@ -174,7 +173,9 @@ function SectionFeatures() {
         </div>
         <div className="features-item">
           <div className="bg-[#3242f5] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
-            {isMobile ? <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" /> : null}
+            {isMobile ? (
+              <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" />
+            ) : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Competitive Incentive for AI Models</div>
@@ -193,9 +194,21 @@ function SectionFeatures() {
       </div>
       {isMobile ? null : (
         <>
-          <Rive src={Feat1} stateMachines={"State Machine 1"} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10" />
-          <Rive src={Feat2} stateMachines={"State Machine 1"} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10" />
-          <Rive src={Feat3} stateMachines={"State Machine 1"} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10" />
+          <Rive
+            src={Feat1}
+            stateMachines={"State Machine 1"}
+            className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10"
+          />
+          <Rive
+            src={Feat2}
+            stateMachines={"State Machine 1"}
+            className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10"
+          />
+          <Rive
+            src={Feat3}
+            stateMachines={"State Machine 1"}
+            className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10"
+          />
         </>
       )}
     </div>
@@ -444,13 +457,10 @@ export default function HomeIndex() {
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">
       {breakpoint === "mobile" ? (
-        <Rive
-          src={HeroRiv}
-          className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10"
-        />
+        <Rive src={HeroRiv} className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10" />
       ) : (
         <Rive
-        src={HeroRiv}
+          src={HeroRiv}
           className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10"
         />
       )}

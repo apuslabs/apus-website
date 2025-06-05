@@ -19,7 +19,7 @@ export function Component() {
   const { connect } = useConnection();
   const { balance, defaultPool, pools, poolListQuery, balanceQuery, refetchPoolList, refetchBalance } =
     useContext(BalanceContext);
-  const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.staking_start || "0"));
+  const pool_start_time = dayjs(Number(poolListQuery.data?.[0]?.pre_staking_time || "0"));
   const pool_end_time = dayjs(Number(poolListQuery.data?.[0]?.staking_end || "0"));
   const [poolID, setPoolID] = useState<string>("");
   const userStakeQuery = useQuery({
