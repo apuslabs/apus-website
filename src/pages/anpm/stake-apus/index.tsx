@@ -198,11 +198,12 @@ export function Component() {
               <Tooltip
                 title={
                   <div>
-                    To earn interest, you must stake for at least 24 hours, starting from the moment you stake. Interest
-                    is distributed every 24 hours.
+                    To earn interest, you must stake for at least 24 hours. Interest is distributed every 24 hours.
                     <br />
-                    To receive interest in the first round, stake early. You can withdraw anytime, but it resets the
-                    timer.
+                    To receive interest in the first round, stake early — the first payout will be made 24 hours after
+                    the Staking Start Date.
+                    <br />
+                    You can withdraw at any time, but doing so will reset your staking timer.
                   </div>
                 }
                 overlayInnerStyle={{ width: "320px" }}

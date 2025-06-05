@@ -182,7 +182,7 @@ const Playground = () => {
 
 export function Component() {
   return (
-    <main className="pt-[210px] pb-[90px] bg-[#F9FAFB]">
+    <main className="pt-[148px] pb-[90px] bg-[#F9FAFB]">
       <div className="content-area mb-[40px]">
         <Breadcrumb
           items={[
