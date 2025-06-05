@@ -42,7 +42,10 @@ export default function ANPM() {
                 }}
               >
                 <ConnectButton
+                  accent="#3242f5"
                   profileModal={false}
+                  showProfilePicture={false}
+                  useAns={false}
                   showBalance={false}
                   onClickCapture={(e) => {
                     e.stopPropagation();
@@ -51,7 +54,13 @@ export default function ANPM() {
                 />
               </Dropdown>
             ) : (
-              <ConnectButton profileModal={false} showBalance={false} />
+              <ConnectButton
+                profileModal={false}
+                showBalance={false}
+                accent="#3242f5"
+                showProfilePicture={false}
+                useAns={false}
+              />
             )}
           </div>
         }

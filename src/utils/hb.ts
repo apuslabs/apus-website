@@ -13,8 +13,6 @@ const ao = () =>
     URL: HB_NODE,
   });
 
-const aoi = ao();
-
 export function requestHB<U>(
   processId: string,
   tags: Record<string, string>,
@@ -41,7 +39,7 @@ export function requestHB<U>(
     );
   console.log("Request: ", processId, tags, data);
 
-  return aoi
+  return ao()
     .request(params2)
     .then((res) => {
       if (!res.body) {
