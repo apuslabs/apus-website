@@ -61,7 +61,18 @@ export function Component() {
     }
   }, [defaultPool, setPoolID]);
 
-  const canStake = inputApus > 0 && pool_start_time.isBefore(dayjs()) && pool_end_time.isAfter(dayjs());
+  const stakeQuota = (function () {
+    if (!currentPool) return 0;
+    if (!currentPool.staking_capacity || !currentPool.cur_staking) return 0;
+    const quota = Number(BigInt(currentPool.staking_capacity) - BigInt(currentPool.cur_staking));
+    if (quota < 0) return 0;
+    return quota;
+  })();
+  const canStake =
+    inputApus > 0 &&
+    ((tab === "Stake" && inputApus * 1e12 <= stakeQuota) || tab === "Unstake") &&
+    pool_start_time.isBefore(dayjs()) &&
+    pool_end_time.isAfter(dayjs());
   const buttonTip = () => {
     if (!pool_start_time.isBefore(dayjs())) {
       return `Staking starts in ${dayjs().to(pool_start_time)}`;
@@ -71,6 +82,9 @@ export function Component() {
     }
     if (inputApus <= 0) {
       return "Please select apus to " + tab.toLowerCase();
+    }
+    if (tab === "Stake" && inputApus * 1e12 > stakeQuota) {
+      return `You can only stake up to ${formatNumber(stakeQuota / 1e12, { fixed: 2 })} APUS`;
     }
     return "";
   };
@@ -182,7 +196,7 @@ export function Component() {
               <div className="text-sm"></div>
             </div>
             <BalanceSldier
-              max={tab === "Stake" ? Number(balance) / 1e12 : Number(staked) / 1e12}
+              max={tab === "Stake" ? Math.min(Number(balance), stakeQuota) / 1e12 : Number(staked) / 1e12}
               disabled={userStakeQuery.isFetching || balanceQuery.isFetching}
               value={inputApus}
               onChange={setInputApus}
