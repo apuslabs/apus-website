@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useAOMint } from "./contexts";
 import { BigNumber } from "ethers";
 import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
 
@@ -160,32 +159,28 @@ export function Component() {
                 </li>
               </ol>
             </div>
-            <Link
-              to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72/CzMaS-eHBqfinh5HzrNle12-5UvO54Glj3NlEnX1mmY"
-              target="_blank"
-            >
-              <div className="w-full text-right underline underline-offset-2 text-gray21 font-medium cursor-pointer">
-                Learn More
-              </div>
-            </Link>
           </div>
         </div>
         <div className="card flex-col p-7">
-          <h3 className="card-caption mb-2">
-            1. Open <a href="https://ao.arweave.net/#/delegate/">AO Delegate</a>
+          <h2 className="font-semibold text-gray33 text-lg mb-7">How to get $APUS?</h2>
+          <h3 className="card-caption mb-4">
+            1. Open{" "}
+            <a href="https://ao.arweave.net/#/delegate/" className="text-mainblue underline">
+              AO Delegate
+            </a>
           </h3>
           <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
             <img src={ImgMint.DelegationGuide1} className="w-full" />
           </div>
-          <h3 className="card-caption mb-2">2. Connect Your wallet</h3>
+          <h3 className="card-caption mb-4">2. Connect Your wallet</h3>
           <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
             <img src={ImgMint.DelegationGuide2} className="w-full" />
           </div>
-          <h3 className="card-caption mb-2">3. Add APUS to your delegation list</h3>
+          <h3 className="card-caption mb-4">3. Add APUS to your delegation list</h3>
           <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
             <img src={ImgMint.DelegationGuide3} className="w-full" />
           </div>
-          <h3 className="card-caption mb-2">4. Confirm and receive your APUS tokens (within ~24 hours)</h3>
+          <h3 className="card-caption mb-4">4. Confirm and receive your APUS tokens (within ~24 hours)</h3>
           <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
             <img src={ImgMint.DelegationGuide4} className="w-full" />
           </div>
