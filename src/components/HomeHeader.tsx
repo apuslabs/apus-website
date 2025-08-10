@@ -77,7 +77,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
 
         {Userbox || (
           <>
-            <Link to="https://apus-network-1.gitbook.io/apus-network" onClick={() => setNavHide(true)}>
+            <Link to="https://docs.apus.network/sdk/introduction" onClick={() => setNavHide(true)}>
               <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
                 {"Docs"}
               </div>
