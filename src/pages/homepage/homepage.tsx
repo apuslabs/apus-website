@@ -209,13 +209,6 @@ function SectionRoadmap() {
             <div className="text-[30px] md:text-[60px] font-semibold md:font-normal leading-none mb-[30px] md:mb-[34px]">
               Roadmap
             </div>
-            <div className="text-base md:text-xl leading-tight">
-              To achieve the seamless integration and enhancement of Fast Provable Inference Faults (FPIF ML) within the
-              AO Protocol and Arweave ecosystem, Apus Network has outlined a comprehensive roadmap.
-              <br />
-              <br />
-              This roadmap details the phased development and implementation milestones from Q1 2025 onwards.
-            </div>
           </div>
         </div>
         <img
@@ -225,30 +218,30 @@ function SectionRoadmap() {
         <div className="px-[25px] pb-[50px] md:pb-0 md:px-0 text-[#1b1b1b] text-base md:text-[22px] leading-tight flex flex-col gap-[50px] md:gap-20">
           {[
             {
-              season: "2025 Q1",
+              season: "2025 H1",
               title: "HyperBEAM Device Integration",
               todos: [
-                "Establish initial GPU Device integration with HyperBEAM",
-                "Implement d11c llama.cpp with NVIDIA GPU",
-                "List on PermaSwap DEX",
+                "Listed on PermaSwap DEX",
+                "Completed HBOS integration with NVIDIA GPU TEE",
+                "Finalized HyperBEAM Inference Device and Attestation",
               ],
             },
             {
-              season: "2025 Q2",
+              season: "2025 Q3",
               title: "Launch AI Pool and Substaking",
               todos: [
-                "Launch AI Pool product with $APUS substaking",
-                "Build AO mainnet GPU nodes and conduct limited public testing",
-                "Expand DEX listings to enhance liquidation",
+                "Sponsor for Agents of the Permaweb: The AO Hackathon",
+                "Assist Arweave Oasis in hosting a hacker house",
+                "Deliver POC for “Digital Twin” AI on AO and Arweave",
               ],
             },
             {
               season: "2025 H2",
               title: "Expand Ecosystem Influence",
               todos: [
-                "Position $APUS as a utility token",
-                "Boost platform appeal and market engagement",
-                "Foster cross-ecosystem collaboration and drive project execution",
+                "Develop deterministic GPU for specific vendors and drivers",
+                "Launch the “Digital Twin” AI as a product",
+                "Position $APUS as a core utility token",
               ],
             },
           ].map(({ season, title, todos }, index) => {
@@ -258,15 +251,15 @@ function SectionRoadmap() {
                   className={`relative w-[130px] h-[48px] md:w-[170px] md:h-[63px] flex-shrink-0 text-2xl leading-[48px] md:leading-[63px] text-center polygon-box ${index === 0 ? "blue" : ""}`}
                 >
                   {season}
-                  {index === 0 && (
+                  {/* {index === 0 && (
                     <img
                       src={isMobile ? RoadmapLineMobile : RoadmapLine}
-                      className="absolute bottom-0 right-0 md:-bottom-[112px] md:right-[2px] md:h-[120px]"
+                      className="absolute bottom-0 right-0 md:-bottom-[112px] md:right-[2px] md:h-[120px] scale-50"
                     />
-                  )}
+                  )} */}
                 </div>
                 <div>
-                  <div className="mb-5 md:my-4 text-[30px] leading-none">{title}</div>
+                  {/* <div className="mb-5 md:my-4 text-[30px] leading-none">{title}</div> */}
                   <ul className=" list-disc pl-6">
                     {todos.map((todo) => (
                       <li key={todo}>{todo}</li>
