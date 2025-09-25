@@ -1,13 +1,11 @@
-import { Divider, Dropdown, Form, Input, InputNumber, Modal, Slider, Spin, Tooltip } from "antd";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import { Pie } from "@ant-design/plots";
+import { Divider, Dropdown, Form, Input, Modal, Spin, Tooltip } from "antd";
+import { ToastContainer, Bounce } from "react-toastify";
 import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
 import { useAOMint } from "./contexts";
 import { BigNumber } from "ethers";
-import { InfoCircleOutlined, LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
 
@@ -27,62 +25,16 @@ export const GrayDivider = ({ className }: { className?: string }) => (
 );
 
 export function Component() {
-  const { connect, disconnect } = useConnection();
+  const { disconnect } = useConnection();
   const activeAddress = useActiveAddress();
   const [apusWallet, setApusWallet] = useLocalStorage<string>("apus-wallet");
-  const {
-    apusDynamic,
-    loadingApus,
-    apusFactor,
-    loadingDelegations,
-    loadingUpdateDelegation,
-    updateDelegation,
-  } = useAOMint({
+  const { apusDynamic, loadingApus } = useAOMint({
     apusWallet,
     wallet: activeAddress,
     MintProcess: APUS_ADDRESS.Mint,
     MirrorProcess: APUS_ADDRESS.Mirror,
   });
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
-
-  const [percent, setPercent] = useState<number>(0);
-
-  useEffect(() => {
-    setPercent(apusFactor);
-  }, [apusFactor]);
-
-  const isPercentUpdated = percent !== apusFactor;
-  const cannotApproveTip = !activeAddress ? "Please connect wallet" : !isPercentUpdated ? "Please Set Percent" : "";
-
-  const approve = async () => {
-    if (!activeAddress) {
-      connect();
-      return;
-    }
-    if (!isPercentUpdated) {
-      return;
-    }
-    Modal.confirm({
-      title: "Delegation Update Confirm",
-      content:
-        percent === 0
-          ? `Remove ALL your delegation to $APUS`
-          : `${percent > apusFactor ? "Increase" : "Decrease"} your delegation to $APUS from ${apusFactor}% to ${percent}%`,
-      onOk: async () => {
-        try {
-          await updateDelegation(percent);
-          toast.success(`Save Successful`);
-        } catch (e: unknown) {
-          if (e instanceof Error) {
-            toast.error(e.message, { autoClose: false });
-            setPercent(apusFactor);
-          } else {
-            toast.error(`Save Failed, Please Try Again.`, { autoClose: false });
-          }
-        }
-      },
-    });
-  };
 
   const [recipientModal, setRecipientModal] = useState(false);
   const [recipient, setRecipient] = useState("");
@@ -91,20 +43,6 @@ export function Component() {
       setRecipient(apusWallet);
     }
   }, [apusWallet]);
-
-  const onPercentChange = (v: number, precision: boolean) => {
-    if (v === 0) {
-      setPercent(0);
-    } else if (v < 5) {
-      setPercent(5);
-    } else {
-      if (precision) {
-        setPercent(v);
-      } else {
-        setPercent(Math.round(v / 5) * 5);
-     }
-    }
-  };
 
   return (
     <>
@@ -129,10 +67,14 @@ export function Component() {
                 ],
               }}
             >
-              <ConnectButton profileModal={false} showBalance={false} onClickCapture={e => {
-                e.stopPropagation()
-                e.preventDefault()
-              }}/>
+              <ConnectButton
+                profileModal={false}
+                showBalance={false}
+                onClickCapture={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                }}
+              />
             </Dropdown>
           ) : (
             <ConnectButton profileModal={false} showBalance={false} />
@@ -151,7 +93,8 @@ export function Component() {
                     <div>Why $APUS is 0 while already delegated?</div>
                     <ul className="pl-4 list-disc">
                       <li>
-                        APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally 24 hours)
+                        APUS mint according to AO Mint Report, your delegation is not react on AO Mint Report Yet(usally
+                        24 hours)
                       </li>
                     </ul>
                   </div>
@@ -209,110 +152,37 @@ export function Component() {
                   <div className="pie-legend-square bg-black" /> Community: <span>92%</span>
                 </li>
                 <li>
-                  <div className="pie-legend-square bg-[#091DFF]" /> Ecosystem: <span>7% (TGE 100%)</span>
+                  <div className="pie-legend-square bg-primary" /> Ecosystem: <span>7% (TGE 100%)</span>
                 </li>
                 <li>
                   <div className="pie-legend-square bg-[#3CDCE5]" /> Liquidity: <span>1% (TGE 100%)</span>
                 </li>
               </ol>
             </div>
-            <Link
-              to="https://mirror.xyz/0xE84A501212d68Ec386CAdAA91AF70D8dAF795C72/CzMaS-eHBqfinh5HzrNle12-5UvO54Glj3NlEnX1mmY"
-              target="_blank"
-            >
-              <div className="w-full text-right underline underline-offset-2 text-gray21 font-medium cursor-pointer">
-                Learn More
-              </div>
-            </Link>
           </div>
         </div>
-        <div className="card flex-col items-center p-12">
-          <div className="card-caption">DELEGATE</div>
-          <div className="text-gray21 mb-8">
-            Below represents how you are delegating your AO Yield
-            <Tooltip
-              title={
-                <div>
-                  Since APUS is built on the AO network, you must first
-                  <Link to="https://ao.arweave.dev/#/mint" className="mx-1 text-blue underline">
-                    Bridge To AO
-                  </Link>
-                  before delegating to APUS. The AO available for delegation includes all your bridged assets, including
-                  and any delegations to other projects.
-                </div>
-              }
-              placement="topRight"
-              arrow={false}
-              overlayInnerStyle={{
-                backgroundColor: "white",
-                color: "#0b0b0b",
-                padding: "1rem",
-                width: "26rem",
-              }}
-            >
-              <InfoCircleOutlined className="pl-1" />
-            </Tooltip>
+        <div className="card flex-col p-7">
+          <h2 className="font-semibold text-gray33 text-lg mb-7">How to get $APUS?</h2>
+          <h3 className="card-caption mb-4">
+            1. Open{" "}
+            <a href="https://ao.arweave.net/#/delegate/" className="text-mainblue underline">
+              AO Delegate
+            </a>
+          </h3>
+          <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
+            <img src={ImgMint.DelegationGuide1} className="w-full" />
           </div>
-          <DemoPie
-            aoFactor={Number((100 - percent).toFixed(2))}
-            apusFactor={percent}
-          />
-          <div className="w-full mx-auto p-5 flex flex-col gap-5 items-center text-gray21">
-            <div className="relative w-full px-[5px]">
-              <div
-                className="absolute left-0 top-[22px] h-[10px] bg-[#333333] rounded-[5px] z-10"
-                style={{
-                  width: `${5}%`,
-                }}
-              ></div>
-              <Slider
-                className="w-full"
-                marks={{ 0: "0%", 5: "5%", 100: <div className="inline underline text-mainblue">MAX</div> }}
-                min={0}
-                max={100}
-                step={0.01}
-                tooltip={{
-                  open: true,
-                  formatter: (v) => (loadingDelegations ? <LoadingOutlined color="#f3f3f3" /> : `${v}%`),
-                }}
-                value={percent}
-                onChange={v => onPercentChange(v, false)}
-              />
-            </div>
-            <div className="w-full flex flex-col items-end -mt-10">
-              <div className="mb-2">
-                <span className="text-mainblue font-semibold">{percent}%</span> delegated to Mint APUS
-              </div>
-              <InputNumber
-                className="w-60"
-                size="large"
-                value={percent}
-                max={100}
-                min={0}
-                precision={2}
-                step={5}
-                onStep={v => onPercentChange(v, false)}
-                onPressEnter={(v) => {
-                  const n = parseFloat((v.target as HTMLInputElement).value);
-                  if (!isNaN(n)) {
-                    onPercentChange(n, true);
-                  }
-                }}
-                onBlur={(v) => {
-                  const n = parseFloat(v.target.value);
-                  if (!isNaN(n)) {
-                    onPercentChange(n, true);
-                  }
-                }}
-              />
-            </div>
-            <Tooltip title={cannotApproveTip} color="#f85931" placement="bottom">
-              <Spin spinning={loadingUpdateDelegation}>
-                <div className={`btn-primary ${isPercentUpdated && activeAddress ? "" : "disabled"}`} onClick={approve}>
-                  {activeAddress ? "Save Changes" : "Connect Wallet"}
-                </div>
-              </Spin>
-            </Tooltip>
+          <h3 className="card-caption mb-4">2. Connect Your wallet</h3>
+          <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
+            <img src={ImgMint.DelegationGuide2} className="w-full" />
+          </div>
+          <h3 className="card-caption mb-4">3. Add APUS to your delegation list</h3>
+          <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
+            <img src={ImgMint.DelegationGuide3} className="w-full" />
+          </div>
+          <h3 className="card-caption mb-4">4. Confirm and receive your APUS tokens (within ~24 hours)</h3>
+          <div className="mb-7 border border-solid border-grayd8 rounded-lg overflow-hidden">
+            <img src={ImgMint.DelegationGuide4} className="w-full" />
           </div>
         </div>
       </div>
@@ -351,39 +221,5 @@ export function Component() {
         </Form>
       </Modal>
     </>
-  );
-}
-
-function DemoPie({ apusFactor, aoFactor }: { apusFactor: number; aoFactor: number }) {
-  return (
-    <Pie
-      data={[
-        { type: "Apus", value: apusFactor },
-        { type: "AO", value: aoFactor },
-      ]}
-      width={400}
-      height={340}
-      paddingX={50}
-      insetBottom={16}
-      angleField="value"
-      colorField="type"
-      scale={{ color: { palette: ["#091DFF", "#F87D5E", "#212121"] } }}
-      animate={{ update: { type: false }, enter: { type: false }, exit: { type: false } }}
-      label={{
-        text: "value",
-        position: "outside",
-      }}
-      legend={{
-        color: {
-          layout: {
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-          },
-          position: "bottom",
-          rowPadding: 5,
-        },
-      }}
-    />
   );
 }

@@ -146,8 +146,12 @@ import DaiLogo from "./mint/dai-logo.svg";
 import IconRecipient from "./mint/icon-recipient.svg";
 import IconMint from "./mint/icon-mint.svg";
 import IconMinting from "./mint/icon-minting.svg";
-import LogoAOTransparent from "./mint/logo-ao.svg"
-import LogoApusTransparent from "./mint/logo-apus.svg"
+import LogoAOTransparent from "./mint/logo-ao.svg";
+import LogoApusTransparent from "./mint/logo-apus.svg";
+import DelegationGuide1 from "./mint/delegation-guide-1.png";
+import DelegationGuide2 from "./mint/delegation-guide-2.png";
+import DelegationGuide3 from "./mint/delegation-guide-3.png";
+import DelegationGuide4 from "./mint/delegation-guide-4.png";
 
 export const ImgMint = {
   TokenomicsPie,
@@ -158,5 +162,9 @@ export const ImgMint = {
   IconMint,
   IconMinting,
   LogoAOTransparent,
-  LogoApusTransparent
+  LogoApusTransparent,
+  DelegationGuide1,
+  DelegationGuide2,
+  DelegationGuide3,
+  DelegationGuide4,
 };
