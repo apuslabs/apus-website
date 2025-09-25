@@ -1,5 +1,7 @@
 .section {
   @apply relative;
+  background: radial-gradient(circle at 20% 80%, rgba(106, 197, 249, 0.12) 0%, transparent 55%),
+              radial-gradient(circle at 80% 20%, rgba(162, 83, 252, 0.10) 0%, transparent 55%);
 }
 
 .section-hero {
@@ -43,3 +45,80 @@
 .section-partner-list {
   @apply flex flex-wrap justify-center items-center gap-[40px] md:gap-[60px];
 }
+
+.features-item {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.features-item:hover {
+  transform: translateY(-8px);
+}
+
+.features-item-content {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.features-item-title {
+  background: linear-gradient(135deg, #1f2937 0%, #374151 50%, #4b5563 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  font-weight: 600;
+}
+
+.features-item-desc {
+  color: #4b5563;
+  line-height: 1.7;
+  font-weight: 400;
+}
+
+.polygon-box {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.polygon-box:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.polygon-box.blue {
+  background: linear-gradient(135deg, #3242f5 0%, #1e30c9 100%);
+  box-shadow: 0 4px 20px rgba(50, 66, 245, 0.3);
+}
+
+.polygon-box.blue:hover {
+  box-shadow: 0 8px 30px rgba(50, 66, 245, 0.4);
+}
+
+/*Video Card Enhance */
+iframe {
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  transition: all 0.4s ease;
+}
+
+iframe:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+}
+
+/* Partner Logo Enhance */
+.section-partner-list img {
+  transition: all 0.3s ease;
+  filter: grayscale(20%) brightness(0.9);
+}
+
+.section-partner-list img:hover {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.08);
+}
+

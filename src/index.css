@@ -49,7 +49,7 @@
 }
 
 .btn-lightblue {
-  @apply inline-block p-[15px] md:px-5 md:py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg font-space-mono hover:bg-[#1e30c9];
+  @apply inline-block p-[15px] md:px-5 md:py-4 bg-primary text-white cursor-pointer rounded-lg font-space-mono hover:bg-primaryHover;
 }
 
 .btn-default {

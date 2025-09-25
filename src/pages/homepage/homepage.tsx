@@ -44,16 +44,19 @@ function SectionHero() {
   return (
     <div className="section section-hero">
       <div className="content-area relative z-20 flex flex-col items-center md:block">
-        <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-medium md:font-normal leading-none bg-white md:bg-transparent">
+        <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-semibold md:font-bold leading-none bg-white md:bg-transparent">
         <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
-          Enabling Verifiable
+          Enabling Trustworthy
           <br /> Decentralized AI
           <br />
-          <span className="text-[#7b7b7b]">through</span>
-          <br /> Deterministic GPU
+          <span className="text-[#6AC5F9]">through</span>
+          <br /> 
+          <span className="bg-gradient-to-r from-[#6AC5F9] to-[#A253FC] bg-clip-text text-transparent">
+            Deterministic GPU
+          </span>
           <br /> Computing
         </div>
-        <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-[#3242F5] flex flex-col gap-2 md:gap-0 md:flex-row items-center">
+        <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-primary flex flex-col gap-2 md:gap-0 md:flex-row items-center">
           <img src={IconMintBox} className="w-[90px] h-[90px] md:w-[175px] md:h-[175px] md:mr-[42px]" />
           <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
             <div className="text-2xl md:text-[40px] text-white">APUS Minting Live!</div>
@@ -130,7 +133,7 @@ function SectionFeatures() {
           </div>
         </div>
         <div className="features-item">
-          <div className="bg-[#3242f5] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
+          <div className="bg-primary h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
             {isMobile ? <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" /> : null}
           </div>
           <div className="features-item-content">

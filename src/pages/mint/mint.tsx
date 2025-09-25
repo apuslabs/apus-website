@@ -152,7 +152,7 @@ export function Component() {
                   <div className="pie-legend-square bg-black" /> Community: <span>92%</span>
                 </li>
                 <li>
-                  <div className="pie-legend-square bg-[#091DFF]" /> Ecosystem: <span>7% (TGE 100%)</span>
+                  <div className="pie-legend-square bg-primary" /> Ecosystem: <span>7% (TGE 100%)</span>
                 </li>
                 <li>
                   <div className="pie-legend-square bg-[#3CDCE5]" /> Liquidity: <span>1% (TGE 100%)</span>

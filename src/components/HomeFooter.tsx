@@ -67,16 +67,14 @@ function Email() {
   const { email, setEmail, subscribe } = useSubscribe();
   return (
     <div className="flex flex-col md:flex-row items-center gap-4 md:gap-5">
-      <Input
-        size="large"
-        style={{
-          height: "48px",
-        }}
+      <input
+        className="w-[200px] md:w-[220px] h-[42px] md:h-[48px] px-4 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
       />
-      <div className="px-5 h-[42px] md:h-[48px] leading-[42px] md:leading-[48px] bg-[#3242f5] text-white text-lg font-space-mono cursor-pointer rounded-lg hover:bg-[#1e30c9]" onClick={subscribe}>
+      <div className="px-5 h-[42px] md:h-[48px] leading-[42px] md:leading-[48px] bg-primary text-white text-lg font-space-mono cursor-pointer rounded-lg hover:bg-primaryHover" onClick={subscribe}>
         Subscribe
       </div>
     </div>
