@@ -73,7 +73,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode, hideMenu?: boolean }> = ({ Use
           <Link to="/team" onClick={() => setNavHide(true)}>
             <li>Team</li>
           </Link>
-        </ul> : undefined}
+        </ul>
 
         {Userbox || (
           <>
