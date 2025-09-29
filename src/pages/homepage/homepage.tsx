@@ -11,7 +11,7 @@ import { useBreakpoint, useCountDate } from "../../utils/react-use";
 
 // Add static image imports
 import Feat1Img from "./images/feat1.png";
-import Feat2Img from "./images/feat2-temp.png";
+import Feat2Img from "./images/feat2.png";
 import Feat3Img from "./images/feat3.png";
 import TunnelMobile from "./images/tunnel-mobile.svg";
 import Tunnel from "./images/tunnel.svg";
@@ -146,7 +146,7 @@ function SectionFeatures() {
     <div className="section">
       <div className="content-area text-[#1b1b1b] ">
         <div className="features-item">
-          <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 flex items-center justify-center">
+          <div className="bg-[#D0EEF5] h-[418px] md:h-full w-full md:w-1/2 flex items-center justify-center">
             {/* Comment out the original animation code */}
             {/* {isMobile ? <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" /> : null} */}
             {/* Replace with static images */}
@@ -178,7 +178,7 @@ function SectionFeatures() {
             </Link>
           </div>
           <div
-            className={`bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden flex items-center justify-center ${isMobile ? "order-1" : "order-2"}`}
+            className={`bg-[#D0EEF5] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden flex items-center justify-center ${isMobile ? "order-1" : "order-2"}`}
           >
             {/* Comment out the original animation code */}
             {/* {isMobile ? <Rive src={Feat2} stateMachines={"State Machine 1"} className="h-[448px] mx-auto" /> : null} */}
@@ -459,8 +459,6 @@ export default function HomeIndex() {
   const breakpoint = useBreakpoint();
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">
-      <SectionHero />
-      {/* 注释掉Hero区域的动画 */}
       {/* 
       {breakpoint === "mobile" ? (
         <Rive src={HeroRiv} className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10" />
@@ -484,6 +482,7 @@ export default function HomeIndex() {
           className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10 object-cover"
         />
       )}
+      <SectionHero />
       <SectionDesc />
       <SectionFeatures />
       <SectionTech />
