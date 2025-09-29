@@ -2,15 +2,23 @@ import "./index.css";
 import { Link } from "react-router-dom";
 import { useBreakpoint, useCountDate } from "../../utils/react-use";
 
-import Rive from "@rive-app/react-canvas";
-import HeroRiv from "./animations/hero.riv";
-import Feat1 from "./animations/apus_hero_verifiable_v3.riv";
-import Feat2 from "./animations/apus_hero_community_v1.riv";
-import Feat3 from "./animations/apus_incentives_v1.riv";
+// Comment out the animation-related imports, keeping them for future use.
+// import Rive from "@rive-app/react-canvas";
+// import HeroRiv from "./animations/hero.riv";
+// import Feat1 from './animations/apus_hero_verifiable_v3.riv';
+// import Feat2 from './animations/apus_hero_community_v1.riv';
+// import Feat3 from './animations/apus_incentives_v1.riv';
+
+// Add static image imports
+import Feat1Img from "./images/feat1.png";
+import Feat2Img from "./images/feat2-temp.png";
+import Feat3Img from "./images/feat3.png";
+import TunnelMobile from "./images/tunnel-mobile.svg";
+import Tunnel from "./images/tunnel.svg";
 import IconMintBox from "./images/mint-box-icon.png";
 import BgDesc from "./images/bg-desc.png";
-import BgDescMobile from "./images/bg-desc.svg";
-import Arch from "./images/arch.svg";
+import BgDescMobile from "./images/bg-desc-mobile.svg";
+import Arch from "./images/arch.png";
 import ArchMobile from "./images/arch-mobile.svg";
 import LogoStroke from "./images/logo-stroke.svg";
 import BgRoadmap from "./images/roadmap-bg.png";
@@ -138,10 +146,11 @@ function SectionFeatures() {
     <div className="section">
       <div className="content-area text-[#1b1b1b] ">
         <div className="features-item">
-          <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2">
-            {isMobile ? (
-              <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" />
-            ) : null}
+          <div className="bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 flex items-center justify-center">
+            {/* Comment out the original animation code */}
+            {/* {isMobile ? <Rive src={Feat1} stateMachines={"State Machine 1"} className="relative left-5 h-[286px]" /> : null} */}
+            {/* Replace with static images */}
+            {isMobile ? <img src={Feat1Img} className="relative left-5 h-[286px] object-contain" alt="Feature 1" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Verifiable Decentralized AI Inference</div>
@@ -169,14 +178,20 @@ function SectionFeatures() {
             </Link>
           </div>
           <div
-            className={`bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden ${isMobile ? "order-1" : "order-2"}`}
+            className={`bg-[#1b1b1b] h-[418px] md:h-full w-full md:w-1/2 overflow-hidden flex items-center justify-center ${isMobile ? "order-1" : "order-2"}`}
           >
-            {isMobile ? <Rive src={Feat2} stateMachines={"State Machine 1"} className="h-[448px] mx-auto" /> : null}
+            {/* Comment out the original animation code */}
+            {/* {isMobile ? <Rive src={Feat2} stateMachines={"State Machine 1"} className="h-[448px] mx-auto" /> : null} */}
+            {/* Replace with static images */}
+            {isMobile ? <img src={Feat2Img} className="h-[448px] mx-auto object-contain" alt="Feature 2" /> : null}
           </div>
         </div>
         <div className="features-item">
-          <div className="bg-primary h-[418px] md:h-full w-full md:w-1/2 overflow-hidden">
-            {isMobile ? <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" /> : null}
+          <div className="bg-primary h-[418px] md:h-full w-full md:w-1/2 overflow-hidden flex items-center justify-center">
+            {/* Comment out the original animation code */}
+            {/* {isMobile ? <Rive src={Feat3} stateMachines={"State Machine 1"} className="h-[460px] relative -left-10" /> : null} */}
+            {/* Replace with static images */}
+            {isMobile ? <img src={Feat3Img} className="h-[460px] relative -left-10 object-contain" alt="Feature 3" /> : null}
           </div>
           <div className="features-item-content">
             <div className="features-item-title">Competitive Incentive for AI Models</div>
@@ -195,21 +210,15 @@ function SectionFeatures() {
       </div>
       {isMobile ? null : (
         <>
-          <Rive
-            src={Feat1}
-            stateMachines={"State Machine 1"}
-            className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10"
-          />
-          <Rive
-            src={Feat2}
-            stateMachines={"State Machine 1"}
-            className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10"
-          />
-          <Rive
-            src={Feat3}
-            stateMachines={"State Machine 1"}
-            className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10"
-          />
+          {/* Comment out the original animation code */}
+          {/* <Rive src={Feat1} stateMachines={"State Machine 1"} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10" />
+          <Rive src={Feat2} stateMachines={"State Machine 1"} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10" />
+          <Rive src={Feat3} stateMachines={"State Machine 1"} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10" /> */}
+          
+          {/* Replace with static images */}
+          <img src={Feat1Img} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10 object-contain" alt="Feature 1" />
+          <img src={Feat2Img} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10 object-contain" alt="Feature 2" />
+          <img src={Feat3Img} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10 object-contain" alt="Feature 3" />
         </>
       )}
     </div>
@@ -289,7 +298,7 @@ function SectionRoadmap() {
               todos: [
                 "Sponsor for Agents of the Permaweb: The AO Hackathon",
                 "Assist Arweave Oasis in hosting a hacker house",
-                "Deliver POC for “Digital Twin” AI on AO and Arweave",
+                "Deliver POC for \"Digital Twin\" AI on AO and Arweave",
               ],
             },
             {
@@ -297,7 +306,7 @@ function SectionRoadmap() {
               title: "Expand Ecosystem Influence",
               todos: [
                 "Develop deterministic GPU for specific vendors and drivers",
-                "Launch the “Digital Twin” AI as a product",
+                "Launch the \"Digital Twin\" AI as a product",
                 "Position $APUS as a core utility token",
               ],
             },
@@ -450,6 +459,9 @@ export default function HomeIndex() {
   const breakpoint = useBreakpoint();
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">
+      <SectionHero />
+      {/* 注释掉Hero区域的动画 */}
+      {/* 
       {breakpoint === "mobile" ? (
         <Rive src={HeroRiv} className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10" />
       ) : (
@@ -457,8 +469,21 @@ export default function HomeIndex() {
           src={HeroRiv}
           className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10"
         />
+      )} 
+      */}
+      {breakpoint === "mobile" ? (
+        <img
+          src={TunnelMobile}
+          alt="tunnel-mobile"
+          className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10 object-cover"
+        />
+      ) : (
+        <img
+          src={Tunnel}
+          alt="tunnel"
+          className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10 object-cover"
+        />
       )}
-      <SectionHero />
       <SectionDesc />
       <SectionFeatures />
       <SectionTech />
