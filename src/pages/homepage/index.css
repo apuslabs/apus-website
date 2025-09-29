@@ -35,7 +35,7 @@
     border-color: rgba(27, 27, 27, 0.6);
   }
   &.blue {
-    @apply text-white bg-[#3242F5] border-0;
+    @apply text-white bg-primary border-0;
     &::before {
       @apply border-0;
     }
@@ -91,7 +91,7 @@
 }
 
 .polygon-box.blue {
-  background: linear-gradient(135deg, #3242f5 0%, #1e30c9 100%);
+  background: linear-gradient(135deg, theme('colors.primary') 0%, theme('colors.primaryHover') 100%);
   box-shadow: 0 4px 20px rgba(50, 66, 245, 0.3);
 }
 
