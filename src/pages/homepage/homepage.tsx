@@ -226,8 +226,8 @@ function SectionTech() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
   return (
-    <div className="section bg-[#f1f1f1] overflow-hidden">
-      {isMobile ? null : <img src={LogoStroke} className="absolute right-[65%] top-[100px] z-10" />}
+    <div className="section overflow-hidden">
+      {/* {isMobile ? null : <img src={LogoStroke} className="absolute right-[65%] top-[100px] z-10" />} */}
       <div className="content-area flex flex-col items-center gap-[30px] md:gap-10 pt-[20px] pb-[40px] md:pt-40 md:pb-24">
         <div className="text-[30px] md:text-[60px] font-semibold md:font-normal text-[1b1b1b] mb-[30px] md:mb-[75px] text-center leading-none">
           How It Works
