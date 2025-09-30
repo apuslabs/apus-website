@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { ethers, BigNumber } from "ethers";
 // import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { useAO } from "../../utils/ao";
 
@@ -43,7 +42,7 @@ export function useAOMint({
   // MirrorProcess: string;
 }) {
   const {
-    result: apus,
+    rawData: apus,
     loading: loadingApus,
     execute: getApus,
   } = useAO<string>(MintProcess, "Balance", "dryrun");

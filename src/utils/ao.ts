@@ -265,6 +265,7 @@ export function useAO<T>(
   );
   return {
     result,
+    rawData: result?.Messages?.[0]?.Data,
     data: getDataFromMessage<T>(result),
     tags: getTagsFromMessage(result),
     loading,
