@@ -32,7 +32,7 @@ export function Component() {
     apusWallet,
     wallet: activeAddress,
     MintProcess: APUS_ADDRESS.Mint,
-    MirrorProcess: APUS_ADDRESS.Mirror,
+    // MirrorProcess: APUS_ADDRESS.Mirror,
   });
   const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
 
