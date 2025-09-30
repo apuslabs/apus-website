@@ -215,7 +215,7 @@ function SectionFeatures() {
           {/* Replace with static images */}
           <img src={Feat1Img} className="absolute right-[48%] top-0 md:w-[421px] md:h-[289px] lg:w-[505px] lg:h-[347px] xl:w-[630px] xl:h-[433px] z-10 object-contain" alt="Feature 1" />
           <img src={Feat2Img} className="absolute left-[55%] top-[700px] md:w-[391px] md:h-[462px] lg:w-[469px] lg:h-[554px] xl:w-[586px] xl:h-[693px] md:scale-125 z-10 object-contain" alt="Feature 2" />
-          <img src={Feat3Img} className="absolute right-[45%] -bottom-[80px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10 object-contain" alt="Feature 3" />
+          <img src={Feat3Img} className="absolute right-[45%] -bottom-[0px] md:w-[550px] md:h-[467px] lg:w-[660px] lg:h-[560px] xl:w-[826px] xl:h-[700px] z-10 object-contain" alt="Feature 3" />
         </>
       )}
     </div>
