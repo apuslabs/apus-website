@@ -1,7 +1,6 @@
 .section {
   @apply relative;
-  background: radial-gradient(circle at 20% 80%, rgba(106, 197, 249, 0.12) 0%, transparent 55%),
-              radial-gradient(circle at 80% 20%, rgba(162, 83, 252, 0.10) 0%, transparent 55%);
+  background: #f4faff;
 }
 
 .section-hero {
