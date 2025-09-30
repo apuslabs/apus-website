@@ -1,39 +1,43 @@
-import { BigNumber, ethers } from "ethers";
+// import { BigNumber, ethers } from "ethers";
 
-export function splitBigNumber(num: BigNumber, decimals: number = 18) {
-  const integer = num.div(BigNumber.from(10).pow(decimals));
-  const decimal = num.mod(BigNumber.from(10).pow(decimals));
-  // 补足小数部分的0
-  const decimalStr = decimal.toString();
-  const decimalLength = decimalStr.length;
-  const zeroLength = decimals - decimalLength;
-  const zeroStr = "0".repeat(zeroLength);
-  const decimalStrFixed = zeroStr + decimalStr;
+export function splitBigNumber(numStr: string, decimals: number = 18) {
+  let integerStr: string;
+  let decimalStr: string;
+
+  if (numStr.length > decimals) {
+    integerStr = numStr.slice(0, numStr.length - decimals);
+    decimalStr = numStr.slice(numStr.length - decimals);
+  } else {
+    integerStr = "0";
+    decimalStr = numStr.padStart(decimals, "0");
+  }
+
   // add , to the integer part
-  const formattedInteger = integer.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const formattedInteger = integerStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
   return {
     integer: formattedInteger,
-    decimal: decimalStrFixed,
+    decimal: decimalStr,
   };
 }
 
-export function formatBigNumber(num?: BigNumber, decimals: number = 18, fixed?: number) {
-  if (!num) {
-    return "--";
-  }
-  if (num.isZero()) {
-    return "0";
-  }
-  const formattedValue = ethers.utils.formatUnits(num, decimals);
-  if (fixed && fixed >= 1) {
-    const { integer, decimal } = splitBigNumber(num, decimals);
-    // if the integer part is 0 and the decimal part is 0, return origin value, or return truncat value
-    if (integer === "0" && decimal.slice(0, fixed) === "0".repeat(fixed)) {
-      return formattedValue;
-    } else {
-      return `${integer}.${decimal.slice(0, fixed)}`;
-    }
-  } else {
-    return formattedValue;
-  }
-}
+// export function formatBigNumber(num?: BigNumber, decimals: number = 18, fixed?: number) {
+//   if (!num) {
+//     return "--";
+//   }
+//   if (num.isZero()) {
+//     return "0";
+//   }
+//   const formattedValue = ethers.utils.formatUnits(num, decimals);
+//   if (fixed && fixed >= 1) {
+//     const { integer, decimal } = splitBigNumber(num.toString(), decimals);
+//     // if the integer part is 0 and the decimal part is 0, return origin value, or return truncat value
+//     if (integer === "0" && decimal.slice(0, fixed) === "0".repeat(fixed)) {
+//       return formattedValue;
+//     } else {
+//       return `${integer}.${decimal.slice(0, fixed)}`;
+//     }
+//   } else {
+//     return formattedValue;
+//   }
+// }
