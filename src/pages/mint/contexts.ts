@@ -27,9 +27,9 @@ import { useAO } from "../../utils/ao";
 //   aoFactor: 100,
 // }
 
-function toBigNumber(value: string | undefined) {
-  return value ? BigNumber.from(value) : undefined;
-}
+// function toBigNumber(value: string | undefined) {
+//   return value ? BigNumber.from(value) : undefined;
+// }
 
 export function useAOMint({
   apusWallet,

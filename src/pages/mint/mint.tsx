@@ -33,7 +33,7 @@ export function Component() {
     MintProcess: APUS_ADDRESS.Mint,
     // MirrorProcess: APUS_ADDRESS.Mirror,
   });
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || "0", 12);
 
   const [recipientModal, setRecipientModal] = useState(false);
   const [recipient, setRecipient] = useState("");
