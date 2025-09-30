@@ -43,7 +43,7 @@ export function useAOMint({
   // MirrorProcess: string;
 }) {
   const {
-    data: apus,
+    result: apus,
     loading: loadingApus,
     execute: getApus,
   } = useAO<string>(MintProcess, "Balance", "dryrun");
@@ -65,15 +65,15 @@ export function useAOMint({
       getApus({ Recipient: apusWallet || wallet });
     }
     // refresh apus every 5 minutes
-    const interval = setInterval(
-      () => {
-        if (wallet) {
-          getApus({ Recipient: ethers.utils.getAddress(wallet) });
-        }
-      },
-      5 * 60 * 1000,
-    );
-    return () => clearInterval(interval);
+    // const interval = setInterval(
+    //   () => {
+    //     if (wallet) {
+    //       getApus({ Recipient: ethers.utils.getAddress(wallet) });
+    //     }
+    //   },
+    //   5 * 60 * 1000,
+    // );
+    // return () => clearInterval(interval);
   }, [apusWallet, wallet, getApus]);
 
   // useEffect(() => {
