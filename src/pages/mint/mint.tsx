@@ -186,7 +186,6 @@ export function Component() {
           </div>
         </div>
       </div>
-      <HomeFooter />
       <ToastContainer
         position="bottom-center"
         autoClose={5000}
