@@ -53,6 +53,7 @@ function TwitterVideo({ className, videoID }: { className?: string; videoID: str
 }
 
 function SectionHero() {
+  const breakpoint = useBreakpoint();
   const poolListQuery = useQuery({
     queryKey: ["poolList"],
     queryFn: () => getPoolList(),
@@ -61,6 +62,19 @@ function SectionHero() {
   const { day, hour, minute, second } = useCountDate(pool_start_time);
   return (
     <div className="section section-hero z-10">
+      {breakpoint === "mobile" ? (
+        <img
+          src={TunnelMobile}
+          alt="tunnel-mobile"
+          className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10 object-cover"
+        />
+      ) : (
+        <img
+          src={Tunnel}
+          alt="tunnel"
+          className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10 object-cover"
+        />
+      )}
       {pool_start_time.isAfter(dayjs()) && !poolListQuery.isFetching ? (
         <div className="launchbox-container mt-[40px]">
           <div className={`launchbox-title text-[35px]`}>Launch in ...</div>
@@ -104,7 +118,7 @@ function SectionHero() {
           <br /> Deterministic GPU
           <br /> Computing
         </div>
-        <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-primary flex flex-col gap-2 md:gap-0 md:flex-row items-center">
+        <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-primary flex flex-col gap-2 md:gap-0 md:flex-row items-center z-30">
           <img src={IconMintBox} className="w-[90px] h-[90px] md:w-[175px] md:h-[175px] md:mr-[42px]" />
           <div className="flex flex-col items-center md:items-start gap-2 md:gap-5">
             <div className="text-2xl md:text-[40px] text-white">APUS Minting Live!</div>
@@ -453,7 +467,6 @@ function SectionPartners() {
 }
 
 export default function HomeIndex() {
-  const breakpoint = useBreakpoint();
   return (
     <div id="homepage" className="relative w-screen overflow-x-hidden">
       {/* 
@@ -466,19 +479,7 @@ export default function HomeIndex() {
         />
       )} 
       */}
-      {breakpoint === "mobile" ? (
-        <img
-          src={TunnelMobile}
-          alt="tunnel-mobile"
-          className="absolute left-0 top-[80px] w-[100%] h-[460px] z-10 object-cover"
-        />
-      ) : (
-        <img
-          src={Tunnel}
-          alt="tunnel"
-          className="absolute left-0 top-[80px] md:left-[45%] md:top-[50px] w-full md:w-[1147px] md:h-[1154px] z-10 object-cover"
-        />
-      )}
+      
       <SectionHero />
       {/* <SectionDesc /> */}
       <SectionFeatures />
