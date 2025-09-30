@@ -6,6 +6,8 @@ import ConsoleHeader from "./components/ConsoleHeader";
 import Homepage from "./pages/homepage/homepage";
 import Page404 from "./pages/404";
 import { Suspense } from "react";
+import ANPMOutlet from './pages/anpm'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const router = createHashRouter([
   {
@@ -29,7 +31,7 @@ const router = createHashRouter([
       {
         path: "mint",
         lazy: () => import("./pages/mint/mint"),
-      },
+      }
     ],
   },
   {
@@ -70,13 +72,48 @@ const router = createHashRouter([
     ],
   },
   {
+    path: "anpm",
+    element: <ANPMOutlet />,
+    children: [
+      {
+        index: true,
+        path: "console",
+        lazy: () => import("./pages/anpm/console"),
+      },
+      {
+        path: "buy-credit",
+        lazy: () => import("./pages/anpm/buy-credit"),
+      },
+      {
+        path: "stake",
+        lazy: () => import("./pages/anpm/stake-apus"),
+      },
+      {
+        path: "transfer-credit",
+        lazy: () => import("./pages/anpm/transfer-credit"),
+      },
+      {
+        path: "process",
+        lazy: () => import("./pages/anpm/process")
+      },
+      {
+        path: "chat",
+        lazy: () => import("./pages/anpm/chat"),
+      }
+    ],
+  },
+  {
     path: "*",
     element: <Page404 />,
   },
 ]);
 
+const queryClient = new QueryClient();
+
 export default function App() {
   return (
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   );
 }

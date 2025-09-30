@@ -57,7 +57,6 @@ export function Component() {
     getCompetitions();
   }, [getCompetitions]);
   const competitions: Pool[] = JSON.parse(getDataFromMessage<string>(competitionsResult) || "[]");
-  // console.log(typeof competitions);
   const activeCompetitions = competitions?.filter(
     (c) => c.start_time < Date.now() / 1000 && c.end_time > Date.now() / 1000,
   );

@@ -15,13 +15,13 @@
   height: calc(100% - 80px);
   @apply bg-white;
   li {
-    @apply h-16 md:h-auto p-4 md:p-0 border-b-1 border-b-[#d9d9d9] md:border-b-0;
+    @apply h-16 md:h-auto p-4 md:p-0 border-b-1 border-b-[#d9d9d9] md:border-b-0 text-xl md:text-2xl font-medium tracking-wide md:px-4 md:py-2 rounded-lg transition-all duration-200 ease-out;
   }
 }
 
 .footer-nav, .header-nav {
   li:hover {
-    @apply font-semibold;
+    @apply font-semibold text-primaryHover scale-105;
   }
 }
 
@@ -41,3 +41,4 @@
     }
   }
 }
+

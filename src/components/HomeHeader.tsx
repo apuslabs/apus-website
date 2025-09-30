@@ -34,7 +34,7 @@ function useAnchor() {
 export const LIGHTPAPER_LINK =
   "https://r2krpzvyn24gq75rtedeo56vpiyxvcya2xsntoeaz7ursparocea.arweave.net/jpUX5rhuuGh_sZkGR3fVejF6iwDV5Nm4gM_pGTwRcIg";
 
-const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
+const HomeHeader: FC<{ Userbox?: React.ReactNode, hideMenu?: boolean }> = ({ Userbox, hideMenu }) => {
   useAnchor();
   const breakpoint = useBreakpoint();
   const [navHide, setNavHide] = useState(true);
@@ -78,7 +78,7 @@ const HomeHeader: FC<{ Userbox?: React.ReactNode }> = ({ Userbox }) => {
         {Userbox || (
           <>
             <Link to="https://docs.apus.network/sdk/introduction" onClick={() => setNavHide(true)}>
-              <div className="hidden md:flex items-center justify-center px-5 py-4 bg-[#3242f5] text-white cursor-pointer rounded-lg hover:bg-[#1e30c9]">
+              <div className="hidden md:flex items-center justify-center px-5 py-4 bg-primary text-white cursor-pointer rounded-lg hover:bg-primaryHover">
                 {"Docs"}
               </div>
             </Link>

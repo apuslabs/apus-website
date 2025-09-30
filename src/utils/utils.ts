@@ -1,4 +1,5 @@
 import dayjs from "dayjs";
+import { ethers } from "ethers";
 
 export function formatNumberWithSuffix(value: number): string {
   const suffixes = ["", "K", "M", "B", "T"];
@@ -16,6 +17,12 @@ export function formatNumberWithSuffix(value: number): string {
     }).format(value) + suffixes[suffixIndex]
   );
 }
+
+export function formatApus(value: string): string {
+  return ethers.utils.formatUnits(String(value), 12);
+}
+
+export const formatCredits = formatApus;
 
 export const formatNumber = new Intl.NumberFormat("en-US").format;
 

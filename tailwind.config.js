@@ -20,6 +20,9 @@ export default {
         "light-purple": "#D7DDF4",
         blue: "#061EFA",
         mainblue: "#091DFF",
+        // Theme A
+        primary: "#6AC5F9",
+        primaryHover: "#4FB3E8",
       },
       backgroundImage: {
         purpleToBlue45: "linear-gradient(-45deg, #9b8aff 0%, #2806fa 100%)",
