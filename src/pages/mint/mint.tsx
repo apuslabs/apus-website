@@ -4,7 +4,6 @@ import "./mint.css";
 import { ImgMint } from "../../assets";
 import { useEffect, useState } from "react";
 import { useAOMint } from "./contexts";
-import { BigNumber } from "ethers";
 import { LoadingOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import HomeFooter from "../../components/HomeFooter";
 import HomeHeader from "../../components/HomeHeader";
@@ -34,7 +33,7 @@ export function Component() {
     MintProcess: APUS_ADDRESS.Mint,
     // MirrorProcess: APUS_ADDRESS.Mirror,
   });
-  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic || BigNumber.from(0), 12);
+  const { integer: apusInteger, decimal: apusDecimal } = splitBigNumber(apusDynamic, 12);
 
   const [recipientModal, setRecipientModal] = useState(false);
   const [recipient, setRecipient] = useState("");

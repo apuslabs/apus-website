@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ethers, BigNumber } from "ethers";
 // import { AO_MINT_PROCESS, APUS_ADDRESS } from "../../utils/config";
 import { useAO } from "../../utils/ao";
@@ -52,7 +52,7 @@ export function useAOMint({
   //   loading: loadingUserEstimatedApus,
   //   execute: getUserEstimatedApus,
   // } = useAO<string>(MirrorProcess, "User.Get-User-Estimated-Apus-Token", "dryrun");
-  const [apusDynamic, setApusDynamic] = useState<BigNumber>();
+  // const [apusDynamic, setApusDynamic] = useState<BigNumber>();
   // const {
   //   data: delegationsData,
   //   loading: loadingDelegations,
@@ -178,10 +178,10 @@ export function useAOMint({
   // );
 
   // animate apus balance change
-  useEffect(() => {
-    if (loadingApus || !apus) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (loadingApus || !apus) {
+  //     return;
+  //   }
     // const bigApus = toBigNumber(apus)
     // const bigUserEstimatedApus = toBigNumber(userEstimatedApus)
     // if (
@@ -191,7 +191,7 @@ export function useAOMint({
       // bigApus?.isZero() ||
       // bigUserEstimatedApus?.isZero()
     // ) {
-      setApusDynamic(toBigNumber(apus));
+      // setApusDynamic(toBigNumber(apus));
     //   return;
     // }
     // const step = bigUserEstimatedApus.div(30 * 24 * 3600);
@@ -205,7 +205,7 @@ export function useAOMint({
     //   });
     // }, 1000);
     // return () => clearInterval(interval);
-  }, [apus, loadingApus]);
+  // }, [apus, loadingApus]);
 
   // const delegations = useMemo(() => {
   //   if (delegationsData) {
@@ -215,7 +215,7 @@ export function useAOMint({
   // }, [delegationsData, wallet])
 
   return {
-    apusDynamic,
+    apusDynamic: apus || "0",
     loadingApus,
     // userEstimatedApus: toBigNumber(userEstimatedApus),
     // loadingUserEstimatedApus,
