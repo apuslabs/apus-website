@@ -21,7 +21,7 @@
 
 .footer-nav, .header-nav {
   li:hover {
-    @apply font-semibold text-primaryHover bg-black5 scale-105;
+    @apply font-semibold text-primaryHover scale-105;
   }
 }
 

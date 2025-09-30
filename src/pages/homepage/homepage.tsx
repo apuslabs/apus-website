@@ -97,14 +97,11 @@ function SectionHero() {
       <div className="content-area relative z-20 flex flex-col items-center md:block">
         <div className="relative w-full text-[35px] px-[18px] md:text-[80px] text-[#262626] mt-[230px] pb-[80px] md:mt-[140px] md:px-0 md:pb-[430px] font-semibold md:font-bold leading-none bg-white md:bg-transparent">
         <div className="md:hidden absolute -top-5 left-0 right-0 h-5 bg-gradient-to-b from-transparent to-white backdrop-filter backdrop-blur-sm"></div>
-          Enabling Trustworthy
-          <br /> Decentralized AI
+          Enabling
+          <br /> Trustworthy AI
           <br />
-          <span className="text-[#6AC5F9]">through</span>
-          <br /> 
-          <span className="bg-gradient-to-r from-[#6AC5F9] to-[#A253FC] bg-clip-text text-transparent">
-            Deterministic GPU
-          </span>
+          through
+          <br /> Deterministic GPU
           <br /> Computing
         </div>
         <div className="md:absolute right-0 bottom-0 md:px-[45px] py-6 md:py-[32px] w-full md:w-auto bg-primary flex flex-col gap-2 md:gap-0 md:flex-row items-center">
@@ -229,10 +226,10 @@ function SectionTech() {
   const breakpoint = useBreakpoint();
   const isMobile = breakpoint === "mobile";
   return (
-    <div className="section bg-[#1b1b1b] overflow-hidden">
+    <div className="section bg-[#f1f1f1] overflow-hidden">
       {isMobile ? null : <img src={LogoStroke} className="absolute right-[65%] top-[100px] z-10" />}
       <div className="content-area flex flex-col items-center gap-[30px] md:gap-10 pt-[20px] pb-[40px] md:pt-40 md:pb-24">
-        <div className="text-white text-[30px] md:text-[60px] font-semibold md:font-normal leading-none">
+        <div className="text-[30px] md:text-[60px] font-semibold md:font-normal text-[1b1b1b] mb-[30px] md:mb-[75px] text-center leading-none">
           How It Works
         </div>
         <img src={isMobile ? ArchMobile : Arch} className="z-20" />
@@ -271,7 +268,7 @@ function SectionRoadmap() {
     <div id="roadmap" className="section md:pt-10 md:pb-40 overflow-hidden">
       <div className="content-area relative flex flex-col md:flex-row md:gap-10">
         <div className="flex-shrink-0 md:w-[470px] text-white z-20">
-          <div className="bg-[#1b1b1b] md:pt-[72px] md:px-[36px] md:pb-[48px] py-[50px] px-[25px]">
+          <div className="bg-primary md:pt-[72px] md:px-[36px] md:pb-[48px] py-[50px] px-[25px]">
             <div className="text-[30px] md:text-[60px] font-semibold md:font-normal leading-none mb-[30px] md:mb-[34px]">
               Roadmap
             </div>
@@ -314,7 +311,7 @@ function SectionRoadmap() {
             return (
               <div className="flex flex-col md:flex-row gap-[20px] md:gap-[36px]" key={season}>
                 <div
-                  className={`relative w-[130px] h-[48px] md:w-[170px] md:h-[63px] flex-shrink-0 text-2xl leading-[48px] md:leading-[63px] text-center polygon-box ${index === 0 ? "blue" : ""}`}
+                  className={`relative w-[130px] h-[48px] md:w-[170px] md:h-[63px] flex-shrink-0 text-2xl leading-[48px] md:leading-[63px] text-center polygon-box ${index === 1 ? "blue" : ""}`}
                 >
                   {season}
                   {/* {index === 0 && (
@@ -483,7 +480,7 @@ export default function HomeIndex() {
         />
       )}
       <SectionHero />
-      <SectionDesc />
+      {/* <SectionDesc /> */}
       <SectionFeatures />
       <SectionTech />
       <SectionVideo />
